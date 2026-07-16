@@ -84,6 +84,26 @@ async function init() {
     });
   }
 
+  /* ---------- Offering pages: soft gate overlay ---------- */
+  // Content stays in the HTML for crawlers; humans without a session get
+  // a login overlay. Logged-in investors never see it.
+  const gate = document.getElementById("offering-gate");
+  if (gate) {
+    if (authed) {
+      gate.remove();
+    } else {
+      gate.style.display = "flex";
+      document.documentElement.style.overflow = "hidden";
+      const gateLogin = document.getElementById("offering-gate-login");
+      if (gateLogin) {
+        gateLogin.addEventListener("click", function (e) {
+          e.preventDefault();
+          kinde.login({ app_state: { returnTo: window.location.pathname } });
+        });
+      }
+    }
+  }
+
   /* ---------- Portal pages: guard + welcome + logout ---------- */
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {

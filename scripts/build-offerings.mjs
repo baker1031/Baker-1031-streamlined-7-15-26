@@ -255,6 +255,41 @@ function buildPage(o) {
   /* ----- compliance-pending footnote placeholders: remove for now ----- */
   html = html.replace(/\s*&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/, "");
   html = html.replace(/\s*<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/, "");
+
+  /* ----- soft gate: full page content stays in the HTML (crawlable), but
+     js/auth.js shows this overlay to human visitors who aren't logged in.
+     Hidden by default so crawlers and logged-in investors never see it. ----- */
+  const gate = `
+  <style>
+    #offering-gate { display: none; position: fixed; inset: 0; z-index: 400;
+      background: rgba(13, 20, 38, 0.55); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+      align-items: center; justify-content: center; padding: 1.5rem; }
+    #offering-gate .gate-card { background: #fff; border-radius: 12px; max-width: 26.5rem; width: 100%;
+      padding: 2.4rem 2.2rem 2.1rem; text-align: center; box-shadow: 0 18px 48px rgba(9, 14, 26, 0.45); }
+    #offering-gate .gate-card img { height: 40px; width: auto; margin-bottom: 1.2rem; }
+    #offering-gate h3 { font-size: 1.15rem; font-weight: 700; color: #2f3237; margin-bottom: 0.5rem; }
+    #offering-gate p { font-size: 0.9rem; line-height: 1.55; color: #5b6069; margin-bottom: 1.4rem; }
+    #offering-gate .gate-login { display: block; width: 100%; background: var(--navy); color: #fff;
+      font-size: 0.92rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.8rem 1rem; border-radius: 6px; margin-bottom: 0.7rem; }
+    #offering-gate .gate-login:hover { background: var(--navy-dark); }
+    #offering-gate .gate-request { display: block; width: 100%; font-size: 0.92rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.06em; color: var(--navy); border: 1px solid #cfd4dd;
+      padding: 0.8rem 1rem; border-radius: 6px; }
+    #offering-gate .gate-request:hover { border-color: var(--navy); }
+    #offering-gate .gate-note { font-size: 0.74rem; color: #8a8f99; margin: 1.1rem 0 0; }
+  </style>
+  <div id="offering-gate" role="dialog" aria-modal="true" aria-label="Investor access required">
+    <div class="gate-card">
+      <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+      <h3>Verified investors only</h3>
+      <p>Full offering details, projections, and documents for ${esc(name)} are available to verified accredited investors.</p>
+      <a class="gate-login" id="offering-gate-login" href="#">Investor Log In</a>
+      <a class="gate-request" href="/?request-access=1">Request Investment Access</a>
+      <p class="gate-note">Access is provisioned after a brief introductory call. Questions? invest@baker1031.com</p>
+    </div>
+  </div>`;
+  html = html.replace(/<\/body>/, `${gate}\n</body>`);
   html = setField(html, "Investment Firm", o["Sponsor"] || "");
   html = setField(html, "Year Founded", o["Sponsor Founded"] || "");
 
