@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://baker1031.com/sitemap.xml
