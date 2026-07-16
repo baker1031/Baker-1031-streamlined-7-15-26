@@ -23,7 +23,9 @@ import { fileURLToPath } from "node:url";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SHEET_ID = "1vTqb5YX8pFjZxToGd2pJ_ncPbny2PXpW5gXx-7IlyZg";
 const SHEET_TAB = "Master Listings";
+const DOCS_TAB = "Documents";
 const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_TAB)}`;
+const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(DOCS_TAB)}`;
 const SITE = "https://baker1031.com";
 
 /* ---------------- CSV parsing (quoted fields, embedded commas/newlines) ---------------- */
@@ -102,6 +104,45 @@ if (offerings.length < 10) {
   }
 }
 console.log(`Parsed ${offerings.length} offerings, ${headers.length} columns.`);
+
+/* ---------------- Documents tab (per-offering document lists) ---------------- */
+const normName = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+const docsByName = new Map(); // normalized Investment Name -> [{label, file, gated}]
+{
+  const res2 = await fetch(DOCS_CSV_URL, { redirect: "follow" });
+  if (!res2.ok) throw new Error(`Documents tab fetch failed: ${res2.status}`);
+  const dRows = parseCSV(await res2.text());
+  const dh = dRows[0].map((h) => h.trim());
+  const di = (n) => dh.indexOf(n);
+  if (di("Investment Name") === -1 || di("Label") === -1 || di("File") === -1) {
+    throw new Error("Documents tab is missing Investment Name / Label / File columns");
+  }
+  for (const r of dRows.slice(1)) {
+    const name = (r[di("Investment Name")] || "").trim();
+    const label = (r[di("Label")] || "").trim();
+    const file = (r[di("File")] || "").trim();
+    if (!name || !label || !file) continue;
+    const key = normName(name);
+    if (!docsByName.has(key)) docsByName.set(key, []);
+    docsByName.get(key).push({ label, file, gated: (r[di("Gated?")] || "").trim() });
+  }
+  console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
+}
+/* Find an offering's documents: exact normalized-name match first, then a
+   unique token-subset match (handles small naming variants between tabs). */
+function docsFor(name) {
+  const key = normName(name);
+  if (docsByName.has(key)) return docsByName.get(key);
+  const tokens = new Set(key.split(" "));
+  const candidates = [];
+  for (const [k, v] of docsByName) {
+    const kt = k.split(" ");
+    const kset = new Set(kt);
+    const subset = kt.every((t) => tokens.has(t)) || [...tokens].every((t) => kset.has(t));
+    if (subset) candidates.push(v);
+  }
+  return candidates.length === 1 ? candidates[0] : null;
+}
 
 /* ---------------- Display rules ---------------- */
 function displayDebt(o) {
@@ -320,16 +361,26 @@ function buildPage(o) {
     }
   );
 
-  /* ----- documents: single entry from DD Label / DD Folder Link ----- */
+  /* ----- documents: per-offering list from the sheet's Documents tab,
+     falling back to DD Label / DD Folder Link when no rows exist ----- */
   {
-    const label = o["DD Label"] || "Offering Documents Available By Request";
-    const link = o["DD Folder Link"] || "";
-    const anchor = link
-      ? `<a class="download" href="${esc(link)}" target="_blank" rel="noopener">Open Documents</a>`
-      : `<a class="download" href="mailto:invest@baker1031.com?subject=${encodeURIComponent("Document request: " + name)}">Request Documents</a>`;
+    const docList = docsFor(name);
+    let items;
+    if (docList && docList.length) {
+      items = docList.map((d) =>
+        `        <li><span data-field="Label">${esc(d.label)}</span><a class="download" href="${esc(d.file)}" target="_blank" rel="noopener" data-gated="${esc(d.gated || "No")}">View</a></li>`
+      ).join("\n");
+    } else {
+      const label = o["DD Label"] || "Offering Documents Available By Request";
+      const link = o["DD Folder Link"] || "";
+      const anchor = link
+        ? `<a class="download" href="${esc(link)}" target="_blank" rel="noopener">Open Documents</a>`
+        : `<a class="download" href="mailto:invest@baker1031.com?subject=${encodeURIComponent("Document request: " + name)}">Request Documents</a>`;
+      items = `        <li><span data-field="Label">${esc(label)}</span>${anchor}</li>`;
+    }
     html = html.replace(
       /(<ul class="doc-list" data-field="Documents">)[\s\S]*?(<\/ul>)/,
-      (_, open, close) => `${open}\n        <li><span data-field="Label">${esc(label)}</span>${anchor}</li>\n      ${close}`
+      (_, open, close) => `${open}\n${items}\n      ${close}`
     );
   }
 
