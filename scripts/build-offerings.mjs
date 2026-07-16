@@ -606,7 +606,50 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
           </tr>`);
   if (sponsorRows.length < 5) throw new Error(`Only ${sponsorRows.length} sponsor rows — refusing to build.`);
 
+  // ---- Preferred vs All summary (computed from the deal-level track record,
+  //      same methodology as the homepage chart: average across completed programs) ----
+  const prefSet = new Set(scRows.slice(1)
+    .filter((r) => /^yes$/i.test((r[sci("Preferred?")] || "").trim()))
+    .map((r) => normName(r[sci("Investment Firm")])));
+  const pct = (v) => { const m = String(v).trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
+  const multVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
+  const numVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)$/); return m ? parseFloat(m[1]) : null; };
+  const mean = (arr) => arr.length ? arr.reduce((a, x) => a + x, 0) / arr.length : null;
+  // sponsor-level success rates + program counts for the weighted success figure
+  const successBySponsor = new Map(scRows.slice(1).map((r) => [normName(r[sci("Investment Firm")]), {
+    rate: pct(r[sci("Success Rate")]),
+    count: numVal(r[sci("Full-Cycle Deals")])
+  }]));
+  function groupStats(label, groupDeals) {
+    const sponsors = [...new Set(groupDeals.map((d) => normName(d.sponsor)))];
+    const avgAnn = mean(groupDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
+    const avgMult = mean(groupDeals.map((d) => multVal(d.multiple)).filter((x) => x !== null));
+    const avgHold = mean(groupDeals.map((d) => numVal(d.hold)).filter((x) => x !== null));
+    let wSum = 0, wTot = 0;
+    for (const s of sponsors) {
+      const sc = successBySponsor.get(s);
+      if (sc && sc.rate !== null && sc.count) { wSum += sc.rate * sc.count; wTot += sc.count; }
+    }
+    const success = wTot ? wSum / wTot : null;
+    const f = (v, suffix, digits = 2) => v === null ? "—" : v.toFixed(digits) + suffix;
+    return `          <tr>
+            <td style="font-weight:700">${esc(label)}</td>
+            <td class="num">${sponsors.length}</td>
+            <td class="num">${groupDeals.length}</td>
+            <td class="num">${f(avgAnn, "%")}</td>
+            <td class="num">${f(avgMult, "x")}</td>
+            <td class="num">${f(avgHold, " Years", 1)}</td>
+            <td class="num">${f(success, "%", 1)}</td>
+          </tr>`;
+  }
+  const prefDeals = deals.filter((d) => prefSet.has(normName(d.sponsor)));
+  const summaryRows = [
+    groupStats("Baker 1031 Preferred Sponsors", prefDeals),
+    groupStats("All Investment Sponsors", deals)
+  ].join("\n");
+
   let perf = readFileSync(join(ROOT, "performance-template.html"), "utf8");
+  perf = perf.replace("<!-- PERF:SUMMARY_ROWS -->", summaryRows);
   perf = perf.replace("<!-- PERF:SPONSOR_ROWS -->", sponsorRows.join("\n"));
   perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
   perf = perf.replace("<!-- PERF:SPONSORS -->", optionsHtml);
