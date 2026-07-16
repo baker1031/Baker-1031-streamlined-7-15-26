@@ -1,0 +1,5 @@
+# Generated at build time by scripts/build-offerings.mjs
+offerings/
+data/offerings.json
+sitemap.xml
+node_modules/
