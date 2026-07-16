@@ -2337,6 +2337,11 @@
                 if (window.baker1031Login) window.baker1031Login(email);
                 else window.location.href = '/current-offerings.html';
               });
+              // Auto-route to the portal login (email prefilled) a few seconds
+              // after booking; the button remains for anyone who waits.
+              setTimeout(function () {
+                if (window.baker1031Login) window.baker1031Login(email);
+              }, 5000);
             }
           }
         });
