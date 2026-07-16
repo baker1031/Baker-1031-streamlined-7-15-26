@@ -17,7 +17,7 @@ const styles: Record<string, React.CSSProperties> = {
     padding: "4.5rem 1rem 3rem",
     boxSizing: "border-box",
     backgroundColor: "#2b3a5f",
-    backgroundImage: `linear-gradient(rgba(43, 58, 95, 0.82), rgba(30, 42, 71, 0.88)), url(${SKYLINE})`,
+    backgroundImage: `linear-gradient(rgba(58, 76, 120, 0.62), rgba(36, 49, 82, 0.78)), url(${SKYLINE})`,
     backgroundBlendMode: "multiply",
     backgroundSize: "cover",
     backgroundPosition: "center top",
