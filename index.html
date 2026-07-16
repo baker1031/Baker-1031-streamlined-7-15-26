@@ -1945,25 +1945,33 @@
     // Full-cycle DST collage: 8 visible cards, random swaps from the pool
     (function () {
       var IMG = {
-        apartments: 'https://res.cloudinary.com/opoazlei/image/upload/v1783843881/Apartments_pllp0h.jpg',
-        warehouse:  'https://res.cloudinary.com/opoazlei/image/upload/v1783843878/Amazon_q2ru5v.png',
-        hotel:      'https://res.cloudinary.com/opoazlei/image/upload/v1783843880/Hotel_ojlaau.avif',
-        oil:        'https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Oil_Wells_m8jf8v.webp',
-        mall:       'https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Mall_a3ex5g.jpg'
+        edenwood:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842315/Lost-Creek_ze1krg.webp',
+        glenmore:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842404/Glenmore_Commerce_svpd4e.avif',
+        almeria:     'https://res.cloudinary.com/opoazlei/image/upload/v1783842460/Almeria_c53njk.jpg',
+        carriage:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842494/Carriage_Homes_wts0pe.jpg',
+        courtyard:   'https://res.cloudinary.com/opoazlei/image/upload/v1783842551/Courtyard_m9khul.jpg',
+        kayalex:     'https://res.cloudinary.com/opoazlei/image/upload/v1783842654/Jacksonville_Hotel_qyrrmq.jpg',
+        austell:     'https://res.cloudinary.com/opoazlei/image/upload/v1783842691/Austell_Place_ypwkig.webp',
+        abbott:      'https://res.cloudinary.com/opoazlei/image/upload/v1783842727/Abott_tk22bd.jpg',
+        avenue25:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842758/Avenue_25_yefddl.jpg',
+        savannah:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842805/Savannah_ja2f2g.jpg',
+        firstave:    'https://res.cloudinary.com/opoazlei/image/upload/v1783842839/St._Pete_vp5o9q.webp',
+        chicagoland: 'https://res.cloudinary.com/opoazlei/image/upload/v1783842950/Stop_and_Shop_xfxjed.webp'
       };
+      // Realized full-cycle programs (Jerry-supplied data, 2026-07)
       var DEALS = [
-        { name: '[Crestview Apartments]',        sponsor: '[Sponsor A]', type: 'Multifamily',       ret: '[7.4%]', mult: '[1.62x]', hold: '[6.1 yrs]', img: IMG.apartments },
-        { name: '[Gateway Logistics Center]',    sponsor: '[Sponsor B]', type: 'Industrial',        ret: '[6.8%]', mult: '[1.48x]', hold: '[5.2 yrs]', img: IMG.warehouse },
-        { name: '[Harborview Hotel Portfolio]',  sponsor: '[Sponsor C]', type: 'Hospitality',       ret: '[8.1%]', mult: '[1.71x]', hold: '[7.3 yrs]', img: IMG.hotel },
-        { name: '[Permian Royalty Partners II]', sponsor: '[Sponsor D]', type: 'Mineral Royalties', ret: '[9.2%]', mult: '[1.55x]', hold: '[4.6 yrs]', img: IMG.oil },
-        { name: '[Lakeside Commons]',            sponsor: '[Sponsor E]', type: 'Retail',            ret: '[6.3%]', mult: '[1.41x]', hold: '[6.8 yrs]', img: IMG.mall },
-        { name: '[Summit Ridge Apartments]',     sponsor: '[Sponsor B]', type: 'Multifamily',       ret: '[7.9%]', mult: '[1.66x]', hold: '[5.5 yrs]', img: IMG.apartments },
-        { name: '[Blue Sky Distribution]',       sponsor: '[Sponsor F]', type: 'Industrial',        ret: '[7.1%]', mult: '[1.52x]', hold: '[4.9 yrs]', img: IMG.warehouse },
-        { name: '[Copper Basin Royalties]',      sponsor: '[Sponsor D]', type: 'Mineral Royalties', ret: '[8.7%]', mult: '[1.49x]', hold: '[5.0 yrs]', img: IMG.oil },
-        { name: '[Grand Vista Suites]',          sponsor: '[Sponsor C]', type: 'Hospitality',       ret: '[7.6%]', mult: '[1.58x]', hold: '[6.4 yrs]', img: IMG.hotel },
-        { name: '[Northgate Marketplace]',       sponsor: '[Sponsor A]', type: 'Retail',            ret: '[6.6%]', mult: '[1.44x]', hold: '[7.1 yrs]', img: IMG.mall },
-        { name: '[Willow Bend Communities]',     sponsor: '[Sponsor E]', type: 'Multifamily',       ret: '[7.2%]', mult: '[1.60x]', hold: '[5.8 yrs]', img: IMG.apartments },
-        { name: '[Ironline Industrial Park]',    sponsor: '[Sponsor F]', type: 'Industrial',        ret: '[6.9%]', mult: '[1.50x]', hold: '[5.4 yrs]', img: IMG.warehouse }
+        { name: 'Edenwood',                                  sponsor: 'Walton Global Holdings', type: 'Land \u00b7 Atlanta, GA',           ret: '30.05%', mult: '2.42x',  hold: '7.9 yrs',  img: IMG.edenwood },
+        { name: 'Glenmore Commerce Court',                   sponsor: 'Time Equities',          type: 'Office \u00b7 Calgary, AB',         ret: '56.07%', mult: '2.40x',  hold: '2.8 yrs',  img: IMG.glenmore },
+        { name: 'Almeria at Ocotillo',                       sponsor: 'Passco',                 type: 'Multifamily \u00b7 Chandler, AZ',   ret: '20.20%', mult: '2.51x',  hold: '5.0 yrs',  img: IMG.almeria },
+        { name: 'Carriage Homes on the Lake I & II',         sponsor: 'Bridgeview',             type: 'Multifamily \u00b7 Garland, TX',    ret: '51.90%', mult: '6.05x',  hold: '5.2 yrs',  img: IMG.carriage },
+        { name: 'Courtyard \u2013 Gulf Shores',             sponsor: 'Peachtree Group',        type: 'Hotel \u00b7 Gulf Shores, AL',      ret: '59.40%', mult: '3.93x',  hold: '3.3 yrs',  img: IMG.courtyard },
+        { name: 'CS1031 Kay Alexander Pointe Apartments',    sponsor: 'Capital Square',         type: 'Multifamily \u00b7 Jacksonville, FL', ret: '25.84%', mult: '2.61x', hold: '4.5 yrs', img: IMG.kayalex },
+        { name: 'Austell Place Equities',                    sponsor: 'Time Equities',          type: 'Industrial \u00b7 Long Island City, NY', ret: '25.18%', mult: '12.51x', hold: '14.3 yrs', img: IMG.austell },
+        { name: 'Abbott Labs Bio-Medical Portfolio',         sponsor: 'Syndicated Equities',    type: 'Life Science \u00b7 Minnetonka, MN', ret: '18.40%', mult: '2.35x', hold: '5.1 yrs',  img: IMG.abbott },
+        { name: 'Avenue 25',                                 sponsor: 'Bluerock',               type: 'Multifamily \u00b7 Phoenix, AZ',    ret: '51.93%', mult: '2.97x',  hold: '2.8 yrs',  img: IMG.avenue25 },
+        { name: 'CX Station at Savannah Quarters, DST',      sponsor: 'Carter Exchange',        type: 'Multifamily \u00b7 Pooler, GA',     ret: '32.30%', mult: '2.01x',  hold: '2.8 yrs',  img: IMG.savannah },
+        { name: '490 First Ave',                             sponsor: 'Denholtz',               type: 'Office \u00b7 St. Petersburg, FL',  ret: '26.66%', mult: '1.87x',  hold: '2.7 yrs',  img: IMG.firstave },
+        { name: 'Chicagoland Grocery Venture II DST',        sponsor: 'Inland',                 type: 'Retail',                             ret: '21.14%', mult: '1.57x',  hold: '2.6 yrs',  img: IMG.chicagoland }
       ];
 
       var grid = document.getElementById('cycle-grid');
