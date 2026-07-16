@@ -50,6 +50,7 @@
   }
   .logout:hover { color: var(--navy); border-color: var(--navy); }
 
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
   .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
   @media (max-width: 720px) {
     .main-header-inner { position: relative; }
@@ -59,6 +60,7 @@
       flex-direction: column; align-items: flex-start; gap: 0.9rem;
       box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
     .account-box.open { display: flex; }
+    .nav-sep { width: 100%; height: 1px; }
   }
 
   /* ---------- Breadcrumbs + title ---------- */
@@ -281,10 +283,11 @@
         <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
       <div class="account-box">
-        <a class="listings-link portal-link" href="/current-offerings.html" style="font-weight:600;font-size:0.9rem">Listings</a>
-        <a class="performance-link portal-link" href="/performance.html" style="font-weight:600;font-size:0.9rem">Performance</a>
-        <span class="welcome">Welcome, <span data-field="First Name">[First Name]</span></span>
-        <a class="logout" href="#">Log Out</a>
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <span class="nav-sep" style="display:none"></span>
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
       </div>
     </div>
   </header>

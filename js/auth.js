@@ -71,6 +71,32 @@ const ready = (async function () {
   return { kinde, user, authed };
 })();
 
+/* ---------- Instant nav state from the last known session ----------
+   Kills the nav flicker between page loads: we render the signed-in nav
+   immediately from a cached name, then reconcile once auth resolves. */
+function applyAuthedNav(name) {
+  const box = document.querySelector(".account-box");
+  if (!box) return;
+  box.querySelectorAll(".portal-link, .nav-sep").forEach(function (el) { el.style.display = ""; });
+  const nameEl = box.querySelector('[data-field="First Name"]');
+  if (nameEl && name) nameEl.textContent = name;
+  const welcomeEl = box.querySelector(".welcome");
+  if (welcomeEl) welcomeEl.style.display = "";
+  const boxLogin = box.querySelector("#investor-login");
+  if (boxLogin) boxLogin.style.display = "none";
+  const logoutBtn = box.querySelector(".logout:not(#investor-login)");
+  if (logoutBtn) logoutBtn.style.display = "";
+}
+function applyLoggedOutNav() {
+  const box = document.querySelector(".account-box");
+  if (!box) return;
+  box.querySelectorAll(".portal-link, .nav-sep, .welcome, .logout:not(#investor-login)").forEach(function (el) { el.style.display = "none"; });
+  const boxLogin = box.querySelector("#investor-login");
+  if (boxLogin) boxLogin.style.display = "";
+}
+const cachedName = sessionStorage.getItem("b1031-name");
+if (cachedName) applyAuthedNav(cachedName);
+
 /* ---------- Wire buttons NOW; act when the client is ready ---------- */
 
 const loginLink = document.getElementById("investor-login");
@@ -146,24 +172,24 @@ ready.then(function (s) {
         sessionStorage.setItem("b1031-auth-redirect", String(Date.now()));
         kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
       }
-      // Offering pages: leave the login link visible; the overlay handles the rest
+      // Stale cache (logged out elsewhere): revert to the signed-out nav
+      sessionStorage.removeItem("b1031-name");
+      applyLoggedOutNav();
+      // Offering pages: the overlay handles the rest
       return;
     }
     sessionStorage.removeItem("b1031-auth-redirect");
 
-    // Signed in: reveal Welcome + Log Out, hide any login link in the box
-    const nameEl = accountBox.querySelector('[data-field="First Name"]');
-    if (nameEl) nameEl.textContent = user.given_name || user.email || "Investor";
-    const welcomeEl = accountBox.querySelector(".welcome");
-    if (welcomeEl) welcomeEl.style.display = "";
-    accountBox.querySelectorAll(".portal-link").forEach(function (el) { el.style.display = ""; });
-    const boxLogin = accountBox.querySelector("#investor-login");
-    if (boxLogin) boxLogin.style.display = "none";
+    // Signed in: reveal the full nav and remember the name for instant
+    // rendering on the next page load
+    const displayName = user.given_name || user.email || "Investor";
+    sessionStorage.setItem("b1031-name", displayName);
+    applyAuthedNav(displayName);
     const logoutBtn = accountBox.querySelector(".logout:not(#investor-login)");
     if (logoutBtn) {
-      logoutBtn.style.display = "";
       logoutBtn.addEventListener("click", function (e) {
         e.preventDefault();
+        sessionStorage.removeItem("b1031-name");
         kinde.logout();
       });
     }

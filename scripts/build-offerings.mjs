@@ -230,6 +230,7 @@ function buildPage(o) {
   html = html.replace(
     /<div class="account-box">[\s\S]*?<\/div>/,
     `<style>
+        .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
         .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
         @media (max-width: 720px) {
           .main-header-inner { position: relative; }
@@ -239,6 +240,7 @@ function buildPage(o) {
             flex-direction: column; align-items: flex-start; gap: 0.9rem;
             box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
           .account-box.open { display: flex; }
+          .nav-sep { width: 100%; height: 1px; }
         }
       </style>
       <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
@@ -247,6 +249,7 @@ function buildPage(o) {
       <div class="account-box">
         <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
         <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <span class="nav-sep" style="display:none"></span>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
         <a class="logout" id="investor-login" href="#">Investor Login</a>
