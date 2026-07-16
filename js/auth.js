@@ -38,6 +38,15 @@ async function init() {
   try { user = kinde.getUser(); } catch (e) { user = null; }
   const authed = !!(user && (user.id || user.email));
 
+  // One-click portal entry after provisioning (email prefilled on the login screen)
+  window.baker1031Login = function (email) {
+    kinde.login({
+      app_state: { returnTo: "/current-offerings.html" },
+      login_hint: email,
+      authUrlParams: { login_hint: email }
+    });
+  };
+
   /* ---------- Public page: Investor Login ---------- */
   const loginLink = document.getElementById("investor-login");
   if (loginLink) {

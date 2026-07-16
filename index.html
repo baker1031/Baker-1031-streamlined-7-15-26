@@ -253,6 +253,18 @@
   .hero-form button:hover { background: #e9edf5; }
   .video-hero .hero-form button { font-size: 0.85rem; }
   .hp-field { position: absolute; left: -9999px; opacity: 0; }
+  .portal-btn {
+    background: var(--navy);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    padding: 0.7rem 1.5rem;
+    cursor: pointer;
+  }
+  .portal-btn:hover { background: var(--navy-dark); }
 
   /* ---------- Investment strategies ---------- */
   .strategies {
@@ -2267,15 +2279,29 @@
         Cal.ns[ns]("on", {
           action: "bookingSuccessful",
           callback: function () {
+            var email = form.elements["email"].value;
             fetch("/.netlify/functions/provision-user", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
-                email: form.elements["email"].value,
+                email: email,
                 given_name: form.elements["first_name"].value,
                 family_name: form.elements["last_name"].value
               })
             }).catch(function () {});
+            // Their account now exists: offer one-click entry to the portal.
+            // (Login is a one-time email code; we prefill their address.)
+            if (!document.getElementById('portal-cta')) {
+              var cta = document.createElement('div');
+              cta.id = 'portal-cta';
+              cta.innerHTML = '<p style="margin:0.75rem 0 0.5rem;font-size:0.92rem;color:var(--ink-soft)">Your investor account is ready.</p>' +
+                '<button type="button" class="portal-btn">Access your investor portal &rarr;</button>';
+              thanks.insertBefore(cta, thanks.querySelector('.cal-holder'));
+              cta.querySelector('.portal-btn').addEventListener('click', function () {
+                if (window.baker1031Login) window.baker1031Login(email);
+                else window.location.href = '/current-offerings.html';
+              });
+            }
           }
         });
       }
@@ -2440,6 +2466,11 @@
       });
       backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+      // Arriving with ?request-access=1 (e.g. from the login screen) auto-opens the popup
+      if (/[?&]request-access\b/.test(window.location.search)) {
+        setTimeout(function () { openModal(''); }, 150);
+      }
 
       // The two email bars now open the popup with the email carried over
       document.querySelectorAll('.hero-form').forEach(function (f) {
