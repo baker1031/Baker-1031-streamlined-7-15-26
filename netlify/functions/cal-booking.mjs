@@ -25,7 +25,8 @@ export default async (req) => {
 
   const secret = process.env.CAL_WEBHOOK_SECRET;
   const url = new URL(req.url);
-  if (secret && url.searchParams.get("secret") !== secret) {
+  // Fail closed: no configured secret means no access
+  if (!secret || url.searchParams.get("secret") !== secret) {
     return new Response("forbidden", { status: 403 });
   }
 
@@ -103,10 +104,10 @@ async function findPerson(token, email) {
 async function pd(method, path, token, body, v) {
   const base = v === 2 ? "https://api.pipedrive.com/api/v2" : API;
   const [p, extra] = path.split("&");
-  const url = `${base}${p}?api_token=${token}${extra ? "&" + extra : ""}`;
+  const url = `${base}${p}${extra ? "?" + extra : ""}`;
   const res = await fetch(url, {
     method,
-    headers: body ? { "Content-Type": "application/json" } : undefined,
+    headers: { "x-api-token": token, ...(body ? { "Content-Type": "application/json" } : {}) },
     body: body ? JSON.stringify(body) : undefined
   });
   try { return await res.json(); } catch { return {}; }

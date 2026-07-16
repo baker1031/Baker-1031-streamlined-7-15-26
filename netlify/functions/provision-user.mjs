@@ -26,6 +26,19 @@ export default async (req) => {
     return json({ error: "invalid email" }, 400);
   }
 
+  // Guard: this endpoint is called from the public site, so only provision
+  // emails that already exist as a Pipedrive person (i.e. went through the
+  // request-access funnel). Blocks drive-by account creation.
+  const pdToken = process.env.PIPEDRIVE_API_TOKEN;
+  if (pdToken) {
+    const found = await fetch(
+      `https://api.pipedrive.com/api/v2/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true`,
+      { headers: { "x-api-token": pdToken } }
+    ).then((r) => r.json()).catch(() => null);
+    const person = found && found.data && found.data.items && found.data.items[0];
+    if (!person) return json({ error: "not eligible" }, 403);
+  }
+
   const domain = process.env.KINDE_DOMAIN;
   const clientId = process.env.KINDE_M2M_CLIENT_ID;
   const clientSecret = process.env.KINDE_M2M_CLIENT_SECRET;
@@ -83,14 +96,15 @@ async function markPortalAccess(email) {
   if (!token || !fieldKey || !yes) return;
 
   const search = await fetch(
-    `https://api.pipedrive.com/api/v2/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true&api_token=${token}`
+    `https://api.pipedrive.com/api/v2/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true`,
+    { headers: { "x-api-token": token } }
   ).then((r) => r.json()).catch(() => null);
   const person = search && search.data && search.data.items && search.data.items[0] && search.data.items[0].item;
   if (!person) return;
 
-  await fetch(`https://api.pipedrive.com/api/v2/persons/${person.id}?api_token=${token}`, {
+  await fetch(`https://api.pipedrive.com/api/v2/persons/${person.id}`, {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", "x-api-token": token },
     body: JSON.stringify({ custom_fields: { [fieldKey]: Number(yes) } })
   });
 }

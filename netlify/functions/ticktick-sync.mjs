@@ -114,10 +114,9 @@ export default async () => {
 export const config = { schedule: "*/15 * * * *" };
 
 async function pd(path, token, method = "GET", body) {
-  const sep = path.includes("?") ? "&" : "?";
-  const res = await fetch(`${PD}${path}${sep}api_token=${token}`, {
+  const res = await fetch(`${PD}${path}`, {
     method,
-    headers: body ? { "Content-Type": "application/json" } : undefined,
+    headers: { "x-api-token": token, ...(body ? { "Content-Type": "application/json" } : {}) },
     body: body ? JSON.stringify(body) : undefined
   });
   return res.json().catch(() => ({}));

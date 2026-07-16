@@ -128,6 +128,14 @@ const docsByName = new Map(); // normalized Investment Name -> [{label, file, ga
   }
   console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
 }
+/* Proxy remote photos (Google Drive/lh3) through Cloudinary fetch for
+   format/quality/size optimization — 1.2MB Drive originals become ~30KB. */
+function optimizedPhoto(url, width) {
+  if (!url || !/^https?:\/\//.test(url)) return url;
+  if (url.includes("res.cloudinary.com")) return url; // already optimized
+  return `https://res.cloudinary.com/opoazlei/image/fetch/f_auto,q_auto,w_${width}/${encodeURIComponent(url)}`;
+}
+
 /* Google Drive file links → direct-download links.
    https://drive.google.com/file/d/<ID>/view?...  →  https://drive.google.com/uc?export=download&id=<ID>
    Non-Drive-file URLs (folders, external sites) pass through unchanged. */
@@ -267,8 +275,10 @@ function buildPage(o) {
     `<meta property="og:type" content="website">`,
     `<meta property="og:title" content="${esc(name)} | Baker 1031 Investments">`,
     `<meta property="og:description" content="${esc(metaDesc)}">`,
-    photo ? `<meta property="og:image" content="${esc(photo)}">` : "",
+    photo ? `<meta property="og:image" content="${esc(optimizedPhoto(photo, 1200))}">` : "",
     `<meta property="og:url" content="${canonical}">`,
+    `<meta property="og:site_name" content="Baker 1031 Investments">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
     `<script type="application/ld+json">${JSON.stringify({
       "@context": "https://schema.org",
       "@graph": [
@@ -278,6 +288,7 @@ function buildPage(o) {
           "name": `${name} — ${o["Structure"] || "DST"} Offering`,
           "description": metaDesc,
           "url": canonical,
+          ...(o["Last Updated"] ? { "dateModified": o["Last Updated"] } : {}),
           "isPartOf": { "@type": "WebSite", "name": "Baker 1031 Investments", "url": SITE }
         },
         {
@@ -384,7 +395,7 @@ function buildPage(o) {
   html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
 
   /* ----- hero photo ----- */
-  if (photo) html = setImg(html, "Photo Link Use", photo, `${name} property photo`);
+  if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`);
 
   /* ----- benchmark chips: above/below class from Interpret text ----- */
   html = html.replace(
@@ -479,7 +490,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const sChip = statusClass(o["Status"]);
     return `      <article class="offering-card" data-tags="${esc(tag)}">
         <a class="card-photo" href="${page}">
-          ${photo ? `<img src="${esc(photo)}" alt="${esc(o["Investment Name"])}" loading="lazy">` : ""}
+          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy">` : ""}
           <span class="status-chip${sChip ? " " + sChip : ""}">${esc(o["Status"])}</span>
           <span class="type-chip">${esc(o["Property Type"] || "")}</span>
         </a>

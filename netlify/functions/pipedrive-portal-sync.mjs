@@ -46,7 +46,10 @@ export default async (req) => {
   if (now === before) return json({ ok: true, note: "portal access unchanged" });
 
   const yes = String(process.env.PD_PORTAL_YES || "").trim();
+  if (!yes) return json({ error: "not configured" }, 503);
+  // Only act on an explicit Yes/No; a cleared field is not a grant OR a revoke
   const grant = now === yes || /^yes$/i.test(now);
+  if (!grant && now === "") return json({ ok: true, note: "field cleared — no action" });
 
   // Person's primary email + name
   const emails = person.emails || person.email || [];

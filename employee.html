@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employee Tools &mdash; Baker 1031 Investments</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48.png">
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; color: var(--ink); background: #f6f7f9; -webkit-font-smoothing: antialiased; }
+  a { text-decoration: none; color: var(--navy); }
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  .main-header { background: #fff; border-bottom: 1px solid var(--hairline); position: sticky; top: 0; z-index: 60; }
+  .main-header-inner { max-width: 78rem; margin: 0 auto; padding: 0.9rem 2rem; display: flex; align-items: center; justify-content: space-between; }
+  .main-header img { height: 34px; width: auto; display: block; }
+  .back-site { font-size: 0.88rem; font-weight: 600; color: var(--ink-soft); border: 1px solid #cfd4dd; border-radius: 6px; padding: 0.45rem 0.9rem; }
+  .back-site:hover { color: var(--navy); border-color: var(--navy); }
+
+  .page-head { padding: 2rem 0 1.2rem; }
+  .page-head h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.01em; }
+  .page-head p { color: var(--muted); font-size: 0.94rem; margin-top: 0.4rem; max-width: 52rem; line-height: 1.6; }
+  .emp-badge { display: inline-block; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #fff; background: var(--navy); border-radius: 999px; padding: 0.25rem 0.7rem; vertical-align: middle; margin-left: 0.6rem; }
+
+  /* ---------- Password gate ---------- */
+  #emp-gate { position: fixed; inset: 0; z-index: 400; background: rgba(13,20,38,0.55); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+  #emp-gate .card { background: #fff; border-radius: 12px; max-width: 24rem; width: 100%; padding: 2.2rem; text-align: center; box-shadow: 0 18px 48px rgba(9,14,26,0.45); }
+  #emp-gate h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.4rem; }
+  #emp-gate p { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.1rem; }
+  #emp-gate input { width: 100%; font: inherit; padding: 0.65rem 0.8rem; border: 1px solid #cfd4dd; border-radius: 6px; margin-bottom: 0.7rem; text-align: center; }
+  #emp-gate button { width: 100%; font: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: var(--navy); color: #fff; border: none; border-radius: 6px; padding: 0.75rem; cursor: pointer; }
+  #emp-gate .err { color: #b23b2e; font-size: 0.8rem; margin-top: 0.5rem; display: none; }
+
+  /* ---------- Tool panels ---------- */
+  .tool-grid { display: grid; grid-template-columns: 20rem 1fr; gap: 1.5rem; align-items: start; padding-bottom: 3rem; }
+  @media (max-width: 900px) { .tool-grid { grid-template-columns: 1fr; } }
+  .panel { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 1.4rem; }
+  .panel h3 { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7a8089; margin-bottom: 1rem; }
+  .field { margin-bottom: 0.9rem; }
+  .field label { display: block; font-size: 0.78rem; font-weight: 600; color: var(--ink-soft); margin-bottom: 0.3rem; }
+  .field input[type="text"], .field input[type="date"], .field select { width: 100%; font: inherit; font-size: 0.9rem; padding: 0.55rem 0.7rem; border: 1px solid #cfd4dd; border-radius: 6px; background: #fff; }
+  .check { display: flex; align-items: center; gap: 0.5rem; font-size: 0.86rem; margin-bottom: 0.5rem; cursor: pointer; }
+  .check input { width: 15px; height: 15px; }
+  .classes { max-height: 12rem; overflow-y: auto; border: 1px solid var(--hairline); border-radius: 6px; padding: 0.6rem 0.7rem; }
+  .run-btn { width: 100%; font: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: var(--navy); color: #fff; border: none; border-radius: 6px; padding: 0.8rem; cursor: pointer; margin-top: 0.4rem; }
+  .run-btn:hover { background: var(--navy-dark); }
+
+  .deadlines { display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1.5rem; }
+  .deadline { background: #fff; border: 1px solid var(--hairline); border-left: 3px solid var(--navy); border-radius: 8px; padding: 0.9rem 1.1rem; }
+  .deadline .label { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #7a8089; }
+  .deadline .value { font-size: 1.15rem; font-weight: 700; margin-top: 0.2rem; }
+  .deadline .sub { font-size: 0.74rem; color: var(--muted); }
+
+  .strategy { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; margin-bottom: 1.5rem; overflow: hidden; }
+  .strategy-head { padding: 1.1rem 1.4rem; border-bottom: 1px solid var(--hairline); display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; align-items: baseline; }
+  .strategy-head h2 { font-size: 1.05rem; font-weight: 800; }
+  .strategy-head .sub { font-size: 0.8rem; color: var(--muted); }
+  .stats-row { display: flex; flex-wrap: wrap; gap: 1.5rem 2.5rem; padding: 0.9rem 1.4rem; background: #fafbfc; border-bottom: 1px solid var(--hairline); }
+  .stat .label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #7a8089; }
+  .stat .value { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  table.alloc { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  table.alloc th { text-align: left; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #7a8089; padding: 0.6rem 1.4rem 0.6rem 0; border-bottom: 1px solid var(--hairline); }
+  table.alloc th:first-child, table.alloc td:first-child { padding-left: 1.4rem; }
+  table.alloc td { padding: 0.55rem 1.4rem 0.55rem 0; border-bottom: 1px solid var(--hairline); font-variant-numeric: tabular-nums; }
+  table.alloc tr:last-child td { border-bottom: none; }
+  .num { text-align: right; white-space: nowrap; }
+  th.num { text-align: right; }
+  .warn { background: #fdf6ec; border: 1px solid #f0dcb8; color: #8a6116; border-radius: 8px; padding: 0.8rem 1.1rem; font-size: 0.85rem; margin-bottom: 1.2rem; }
+  .note { font-size: 0.72rem; line-height: 1.55; color: var(--muted); padding: 0.9rem 1.4rem; border-top: 1px solid var(--hairline); }
+  #results:empty::after { content: "Enter the exchange details on the left and press Build Portfolios."; display: block; color: var(--muted); font-size: 0.9rem; padding: 2rem 0; }
+</style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <a class="back-site" href="/">Back to site</a>
+    </div>
+  </header>
+
+  <div id="emp-gate">
+    <div class="card">
+      <h3>Employee access</h3>
+      <p>Internal tools &mdash; enter the team password.</p>
+      <input type="password" id="emp-pw" placeholder="Password" autocomplete="off">
+      <button type="button" id="emp-go">Enter</button>
+      <p class="err" id="emp-err">That&rsquo;s not it.</p>
+    </div>
+  </div>
+
+  <main class="container" id="tool" style="visibility:hidden">
+    <div class="page-head">
+      <h1>1031 Portfolio Builder<span class="emp-badge">Internal</span></h1>
+      <p>Enter a client&rsquo;s equity/debt mix and exchange start date. The builder solves allocations across the current inventory that hit the debt-replacement target exactly, then optimizes for income, growth, or balance.</p>
+    </div>
+
+    <div class="tool-grid">
+      <div class="panel">
+        <h3>Exchange Inputs</h3>
+        <div class="field"><label for="in-equity">Equity from sale ($)</label><input type="text" id="in-equity" inputmode="numeric" placeholder="1,000,000"></div>
+        <div class="field"><label for="in-debt">Debt to replace ($)</label><input type="text" id="in-debt" inputmode="numeric" placeholder="500,000"></div>
+        <div class="field"><label for="in-date">Exchange start date (sale closing)</label><input type="date" id="in-date"></div>
+
+        <h3 style="margin-top:1.4rem">Filters</h3>
+        <label class="check"><input type="checkbox" id="f-allcash"> All-cash offerings only</label>
+        <div class="field"><label for="f-721">721 exchange exit</label>
+          <select id="f-721">
+            <option value="any">Any</option>
+            <option value="mandatory">721 Mandatory only</option>
+            <option value="optional">721 Optional only</option>
+            <option value="none">No 721 exit</option>
+            <option value="exclude-mandatory">Exclude 721 Mandatory</option>
+          </select>
+        </div>
+        <div class="field"><label>Asset classes</label><div class="classes" id="f-classes"></div></div>
+        <button type="button" class="run-btn" id="run">Build Portfolios</button>
+      </div>
+
+      <div>
+        <div class="deadlines" id="deadlines" style="display:none">
+          <div class="deadline"><div class="label">45-Day Identification</div><div class="value" id="d45"></div><div class="sub">Identify replacement property by this date</div></div>
+          <div class="deadline"><div class="label">180-Day Closing</div><div class="value" id="d180"></div><div class="sub">Complete the exchange by this date</div></div>
+        </div>
+        <div id="results"></div>
+        <p style="font-size:0.72rem;color:var(--muted);line-height:1.55;margin-top:0.5rem">Internal planning tool only &mdash; illustrations are hypothetical allocations built from current inventory data and are not investment advice or a recommendation. Yields are sponsor projections; availability changes daily. Verify minimums, availability, and suitability before presenting to a client.</p>
+      </div>
+    </div>
+  </main>
+
+<script>
+(function () {
+  /* ---------- Password gate (soft) ---------- */
+  var gate = document.getElementById("emp-gate");
+  var tool = document.getElementById("tool");
+  function open() { gate.style.display = "none"; tool.style.visibility = "visible"; }
+  if (sessionStorage.getItem("b1031-emp") === "1") open();
+  function tryPw() {
+    if (document.getElementById("emp-pw").value === "Benji") {
+      sessionStorage.setItem("b1031-emp", "1"); open();
+    } else { document.getElementById("emp-err").style.display = "block"; }
+  }
+  document.getElementById("emp-go").addEventListener("click", tryPw);
+  document.getElementById("emp-pw").addEventListener("keydown", function (e) { if (e.key === "Enter") tryPw(); });
+
+  /* ---------- Data ---------- */
+  var OFFERINGS = [];
+  var pct = function (v) { var m = String(v || "").match(/(-?[\d.]+)\s*%/); return m ? parseFloat(m[1]) : null; };
+  var money = function (v) { var m = String(v || "").replace(/[^0-9.]/g, ""); return m ? parseFloat(m) : null; };
+  var fmt$ = function (n) { return "$" + Math.round(n).toLocaleString("en-US"); };
+  var fmtPct = function (n, d) { return n.toFixed(d === undefined ? 2 : d) + "%"; };
+
+  fetch("/data/offerings.json").then(function (r) { return r.json(); }).then(function (d) {
+    OFFERINGS = d.offerings.filter(function (o) { return (o.Status || "").trim() !== "Closed"; }).map(function (o) {
+      var ltv = pct(o["In-Place LTV"]);
+      return {
+        name: o["Investment Name"],
+        page: o.page,
+        type: (o["Property Type"] || "Other").trim(),
+        yieldPct: pct(o["Average Yield"]),
+        growthPct: pct(o["BM: Growth - Deal"]),
+        ltv: ltv === null ? null : ltv / 100,
+        min: money(o["Minimum Investment"]) || 100000,
+        exit721: (o["721 Exchange Exit"] || "").trim().toLowerCase(),
+        status: (o.Status || "").trim()
+      };
+    }).filter(function (o) { return o.ltv !== null; });
+
+    // asset-class checkboxes
+    var types = {};
+    OFFERINGS.forEach(function (o) { types[o.type] = true; });
+    var box = document.getElementById("f-classes");
+    Object.keys(types).sort().forEach(function (t) {
+      var l = document.createElement("label");
+      l.className = "check";
+      l.innerHTML = '<input type="checkbox" checked value="' + t.replace(/"/g, "&quot;") + '"> ' + t;
+      box.appendChild(l);
+    });
+  });
+
+  /* ---------- Optimizer ---------- */
+  function candidates(scoreKey) {
+    var allCash = document.getElementById("f-allcash").checked;
+    var x721 = document.getElementById("f-721").value;
+    var classes = {};
+    document.querySelectorAll("#f-classes input:checked").forEach(function (c) { classes[c.value] = true; });
+    return OFFERINGS.filter(function (o) {
+      if (!classes[o.type]) return false;
+      if (allCash && o.ltv > 0.001) return false;
+      if (x721 === "mandatory" && o.exit721 !== "mandatory") return false;
+      if (x721 === "optional" && o.exit721 !== "optional") return false;
+      if (x721 === "none" && o.exit721 !== "none") return false;
+      if (x721 === "exclude-mandatory" && o.exit721 === "mandatory") return false;
+      if (o[scoreKey] === null) return false;
+      return true;
+    });
+  }
+
+  // Build one portfolio hitting equity E and debt D exactly, maximizing score.
+  function build(cands, scoreFn, E, D) {
+    var dbar = D / E; // target debt per equity dollar
+    var pool = cands.map(function (o) {
+      return Object.assign({ d: o.ltv >= 0.995 ? 99 : o.ltv / (1 - o.ltv), score: scoreFn(o) }, o);
+    }).filter(function (o) { return o.min <= E; });
+    if (!pool.length) return { error: "No offerings match the filters." };
+    pool.sort(function (a, b) { return b.score - a.score; });
+
+    var dMin = Math.min.apply(null, pool.map(function (o) { return o.d; }));
+    var dMax = Math.max.apply(null, pool.map(function (o) { return o.d; }));
+    if (dbar < dMin - 1e-9 || dbar > dMax + 1e-9) {
+      return { error: "This equity/debt mix needs a blended LTV of " + fmtPct(100 * D / (E + D), 1) +
+        ", but the filtered inventory only supports " + fmtPct(100 * (dMin / (1 + dMin)), 1) + " to " + fmtPct(100 * (dMax / (1 + dMax)), 1) +
+        ". Loosen the filters or adjust the debt target." };
+    }
+
+    // pick top-K ensuring both sides of the target are represented
+    var K = Math.max(2, Math.min(6, Math.floor(E / 250000) + 2));
+    var picked = pool.slice(0, K);
+    var hasLow = picked.some(function (o) { return o.d <= dbar; });
+    var hasHigh = picked.some(function (o) { return o.d >= dbar; });
+    if (!hasLow) {
+      var low = pool.filter(function (o) { return o.d <= dbar; })[0];
+      if (low) picked[picked.length - 1] = low;
+    } else if (!hasHigh) {
+      var high = pool.filter(function (o) { return o.d >= dbar; })[0];
+      if (high) picked[picked.length - 1] = high;
+    }
+
+    // iterative allocate: equal weight within low/high groups, solve mix x
+    for (var attempt = 0; attempt < 8; attempt++) {
+      var low = picked.filter(function (o) { return o.d <= dbar; });
+      var high = picked.filter(function (o) { return o.d > dbar; });
+      if (!low.length && Math.abs(dbar) < 1e-9) { low = picked; high = []; }
+      var dLow = low.length ? low.reduce(function (s, o) { return s + o.d; }, 0) / low.length : 0;
+      var dHigh = high.length ? high.reduce(function (s, o) { return s + o.d; }, 0) / high.length : 0;
+      var x; // fraction of equity to the low group
+      if (!high.length) x = 1;
+      else if (!low.length) x = 0;
+      else x = (dHigh - dbar) / (dHigh - dLow);
+      x = Math.max(0, Math.min(1, x));
+
+      var alloc = [];
+      low.forEach(function (o) { alloc.push({ o: o, eq: E * x / low.length }); });
+      high.forEach(function (o) { alloc.push({ o: o, eq: E * (1 - x) / high.length }); });
+
+      // enforce minimum investments: drop the worst-scoring violator and retry
+      var violator = null;
+      alloc.forEach(function (a) {
+        if (a.eq < a.o.min - 1) {
+          if (!violator || a.o.score < violator.o.score) violator = a;
+        }
+      });
+      if (!violator) {
+        // exact debt fix: adjust between the largest low and largest high positions
+        var totD = alloc.reduce(function (s, a) { return s + a.eq * a.o.d; }, 0);
+        var resid = D - totD;
+        if (Math.abs(resid) > 1 && low.length && high.length) {
+          var la = alloc.filter(function (a) { return a.o.d <= dbar; }).sort(function (a, b) { return b.eq - a.eq; })[0];
+          var ha = alloc.filter(function (a) { return a.o.d > dbar; }).sort(function (a, b) { return b.eq - a.eq; })[0];
+          var delta = resid / (ha.o.d - la.o.d);
+          ha.eq += delta; la.eq -= delta;
+        }
+        if (alloc.some(function (a) { return a.eq < -1; })) { /* fall through to drop */ }
+        else {
+          alloc = alloc.filter(function (a) { return a.eq > 1; });
+          return { alloc: alloc, dbar: dbar };
+        }
+      }
+      if (picked.length <= 2) break;
+      var dropIdx = picked.indexOf((violator || { o: picked[picked.length - 1] }).o);
+      picked.splice(dropIdx === -1 ? picked.length - 1 : dropIdx, 1);
+      // keep both sides present
+      if (!picked.some(function (o) { return o.d <= dbar; })) {
+        var lo = pool.filter(function (o) { return o.d <= dbar && picked.indexOf(o) === -1; })[0];
+        if (lo) picked.push(lo);
+      }
+      if (!picked.some(function (o) { return o.d >= dbar; })) {
+        var hi = pool.filter(function (o) { return o.d >= dbar && picked.indexOf(o) === -1; })[0];
+        if (hi) picked.push(hi);
+      }
+    }
+    // last resort: two-asset exact solution around the target
+    var lows = pool.filter(function (o) { return o.d <= dbar; }).sort(function (a, b) { return b.score - a.score; });
+    var highs = pool.filter(function (o) { return o.d >= dbar; }).sort(function (a, b) { return b.score - a.score; });
+    if (lows.length && highs.length) {
+      var A = highs[0], B = lows[0];
+      if (Math.abs(A.d - B.d) < 1e-9) return { alloc: [{ o: A, eq: E }], dbar: dbar };
+      var eA = E * (dbar - B.d) / (A.d - B.d);
+      return { alloc: [{ o: A, eq: eA }, { o: B, eq: E - eA }].filter(function (a) { return a.eq > 1; }), dbar: dbar };
+    }
+    return { error: "Couldn't satisfy the minimum-investment constraints with this mix. Try a larger equity amount or looser filters." };
+  }
+
+  function card(title, subtitle, res, E, D) {
+    if (res.error) {
+      return '<div class="strategy"><div class="strategy-head"><h2>' + title + '</h2><span class="sub">' + subtitle + '</span></div><div class="warn" style="margin:1.2rem 1.4rem">' + res.error + "</div></div>";
+    }
+    var a = res.alloc.slice().sort(function (x, y) { return y.eq - x.eq; });
+    var totE = a.reduce(function (s, p) { return s + p.eq; }, 0);
+    var totD = a.reduce(function (s, p) { return s + p.eq * p.o.d; }, 0);
+    var wy = a.reduce(function (s, p) { return s + p.eq * (p.o.yieldPct || 0); }, 0) / totE;
+    var wg = a.reduce(function (s, p) { return s + p.eq * (p.o.growthPct || 0); }, 0) / totE;
+    var blendLtv = totD / (totE + totD) * 100;
+    var rows = a.map(function (p) {
+      return "<tr><td><a href='" + p.o.page + "' target='_blank'>" + p.o.name + "</a></td><td>" + p.o.type +
+        "</td><td class='num'>" + fmtPct(p.o.ltv * 100, 1) + "</td><td class='num'>" + (p.o.yieldPct === null ? "—" : fmtPct(p.o.yieldPct)) +
+        "</td><td class='num'>" + fmt$(p.eq) + "</td><td class='num'>" + fmt$(p.eq * p.o.d) + "</td><td class='num'>" + fmtPct(100 * p.eq / totE, 1) + "</td></tr>";
+    }).join("");
+    return '<div class="strategy">' +
+      '<div class="strategy-head"><h2>' + title + '</h2><span class="sub">' + subtitle + "</span></div>" +
+      '<div class="stats-row">' +
+      '<div class="stat"><div class="label">Equity Placed</div><div class="value">' + fmt$(totE) + "</div></div>" +
+      '<div class="stat"><div class="label">Debt Replaced</div><div class="value">' + fmt$(totD) + " <span style='font-weight:400;font-size:0.72rem;color:var(--muted)'>(target " + fmt$(D) + ")</span></div></div>" +
+      '<div class="stat"><div class="label">Blended LTV</div><div class="value">' + fmtPct(blendLtv, 1) + "</div></div>" +
+      '<div class="stat"><div class="label">Blended Avg Yield</div><div class="value">' + fmtPct(wy) + "</div></div>" +
+      '<div class="stat"><div class="label">Blended Growth Score</div><div class="value">' + fmtPct(wg, 1) + "</div></div>" +
+      "</div>" +
+      '<table class="alloc"><thead><tr><th>Offering</th><th>Type</th><th class="num">LTV</th><th class="num">Avg Yield</th><th class="num">Equity</th><th class="num">Debt</th><th class="num">Weight</th></tr></thead><tbody>' + rows + "</tbody></table>" +
+      '<p class="note">Allocations solve to the exact debt-replacement target using each offering&rsquo;s in-place LTV (debt rides along with equity pro-rata inside each DST). Positions respect each offering&rsquo;s stated minimum. Growth score is the offering&rsquo;s projected growth benchmark.</p>' +
+      "</div>";
+  }
+
+  document.getElementById("run").addEventListener("click", function () {
+    var E = money(document.getElementById("in-equity").value);
+    var D = money(document.getElementById("in-debt").value) || 0;
+    var results = document.getElementById("results");
+    if (!E || E <= 0) { results.innerHTML = '<div class="warn">Enter the equity amount.</div>'; return; }
+
+    var dateVal = document.getElementById("in-date").value;
+    var dl = document.getElementById("deadlines");
+    if (dateVal) {
+      var start = new Date(dateVal + "T00:00:00");
+      var f = function (dt) { return dt.toLocaleDateString("en-US", { weekday: "short", month: "long", day: "numeric", year: "numeric" }); };
+      var d45 = new Date(start); d45.setDate(d45.getDate() + 45);
+      var d180 = new Date(start); d180.setDate(d180.getDate() + 180);
+      document.getElementById("d45").textContent = f(d45);
+      document.getElementById("d180").textContent = f(d180);
+      dl.style.display = "grid";
+    } else { dl.style.display = "none"; }
+
+    var maxIncome = build(candidates("yieldPct"), function (o) { return o.yieldPct; }, E, D);
+    var maxGrowth = build(candidates("growthPct"), function (o) { return o.growthPct; }, E, D);
+    // balanced: normalize both metrics across the candidate pool
+    var pool = candidates("yieldPct").filter(function (o) { return o.growthPct !== null; });
+    var ys = pool.map(function (o) { return o.yieldPct; }), gs = pool.map(function (o) { return o.growthPct; });
+    var yMin = Math.min.apply(null, ys), yMax = Math.max.apply(null, ys);
+    var gMin = Math.min.apply(null, gs), gMax = Math.max.apply(null, gs);
+    var balanced = build(pool, function (o) {
+      var ny = yMax > yMin ? (o.yieldPct - yMin) / (yMax - yMin) : 0.5;
+      var ng = gMax > gMin ? (o.growthPct - gMin) / (gMax - gMin) : 0.5;
+      return 0.5 * ny + 0.5 * ng;
+    }, E, D);
+
+    results.innerHTML =
+      card("Maximum Income", "Optimized for blended average yield", maxIncome, E, D) +
+      card("Maximum Growth", "Optimized for projected growth benchmark", maxGrowth, E, D) +
+      card("Balanced", "Even weighting of income and growth", balanced, E, D);
+  });
+})();
+</script>
+</body>
+</html>
