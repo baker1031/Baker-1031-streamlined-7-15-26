@@ -1,11 +1,9 @@
 import React from "react";
-import { getDarkModeLogoUrl } from "@kinde/infrastructure";
 
 const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
 
-// Navy-duotone skyline (frame pulled from the homepage hero video via Cloudinary)
-const SKYLINE =
-  "https://assets.baker1031.com/assets/login-skyline.jpg";
+// San Francisco skyline (Jerry-supplied), served from *.baker1031.com for Kinde's CSP
+const SKYLINE = "https://assets.baker1031.com/assets/login-skyline-sf.webp";
 
 const styles: Record<string, React.CSSProperties> = {
   page: {
@@ -14,43 +12,20 @@ const styles: Record<string, React.CSSProperties> = {
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    padding: "4.5rem 1rem 3rem",
+    padding: "3rem 1rem",
     boxSizing: "border-box",
     backgroundColor: "#2b3a5f",
-    backgroundImage: `linear-gradient(rgba(58, 76, 120, 0.62), rgba(36, 49, 82, 0.78)), url(${SKYLINE})`,
-    backgroundBlendMode: "multiply",
+    backgroundImage: `linear-gradient(rgba(30, 42, 71, 0.28), rgba(30, 42, 71, 0.38)), url(${SKYLINE})`,
     backgroundSize: "cover",
-    backgroundPosition: "center top",
+    backgroundPosition: "center",
     backgroundRepeat: "no-repeat",
   },
-  cardWrap: {
-    position: "relative",
-    width: "min(92vw, 26.5rem)",
-  },
-  plaque: {
-    position: "absolute",
-    top: "-3.1rem",
-    left: "50%",
-    transform: "translateX(-50%)",
-    background: "linear-gradient(160deg, #2b3a5f 0%, #1e2a47 100%)",
-    border: "1px solid rgba(255,255,255,0.85)",
-    boxShadow: "0 10px 24px rgba(9, 14, 26, 0.45)",
-    padding: "1.1rem 1.4rem",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 2,
-  },
-  plaqueImg: {
-    width: "11.5rem",
-    height: "auto",
-    display: "block",
-  },
   card: {
-    position: "relative",
-    background: "#fbfbfc",
-    boxShadow: "0 18px 48px rgba(9, 14, 26, 0.5)",
-    padding: "4.4rem 2.4rem 2.1rem",
+    width: "min(92vw, 26.5rem)",
+    background: "#ffffff",
+    borderRadius: "12px",
+    boxShadow: "0 18px 48px rgba(9, 14, 26, 0.45)",
+    padding: "2.4rem 2.4rem 2.1rem",
     boxSizing: "border-box",
   },
 };
@@ -58,16 +33,7 @@ const styles: Record<string, React.CSSProperties> = {
 export const DefaultLayout = (props: { children: React.ReactNode }) => {
   return (
     <div style={styles.page}>
-      <div style={styles.cardWrap}>
-        <a href={SITE_URL} style={styles.plaque} aria-label="Baker 1031 Investments">
-          <img
-            src={getDarkModeLogoUrl()}
-            alt="Baker 1031 Investments"
-            style={styles.plaqueImg}
-          />
-        </a>
-        <div style={styles.card}>{props.children}</div>
-      </div>
+      <div style={styles.card}>{props.children}</div>
     </div>
   );
 };

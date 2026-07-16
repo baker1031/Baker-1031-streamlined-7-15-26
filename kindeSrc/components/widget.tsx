@@ -1,32 +1,37 @@
 "use server";
 
 import React from "react";
-import { getKindeWidget } from "@kinde/infrastructure";
+import { getKindeWidget, getLogoUrl } from "@kinde/infrastructure";
 
 const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
 
-const serif = "Georgia, 'Times New Roman', Times, serif";
+const font =
+  "-apple-system, system-ui, BlinkMacSystemFont, Helvetica, Arial, 'Segoe UI', Roboto, sans-serif";
 
 const styles: Record<string, React.CSSProperties> = {
   loginForm: {
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
+    fontFamily: font,
   },
+  logoLink: { display: "flex", justifyContent: "center", marginBottom: "1.5rem" },
+  logo: { width: "12.5rem", height: "auto", display: "block" },
   welcome: {
-    fontFamily: serif,
+    fontFamily: font,
     textAlign: "center",
-    color: "#2b3a5f",
-    fontSize: "1.05rem",
-    margin: "0 0 0.15rem",
+    color: "#4a4a4a",
+    fontSize: "0.95rem",
+    margin: "0 0 0.2rem",
   },
   heading: {
-    fontFamily: serif,
+    fontFamily: font,
     textAlign: "center",
-    color: "#2b3a5f",
-    fontWeight: 600,
-    fontSize: "1.65rem",
-    lineHeight: 1.25,
+    color: "#2f3237",
+    fontWeight: 700,
+    fontSize: "1.45rem",
+    lineHeight: 1.3,
+    letterSpacing: "-0.01em",
     margin: "0 0 1.4rem",
   },
   buttonRow: {
@@ -40,7 +45,9 @@ const styles: Record<string, React.CSSProperties> = {
     textAlign: "center",
     padding: "0.72rem 0.5rem",
     border: "1px solid #2b3a5f",
+    borderRadius: "6px",
     color: "#2b3a5f",
+    fontFamily: font,
     fontSize: "0.78rem",
     fontWeight: 600,
     letterSpacing: "0.06em",
@@ -49,6 +56,7 @@ const styles: Record<string, React.CSSProperties> = {
     background: "#ffffff",
   },
   helpLine: {
+    fontFamily: font,
     textAlign: "center",
     fontSize: "0.88rem",
     color: "#4a4a4a",
@@ -58,8 +66,9 @@ const styles: Record<string, React.CSSProperties> = {
   },
   helpLink: { color: "#2b3a5f", fontWeight: 600, textDecoration: "underline" },
   note: {
+    fontFamily: font,
     fontSize: "0.8rem",
-    color: "#6b7280",
+    color: "#8a8f99",
     lineHeight: 1.5,
     marginTop: "1.1rem",
     marginBottom: 0,
@@ -70,6 +79,9 @@ const styles: Record<string, React.CSSProperties> = {
 export const Widget = (props: { heading: string; description: string }) => {
   return (
     <main style={styles.loginForm}>
+      <a href={SITE_URL} style={styles.logoLink} aria-label="Baker 1031 Investments">
+        <img src={getLogoUrl()} alt="Baker 1031 Investments" style={styles.logo} />
+      </a>
       <p style={styles.welcome}>Welcome to the</p>
       <h2 style={styles.heading}>Baker 1031 Investor Portal</h2>
       {getKindeWidget()}
