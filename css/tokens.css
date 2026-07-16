@@ -33,3 +33,19 @@
   --radius-lg: 12px;
   --header-height: 72px;
 }
+
+/* Skip-to-content link — off-screen until keyboard-focused (present on every page) */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 500;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  border-radius: 0 0 6px 0;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+.skip-link:focus { left: 0; }
