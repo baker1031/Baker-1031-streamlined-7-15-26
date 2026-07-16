@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Offerings &mdash; Baker 1031 Investments</title>
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Filters ---------- */
+  .filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+  }
+  .filter-pills button {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid #cfd4dd;
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .filter-pills button:hover { border-color: var(--navy); color: var(--navy); }
+  .filter-pills button.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+
+  /* ---------- Offering cards ---------- */
+  .offering-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 1000px) { .offering-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .offering-grid { grid-template-columns: 1fr; } }
+
+  .offering-card {
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .offering-card:hover {
+    box-shadow: 0 10px 30px rgba(20, 30, 55, 0.12);
+    transform: translateY(-2px);
+  }
+  .offering-card.hidden { display: none; }
+  .card-photo { position: relative; }
+  .card-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--wash);
+  }
+  .status-chip {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--good);
+  }
+  .type-chip {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(13, 20, 38, 0.72);
+    color: #fff;
+  }
+  .card-body { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+  .card-body h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+  .card-body .sponsor-line { font-size: 0.82rem; color: var(--muted); margin: 0.2rem 0 0.9rem; }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.65rem 0.75rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.85rem;
+    margin-bottom: 0.95rem;
+  }
+  .card-stats .cs { min-width: 0; }
+  .card-stats .label {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+  }
+  .card-stats .value { font-size: 0.85rem; font-weight: 700; }
+
+  .availability { margin-bottom: 1rem; }
+  .availability .bar {
+    height: 6px;
+    border-radius: 999px;
+    background: #e9ecf1;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+  }
+  .availability .fill { height: 100%; background: var(--navy); border-radius: 999px; }
+  .availability .cap { font-size: 0.72rem; color: var(--muted); }
+
+  .view-btn {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+    background: var(--navy);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+  }
+  .view-btn:hover { background: var(--navy-dark); }
+
+  .page-note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 2rem; max-width: 66rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+</style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <div class="account-box">
+        <span class="welcome">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current">Current Offerings</span>
+    </nav>
+
+    <div class="page-head">
+      <h1>Current Offerings</h1>
+      <p>The current menu from our vetted sponsors. Every offering here has been through our underwriting review; the documents behind each one are a click away.</p>
+    </div>
+
+    <div class="filter-pills" role="group" aria-label="Filter offerings by property type">
+      <button type="button" class="active" data-filter="all">All</button>
+      <button type="button" data-filter="healthcare">Healthcare</button>
+      <button type="button" data-filter="multifamily">Multifamily</button>
+      <button type="button" data-filter="industrial">Industrial</button>
+      <button type="button" data-filter="retail">Retail</button>
+      <button type="button" data-filter="mineral-royalties">Mineral Royalties</button>
+      <button type="button" data-filter="oz-fund">OZ Funds</button>
+    </div>
+
+    <div class="offering-grid">
+
+      <!-- AEI Healthcare Portfolio VII DST (live data) -->
+      <article class="offering-card" data-tags="healthcare">
+        <a class="card-photo" href="offering-template.html" data-href-field="URL">
+          <img src="https://lh3.googleusercontent.com/d/1UpckdXDq8HJjnUzTg9n_WOvsJA0k1qGf" alt="AEI Healthcare Portfolio VII DST" data-field="Photo Link Use" loading="lazy">
+          <span class="status-chip" data-field="Status">Available</span>
+          <span class="type-chip" data-field="Property Type">Healthcare</span>
+        </a>
+        <div class="card-body">
+          <h3 data-field="Investment Name">AEI Healthcare Portfolio VII DST</h3>
+          <div class="sponsor-line" data-field="Sponsor">AEI Capital Corporation</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value" data-field="Minimum Investment">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value" data-field="Average Yield">5.54%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value" data-field="In-Place LTV">0.00% LTV</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value" data-field="Strategy">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value" data-field="Estimated Hold Period">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value" data-field="Location (Use)">AZ, CT, TX</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 50.85%" data-field="Available Percentage"></div></div>
+            <span class="cap"><span data-field="Available Percentage">50.85%</span> of equity still available &middot; <span data-field="Available Equity">$25,680,857</span></span>
+          </div>
+          <a class="view-btn" href="offering-template.html" data-href-field="URL">View Offering</a>
+        </div>
+      </article>
+
+      <!-- Placeholder cards until more offerings are wired in -->
+      <article class="offering-card" data-tags="multifamily">
+        <a class="card-photo" href="#">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843881/Apartments_pllp0h.jpg" alt="[Multifamily offering]" loading="lazy">
+          <span class="status-chip">Available</span>
+          <span class="type-chip">Multifamily</span>
+        </a>
+        <div class="card-body">
+          <h3>[Offering Name] DST</h3>
+          <div class="sponsor-line">[Sponsor Name]</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value">[$100,000]</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">[X.XX%]</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">[XX% LTV]</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">[Core]</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">[7 years]</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">[TN]</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 72%"></div></div>
+            <span class="cap">[72%] of equity still available &middot; [$XX,XXX,XXX]</span>
+          </div>
+          <a class="view-btn" href="#">View Offering</a>
+        </div>
+      </article>
+
+      <article class="offering-card" data-tags="industrial">
+        <a class="card-photo" href="#">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843878/Amazon_q2ru5v.png" alt="[Industrial offering]" loading="lazy">
+          <span class="status-chip">Available</span>
+          <span class="type-chip">Industrial</span>
+        </a>
+        <div class="card-body">
+          <h3>[Offering Name] DST</h3>
+          <div class="sponsor-line">[Sponsor Name]</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value">[$100,000]</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">[X.XX%]</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">[XX% LTV]</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">[Core+]</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">[7 years]</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">[TX]</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 38%"></div></div>
+            <span class="cap">[38%] of equity still available &middot; [$XX,XXX,XXX]</span>
+          </div>
+          <a class="view-btn" href="#">View Offering</a>
+        </div>
+      </article>
+
+      <article class="offering-card" data-tags="mineral-royalties">
+        <a class="card-photo" href="#">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Oil_Wells_m8jf8v.webp" alt="[Mineral royalties offering]" loading="lazy">
+          <span class="status-chip">Available</span>
+          <span class="type-chip">Mineral Royalties</span>
+        </a>
+        <div class="card-body">
+          <h3>[Offering Name]</h3>
+          <div class="sponsor-line">[Sponsor Name]</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value">[$50,000]</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">[X.XX%]</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">0.00% LTV</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">[Income]</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">[Perpetual]</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">[TX, NM]</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 61%"></div></div>
+            <span class="cap">[61%] of equity still available &middot; [$XX,XXX,XXX]</span>
+          </div>
+          <a class="view-btn" href="#">View Offering</a>
+        </div>
+      </article>
+
+      <article class="offering-card" data-tags="retail">
+        <a class="card-photo" href="#">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Mall_a3ex5g.jpg" alt="[Retail offering]" loading="lazy">
+          <span class="status-chip">Available</span>
+          <span class="type-chip">Retail</span>
+        </a>
+        <div class="card-body">
+          <h3>[Offering Name] DST</h3>
+          <div class="sponsor-line">[Sponsor Name]</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value">[$100,000]</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">[X.XX%]</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">[XX% LTV]</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">[Core]</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">[10 years]</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">[FL]</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 85%"></div></div>
+            <span class="cap">[85%] of equity still available &middot; [$XX,XXX,XXX]</span>
+          </div>
+          <a class="view-btn" href="#">View Offering</a>
+        </div>
+      </article>
+
+      <article class="offering-card" data-tags="oz-fund">
+        <a class="card-photo" href="#">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843880/Hotel_ojlaau.avif" alt="[OZ fund offering]" loading="lazy">
+          <span class="status-chip">Available</span>
+          <span class="type-chip">OZ Fund</span>
+        </a>
+        <div class="card-body">
+          <h3>[Fund Name] QOF</h3>
+          <div class="sponsor-line">[Sponsor Name]</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Min Investment</span><span class="value">[$100,000]</span></div>
+            <div class="cs"><span class="label">Target Return</span><span class="value">[X.XX%]</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">[XX% LTV]</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">[Development]</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">[10+ years]</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">[Various]</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 44%"></div></div>
+            <span class="cap">[44%] of equity still available &middot; [$XX,XXX,XXX]</span>
+          </div>
+          <a class="view-btn" href="#">View Offering</a>
+        </div>
+      </article>
+
+    </div>
+
+    <p class="page-note">Offerings shown to verified accredited investors only. Availability, minimums, and yields change as programs subscribe; figures shown as of each offering&rsquo;s last update. Projected yields are the sponsors&rsquo; projections, are not guaranteed, and can be reduced or suspended. Bracketed cards are placeholders pending live data. This page is a summary for convenience only and is qualified in its entirety by each offering&rsquo;s private placement memorandum.</p>
+
+  </main>
+
+  <!-- Footer (same as offering page / homepage) -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>[FULL DISCLOSURE BLOCK &mdash; pending broker-dealer review. Reserve this space for the complete required disclosure language.]</p>
+        <p>DST, 721 exchange, Opportunity Zone fund, and mineral royalty investments are offered through private placements available to accredited investors only. These investments involve substantial risk, including loss of principal, illiquidity, and no guarantee of distributions or appreciation. Diversification does not assure a profit or protect against loss. Nothing on this page is tax or legal advice; consult your own advisors before investing. Past performance does not guarantee future results.</p>
+        <p>Securities offered through [Broker-Dealer], member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments and [Broker-Dealer] are separate entities. Check the background of this firm and its representatives on <a href="https://brokercheck.finra.org/" target="_blank" rel="noopener">FINRA BrokerCheck</a>.</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms of Use</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Property-type filters
+    (function () {
+      var pills = document.querySelectorAll('.filter-pills button');
+      var cards = document.querySelectorAll('.offering-card');
+      pills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          pills.forEach(function (p) { p.classList.remove('active'); });
+          pill.classList.add('active');
+          var f = pill.getAttribute('data-filter');
+          cards.forEach(function (card) {
+            var show = f === 'all' || card.getAttribute('data-tags').split(' ').indexOf(f) !== -1;
+            card.classList.toggle('hidden', !show);
+          });
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

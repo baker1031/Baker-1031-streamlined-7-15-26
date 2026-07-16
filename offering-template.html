@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- URL slug (data-field="URL"): aei-healthcare-portfolio-vii-dst -->
+<title>AEI Healthcare Portfolio VII DST &mdash; Baker 1031 Investments</title>
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  section[id] { scroll-margin-top: 132px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  /* Breadcrumbs */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+  .back-link { display: inline-block; font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 1rem; }
+  .back-link:hover { text-decoration: underline; }
+
+  /* ---------- Hero image with name overlay ---------- */
+  .offering-hero {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .offering-hero img.photo {
+    display: block;
+    width: 100%;
+    height: clamp(300px, 44vh, 460px);
+    object-fit: cover;
+    background: var(--wash);
+  }
+  .offering-hero .overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(13, 20, 38, 0.85) 0%, rgba(13, 20, 38, 0.35) 45%, rgba(13, 20, 38, 0.12) 100%);
+  }
+  .offering-hero .hero-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 2rem 2.25rem;
+    color: #fff;
+    text-shadow: 0 1px 8px rgba(10, 16, 32, 0.45);
+  }
+  .offering-hero h1 {
+    font-size: clamp(1.6rem, 3.2vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.12;
+  }
+  .offering-hero .subline { margin-top: 0.4rem; font-size: 0.98rem; color: rgba(255, 255, 255, 0.88); }
+  .offering-hero .subline a { color: #fff; font-weight: 600; text-decoration: underline; }
+  @media (max-width: 640px) {
+    .offering-hero .hero-text { padding: 1.25rem 1.25rem; }
+  }
+
+  /* ---------- Key stats grid ---------- */
+  .key-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border-top: 1px solid var(--hairline);
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 980px) { .key-stats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .key-stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat-cell { padding: 0.85rem 0.75rem 0.85rem 0; border-bottom: 1px solid var(--hairline); }
+  .stat-cell .label {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+  .stat-cell .value { font-size: 0.98rem; font-weight: 700; }
+  .stat-cell .value small { font-size: 0.72rem; font-weight: 400; color: var(--muted); }
+
+  /* ---------- Section nav ---------- */
+  /* TOC rides along, pinned to the bottom edge of the sticky header */
+  .section-nav {
+    position: sticky;
+    top: 72px;
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    border-bottom: 1px solid var(--hairline);
+    z-index: 50;
+  }
+  .section-nav-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  .nav-links { display: flex; gap: 2rem; }
+  .section-nav a {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    padding: 0.9rem 0;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+  }
+  .section-nav a:hover { color: var(--navy); border-bottom-color: var(--navy); }
+  /* When the links don't fit, the row collapses into a dropdown */
+  .nav-select {
+    display: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    background: #fff;
+    padding: 0.55rem 0.7rem;
+    margin: 0.55rem 0;
+    max-width: 22rem;
+    width: 100%;
+  }
+  .section-nav.collapsed .nav-links { display: none; }
+  .section-nav.collapsed .nav-select { display: block; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 2.5rem 0 0.5rem; }
+  section h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.1rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  section h3 { font-size: 1rem; font-weight: 700; margin: 1.5rem 0 0.6rem; }
+  section p { font-size: 0.95rem; line-height: 1.68; color: var(--ink-soft); margin-bottom: 0.9rem; }
+
+  .analysis-item { padding: 1rem 0; border-bottom: 1px solid var(--hairline); }
+  .analysis-item:last-child { border-bottom: none; }
+  .analysis-item p { margin: 0; }
+
+  .assessment-panels {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+    margin-top: 2.5rem;
+  }
+  @media (max-width: 880px) { .assessment-panels { grid-template-columns: 1fr; } }
+  .assessment-panels .panel { border: 1px solid var(--hairline); border-radius: 10px; padding: 1.25rem 1.4rem; }
+  .assessment-panels .panel.advantages-panel { border-top: 3px solid var(--good); }
+  .assessment-panels .panel.concerns-panel { border-top: 3px solid var(--bad); }
+  .assessment-panels h3 { margin: 0 0 0.6rem; }
+  .assessment-panels p { margin: 0; }
+
+  /* ---------- Data tables ---------- */
+  table.data { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+  table.data th, table.data td {
+    text-align: left;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  table.data th {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  table.data td:first-child { color: var(--ink-soft); }
+  table.data td:last-child { font-weight: 600; }
+
+  /* ---------- Distributions: responsive year grid ---------- */
+  .yield-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--hairline);
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 700px) { .yield-summary { grid-template-columns: repeat(2, 1fr); } }
+  .year-grid {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 0.5rem;
+  }
+  @media (max-width: 980px) { .year-grid { grid-template-columns: repeat(5, 1fr); } }
+  @media (max-width: 560px) { .year-grid { grid-template-columns: repeat(2, 1fr); } }
+  .year-cell {
+    background: var(--wash);
+    border-radius: 8px;
+    text-align: center;
+    padding: 0.75rem 0.25rem;
+  }
+  .year-cell .yr {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+  .year-cell .rate { font-size: 0.95rem; font-weight: 600; }
+
+  .note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 0.85rem; }
+
+  /* ---------- Financing tiles ---------- */
+  .fin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 880px) { .fin-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .fin-grid { grid-template-columns: 1fr; } }
+  .fin-cell {
+    background: var(--wash);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+  }
+  .fin-cell .label {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+  .fin-cell .value { font-size: 1.05rem; font-weight: 700; }
+
+  /* ---------- Benchmarks: cards ---------- */
+  .bm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  @media (max-width: 880px) { .bm-grid { grid-template-columns: 1fr; } }
+  .bm-card {
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 1.1rem 1.2rem;
+  }
+  .bm-card .metric {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+  }
+  .bm-values { display: flex; gap: 1.75rem; margin-bottom: 0.85rem; }
+  .bm-values .label {
+    display: block;
+    font-size: 0.66rem;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .bm-values .val { font-size: 1.15rem; font-weight: 700; }
+  .bm-chip {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+  }
+  .bm-chip.above { background: #eaf4ea; color: var(--good); }
+  .bm-chip.below { background: #f9ece9; color: var(--bad); }
+
+  /* ---------- Sponsor ---------- */
+  .sponsor-head { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem; }
+  .sponsor-head img { width: 110px; height: 56px; object-fit: contain; flex: 0 0 auto; }
+  .sponsor-head .meta { font-size: 0.85rem; color: var(--muted); }
+  .sponsor-head .meta strong { color: var(--ink); font-size: 1.05rem; display: block; margin-bottom: 0.15rem; }
+  .sponsor-stats {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    margin: 1.4rem 0;
+  }
+  @media (max-width: 880px) { .sponsor-stats { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .sponsor-stats { grid-template-columns: repeat(2, 1fr); } }
+  .sponsor-stat {
+    background: var(--wash);
+    border-radius: 10px;
+    text-align: center;
+    padding: 1.1rem 0.5rem;
+  }
+  .sponsor-stat .value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.3rem;
+  }
+  .sponsor-stat .label {
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .advantages { list-style: none; }
+  .advantages li {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding: 0.55rem 0 0.55rem 1.4rem;
+    position: relative;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .advantages li:last-child { border-bottom: none; }
+  .advantages li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--navy);
+  }
+
+  /* ---------- Documents ---------- */
+  .doc-list { list-style: none; }
+  .doc-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.9rem 0.25rem;
+    border-bottom: 1px solid var(--hairline);
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+  .doc-list a.download {
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: var(--navy);
+    color: #fff;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    white-space: nowrap;
+  }
+  .doc-list a.download:hover { background: var(--navy-dark); }
+
+  /* ---------- Footer (matches homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+</style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <div class="account-box">
+        <span class="welcome">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <a href="#">Current Offerings</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current" data-field="Investment Name">AEI Healthcare Portfolio VII DST</span>
+    </nav>
+    <a class="back-link" href="#">&larr; Back to all investments</a>
+
+    <!-- Hero image with name + sponsor overlay -->
+    <div class="offering-hero">
+      <img class="photo" src="https://lh3.googleusercontent.com/d/1UpckdXDq8HJjnUzTg9n_WOvsJA0k1qGf" alt="AEI Healthcare Portfolio VII DST property" data-field="Photo Link Use">
+      <div class="overlay"></div>
+      <div class="hero-text">
+        <h1 data-field="Investment Name">AEI Healthcare Portfolio VII DST</h1>
+        <div class="subline">Sponsored by <span data-field="Sponsor">AEI Capital Corporation</span></div>
+      </div>
+    </div>
+
+    <!-- Key stats -->
+    <div class="key-stats">
+      <div class="stat-cell"><span class="label">Minimum Investment</span><span class="value" data-field="Minimum Investment">$100,000</span></div>
+      <div class="stat-cell"><span class="label">Total Offering</span><span class="value" data-field="Total Offering">$50,500,000</span></div>
+      <div class="stat-cell"><span class="label">Available Equity</span><span class="value" data-field="Available Equity">$25,680,857 <small data-field="Available Percentage">50.85% available</small></span></div>
+      <div class="stat-cell"><span class="label">Equity</span><span class="value" data-field="Equity">$50,500,000</span></div>
+      <div class="stat-cell"><span class="label">Debt</span><span class="value" data-field="Debt">All-Cash</span></div>
+      <div class="stat-cell"><span class="label">In-Place LTV</span><span class="value" data-field="In-Place LTV">0.00% LTV</span></div>
+      <div class="stat-cell"><span class="label">Average Yield</span><span class="value" data-field="Average Yield">5.54%</span></div>
+      <!-- Toggle: when "Tax-Adj. Yield" is populated, show it with its label; otherwise show "Tax Adjusted Yield (Use)" with "Tax Adj Label" -->
+      <div class="stat-cell"><span class="label" data-field="Tax Adj Label">Est. Tax-Adjusted Yield&#8313;</span><span class="value" data-field="Tax Adjusted Yield (Use)">11.84%</span></div>
+      <div class="stat-cell"><span class="label">Cap Rate Equivalent</span><span class="value" data-field="Cap Rate Equivalent">7.60%</span></div>
+      <div class="stat-cell"><span class="label">Location</span><span class="value" data-field="Location (Use)">AZ, CT, TX</span></div>
+      <div class="stat-cell"><span class="label">Estimated Hold Period</span><span class="value" data-field="Estimated Hold Period">10 years</span></div>
+      <div class="stat-cell"><span class="label">721 Exchange Exit</span><span class="value" data-field="721 Exchange Exit">Optional</span></div>
+      <div class="stat-cell"><span class="label">Total Load</span><span class="value" data-field="Total Load">9.12%</span></div>
+      <div class="stat-cell"><span class="label">Strategy</span><span class="value" data-field="Strategy">Core</span></div>
+      <div class="stat-cell"><span class="label">Status</span><span class="value" data-field="Status">Available</span></div>
+    </div>
+  </div>
+
+  <!-- Section nav -->
+  <nav class="section-nav" id="section-nav" aria-label="Offering sections">
+    <div class="section-nav-inner">
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#analysis">Analysis</a>
+        <a href="#distributions">Distributions</a>
+        <a href="#financing">Financing</a>
+        <a href="#benchmarks">Benchmarks</a>
+        <a href="#sponsor">Sponsor</a>
+        <a href="#documents">Documents</a>
+      </div>
+      <select class="nav-select" aria-label="Jump to section">
+        <option value="" selected disabled>Jump to section&hellip;</option>
+        <option value="#overview">Overview</option>
+        <option value="#analysis">Analysis</option>
+        <option value="#distributions">Distributions</option>
+        <option value="#financing">Financing</option>
+        <option value="#benchmarks">Benchmarks</option>
+        <option value="#sponsor">Sponsor</option>
+        <option value="#documents">Documents</option>
+      </select>
+    </div>
+  </nav>
+
+  <main class="container">
+
+    <!-- Overview + Highlights -->
+    <section id="overview">
+      <h2>Overview</h2>
+      <p data-field="Description">Three purpose-built, single-tenant outpatient medical office assets held debt-free in a DST: HonorHealth Complete Care (12,000 SF, Surprise AZ, Phoenix MSA, lease to 2042), Texas Children's Pavilion for Women (12,642 SF, Cedar Park/Austin TX, co-located one block from the tenant's own hospital campus, lease to 2038), and a United Healthcare/ProHealth Physicians clinic (26,547 SF on 6.40 ac, Bristol CT, lease to 2037). Submarkets are infill/Sun Belt growth corridors with strong daytime traffic and household incomes ($78k-$125k) and constrained MOB supply (~6.9% national availability). Thesis is durable, escalating net-lease income from investment-grade-equivalent healthcare credit, underpinned by secular outpatient-care migration and aging demographics. Operating strategy is passive triple-net ownership through an affiliated master tenant, with insurance fully tenant-reimbursed and de minimis trust-level expense; income growth is driven entirely by contractual 2.0%-2.5% escalators.</p>
+      <h3>Highlights</h3>
+      <div class="analysis-item"><p data-field="Highlight 1">The portfolio exhibits a credit barbell. Texas Children's Hospital (AA-/Fitch) and the UnitedHealth Group parent (AA-/Fitch, A/AM Best) supply investment-grade-equivalent corporate backing, while HonorHealth (A+/Fitch) is a single-state Arizona nonprofit system. Income is disproportionately weighted to Bristol, whose ~$1.15M gross rent is roughly 44% of in-place rent, concentrating cash flow in a single asset and a single tenant whose parent's Fitch outlook was revised to negative in July 2025 - a trajectory the static AA- marketing presentation omits.</p></div>
+      <div class="analysis-item"><p data-field="Highlight 2">Weighted average remaining lease term is 13.62 years across staggered expirations (Surprise 2042, Austin 2038, Bristol 2037). Duration is asymmetric: the long-dated HonorHealth lease carries the lowest escalator (2.0%), while the largest asset (Bristol) escalates 2.5% only through year 9 and then steps flat, capping income growth on the portfolio's biggest rent stream precisely as the projected disposition window approaches.</p></div>
+      <div class="analysis-item"><p data-field="Highlight 3">Real estate quality is high and recently delivered (2022-2024 vintage), purpose-built for outpatient use. The Austin asset's co-location one block from Texas Children's own hospital campus creates a mission-critical referral linkage that raises renewal probability and tenant switching costs; the Surprise asset is the sole urgent care within a 3.5-mile radius in a high-traffic retail corridor (71,024 VPD). These siting characteristics function as soft barriers to entry that support re-leasing economics.</p></div>
+      <div class="analysis-item"><p data-field="Highlight 4">The debt-free capital structure removes refinancing, maturity, rate-cap, and foreclosure risk entirely, and eliminates the equal-or-greater-debt replacement requirement for 1031 investors averse to boot-offsetting leverage. The structural cost is the absence of positive financial leverage, which mechanically caps levered IRR and is the primary reason the 5.00% going-in distribution sits below comparable leveraged net-lease DSTs.</p></div>
+      <div class="analysis-item"><p data-field="Highlight 5">The triple-net structure with tenant-reimbursed insurance and ~$1,400/year trust-level property expense insulates distributable cash from operating inflation. The qualifier is capital responsibility: the Trust retains certain capex obligations funded only from a modest reserve that declines from $371,000 to ~$67,764 by 2035, drawn down immediately by a $221,000 Connecticut transfer-tax charge in year 1, leaving limited capacity for unbudgeted tenant improvements and condition-assessment items.</p></div>
+    </section>
+
+    <!-- Analysis: Insights, Advantages, Concerns -->
+    <section id="analysis">
+      <h2>Analysis</h2>
+      <h3 style="margin-top:0">Insights</h3>
+      <p data-field="Insights">This is a low-beta, income-oriented core net-lease vehicle whose return is almost entirely a function of contractual escalators and terminal value, given the absence of leverage and any value-add component. The 5.00% to 6.14% distribution ramp is mechanically supported by the lease schedule, but the early-year spread between subtenant rent collected and master-lease rent paid is razor-thin, concentrating execution risk in the thinly capitalized master tenant. The debt-free design is genuinely defensive in a higher-for-longer regime, sidestepping the leveraged-net-lease maturity wall and cap-cost repricing, but the same feature suppresses yield - the 5.00% going-in sits below AEI's own operating-program current yield (5.48%) and full-cycle average (6.37%), implying reliance on escalators and exit pricing compression to reach target total return. The dominant underwriting sensitivity is terminal value: with no amortization and a fixed escalator schedule, investor IRR is governed by the year-10 disposition pricing against a portfolio whose largest asset will carry only short residual lease term at exit, while Austin (2038) and Surprise (2042) provide longer-dated support to residual value. Feasibility of the projected distributions is reasonable on a contractual basis; the credible variance is in capital-event timing and exit pricing rather than in-place income.</p>
+      <div class="assessment-panels">
+        <div class="panel advantages-panel">
+          <h3>Advantages</h3>
+          <p data-field="Pros">The offering pairs institutional-grade healthcare net-lease credit with a defensive, unlevered balance sheet. Tenants are investment-grade-equivalent corporate operators on long-dated NNN leases (13.62-yr WALT) with contractual 2.0%-2.5% escalators, in demographically supported submarkets benefiting from outpatient-care migration, an aging cohort, and tight MOB supply. The debt-free structure removes refinance, maturity, cap-cost, and foreclosure exposure and offers a clean basis for 1031 capital seeking certainty of monthly income. The sponsor carries a ~40-year, 153-program operating history, including 57 full-cycle 1031 offerings averaging 6.37% annual cash-on-cash, and the distribution schedule escalates from 5.00% to 6.14% over the projected hold.</p>
+        </div>
+        <div class="panel concerns-panel">
+          <h3>Concerns</h3>
+          <p data-field="Cons">Income is concentrated in three single-tenant assets, with Bristol/United Healthcare alone at ~44% of rent, rendering any single vacancy binary to portfolio cash flow. The master tenant is thinly capitalized - funded by a $500,000 demand promissory note (not cash) from an affiliate, with projected Y1 net income of only ~$2,013 - so a subtenant payment interruption would rapidly exhaust the master tenant's cushion and the trust's limited reserves. The Bristol escalator caps at year 9 and steps flat, flattening growth on the largest asset into the disposition window, where that lease (2037 expiry) leaves only ~1.5 years of residual term at a 2035 exit - a material re-leasing/rollover overhang on the highest-rent asset at the point of valuation. The UNH parent's Fitch outlook turned negative in July 2025, and the Bristol lessee is an operating subsidiary rather than the rated parent. Reserve adequacy is thin post the $221,000 CT transfer-tax draw, and a one-month UNH rent abatement (August 2026) dampens Y1 collections.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Distributions -->
+    <section id="distributions">
+      <h2>Projected Distributions</h2>
+      <div class="yield-summary">
+        <div class="stat-cell"><span class="label">Average Yield</span><span class="value" data-field="Average Yield">5.54%</span></div>
+        <!-- Toggle: "Tax-Adj. Yield" when populated, else "Tax Adjusted Yield (Use)" + "Tax Adj Label" -->
+        <div class="stat-cell"><span class="label" data-field="Tax Adj Label">Est. Tax-Adjusted Yield&#8313;</span><span class="value" data-field="Tax Adjusted Yield (Use)">11.84%</span></div>
+        <div class="stat-cell"><span class="label">Cap Rate Equivalent</span><span class="value" data-field="Cap Rate Equivalent">7.60%</span></div>
+      </div>
+      <div class="year-grid">
+        <div class="year-cell"><span class="yr">Y1</span><span class="rate" data-field="Y1">5.00%</span></div>
+        <div class="year-cell"><span class="yr">Y2</span><span class="rate" data-field="Y2">5.04%</span></div>
+        <div class="year-cell"><span class="yr">Y3</span><span class="rate" data-field="Y3">5.07%</span></div>
+        <div class="year-cell"><span class="yr">Y4</span><span class="rate" data-field="Y4">5.35%</span></div>
+        <div class="year-cell"><span class="yr">Y5</span><span class="rate" data-field="Y5">5.47%</span></div>
+        <div class="year-cell"><span class="yr">Y6</span><span class="rate" data-field="Y6">5.63%</span></div>
+        <div class="year-cell"><span class="yr">Y7</span><span class="rate" data-field="Y7">5.76%</span></div>
+        <div class="year-cell"><span class="yr">Y8</span><span class="rate" data-field="Y8">5.90%</span></div>
+        <div class="year-cell"><span class="yr">Y9</span><span class="rate" data-field="Y9">6.03%</span></div>
+        <div class="year-cell"><span class="yr">Y10</span><span class="rate" data-field="Y10">6.14%</span></div>
+      </div>
+      <p class="note">Projected, not guaranteed. Distribution rates are the sponsor&rsquo;s projections, are not a promise of performance, and can be reduced or suspended. &#8313; [Tax-adjusted yield methodology footnote &mdash; pending compliance language.] See the private placement memorandum for the assumptions behind these figures.</p>
+    </section>
+
+    <!-- Financing -->
+    <section id="financing">
+      <h2>Financing</h2>
+      <div class="fin-grid">
+        <div class="fin-cell"><span class="label">Lender</span><span class="value" data-field="Lender">None (debt-free)</span></div>
+        <div class="fin-cell"><span class="label">Interest Rate</span><span class="value" data-field="Interest Rate">N/A (no debt)</span></div>
+        <div class="fin-cell"><span class="label">Loan Term</span><span class="value" data-field="Loan Term">N/A (no debt)</span></div>
+        <div class="fin-cell"><span class="label">I/O Period</span><span class="value" data-field="I/O Period">N/A (no debt)</span></div>
+        <div class="fin-cell"><span class="label">Amortization</span><span class="value" data-field="Amortization">N/A (no debt)</span></div>
+        <div class="fin-cell"><span class="label">Y1 DSCR</span><span class="value" data-field="Y1 DSCR">All-Cash</span></div>
+      </div>
+    </section>
+
+    <!-- Benchmarks -->
+    <section id="benchmarks">
+      <h2>Benchmarks</h2>
+      <div class="bm-grid">
+        <div class="bm-card">
+          <div class="metric">Avg. Income</div>
+          <div class="bm-values">
+            <div><span class="label">This deal</span><span class="val" data-field="BM: Avg. Income - Deal">5.54%</span></div>
+            <div><span class="label">Market</span><span class="val" data-field="BM: Avg. Income - MKT">6.41%</span></div>
+          </div>
+          <span class="bm-chip below" data-field="BM: Avg. Income - Interpret">Below Average</span>
+        </div>
+        <div class="bm-card">
+          <div class="metric">Growth</div>
+          <div class="bm-values">
+            <div><span class="label">This deal</span><span class="val" data-field="BM: Growth - Deal">22.80%</span></div>
+            <div><span class="label">Market</span><span class="val" data-field="BM: Growth- MKT">15.43%</span></div>
+          </div>
+          <span class="bm-chip above" data-field="BM: Growth - Interpret">Above Average</span>
+        </div>
+        <div class="bm-card">
+          <div class="metric">Peak</div>
+          <div class="bm-values">
+            <div><span class="label">This deal</span><span class="val" data-field="BM: Peak - Deal">6.14%</span></div>
+            <div><span class="label">Market</span><span class="val" data-field="BM: Peak- MKT">7.03%</span></div>
+          </div>
+          <span class="bm-chip below" data-field="BM: Peak - Interpret">Below Average</span>
+        </div>
+      </div>
+      <p class="note">[Benchmark methodology footnote &mdash; define the market comparison set and time period; pending compliance review.]</p>
+    </section>
+
+    <!-- Sponsor -->
+    <section id="sponsor">
+      <h2>The Sponsor</h2>
+      <div class="sponsor-head">
+        <img src="https://img.logo.dev/aeifunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="AEI Capital Corporation" data-field="Sponsor Image">
+        <div class="meta">
+          <strong data-field="Investment Firm">AEI Capital Corporation</strong>
+          Founded <span data-field="Year Founded">1970</span> &middot; <span data-field="Headquarters (City, State)">St. Paul, MN</span> &middot; <a href="https://aeifunds.com" data-field="Website">aeifunds.com</a>
+        </div>
+      </div>
+      <p data-field="Sponsor Description">AEI is among the longest-tenured names in the net-lease 1031 space, tracing its lineage to 1970 and to what it describes as one of the earliest securitized fractional-ownership structures. The firm's franchise is built on debt-free, all-cash ownership of single-tenant retail, restaurant and healthcare properties leased to credit-quality operators&mdash;a conservative posture that strips refinancing and foreclosure risk out of the capital stack and has carried it through multiple real estate cycles. With decades of completed full-cycle programs behind it, AEI markets stability and longevity over scale or sector breadth, a profile that resonates with risk-averse exchangers prioritizing capital preservation over yield.</p>
+      <div class="sponsor-stats">
+        <div class="sponsor-stat"><span class="value" data-field="Full-Cycle Count">55</span><span class="label">Full-Cycle Deals</span></div>
+        <div class="sponsor-stat"><span class="value" data-field="Sponsor AAR">6.80%</span><span class="label">Average Annual Return</span></div>
+        <div class="sponsor-stat"><span class="value" data-field="Sponsor AEM">1.58x</span><span class="label">Average Equity Multiple</span></div>
+        <div class="sponsor-stat"><span class="value" data-field="Sponsor Hold">13.57 Years</span><span class="label">Average Hold Period</span></div>
+        <div class="sponsor-stat"><span class="value" data-field="Sponsor Success">100.00%</span><span class="label">Success Rate</span></div>
+      </div>
+      <ul class="advantages">
+        <li data-field="Key Strategy / Advantage 1">One of the oldest net-lease sponsors in the securitized-exchange market, tracing to 1970 and to one of the earliest fractional-ownership structures.</li>
+        <li data-field="Key Strategy / Advantage 2">Anchors offerings in debt-free, all-cash ownership, stripping refinancing and foreclosure risk out of the capital stack.</li>
+        <li data-field="Key Strategy / Advantage 3">Specializes in single-tenant retail, restaurant and healthcare net lease to credit-quality operators.</li>
+        <li data-field="Key Strategy / Advantage 4">Has completed hundreds of full-cycle programs across multiple cycles, a deep disposition record.</li>
+        <li data-field="Key Strategy / Advantage 5">Markets stability and longevity over scale, resonating with capital-preservation-focused exchangers.</li>
+      </ul>
+      <p class="note">Sponsor figures are provided by the sponsor and have not been independently verified except as described in the offering materials. Past performance does not guarantee future results.</p>
+    </section>
+
+    <!-- Documents -->
+    <section id="documents">
+      <h2>Documents</h2>
+      <ul class="doc-list" data-field="Documents">
+        <li><span data-field="Label">Private Placement Memorandum (PPM)</span><a class="download" href="https://drive.google.com/uc?export=download&amp;id=1MwIlrSy2YzfK6WMdsA4OGHHbp1whl-hx" data-field="File" data-gated="No">Download</a></li>
+        <li><span data-field="Label">Investment Brochure</span><a class="download" href="https://drive.google.com/uc?export=download&amp;id=17LgvlT-Cg3VfFXAY7Tphbb_lj3Jd0_Vz" data-field="File" data-gated="No">Download</a></li>
+        <li><span data-field="Label">Fact Sheet / Teaser</span><a class="download" href="https://drive.google.com/uc?export=download&amp;id=1JQ2itTnW3UUL-5mPL5gBrSH_zUkH4rkS" data-field="File" data-gated="No">Download</a></li>
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- Footer (same as homepage) -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>[FULL DISCLOSURE BLOCK &mdash; pending broker-dealer review. Reserve this space for the complete required disclosure language.]</p>
+        <p>DST, 721 exchange, Opportunity Zone fund, and mineral royalty investments are offered through private placements available to accredited investors only. These investments involve substantial risk, including loss of principal, illiquidity, and no guarantee of distributions or appreciation. Diversification does not assure a profit or protect against loss. Nothing on this page is tax or legal advice; consult your own advisors before investing. Past performance does not guarantee future results.</p>
+        <p>Securities offered through [Broker-Dealer], member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments and [Broker-Dealer] are separate entities. Check the background of this firm and its representatives on <a href="https://brokercheck.finra.org/" target="_blank" rel="noopener">FINRA BrokerCheck</a>.</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms of Use</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Section nav: collapse to a dropdown when the links overflow the bar
+    (function () {
+      var nav = document.getElementById('section-nav');
+      var inner = nav.querySelector('.section-nav-inner');
+      var links = nav.querySelector('.nav-links');
+      var select = nav.querySelector('.nav-select');
+
+      function check() {
+        nav.classList.remove('collapsed');            // measure at full width
+        var overflows = links.scrollWidth > inner.clientWidth;
+        nav.classList.toggle('collapsed', overflows);
+      }
+
+      select.addEventListener('change', function () {
+        if (select.value) {
+          location.hash = select.value;
+          select.selectedIndex = 0; // reset so the same section can be picked again
+        }
+      });
+
+      var t;
+      window.addEventListener('resize', function () {
+        clearTimeout(t);
+        t = setTimeout(check, 120);
+      });
+      check();
+    })();
+  </script>
+
+</body>
+</html>

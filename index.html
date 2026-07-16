@@ -1,0 +1,2508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baker 1031 Investments</title>
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  section[id], footer[id] { scroll-margin-top: 96px; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; }
+
+  /* ---------- Upper nav level ---------- */
+  .utility-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .utility-bar-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 2rem;
+    min-height: 48px;
+  }
+  .utility-bar a {
+    color: var(--ink);
+    font-size: 0.92rem;
+  }
+  .utility-bar a:hover { color: var(--navy); }
+  .utility-bar a.request-access {
+    color: var(--navy);
+    font-weight: 600;
+  }
+  .utility-bar a.request-access:hover { text-decoration: underline; }
+
+  /* ---------- Lower nav level: logo + primary nav ---------- */
+  .main-header {
+    background: #fff;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    min-height: 88px;
+    gap: 0.5rem 2rem;
+  }
+
+  .logo { display: flex; align-items: center; }
+  .logo img { height: 40px; width: auto; display: block; }
+
+  .primary-nav { display: flex; align-items: center; gap: 2.25rem; }
+  .primary-nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2.25rem;
+  }
+  .primary-nav a {
+    color: var(--ink);
+    font-size: 1.02rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.5rem 0;
+  }
+  .primary-nav a:hover { color: var(--navy); }
+  .primary-nav a svg.chevron {
+    width: 14px;
+    height: 14px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+    margin-top: 2px;
+  }
+  .search-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: center;
+    padding: 0.4rem;
+  }
+  .search-btn:hover { color: var(--navy); }
+  .search-btn svg {
+    width: 20px;
+    height: 20px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+
+  /* Hamburger (shown when the nav would get cramped) */
+  .menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink);
+    padding: 0.5rem;
+  }
+  .menu-btn svg {
+    width: 26px;
+    height: 26px;
+    stroke: currentColor;
+    stroke-width: 2;
+    fill: none;
+  }
+  @media (max-width: 950px) {
+    .main-header-inner {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      min-height: 68px;
+      padding: 0 1.25rem;
+    }
+    .menu-btn { display: inline-flex; }
+    .primary-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-bottom: 1px solid var(--hairline);
+      box-shadow: 0 12px 24px rgba(20, 30, 55, 0.08);
+      padding: 0.5rem 1.5rem 1rem;
+    }
+    .primary-nav.open { display: block; }
+    .primary-nav ul {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+    }
+    .primary-nav li + li { border-top: 1px solid var(--hairline); }
+    .primary-nav a { display: block; padding: 0.9rem 0; font-size: 1.05rem; }
+    .search-btn { display: none; }
+  }
+
+  /* ---------- Hero: navy-overlay video (constrained to content width) ---------- */
+  .video-hero-wrap {
+    max-width: 78rem;
+    margin: 2rem auto 0;
+    padding: 0 2rem;
+  }
+  .video-hero {
+    position: relative;
+    min-height: clamp(360px, 50vh, 540px);
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background: var(--navy); /* shown while video loads */
+    border-radius: 8px;
+  }
+  .video-hero video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .video-hero .overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--navy-overlay);
+  }
+  .video-hero .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 46rem;
+    padding: 3rem 3.5rem;
+    text-align: left;
+    color: #fff;
+  }
+  .video-hero h1 {
+    font-size: clamp(1.3rem, 4vw, 2.75rem);
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 1px 12px rgba(10, 16, 32, 0.35);
+  }
+  .video-hero h1 span {
+    display: block;
+    white-space: nowrap;
+  }
+  /* Glass panel around the email capture */
+  .hero-form {
+    display: inline-flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 0.6rem;
+    padding: 0.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: 0 4px 24px rgba(10, 16, 32, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  }
+  .hero-form input[type="email"] {
+    flex: 1 1 auto;
+    min-width: 0;
+    width: 22rem;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 0.75rem 0.9rem;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #fff;
+  }
+  .hero-form input[type="email"]::placeholder { color: rgba(255, 255, 255, 0.75); }
+  .hero-form input[type="email"]:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .hero-form button {
+    flex: 0 0 auto;
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 600;
+    background: #fff;
+    color: var(--navy);
+    border: none;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .hero-form button:hover { background: #e9edf5; }
+  .video-hero .hero-form button { font-size: 0.85rem; }
+  .hp-field { position: absolute; left: -9999px; opacity: 0; }
+
+  /* ---------- Investment strategies ---------- */
+  .strategies {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 2rem;
+  }
+  .strategies h2 {
+    font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+  }
+  .filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 2.25rem;
+  }
+  .filter-pills button {
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid #cfd4dd;
+    border-radius: 999px;
+    padding: 0.45rem 1rem;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+  }
+  .filter-pills button:hover { border-color: var(--navy); color: var(--navy); }
+  .filter-pills button.active {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: #fff;
+  }
+  /* Fixed column counts so card size never changes when fewer cards are shown */
+  .strategy-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.9rem;
+  }
+  @media (max-width: 880px)  { .strategy-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 660px)  { .strategy-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 440px)  { .strategy-grid { grid-template-columns: 1fr; } }
+
+  .more-card {
+    border: none;
+    border-radius: 10px;
+    background: var(--navy);
+    color: #fff;
+    font-family: inherit;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 200px;
+    transition: background 0.15s, box-shadow 0.2s, transform 0.2s;
+  }
+  .more-card:hover {
+    background: var(--navy-dark, #22304f);
+    box-shadow: 0 8px 28px rgba(20, 30, 55, 0.18);
+    transform: translateY(-2px);
+  }
+  .more-card.hidden { display: none; }
+  .strategy-card {
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+    cursor: pointer;
+  }
+  .strategy-card:hover {
+    box-shadow: 0 8px 28px rgba(20, 30, 55, 0.12);
+    transform: translateY(-2px);
+  }
+  .strategy-card.hidden { display: none; }
+  .strategy-card .photo {
+    aspect-ratio: 16 / 10;
+    width: 100%;
+    object-fit: cover;
+    display: block;
+    background: #eef0f4;
+  }
+  .strategy-card .card-body {
+    padding: 1.1rem 1.2rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .strategy-card h3 {
+    font-size: 1.02rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 0.5rem;
+  }
+  .strategy-card p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    margin-bottom: 0.9rem;
+    flex: 1;
+  }
+  .strategy-card .note {
+    font-size: 0.75rem;
+    color: #8a8f99;
+    margin-bottom: 0.6rem;
+    flex: 0;
+  }
+
+  /* ---------- Why Baker 1031 ---------- */
+  .why {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 2rem;
+  }
+  .why h2 {
+    font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 2.25rem;
+  }
+  .why h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  .why .section-intro {
+    max-width: 52rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+  }
+
+  .chart-card {
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 1.75rem 1.75rem 1.4rem;
+    background: #fff;
+    margin-bottom: 1rem;
+  }
+  .chart-card .chart-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+  }
+  .chart-card svg { width: 100%; height: auto; display: block; }
+  .bar-col { transition: opacity 0.15s; cursor: default; }
+  .bar-col:hover .bar { opacity: 0.82; }
+
+  .chart-tooltip {
+    position: fixed;
+    z-index: 200;
+    pointer-events: none;
+    background: #1d2536;
+    color: #fff;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    padding: 0.45rem 0.65rem;
+    border-radius: 6px;
+    box-shadow: 0 4px 14px rgba(10, 16, 32, 0.25);
+    opacity: 0;
+    transition: opacity 0.12s;
+    max-width: 240px;
+  }
+  .chart-tooltip.show { opacity: 1; }
+  .chart-tooltip strong { display: block; }
+
+  .chart-footnote, .chart-sources {
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: #8a8f99;
+    max-width: 66rem;
+    margin-bottom: 0.75rem;
+  }
+  .chart-sources { margin-bottom: 3rem; }
+
+  /* Chart left 2/3, differentiators stacked right 1/3 */
+  .why-split {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2.25rem;
+    align-items: start;
+    margin-bottom: 3.5rem;
+  }
+  .why-stack {
+    border-left: 1px solid var(--hairline);
+    padding-left: 2.25rem;
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .why-tile { padding: 1.05rem 0; }
+  .why-tile + .why-tile { border-top: 1px solid var(--hairline); }
+  .why-tile h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin-bottom: 0.45rem;
+    color: var(--navy);
+  }
+  .why-tile p {
+    font-size: 0.86rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  @media (max-width: 880px) {
+    .why-split { grid-template-columns: 1fr; gap: 1.5rem; }
+    .why-stack { border-left: none; padding-left: 0; border-top: 1px solid var(--hairline); padding-top: 0.5rem; }
+  }
+
+  .sponsors p {
+    max-width: 52rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 1.5rem;
+  }
+  /* Scrolling sponsor marquee with faded ends */
+  .sponsor-marquee {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .sponsor-track {
+    display: flex;
+    gap: 0.9rem;
+    width: max-content;
+    animation: sponsor-scroll 240s linear infinite;
+  }
+  @keyframes sponsor-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(calc(-50% - 0.45rem)); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sponsor-track { animation: none; }
+  }
+  .sponsor-track .logo-box {
+    flex: 0 0 auto;
+    width: 200px;
+    border-radius: 8px;
+    min-height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #c3c7cd;
+    font-size: 0.8rem;
+    letter-spacing: 0.04em;
+    transition: color 0.25s;
+    cursor: pointer;
+  }
+  .sponsor-track .logo-box:hover { color: var(--navy); }
+  /* Real sponsor logos: light grey at rest, full color on hover as they scroll by */
+  .sponsor-track .logo-box img {
+    max-width: 80%;
+    max-height: 52px;
+    object-fit: contain;
+    filter: grayscale(1) opacity(0.45);
+    transition: filter 0.25s;
+  }
+  .sponsor-track .logo-box:hover img { filter: grayscale(0) opacity(1); }
+
+  /* ---------- Full-cycle DST collage ---------- */
+  .full-cycle {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 2rem;
+  }
+  .full-cycle h2 {
+    font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.6rem;
+  }
+  .full-cycle .section-intro {
+    max-width: 52rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin-bottom: 1.75rem;
+  }
+  .cycle-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 0.9rem;
+    perspective: 1400px;
+  }
+  @media (max-width: 1000px) { .cycle-grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 760px)  { .cycle-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px)  { .cycle-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 660px) {
+    .cycle-body h3 { font-size: 0.92rem; }
+    .cycle-stats { gap: 0.6rem; padding-top: 0.5rem; }
+    .cycle-stats .stat .label { font-size: 0.54rem; }
+    .cycle-stats .stat .value { font-size: 0.85rem; }
+  }
+  .cycle-card {
+    position: relative;
+    aspect-ratio: 4 / 4.6;
+    border-radius: 10px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    cursor: pointer;
+    /* second half of the flip: decelerate out of the edge */
+    transition: transform 0.3s cubic-bezier(0.215, 0.61, 0.355, 1);
+    backface-visibility: hidden;
+    will-change: transform;
+  }
+  /* first half of the flip: accelerate into the edge, so the two halves
+     read as one continuous spin with no pause at 90 degrees */
+  .cycle-card.flip-out {
+    transition: transform 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+    transform: rotateY(90deg);
+  }
+  .cycle-card.flip-in { transition: none; transform: rotateY(-90deg); }
+  .cycle-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(13, 20, 38, 0.42) 0%,
+      rgba(13, 20, 38, 0.28) 30%,
+      rgba(13, 20, 38, 0.78) 58%,
+      rgba(13, 20, 38, 0.97) 100%);
+  }
+  .cycle-flag {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--navy);
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+  }
+  .cycle-body {
+    position: relative;
+    padding: 0 1rem 1rem;
+    text-shadow: 0 1px 6px rgba(10, 16, 32, 0.5);
+  }
+  .cycle-body h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 0.15rem;
+  }
+  .cycle-meta {
+    font-size: 0.78rem;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.75rem;
+  }
+  .cycle-stats {
+    display: flex;
+    gap: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.28);
+    padding-top: 0.65rem;
+  }
+  .cycle-stats .stat { flex: 1; }
+  .cycle-stats .stat .label {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+    margin-bottom: 0.15rem;
+  }
+  .cycle-stats .stat .value {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+  .cycle-note {
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: #8a8f99;
+    max-width: 66rem;
+    margin-top: 1rem;
+  }
+
+  /* ---------- Request access CTA ---------- */
+  .cta-wrap {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 2rem;
+  }
+  .cta-access {
+    background: linear-gradient(135deg, #2b3a5f 0%, #1e2a47 100%);
+    border-radius: 12px;
+    padding: 2.75rem 3rem 2.5rem;
+    color: #fff;
+  }
+  .cta-top {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+    margin-bottom: 1.75rem;
+  }
+  @media (max-width: 880px) {
+    .cta-access { padding: 2.25rem 1.5rem; }
+    .cta-top { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+  .cta-access h2 {
+    font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-align: center;
+    margin-bottom: 1.75rem;
+  }
+  .cta-access .cta-copy p {
+    font-size: 1rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 1rem;
+  }
+  .cta-access .cta-copy p:last-child { margin-bottom: 0; }
+  .cta-points { list-style: none; }
+  .cta-points li {
+    padding: 0.7rem 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  .cta-points li + li { border-top: 1px solid rgba(255, 255, 255, 0.22); }
+  .cta-points li strong { color: #fff; }
+  .cta-access .hero-form { display: flex; width: 84%; margin: 0 auto; }
+  .cta-access .hero-form input[type="email"] { flex: 1 1 auto; width: auto; }
+  .cta-fineprint {
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: rgba(255, 255, 255, 0.6);
+    margin-top: 1rem;
+    text-align: center;
+  }
+
+  /* ---------- About + FAQ ---------- */
+  .about-faq {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 4.5rem 2rem 2rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .about-faq { grid-template-columns: 1fr; gap: 2.5rem; }
+  }
+  .about-faq h3 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+  }
+  .about-col p {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    margin-bottom: 1rem;
+  }
+  .about-jerry { padding-bottom: 2rem; border-bottom: 1px solid var(--hairline); margin-bottom: 2rem; }
+  .about-jerry .jerry-row {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  .jerry-photo {
+    flex: 0 0 auto;
+    width: 112px;
+    height: 112px;
+    border-radius: 8px;
+    object-fit: cover;
+    display: block;
+  }
+  .about-jerry .brokercheck {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--navy);
+    text-decoration: underline;
+  }
+  .about-disclosure {
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: #8a8f99;
+    margin-top: 1.25rem;
+  }
+
+  .faq-col details {
+    border-top: 1px solid var(--hairline);
+  }
+  .faq-col details:last-child { border-bottom: 1px solid var(--hairline); }
+  .faq-col summary {
+    list-style: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0.25rem;
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .faq-col summary::-webkit-details-marker { display: none; }
+  .faq-col summary::after {
+    content: "+";
+    flex: 0 0 auto;
+    font-size: 1.25rem;
+    font-weight: 400;
+    color: var(--navy);
+    transition: transform 0.2s;
+    line-height: 1;
+  }
+  .faq-col details[open] summary::after { transform: rotate(45deg); }
+  .faq-col details p {
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    padding: 0 0.25rem 1.1rem;
+  }
+
+  /* ---------- Request-access popup form ---------- */
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 20, 38, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 300;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 12px;
+    width: min(560px, 94vw);
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 1.75rem 2rem 2rem;
+    box-shadow: 0 24px 64px rgba(10, 16, 32, 0.35);
+  }
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+  }
+  .modal-head h3 { font-size: 1.25rem; font-weight: 700; }
+  .modal-controls { display: flex; align-items: center; gap: 0.75rem; }
+  .modal-skip {
+    background: none;
+    border: 1px dashed #cfd4dd;
+    border-radius: 6px;
+    color: #8a8f99;
+    font-family: inherit;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.6rem;
+    cursor: pointer;
+  }
+  .modal-skip:hover { color: var(--ink); border-color: #9aa0ab; }
+  .modal-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #8a8f99;
+    font-size: 1.5rem;
+    line-height: 1;
+    padding: 0.25rem;
+  }
+  .modal-close:hover { color: var(--ink); }
+  .modal-progress {
+    font-size: 0.76rem;
+    color: #8a8f99;
+    margin-bottom: 1.25rem;
+  }
+  .form-step { display: none; }
+  .form-step.active { display: block; }
+  .form-step h4 { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; }
+  .field { margin-bottom: 0.9rem; }
+  .field label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  .field label .opt { font-weight: 400; color: #9aa0ab; }
+  .field input, .field select {
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.95rem;
+    color: var(--ink);
+    padding: 0.6rem 0.7rem;
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    background: #fff;
+  }
+  .field input:focus, .field select:focus {
+    outline: 2px solid var(--navy);
+    outline-offset: 0;
+    border-color: var(--navy);
+  }
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+  }
+  @media (max-width: 520px) { .field-row { grid-template-columns: 1fr; } }
+  .radio-set { display: flex; flex-direction: column; gap: 0.5rem; }
+  .radio-set label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--ink);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    cursor: pointer;
+  }
+  .radio-set label:has(input:checked) { border-color: var(--navy); background: #f2f5fb; }
+  .radio-set input {
+    width: auto;          /* undo .field input's 100% width — that rule broke the radio layout */
+    flex: 0 0 auto;
+    padding: 0;
+    margin-top: 0.15rem;
+    accent-color: var(--navy);
+  }
+  .form-error {
+    display: none;
+    font-size: 0.8rem;
+    color: #b3261e;
+    margin: 0.5rem 0 0;
+  }
+  .form-error.show { display: block; }
+  .modal-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .modal-nav .btn-back {
+    background: none;
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.65rem 1.2rem;
+    cursor: pointer;
+  }
+  .modal-nav .btn-back:hover { border-color: var(--navy); color: var(--navy); }
+  .modal-nav .btn-next {
+    background: var(--navy);
+    border: none;
+    border-radius: 6px;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    padding: 0.65rem 1.5rem;
+    cursor: pointer;
+    margin-left: auto;
+  }
+  .modal-nav .btn-next:hover { background: var(--navy-dark, #22304f); }
+  .modal-fineprint { font-size: 0.72rem; line-height: 1.5; color: #9aa0ab; margin-top: 1rem; }
+  .modal-thanks { display: none; text-align: center; padding: 1rem 0 0.5rem; }
+  .modal-thanks.show { display: block; }
+  .modal-thanks h4 { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.6rem; }
+  .modal-thanks p { font-size: 0.95rem; line-height: 1.6; color: var(--ink-soft); }
+  .modal.modal-wide { width: min(980px, 96vw); }
+  .cal-holder { width: 100%; height: 62vh; overflow: auto; margin-top: 1.25rem; }
+  /* Phones: the scheduler needs the whole screen */
+  @media (max-width: 640px) {
+    .modal-backdrop.open { padding: 0; align-items: stretch; }
+    .modal, .modal.modal-wide {
+      width: 100vw;
+      height: 100dvh;
+      max-height: 100dvh;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .modal form { overflow-y: auto; }
+    .modal-thanks.show {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      min-height: 0;
+    }
+    .cal-holder { flex: 1; height: auto; min-height: 0; margin-top: 0.75rem; }
+  }
+  .suggest-box {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    background: #fff8e6;
+    border: 1px solid #e3cf8f;
+    border-radius: 6px;
+    font-size: 0.82rem;
+    color: #6b5a1e;
+    padding: 0.5rem 0.65rem;
+    margin-top: 0.4rem;
+  }
+  .suggest-box button {
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    border-radius: 5px;
+    padding: 0.3rem 0.65rem;
+    cursor: pointer;
+  }
+  .suggest-box .use-btn { background: var(--navy); color: #fff; border: none; }
+  .suggest-box .keep-btn { background: none; color: #6b5a1e; border: 1px solid #d5c079; }
+
+  /* ---------- Footer ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 3.5rem 2rem 2rem;
+  }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img {
+    height: 34px;
+    width: auto;
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .footer-brand p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 26rem;
+  }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure {
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .footer-disclosure p {
+    font-size: 0.74rem;
+    line-height: 1.6;
+    color: #8a8f99;
+    margin-bottom: 0.75rem;
+  }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+
+  @media (max-width: 860px) {
+    .utility-bar-inner { justify-content: center; }
+    .video-hero-wrap { padding: 0 1rem; margin-top: 1rem; }
+    .video-hero .hero-content { padding: 2rem 1.25rem; }
+    .hero-form { gap: 0.4rem; padding: 0.4rem; }
+    .hero-form input[type="email"] { width: auto; }
+    .hero-form button { padding: 0.75rem 1rem; }
+  }
+
+  /* Phones: centered hero with stacked email capture; centered CTA likewise */
+  @media (max-width: 640px) {
+    .video-hero .hero-content {
+      width: 100%;
+      text-align: center;
+      padding: 2.25rem 1.25rem;
+    }
+    .video-hero .hero-form {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5rem;
+      padding: 0.6rem;
+    }
+    .video-hero .hero-form input[type="email"] { width: 100%; text-align: center; }
+    .video-hero .hero-form button { width: 100%; }
+
+    .cta-access { text-align: center; }
+    .cta-points li { text-align: center; }
+    .cta-access .hero-form {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5rem;
+      padding: 0.6rem;
+    }
+    .cta-access .hero-form input[type="email"] { text-align: center; }
+    .cta-access .hero-form button { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Upper nav level -->
+  <div class="utility-bar">
+    <div class="utility-bar-inner">
+      <a href="#">Investor Login</a>
+      <a class="request-access" href="#request-access">Request Investment Access</a>
+    </div>
+  </div>
+
+  <!-- Lower nav level -->
+  <header class="main-header">
+    <div class="main-header-inner">
+
+      <a class="logo" href="#" aria-label="Baker 1031 Investments — Home">
+        <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments" height="40">
+      </a>
+
+      <button class="menu-btn" type="button" aria-label="Menu" aria-expanded="false" aria-controls="primary-nav">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="20" y2="17"/></svg>
+      </button>
+
+      <nav class="primary-nav" id="primary-nav" aria-label="Primary">
+        <ul>
+          <li><a href="#strategies">Strategies</a></li>
+          <li><a href="#why">Difference</a></li>
+          <li><a href="#full-cycle">Performance</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+        <button class="search-btn" type="button" aria-label="Search">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        </button>
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- First content area: navy-overlay video -->
+  <div class="video-hero-wrap">
+    <section class="video-hero">
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="https://res.cloudinary.com/opoazlei/video/upload/v1783842226/Baker_1031_Homepage_Video_q9k7ca.mp4" type="video/mp4">
+      </video>
+      <div class="overlay"></div>
+      <div class="hero-content">
+        <h1><span>Defer the tax.</span><span>Stay invested in real estate.</span></h1>
+        <form class="hero-form" method="POST" action="/.netlify/functions/lead">
+          <label class="hp-field" aria-hidden="true">Leave this field empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+          <input type="email" name="email" placeholder="Your email address" required aria-label="Your email address">
+          <button type="submit">Request Investment Access</button>
+        </form>
+      </div>
+    </section>
+  </div>
+
+  <main>
+
+    <!-- Investment strategies -->
+    <section class="strategies" id="strategies">
+      <h2>Our Investment Strategies</h2>
+
+      <div class="filter-pills" role="group" aria-label="Filter strategies by goal">
+        <button type="button" class="active" data-filter="all">All</button>
+        <button type="button" data-filter="1031-exchange">1031 Exchange</button>
+        <button type="button" data-filter="income">Income</button>
+        <button type="button" data-filter="passive-investing">Passive Investing</button>
+        <button type="button" data-filter="diversification">Diversification</button>
+        <button type="button" data-filter="retirement-planning">Retirement Planning</button>
+        <button type="button" data-filter="estate-planning">Estate Planning</button>
+        <button type="button" data-filter="value-growth">Value Growth</button>
+        <button type="button" data-filter="capital-gains">Capital Gains</button>
+        <button type="button" data-filter="tax-deferral">Tax Deferral</button>
+        <button type="button" data-filter="depreciation">Depreciation</button>
+        <button type="button" data-filter="assumable-loans">Assumable Loans</button>
+        <button type="button" data-filter="ira">IRA</button>
+        <button type="button" data-filter="1031-into-reit">1031 Exchange into a REIT</button>
+        <button type="button" data-filter="cash-investing">Cash Investing</button>
+      </div>
+
+      <div class="strategy-grid">
+
+        <article class="strategy-card" data-tags="1031-exchange income passive-investing diversification retirement-planning estate-planning tax-deferral depreciation assumable-loans capital-gains">
+          <img class="photo" src="https://res.cloudinary.com/opoazlei/image/upload/v1783843881/Apartments_pllp0h.jpg" alt="Apartment community" loading="lazy">
+          <div class="card-body">
+            <h3>Delaware Statutory Trust (DST) Properties</h3>
+            <p>Fractional ownership in institutional-quality properties like apartment communities and distribution warehouses, structured to complete a 1031 exchange.</p>
+          </div>
+        </article>
+
+        <article class="strategy-card" data-tags="1031-exchange 1031-into-reit income passive-investing diversification retirement-planning estate-planning tax-deferral">
+          <img class="photo" src="https://res.cloudinary.com/opoazlei/image/upload/v1783843878/Amazon_q2ru5v.png" alt="Distribution warehouse" loading="lazy">
+          <div class="card-body">
+            <h3>721 Exchange (UPREIT) DST Properties</h3>
+            <p>Start in a DST, then exchange into units of a REIT's operating partnership. It's a one-way door that trades direct ownership for broad diversification.</p>
+          </div>
+        </article>
+
+
+        <article class="strategy-card" data-tags="1031-exchange income passive-investing diversification capital-gains ira cash-investing">
+          <img class="photo" src="https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Oil_Wells_m8jf8v.webp" alt="Oil wells on producing land" loading="lazy">
+          <div class="card-body">
+            <h3>Mineral Rights &amp; Royalties</h3>
+            <p>A royalty check instead of a rent check. Ownership of the minerals under producing land, with no operations to manage.</p>
+          </div>
+        </article>
+
+        <article class="strategy-card" data-tags="capital-gains tax-deferral value-growth estate-planning diversification cash-investing">
+          <img class="photo" src="https://res.cloudinary.com/opoazlei/image/upload/v1783843880/Hotel_ojlaau.avif" alt="Hotel development" loading="lazy">
+          <div class="card-body">
+            <h3>Qualified Opportunity Zone (OZ) Funds</h3>
+            <p>A way to defer capital gains from any sale, real estate or otherwise, by investing in long-term development projects.</p>
+            <div class="note">For capital gains from any source. Not a 1031 vehicle.</div>
+          </div>
+        </article>
+
+        <button type="button" class="more-card hidden" aria-label="Show remaining strategies">+2 more</button>
+
+      </div>
+    </section>
+
+    <!-- Why Baker 1031 -->
+    <section class="why" id="why">
+      <h2>Why Experienced Investors Choose Baker 1031 Investments</h2>
+
+      <h3>Real Estate in Context</h3>
+      <p class="section-intro">How public and private real estate approaches compared with the broader stock market across 2025. Real estate trailed equities in a strong year for stocks, and each series below is measured differently &mdash; see the sources beneath the chart.</p>
+
+      <div class="why-split">
+      <div class="why-left">
+      <div class="chart-card">
+        <div class="chart-title">Total return by asset class &middot; full-year 2025</div>
+        <svg viewBox="0 0 960 365" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bar chart: Baker 1031 preferred sponsors 20.8% (multi-year full-cycle average, see footnote), S&P 500 17.9%, private ownership real estate 4.9%, real estate private equity 3.8%, public REITs 2.3%, crowdfunding real estate 1.3%">
+          <!-- gridlines -->
+          <g stroke="#e9ebef" stroke-width="1">
+            <line x1="56" y1="54" x2="944" y2="54"/>
+            <line x1="56" y1="105.2" x2="944" y2="105.2"/>
+            <line x1="56" y1="156.4" x2="944" y2="156.4"/>
+            <line x1="56" y1="207.6" x2="944" y2="207.6"/>
+            <line x1="56" y1="258.8" x2="944" y2="258.8"/>
+          </g>
+          <line x1="56" y1="310" x2="944" y2="310" stroke="#d5d9e0" stroke-width="1"/>
+          <!-- y-axis labels -->
+          <g font-size="12" fill="#8a8f99" text-anchor="end">
+            <text x="46" y="58">25%</text>
+            <text x="46" y="109.2">20%</text>
+            <text x="46" y="160.4">15%</text>
+            <text x="46" y="211.6">10%</text>
+            <text x="46" y="262.8">5%</text>
+            <text x="46" y="314">0%</text>
+          </g>
+
+          <!-- Baker 1031 Preferred -->
+          <g class="bar-col" data-name="Baker 1031 Preferred*" data-value="20.8%" data-note="Average realized, full-cycle, net-to-investor annualized return across completed preferred-sponsor programs. Multi-year, not a 2025 calendar-year return.">
+            <rect x="56" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M92,310 V101 Q92,97 96,97 H164 Q168,97 168,101 V310 Z" fill="#2b3a5f"/>
+            <text x="130" y="88" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">20.8%*</text>
+            <text x="130" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Baker 1031</text>
+            <text x="130" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Preferred*</text>
+          </g>
+          <!-- S&P 500 -->
+          <g class="bar-col" data-name="S&amp;P 500" data-value="17.9%" data-note="2025 total return, 17.88% (Slickcharts).">
+            <rect x="204" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M240,310 V130.7 Q240,126.7 244,126.7 H316 Q320,126.7 320,130.7 V310 Z" fill="#b4bfd2"/>
+            <text x="278" y="117.7" font-size="14" font-weight="600" fill="#2f3237" text-anchor="middle">17.9%</text>
+            <text x="278" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">S&amp;P 500</text>
+          </g>
+          <!-- Private Ownership RE -->
+          <g class="bar-col" data-name="Private Ownership Real Estate" data-value="4.9%" data-note="NCREIF Property Index (NPI), 2025, gross unlevered.">
+            <rect x="352" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M388,310 V263.8 Q388,259.8 392,259.8 H464 Q468,259.8 468,263.8 V310 Z" fill="#b4bfd2"/>
+            <text x="426" y="250.8" font-size="14" font-weight="600" fill="#2f3237" text-anchor="middle">4.9%</text>
+            <text x="426" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Private</text>
+            <text x="426" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Ownership RE</text>
+          </g>
+          <!-- RE Private Equity -->
+          <g class="bar-col" data-name="Real Estate Private Equity" data-value="3.8%" data-note="NCREIF ODCE, 2025, gross levered (NCREIF, via RCLCO).">
+            <rect x="500" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M536,310 V275.1 Q536,271.1 540,271.1 H612 Q616,271.1 616,275.1 V310 Z" fill="#b4bfd2"/>
+            <text x="574" y="262.1" font-size="14" font-weight="600" fill="#2f3237" text-anchor="middle">3.8%</text>
+            <text x="574" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">RE Private</text>
+            <text x="574" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Equity</text>
+          </g>
+          <!-- Public REITs -->
+          <g class="bar-col" data-name="Public REITs" data-value="2.3%" data-note="FTSE Nareit All Equity REITs Index total return, 2025 (Nareit).">
+            <rect x="648" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M684,310 V290.4 Q684,286.4 688,286.4 H760 Q764,286.4 764,290.4 V310 Z" fill="#b4bfd2"/>
+            <text x="722" y="277.4" font-size="14" font-weight="600" fill="#2f3237" text-anchor="middle">2.3%</text>
+            <text x="722" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Public</text>
+            <text x="722" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">REITs</text>
+          </g>
+          <!-- Crowdfunding RE -->
+          <g class="bar-col" data-name="Crowdfunding Real Estate" data-value="1.3%" data-note="Fundrise Flagship Real Estate Fund, 2025, 1.33% net (audited Form N-CSR).">
+            <rect x="796" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M832,310 V300.7 Q832,296.7 836,296.7 H908 Q912,296.7 912,300.7 V310 Z" fill="#b4bfd2"/>
+            <text x="870" y="287.7" font-size="14" font-weight="600" fill="#2f3237" text-anchor="middle">1.3%</text>
+            <text x="870" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Crowdfunding</text>
+            <text x="870" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">RE</text>
+          </g>
+        </svg>
+      </div>
+      <div class="chart-tooltip" id="chart-tooltip"></div>
+
+      <p class="chart-footnote">* Baker 1031 preferred sponsors shows the average realized, full-cycle, net-to-investor annualized return across completed programs from our curated (&ldquo;preferred&rdquo;) sponsors &mdash; a multi-year figure measured over each program&rsquo;s full hold, not a 2025 calendar-year return, and therefore not directly comparable to the single-year index results shown beside it. &ldquo;Preferred&rdquo; is Baker 1031&rsquo;s own designation, not an endorsement, recommendation, or guarantee of any security or of future performance (per SEC/FINRA). Past performance does not guarantee future results.</p>
+
+      <p class="chart-sources"><strong>Sources &amp; methodology.</strong> Full-year 2025 returns. S&amp;P 500 total return 17.88% (Slickcharts). Public REITs: FTSE Nareit All Equity REITs Index total return 2.3% (Nareit). Private Ownership Real Estate: NCREIF Property Index (NPI) 4.9%, gross unlevered. Real Estate Private Equity: NCREIF ODCE 3.8%, gross levered (NCREIF, via RCLCO). Crowdfunding Real Estate: Fundrise Flagship Real Estate Fund 1.33% net (audited Form N-CSR). These series use different methodologies (index total returns vs. appraisal-based gross returns vs. net-of-fee fund results) and reflect a single calendar year, so they are not directly comparable. Past performance does not guarantee future results.</p>
+      </div><!-- /.why-left -->
+
+      <div class="why-stack">
+        <div class="why-tile">
+          <h4>Direct Principal Access</h4>
+          <p>One-on-one attention from the firm&rsquo;s managing principal &mdash; not a call center or a junior representative.</p>
+        </div>
+        <div class="why-tile">
+          <h4>Built by Real Estate Investors</h4>
+          <p>A family firm of real estate professionals who have owned, operated, and exchanged property themselves &mdash; so we understand what individual investors actually need.</p>
+        </div>
+        <div class="why-tile">
+          <h4>Always Shown Net</h4>
+          <p>All figures we present are shown net of fees and expenses &mdash; so the numbers you evaluate are the numbers you receive.</p>
+        </div>
+        <div class="why-tile">
+          <h4>Turnkey Financing</h4>
+          <p>Turnkey financing arranged for you, debt-free options available, and closings in as little as 2&ndash;3 business days.</p>
+        </div>
+      </div><!-- /.why-stack -->
+      </div><!-- /.why-split -->
+
+      <div class="sponsors">
+        <h3>Our Investment Sponsors</h3>
+        <p>We independently vet every sponsor &mdash; track record, tenure, financial strength, and how they treat investors &mdash; before we ever present them.</p>
+        <div class="sponsor-marquee">
+          <div class="sponsor-track">
+            <div class="logo-box"><img src="https://img.logo.dev/1031crowdfunding.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="1031Crowdfunding" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/aeifunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Aeifunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/americancapitalgroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Americancapitalgroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/apollo.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Apollo" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/arctrust.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Arctrust" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/aresmgmt.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Aresmgmt" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/arrimuscapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Arrimuscapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/bakertilly.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bakertilly" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/beaconreg.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Beaconreg" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/blackstone.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Blackstone" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/blueowl.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Blueowl" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/bluerockexchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bluerockexchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/bonaventure.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bonaventure" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/bridgeviewre.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bridgeviewre" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/brookfield.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Brookfield" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/caicap.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Caicap" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/cantor.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cantor" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/cantorsilverstein.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cantorsilverstein" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/capitalsq.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Capitalsq" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/carterfunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Carterfunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/cliffwater.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cliffwater" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/crhmi.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Crhmi" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/corepacific.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Corepacific" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/covecapitalinvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Covecapitalinvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/croataninvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Croataninvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/cunat.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cunat" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/denholtz.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Denholtz" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/erpfunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Erpfunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/exchangeright.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Exchangeright" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/fortress.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Fortress" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/ten31xchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Ten31Xchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/fsinvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Fsinvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/gkdevelopment.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Gkdevelopment" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/gostoreit.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Gostoreit" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/goldmansachs.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Goldmansachs" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/greystar.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Greystar" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/griffincapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Griffincapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/hamiltonptinv.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hamiltonptinv" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/hines.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hines" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/hpaxchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hpaxchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/inlandprivatecapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Inlandprivatecapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/invesco.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Invesco" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/jpmorgan.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Jpmorgan" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/jllipt.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Jllipt" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/kpi1031.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kpi1031" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/knpre.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Knpre" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/kingsbarn.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kingsbarn" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/kkr.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kkr" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/lasalle.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Lasalle" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/livingstonstreetcapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Livingstonstreetcapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/madisoncapgroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Madisoncapgroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/madisonrealty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Madisonrealty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/miraeasset.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Miraeasset" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/moodynational.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Moodynational" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/nasinvestmentsolutions.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nasinvestmentsolutions" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/nelsonbrothers.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nelsonbrothers" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/nelsonpartners.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nelsonpartners" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/netleasecapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Netleasecapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/nexpoint.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nexpoint" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/nuveen.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nuveen" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/olympusproperty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Olympusproperty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/origininvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Origininvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/pacificoakcapitaladvisors.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Pacificoakcapitaladvisors" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/passco.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Passco" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/peachtreegroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Peachtreegroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/pgim.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Pgim" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/platformventures.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Platformventures" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/resourceroyalty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Resourceroyalty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/rkprop.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Rkprop" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/sealynet.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Sealynet" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/silversteinproperties.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Silversteinproperties" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/smartstop.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Smartstop" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/spartan-investors.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Spartan Investors" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/starboard-realty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Starboard Realty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/starwoodcapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Starwoodcapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/syndicatedequities.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Syndicatedequities" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/timeequities.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Timeequities" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/trilogyreg.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Trilogyreg" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/urbancatalyst.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Urbancatalyst" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/virtuapartners.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Virtuapartners" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/walton.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Walton" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/newstar-am.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Newstar Am" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://img.logo.dev/thewyomingreserve.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Thewyomingreserve" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box"><img src="https://logo.clearbit.com/idealcapgroup.com" alt="Ideal Capital Group" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <!-- duplicate set for a seamless loop -->
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/1031crowdfunding.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="1031Crowdfunding" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/aeifunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Aeifunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/americancapitalgroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Americancapitalgroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/apollo.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Apollo" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/arctrust.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Arctrust" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/aresmgmt.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Aresmgmt" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/arrimuscapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Arrimuscapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/bakertilly.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bakertilly" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/beaconreg.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Beaconreg" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/blackstone.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Blackstone" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/blueowl.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Blueowl" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/bluerockexchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bluerockexchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/bonaventure.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bonaventure" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/bridgeviewre.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Bridgeviewre" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/brookfield.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Brookfield" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/caicap.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Caicap" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/cantor.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cantor" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/cantorsilverstein.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cantorsilverstein" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/capitalsq.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Capitalsq" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/carterfunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Carterfunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/cliffwater.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cliffwater" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/crhmi.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Crhmi" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/corepacific.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Corepacific" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/covecapitalinvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Covecapitalinvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/croataninvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Croataninvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/cunat.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Cunat" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/denholtz.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Denholtz" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/erpfunds.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Erpfunds" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/exchangeright.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Exchangeright" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/fortress.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Fortress" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/ten31xchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Ten31Xchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/fsinvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Fsinvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/gkdevelopment.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Gkdevelopment" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/gostoreit.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Gostoreit" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/goldmansachs.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Goldmansachs" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/greystar.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Greystar" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/griffincapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Griffincapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/hamiltonptinv.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hamiltonptinv" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/hines.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hines" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/hpaxchange.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Hpaxchange" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/inlandprivatecapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Inlandprivatecapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/invesco.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Invesco" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/jpmorgan.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Jpmorgan" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/jllipt.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Jllipt" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/kpi1031.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kpi1031" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/knpre.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Knpre" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/kingsbarn.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kingsbarn" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/kkr.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Kkr" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/lasalle.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Lasalle" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/livingstonstreetcapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Livingstonstreetcapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/madisoncapgroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Madisoncapgroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/madisonrealty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Madisonrealty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/miraeasset.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Miraeasset" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/moodynational.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Moodynational" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/nasinvestmentsolutions.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nasinvestmentsolutions" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/nelsonbrothers.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nelsonbrothers" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/nelsonpartners.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nelsonpartners" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/netleasecapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Netleasecapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/nexpoint.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nexpoint" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/nuveen.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Nuveen" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/olympusproperty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Olympusproperty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/origininvestments.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Origininvestments" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/pacificoakcapitaladvisors.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Pacificoakcapitaladvisors" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/passco.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Passco" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/peachtreegroup.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Peachtreegroup" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/pgim.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Pgim" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/platformventures.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Platformventures" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/resourceroyalty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Resourceroyalty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/rkprop.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Rkprop" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/sealynet.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Sealynet" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/silversteinproperties.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Silversteinproperties" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/smartstop.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Smartstop" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/spartan-investors.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Spartan Investors" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/starboard-realty.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Starboard Realty" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/starwoodcapital.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Starwoodcapital" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/syndicatedequities.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Syndicatedequities" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/timeequities.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Timeequities" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/trilogyreg.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Trilogyreg" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/urbancatalyst.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Urbancatalyst" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/virtuapartners.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Virtuapartners" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/walton.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Walton" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/newstar-am.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Newstar Am" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://img.logo.dev/thewyomingreserve.com?token=pk_FIVsDKgZTvCedVXXtt2rEg&size=200&retina=true" alt="Thewyomingreserve" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+            <div class="logo-box" aria-hidden="true"><img src="https://logo.clearbit.com/idealcapgroup.com" alt="Ideal Capital Group" loading="lazy" onerror="this.closest('.logo-box').style.display='none'"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Full-cycle DSTs -->
+    <section class="full-cycle" id="full-cycle">
+      <h2>Full-Cycle DSTs</h2>
+      <p class="section-intro">Programs our sponsors have taken all the way from offering to final sale. Every figure below is a bracketed sample pending substantiation.</p>
+      <div class="cycle-grid" id="cycle-grid" aria-label="Full-cycle DST examples"></div>
+      <p class="cycle-note">&ldquo;Full cycle&rdquo; means the program has completed its hold and returned investor capital; these offerings are closed and no longer available. Figures shown are samples for layout purposes only and must be substantiated before publication. Average annual return and equity multiple are net to investor over each program&rsquo;s full hold period. Past performance does not guarantee future results.</p>
+    </section>
+
+    <!-- Request access CTA -->
+    <section class="cta-wrap" id="request-access">
+      <div class="cta-access">
+        <h2>Request Investment Access</h2>
+        <div class="cta-top">
+          <div class="cta-copy">
+            <p>Current offerings can&rsquo;t be listed on a public website. Request access, and once I&rsquo;ve verified you&rsquo;re an accredited investor I&rsquo;ll send the current menu from our vetted sponsors, with the documents behind each one.</p>
+          </div>
+          <ul class="cta-points">
+            <li><strong>Current inventory</strong> of open DST, 721, royalty, and OZ offerings</li>
+            <li><strong>Full offering documents</strong>, so you can read before you decide</li>
+          </ul>
+        </div>
+        <form class="hero-form" method="POST" action="/.netlify/functions/lead">
+          <label class="hp-field" aria-hidden="true">Leave this field empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+          <input type="email" name="email" placeholder="Your email address" required aria-label="Your email address">
+          <button type="submit">Request Investment Access</button>
+        </form>
+        <p class="cta-fineprint">Private placements, available to accredited investors. No obligation.</p>
+      </div>
+    </section>
+
+    <!-- About + FAQ -->
+    <section class="about-faq" id="about">
+      <div class="about-col">
+        <div class="about-jerry">
+          <h3>About Jerry Baker</h3>
+          <div class="jerry-row">
+            <img class="jerry-photo" src="https://res.cloudinary.com/opoazlei/image/upload/v1783927734/jerry-baker_ovhy2w.jpg" alt="Jerry Baker, Managing Principal" loading="lazy">
+            <p>Gerald F. Baker, III (&ldquo;Jerry&rdquo;) is the founder and managing principal of Baker 1031 Investments, LLC, specializing in institutional-grade Delaware Statutory Trust (DST) properties and tax-deferred exchange solutions for individual investors.</p>
+          </div>
+          <p>Prior to founding the firm, Jerry spent more than a decade on Wall Street, where he was directly involved in over $10 billion in real estate transactions, leading property investment strategies and acquisitions for several prominent private equity firms and hedge funds.</p>
+          <p>His expertise is underpinned by a 60-year family legacy in real estate &mdash; three generations of developing, managing, and investing in high-quality assets. He established Baker 1031 to address the lack of transparency in the 1031 marketplace, engineering an execution model that can complete complex transactions in as little as two to three days.</p>
+          <p>Before a single offering is shown, Jerry underwrites the underlying real estate the way a private-equity investor would &mdash; the market, the rent roll, the business plan, the debt &mdash; on the conviction that if the real estate does not make sense, the rest of the deal will not either.</p>
+        </div>
+        <div class="about-firm">
+          <h3>About the Firm</h3>
+          <p>Baker 1031 Investments is a San Francisco&ndash;based, founder-led real estate securities firm that helps accredited investors complete 1031 exchanges using institutional Delaware Statutory Trust (DST) properties &mdash; building custom portfolios from leading sponsors, and also working in 721 UPREIT exchanges, Opportunity Zone funds, mineral &amp; royalty interests, and REITs so clients defer capital gains and own income real estate without the work of managing it.</p>
+          <p>There is a team behind me handling paperwork, deadline tracking, and the work behind the scenes, built so clients get taken care of properly. Every client works directly with me.</p>
+        </div>
+      </div>
+
+      <div class="faq-col">
+        <h3>Frequently Asked Questions</h3>
+        <details>
+          <summary>What is the minimum investment?</summary>
+          <p>Most DST programs I work with start at [$100,000] for 1031 exchange investors. Mineral royalty and Opportunity Zone fund minimums vary by program, and some cash investments start lower. Ask and I&rsquo;ll tell you what&rsquo;s current.</p>
+        </details>
+        <details>
+          <summary>Do I need to be an accredited investor?</summary>
+          <p>Yes. These offerings are private placements, and securities rules limit them to accredited investors. For most people that means a net worth over $1 million excluding your primary residence, or income over $200,000 in each of the last two years ($300,000 jointly).</p>
+        </details>
+        <details>
+          <summary>How are you paid?</summary>
+          <p>I&rsquo;m compensated by the program&rsquo;s sponsor through the offering, and every fee is itemized in the private placement memorandum. Ask me and I&rsquo;ll walk you through the fee table line by line before you invest.</p>
+        </details>
+        <details>
+          <summary>Can I sell my investment if I need to?</summary>
+          <p>Plan on holding for the full term. DSTs and the other programs I offer have no established resale market, so you should treat them as illiquid until the program sells &mdash; typically [5&ndash;10] years. If liquidity matters to your situation, tell me early and we&rsquo;ll factor it in.</p>
+        </details>
+        <details>
+          <summary>What happens when a DST sells?</summary>
+          <p>The property is sold, the program winds down, and your share of the proceeds comes back to you. At that point you can do another 1031 exchange, complete a 721 exchange into a REIT where available, or pay the tax and be done. We&rsquo;ll talk through it well before the sale.</p>
+        </details>
+        <details>
+          <summary>What is a Delaware Statutory Trust, in plain English?</summary>
+          <p>A trust that owns one or more institutional properties &mdash; an apartment community, a distribution warehouse, a medical office building. You buy a fractional interest, the IRS treats it as like-kind real estate for a 1031 exchange, and a professional manager runs the property. You collect your share without taking a landlord call.</p>
+        </details>
+        <details>
+          <summary>Can I split my exchange across several DSTs?</summary>
+          <p>Yes, and many clients do. Because DST minimums are modest, one sale can be spread across several programs &mdash; different property types, sponsors, and regions &mdash; instead of riding on a single building.</p>
+        </details>
+        <details>
+          <summary>How fast can I close?</summary>
+          <p>Once your funds are with the qualified intermediary and your paperwork is in, a DST closing can happen in as little as 2&ndash;3 business days, because the property and its financing are already in place. That speed is what saves exchanges late in the 45-day window.</p>
+        </details>
+        <details>
+          <summary>I&rsquo;m already inside my 45-day window. Is it too late?</summary>
+          <p>Usually not, but call today rather than tomorrow. DSTs can be identified and closed quickly, and in many cases they&rsquo;re used as a backup identification alongside property you&rsquo;re pursuing directly.</p>
+        </details>
+        <details>
+          <summary>What is a 721 exchange?</summary>
+          <p>A second step after a DST. Some programs let you exchange your DST interest into units of a REIT&rsquo;s operating partnership, trading direct property ownership for a share of a large diversified portfolio. It&rsquo;s a one-way door, so we talk it through carefully before you take it.</p>
+        </details>
+        <details>
+          <summary>Can I invest through my IRA or 401(k)?</summary>
+          <p>Some offerings accept retirement dollars, and mineral royalty and REIT programs are common fits. A 1031 exchange itself is for investment real estate, so IRA money follows a different path. Tell me what accounts you&rsquo;re working with and I&rsquo;ll show you what applies.</p>
+        </details>
+        <details>
+          <summary>What happens to my investment when I pass away?</summary>
+          <p>Your interest passes to your heirs like other investment real estate, and under current law they may receive a step-up in basis, which can permanently eliminate the deferred gain. Many clients use DSTs specifically as an estate-planning endgame. Your tax and estate advisors should confirm how the rules apply to you.</p>
+        </details>
+        <details>
+          <summary>Do I have to be in California to work with you?</summary>
+          <p>No. The firm is based in San Francisco, and clients complete exchanges in properties all over the country. Everything we do together can happen by phone, video, and email.</p>
+        </details>
+        <details>
+          <summary>When should I call you?</summary>
+          <p>The best time to call is before you sell. The second-best time is today. Once your sale closes, the 45-day identification clock is running, and the earlier we talk, the more options you have.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Static form so Netlify detects it at deploy time; the popup submits these fields via AJAX -->
+  <form name="request-investment-access" data-netlify="true" netlify-honeypot="company" hidden>
+    <input type="text" name="company">
+    <input type="text" name="first_name">
+    <input type="text" name="last_name">
+    <input type="email" name="email">
+    <input type="tel" name="phone">
+    <input type="text" name="state">
+    <input type="text" name="preferred_name">
+    <input type="text" name="role">
+    <input type="text" name="role_other">
+    <input type="text" name="situation">
+    <input type="text" name="situation_other">
+    <input type="text" name="closing_date">
+    <input type="text" name="equity_amount">
+    <input type="text" name="debt_amount">
+    <input type="text" name="investment_amount">
+    <input type="text" name="dst_familiarity">
+    <input type="text" name="current_plan">
+    <input type="text" name="marital_status">
+    <input type="text" name="household_income">
+    <input type="text" name="net_worth">
+    <input type="text" name="us_check">
+    <input type="text" name="accreditation_check">
+    <input type="text" name="routed_to">
+  </form>
+
+  <!-- Request-access popup -->
+  <div class="modal-backdrop" id="access-modal" role="dialog" aria-modal="true" aria-labelledby="access-modal-title">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="access-modal-title">Request Investment Access</h3>
+        <div class="modal-controls">
+          <button type="button" class="modal-skip" id="modal-skip" title="Temporary — remove before launch">Skip (design mode)</button>
+          <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+        </div>
+      </div>
+      <div class="modal-progress" id="modal-progress">Step 1 of 4</div>
+
+      <form id="access-form" novalidate>
+        <label class="hp-field" aria-hidden="true">Leave this field empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+
+        <!-- Step 1: contact details -->
+        <div class="form-step active" data-step="contact">
+          <h4>Your contact details</h4>
+          <div class="field-row">
+            <div class="field"><label for="f-first">First Name</label><input id="f-first" name="first_name" type="text" required autocomplete="given-name"></div>
+            <div class="field"><label for="f-last">Last Name</label><input id="f-last" name="last_name" type="text" required autocomplete="family-name"></div>
+          </div>
+          <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email"></div>
+          <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" required autocomplete="tel"></div>
+          <div class="field">
+            <label for="f-state">State of Residence</label>
+            <select id="f-state" name="state" required>
+              <option value="" selected disabled>Select&hellip;</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-preferred">Preferred Name <span class="opt">(optional)</span></label><input id="f-preferred" name="preferred_name" type="text" autocomplete="nickname"></div>
+        </div>
+
+        <!-- Step 2: role + situation -->
+        <div class="form-step" data-step="role">
+          <h4>About your situation</h4>
+          <div class="field">
+            <label for="f-role">Your role in this investment</label>
+            <select id="f-role" name="role" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>Investor</option>
+              <option>Broker</option>
+              <option>Financial Advisor</option>
+              <option>CPA</option>
+              <option>Attorney</option>
+              <option>Qualified Intermediary</option>
+              <option>Real Estate Agent</option>
+              <option>Family Member / Assisting an Investor</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-situation">Current situation</label>
+            <select id="f-situation" name="situation" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>In a 1031 exchange now (my property has sold)</option>
+              <option>Sale closing soon (exchange coming up)</option>
+              <option>Planning ahead for a future 1031 exchange</option>
+              <option>Still weighing my options</option>
+              <option>Investing cash (no 1031 exchange)</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="field" id="role-other-field" hidden>
+            <label for="f-role-other">Tell us a little about your role</label>
+            <input id="f-role-other" name="role_other" type="text" required disabled>
+          </div>
+          <div class="field" id="situation-other-field" hidden>
+            <label for="f-situation-other">Briefly describe your situation</label>
+            <input id="f-situation-other" name="situation_other" type="text" required disabled>
+          </div>
+        </div>
+
+        <!-- Step 3a: 1031 details -->
+        <div class="form-step" data-step="deal-1031">
+          <h4>Your exchange</h4>
+          <div class="field"><label for="f-closing">Closing date <span class="opt">(estimated is fine)</span></label><input id="f-closing" name="closing_date" type="date" required></div>
+          <div class="field-row">
+            <div class="field"><label for="f-equity">Equity</label><input id="f-equity" name="equity_amount" type="text" inputmode="numeric" placeholder="$" required></div>
+            <div class="field"><label for="f-debt">Debt <span class="opt">(enter 0 if none)</span></label><input id="f-debt" name="debt_amount" type="text" inputmode="numeric" placeholder="$0 if none" required></div>
+          </div>
+        </div>
+
+        <!-- Step 3b: non-1031 details -->
+        <div class="form-step" data-step="deal-cash">
+          <h4>Your investment</h4>
+          <div class="field"><label for="f-amount">Anticipated investment amount</label><input id="f-amount" name="investment_amount" type="text" inputmode="numeric" placeholder="$" required></div>
+        </div>
+
+        <!-- Step 4: DST familiarity + plan -->
+        <div class="form-step" data-step="dst">
+          <h4>DSTs and your plan</h4>
+          <div class="field">
+            <label for="f-familiar">How familiar are you with DSTs?</label>
+            <select id="f-familiar" name="dst_familiarity" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>New to DSTs</option>
+              <option>Somewhat familiar</option>
+              <option>Very familiar</option>
+              <option>Experienced DST investor</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Where do DSTs fit in your plan?</label>
+            <div class="radio-set">
+              <label><input type="radio" name="current_plan" value="DSTs are my main focus" required> DSTs are my main focus</label>
+              <label><input type="radio" name="current_plan" value="Exploring DSTs alongside other options"> Exploring DSTs alongside other options</label>
+              <label><input type="radio" name="current_plan" value="Not really interested in DSTs"> Not really interested in DSTs</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 5: accreditation (investors only) -->
+        <div class="form-step" data-step="accreditation">
+          <h4>Accreditation</h4>
+          <div class="field">
+            <label for="f-marital">Marital status</label>
+            <select id="f-marital" name="marital_status" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>Single</option>
+              <option>Married</option>
+              <option>Domestic Partnership</option>
+              <option>Divorced</option>
+              <option>Widowed</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-income">Household income</label>
+            <select id="f-income" name="household_income" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>Under $200,000</option>
+              <option>$200,000 &ndash; $300,000</option>
+              <option>$300,000 &ndash; $500,000</option>
+              <option>$500,000 &ndash; $1,000,000</option>
+              <option>Over $1,000,000</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-networth">Net worth <span class="opt">(excluding primary residence)</span></label>
+            <select id="f-networth" name="net_worth" required>
+              <option value="" selected disabled>Select&hellip;</option>
+              <option>Under $1,000,000</option>
+              <option>$1,000,000 &ndash; $2,500,000</option>
+              <option>$2,500,000 &ndash; $5,000,000</option>
+              <option>$5,000,000 &ndash; $10,000,000</option>
+              <option>Over $10,000,000</option>
+            </select>
+          </div>
+          <p class="modal-fineprint">Used only to confirm eligibility under SEC accredited-investor rules. Your information is never shared or sold.</p>
+        </div>
+
+        <p class="form-error" id="form-error">Please complete the highlighted fields before continuing.</p>
+
+        <div class="modal-nav">
+          <button type="button" class="btn-back" id="btn-back">Back</button>
+          <button type="button" class="btn-next" id="btn-next">Next</button>
+        </div>
+      </form>
+
+      <div class="modal-thanks" id="modal-thanks">
+        <h4>Thank you.</h4>
+        <p>Your request is in. After a quick suitability review, I&rsquo;ll send the current offering menu and documents to your email.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="#strategies">Strategies</a></li>
+            <li><a href="#why">Difference</a></li>
+            <li><a href="#full-cycle">Performance</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>[FULL DISCLOSURE BLOCK &mdash; pending broker-dealer review. Reserve this space for the complete required disclosure language.]</p>
+        <p>DST, 721 exchange, Opportunity Zone fund, and mineral royalty investments are offered through private placements available to accredited investors only. These investments involve substantial risk, including loss of principal, illiquidity, and no guarantee of distributions or appreciation. Diversification does not assure a profit or protect against loss. Nothing on this page is tax or legal advice; consult your own advisors before investing. Past performance does not guarantee future results.</p>
+        <p>Securities offered through [Broker-Dealer], member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments and [Broker-Dealer] are separate entities. Check the background of this firm and its representatives on <a href="https://brokercheck.finra.org/" target="_blank" rel="noopener">FINRA BrokerCheck</a>.</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="#">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="#">Terms of Use</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var pills = document.querySelectorAll('.filter-pills button');
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.strategy-card'));
+      var grid = document.querySelector('.strategy-grid');
+      var moreCard = document.querySelector('.more-card');
+      var currentFilter = 'all';
+      var expanded = false;
+
+      function columnCount() {
+        return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      }
+
+      function matching() {
+        return cards.filter(function (card) {
+          if (currentFilter === 'all') return true;
+          return card.getAttribute('data-tags').split(' ').indexOf(currentFilter) !== -1;
+        });
+      }
+
+      function render() {
+        var visible = matching();
+        cards.forEach(function (card) { card.classList.add('hidden'); });
+
+        var cols = columnCount();
+        if (!expanded && visible.length > cols) {
+          // One row only: fill all but the last slot, navy card takes the last slot
+          // (on single-column screens, always show at least one real card)
+          var shown = Math.max(cols - 1, 1);
+          visible.slice(0, shown).forEach(function (card) { card.classList.remove('hidden'); });
+          moreCard.textContent = '+' + (visible.length - shown) + ' more';
+          moreCard.classList.remove('hidden');
+        } else {
+          visible.forEach(function (card) { card.classList.remove('hidden'); });
+          moreCard.classList.add('hidden');
+        }
+      }
+
+      pills.forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          pills.forEach(function (p) { p.classList.remove('active'); });
+          pill.classList.add('active');
+          currentFilter = pill.getAttribute('data-filter');
+          expanded = false; // collapse again on every filter change
+          render();
+        });
+      });
+
+      moreCard.addEventListener('click', function () {
+        expanded = true;
+        render();
+      });
+
+      var resizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(render, 120);
+      });
+
+      render();
+    })();
+
+    // Full-cycle DST collage: 8 visible cards, random swaps from the pool
+    (function () {
+      var IMG = {
+        apartments: 'https://res.cloudinary.com/opoazlei/image/upload/v1783843881/Apartments_pllp0h.jpg',
+        warehouse:  'https://res.cloudinary.com/opoazlei/image/upload/v1783843878/Amazon_q2ru5v.png',
+        hotel:      'https://res.cloudinary.com/opoazlei/image/upload/v1783843880/Hotel_ojlaau.avif',
+        oil:        'https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Oil_Wells_m8jf8v.webp',
+        mall:       'https://res.cloudinary.com/opoazlei/image/upload/v1783843879/Mall_a3ex5g.jpg'
+      };
+      var DEALS = [
+        { name: '[Crestview Apartments]',        sponsor: '[Sponsor A]', type: 'Multifamily',       ret: '[7.4%]', mult: '[1.62x]', hold: '[6.1 yrs]', img: IMG.apartments },
+        { name: '[Gateway Logistics Center]',    sponsor: '[Sponsor B]', type: 'Industrial',        ret: '[6.8%]', mult: '[1.48x]', hold: '[5.2 yrs]', img: IMG.warehouse },
+        { name: '[Harborview Hotel Portfolio]',  sponsor: '[Sponsor C]', type: 'Hospitality',       ret: '[8.1%]', mult: '[1.71x]', hold: '[7.3 yrs]', img: IMG.hotel },
+        { name: '[Permian Royalty Partners II]', sponsor: '[Sponsor D]', type: 'Mineral Royalties', ret: '[9.2%]', mult: '[1.55x]', hold: '[4.6 yrs]', img: IMG.oil },
+        { name: '[Lakeside Commons]',            sponsor: '[Sponsor E]', type: 'Retail',            ret: '[6.3%]', mult: '[1.41x]', hold: '[6.8 yrs]', img: IMG.mall },
+        { name: '[Summit Ridge Apartments]',     sponsor: '[Sponsor B]', type: 'Multifamily',       ret: '[7.9%]', mult: '[1.66x]', hold: '[5.5 yrs]', img: IMG.apartments },
+        { name: '[Blue Sky Distribution]',       sponsor: '[Sponsor F]', type: 'Industrial',        ret: '[7.1%]', mult: '[1.52x]', hold: '[4.9 yrs]', img: IMG.warehouse },
+        { name: '[Copper Basin Royalties]',      sponsor: '[Sponsor D]', type: 'Mineral Royalties', ret: '[8.7%]', mult: '[1.49x]', hold: '[5.0 yrs]', img: IMG.oil },
+        { name: '[Grand Vista Suites]',          sponsor: '[Sponsor C]', type: 'Hospitality',       ret: '[7.6%]', mult: '[1.58x]', hold: '[6.4 yrs]', img: IMG.hotel },
+        { name: '[Northgate Marketplace]',       sponsor: '[Sponsor A]', type: 'Retail',            ret: '[6.6%]', mult: '[1.44x]', hold: '[7.1 yrs]', img: IMG.mall },
+        { name: '[Willow Bend Communities]',     sponsor: '[Sponsor E]', type: 'Multifamily',       ret: '[7.2%]', mult: '[1.60x]', hold: '[5.8 yrs]', img: IMG.apartments },
+        { name: '[Ironline Industrial Park]',    sponsor: '[Sponsor F]', type: 'Industrial',        ret: '[6.9%]', mult: '[1.50x]', hold: '[5.4 yrs]', img: IMG.warehouse }
+      ];
+
+      var grid = document.getElementById('cycle-grid');
+      var showing = []; // deal index per card slot
+
+      // Preload every card photo once, so mid-flip swaps never wait on the network
+      Object.keys(IMG).forEach(function (k) {
+        var im = new Image();
+        im.src = IMG[k];
+      });
+
+      function cardHTML(d) {
+        return '<span class="cycle-flag">Full Cycle</span>' +
+          '<div class="cycle-body">' +
+            '<h3>' + d.name + '</h3>' +
+            '<div class="cycle-meta">' + d.sponsor + ' &middot; ' + d.type + '</div>' +
+            '<div class="cycle-stats">' +
+              '<span class="stat"><span class="label">Avg Annual Return</span><span class="value">' + d.ret + '</span></span>' +
+              '<span class="stat"><span class="label">Equity Multiple</span><span class="value">' + d.mult + '</span></span>' +
+              '<span class="stat"><span class="label">Hold Period</span><span class="value">' + d.hold + '</span></span>' +
+            '</div>' +
+          '</div>';
+      }
+
+      function fill(card, dealIdx) {
+        var d = DEALS[dealIdx];
+        card.style.backgroundImage = "url('" + d.img + "')";
+        card.innerHTML = cardHTML(d);
+      }
+
+      // initial deal order: shuffled
+      var order = DEALS.map(function (_, i) { return i; });
+      for (var i = order.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = order[i]; order[i] = order[j]; order[j] = t;
+      }
+
+      function columnCount() {
+        return getComputedStyle(grid).gridTemplateColumns.split(' ').length;
+      }
+
+      function unseen() {
+        return DEALS.map(function (_, i) { return i; })
+          .filter(function (i) { return showing.indexOf(i) === -1; });
+      }
+
+      // Keep exactly 2 full rows of cards at every screen size — no gaps
+      function syncCount() {
+        var target = columnCount() * 2;
+        while (grid.children.length > target) {
+          grid.removeChild(grid.lastElementChild);
+          showing.pop();
+        }
+        while (grid.children.length < target) {
+          var pool = unseen();
+          var next = pool.length
+            ? pool[Math.floor(Math.random() * pool.length)]
+            : order[grid.children.length % order.length];
+          var card = document.createElement('article');
+          card.className = 'cycle-card';
+          fill(card, next);
+          showing.push(next);
+          grid.appendChild(card);
+        }
+      }
+
+      syncCount();
+      var cycleResizeTimer;
+      window.addEventListener('resize', function () {
+        clearTimeout(cycleResizeTimer);
+        cycleResizeTimer = setTimeout(syncCount, 150);
+      });
+
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion) {
+        setInterval(function () {
+          var count = grid.children.length;
+          if (!count) return;
+          var slot = Math.floor(Math.random() * count);
+          var pool = unseen();
+          if (!pool.length) return;
+          var next = pool[Math.floor(Math.random() * pool.length)];
+          var card = grid.children[slot];
+          card.classList.add('flip-out');            // rotate to edge-on
+          card.addEventListener('transitionend', function () {
+            fill(card, next);                        // swap the face exactly at 90°
+            showing[slot] = next;
+            card.classList.remove('flip-out');
+            card.classList.add('flip-in');           // snap to -90° (no transition)
+            void card.offsetWidth;                   // force reflow
+            card.classList.remove('flip-in');        // rotate in to flat
+          }, { once: true });
+        }, 2800);
+      }
+    })();
+
+    // Request-access popup form (multi-step, submits to Netlify Forms)
+    (function () {
+      var backdrop = document.getElementById('access-modal');
+      var form = document.getElementById('access-form');
+      var thanks = document.getElementById('modal-thanks');
+      var progress = document.getElementById('modal-progress');
+      var errorMsg = document.getElementById('form-error');
+      var btnBack = document.getElementById('btn-back');
+      var btnNext = document.getElementById('btn-next');
+
+      // Populate the state dropdown: 50 states + DC + territories + Outside USA
+      var STATES = ['Alabama','Alaska','Arizona','Arkansas','California','Colorado','Connecticut','Delaware','Florida','Georgia','Hawaii','Idaho','Illinois','Indiana','Iowa','Kansas','Kentucky','Louisiana','Maine','Maryland','Massachusetts','Michigan','Minnesota','Mississippi','Missouri','Montana','Nebraska','Nevada','New Hampshire','New Jersey','New Mexico','New York','North Carolina','North Dakota','Ohio','Oklahoma','Oregon','Pennsylvania','Rhode Island','South Carolina','South Dakota','Tennessee','Texas','Utah','Vermont','Virginia','Washington','West Virginia','Wisconsin','Wyoming','District of Columbia','Puerto Rico','Guam','U.S. Virgin Islands','American Samoa','Northern Mariana Islands'];
+      var stateSel = document.getElementById('f-state');
+      var outside = document.createElement('option');
+      outside.textContent = 'Outside USA';
+      stateSel.appendChild(outside);
+      var divider = document.createElement('option');
+      divider.disabled = true;
+      divider.textContent = '──────────';
+      stateSel.appendChild(divider);
+      STATES.forEach(function (s) {
+        var o = document.createElement('option');
+        o.textContent = s;
+        stateSel.appendChild(o);
+      });
+
+      // Step order is computed from answers:
+      //  - 1031 situations get the exchange page; everything else gets the amount page
+      //  - accreditation only when role is Investor
+      function stepOrder() {
+        var situation = form.elements['situation'].value;
+        var role = form.elements['role'].value;
+        var is1031 = [
+          'In a 1031 exchange now (my property has sold)',
+          'Sale closing soon (exchange coming up)',
+          'Planning ahead for a future 1031 exchange'
+        ].indexOf(situation) !== -1;
+        var order = ['contact', 'role'];
+        if (situation) order.push(is1031 ? 'deal-1031' : 'deal-cash');
+        else order.push('deal-1031'); // placeholder until situation chosen
+        order.push('dst');
+        if (role === 'Investor' || !role) order.push('accreditation');
+        return order;
+      }
+
+      var current = 0;
+
+      /* ---------- Smart validation: names, email typos, phone ---------- */
+
+      // Silent tidy-up: title-case names typed in all lower/upper, incl. Mc / O' prefixes
+      function fixName(v) {
+        v = v.trim().replace(/\s+/g, ' ');
+        if (!v) return v;
+        if (v === v.toLowerCase() || v === v.toUpperCase()) {
+          v = v.toLowerCase().replace(/(^|[\s\-'])([a-z])/g, function (m, sep, c) { return sep + c.toUpperCase(); });
+          v = v.replace(/\bMc([a-z])/g, function (m, c) { return 'Mc' + c.toUpperCase(); });
+        }
+        return v;
+      }
+
+      function letterCount(v) { return (v.match(/[A-Za-z]/g) || []).length; }
+
+      // Common email domain typos → suggestion
+      var DOMAIN_FIXES = { gmial: 'gmail', gmal: 'gmail', gamil: 'gmail', gnail: 'gmail', gmali: 'gmail', gmil: 'gmail', gmaill: 'gmail', hotmial: 'hotmail', hotmal: 'hotmail', hotmali: 'hotmail', hotamil: 'hotmail', yahooo: 'yahoo', yaho: 'yahoo', yhoo: 'yahoo', outlok: 'outlook', outllok: 'outlook', outloook: 'outlook', icoud: 'icloud', iclould: 'icloud', icluod: 'icloud', aoll: 'aol' };
+      var TLD_FIXES = { con: 'com', cmo: 'com', ocm: 'com', vom: 'com', comm: 'com', nte: 'net', ent: 'net', orgg: 'org' };
+      var BIG_PROVIDERS = ['gmail', 'yahoo', 'hotmail', 'outlook', 'icloud', 'aol'];
+
+      function emailSuggestion(v) {
+        var m = v.toLowerCase().match(/^([^@]+)@([^@.]+)((?:\.[^@.]+)+)$/);
+        if (!m) return null;
+        var local = m[1], domain = m[2], tlds = m[3];
+        var newDomain = DOMAIN_FIXES[domain] || domain;
+        var parts = tlds.split('.').filter(Boolean);
+        var last = parts[parts.length - 1];
+        if (TLD_FIXES[last]) parts[parts.length - 1] = TLD_FIXES[last];
+        if (BIG_PROVIDERS.indexOf(newDomain) !== -1 && parts.length === 1 && parts[0] === 'co') parts[0] = 'com';
+        var fixed = local + '@' + newDomain + '.' + parts.join('.');
+        return fixed !== v.toLowerCase() ? fixed : null;
+      }
+
+      var FOREIGN_TLDS = ['.uk', '.ca', '.au', '.de', '.fr', '.in', '.cn', '.jp', '.br', '.mx', '.ru', '.es', '.it', '.nl', '.se', '.no', '.ch', '.ie', '.nz', '.za', '.kr', '.sg', '.hk', '.ae'];
+      function emailLooksForeign(v) {
+        v = v.toLowerCase();
+        return FOREIGN_TLDS.some(function (t) { return v.slice(-t.length) === t; });
+      }
+
+      function phoneDigits(v) { return v.replace(/\D/g, ''); }
+      function phoneIsUS(v) {
+        var d = phoneDigits(v);
+        return d.length === 10 || (d.length === 11 && d.charAt(0) === '1');
+      }
+      function formatUSPhone(v) {
+        var d = phoneDigits(v);
+        if (d.length === 11 && d.charAt(0) === '1') d = d.slice(1);
+        if (d.length !== 10) return v;
+        return '(' + d.slice(0, 3) + ') ' + d.slice(3, 6) + '-' + d.slice(6);
+      }
+
+      // Suggestion box: one at a time; "keep as typed" is remembered until the field changes
+      function clearSuggestion() {
+        var box = form.querySelector('.suggest-box');
+        if (box) box.remove();
+      }
+      function showSuggestion(input, suggested, message) {
+        clearSuggestion();
+        var box = document.createElement('div');
+        box.className = 'suggest-box';
+        box.appendChild(document.createTextNode(message + ' '));
+        var use = document.createElement('button');
+        use.type = 'button'; use.className = 'use-btn'; use.textContent = 'Use "' + suggested + '"';
+        var keep = document.createElement('button');
+        keep.type = 'button'; keep.className = 'keep-btn'; keep.textContent = 'Keep as typed';
+        box.appendChild(use); box.appendChild(keep);
+        input.closest('.field').appendChild(box);
+        use.addEventListener('click', function () { input.value = suggested; clearSuggestion(); });
+        keep.addEventListener('click', function () { input.dataset.keep = '1'; clearSuggestion(); });
+        input.addEventListener('input', function onEdit() { delete input.dataset.keep; input.removeEventListener('input', onEdit); });
+      }
+
+      // Runs on Next from the contact step. Returns an error string, or null when clear to proceed.
+      function smartContactCheck() {
+        clearSuggestion();
+        var first = document.getElementById('f-first');
+        var last = document.getElementById('f-last');
+        var preferred = document.getElementById('f-preferred');
+        var email = document.getElementById('f-email');
+        var phone = document.getElementById('f-phone');
+        var state = document.getElementById('f-state');
+
+        [first, last, preferred].forEach(function (el) { el.value = fixName(el.value); });
+
+        if (letterCount(first.value) < 2 || letterCount(last.value) < 2) {
+          (letterCount(first.value) < 2 ? first : last).focus();
+          return 'Please enter your full first and last name (at least two letters each).';
+        }
+        // Two bare letters usually means initials: aj → A.J.
+        var initialsTargets = [first, preferred];
+        for (var i = 0; i < initialsTargets.length; i++) {
+          var el = initialsTargets[i];
+          if (/^[A-Za-z]{2}$/.test(el.value) && !el.dataset.keep) {
+            var initials = el.value.charAt(0).toUpperCase() + '.' + el.value.charAt(1).toUpperCase() + '.';
+            showSuggestion(el, initials, 'That looks like initials.');
+            return 'Please confirm the highlighted name before continuing.';
+          }
+        }
+        var fix = emailSuggestion(email.value);
+        if (fix && !email.dataset.keep) {
+          showSuggestion(email, fix, 'Possible typo in that email.');
+          return 'Please confirm your email address before continuing.';
+        }
+        if (state.value !== 'Outside USA') {
+          if (!phoneIsUS(phone.value)) {
+            phone.focus();
+            return 'Please enter a valid 10-digit US phone number.';
+          }
+          phone.value = formatUSPhone(phone.value);
+        } else if (phoneDigits(phone.value).length < 7) {
+          phone.focus();
+          return 'Please enter a valid phone number, including your country code.';
+        }
+        return null;
+      }
+
+      /* ---------- Post-form checks & scheduling routes ---------- */
+
+      // 1) Do the answers look like a US person? (state + phone shape + email TLD)
+      function usCheck() {
+        var signals = [];
+        if (form.elements['state'].value === 'Outside USA') signals.push('state: Outside USA');
+        if (!phoneIsUS(form.elements['phone'].value)) signals.push('non-US phone');
+        if (emailLooksForeign(form.elements['email'].value)) signals.push('foreign email TLD');
+        return { isUS: signals.length === 0, detail: signals.length ? 'Non-US signals: ' + signals.join(', ') : 'Appears US-based' };
+      }
+
+      // 2) Self-reported accreditation: net worth $1M+ (excl. residence), or income
+      //    $200k+ single / $300k+ joint. Index-based so the dash characters don't matter.
+      function accreditationCheck() {
+        if (form.elements['role'].value !== 'Investor') return { accredited: true, detail: 'N/A (not the investor)' };
+        var joint = ['Married', 'Domestic Partnership'].indexOf(form.elements['marital_status'].value) !== -1;
+        var incomeIdx = document.getElementById('f-income').selectedIndex;   // 1=Under 200k … 5=Over 1M
+        var worthIdx = document.getElementById('f-networth').selectedIndex;  // 1=Under 1M … 5=Over 10M
+        var byWorth = worthIdx >= 2;
+        var byIncome = joint ? incomeIdx >= 3 : incomeIdx >= 2;
+        var accredited = byWorth || byIncome;
+        return { accredited: accredited, detail: accredited ? 'Appears accredited (self-reported)' : 'Does not appear accredited (self-reported)' };
+      }
+
+      function isCashInvestor() {
+        return form.elements['situation'].value === 'Investing cash (no 1031 exchange)';
+      }
+
+      function buildCalNotes() {
+        var parts = [];
+        function add(label, name) {
+          var el = form.elements[name];
+          if (el && el.value && !el.disabled) parts.push(label + ': ' + el.value);
+        }
+        add('Phone', 'phone'); add('State', 'state'); add('Role', 'role'); add('Role detail', 'role_other');
+        add('Situation', 'situation'); add('Situation detail', 'situation_other');
+        add('Closing date', 'closing_date'); add('Equity', 'equity_amount'); add('Debt', 'debt_amount');
+        add('Anticipated investment', 'investment_amount');
+        add('DST familiarity', 'dst_familiarity');
+        var plan = form.querySelector('input[name="current_plan"]:checked');
+        if (plan) parts.push('Plan: ' + plan.value);
+        return parts.join(' | ');
+      }
+
+      // Cal.com inline embed (Jerry's snippets, parameterized) with the form data prefilled
+      function initCalEmbed(ns, elementId, calLink) {
+        (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+        Cal("init", ns, { origin: "https://app.cal.com" });
+        Cal.config = Cal.config || {};
+        Cal.config.forwardQueryParams = true;
+        var displayName = (form.elements['preferred_name'].value || (form.elements['first_name'].value + ' ' + form.elements['last_name'].value)).trim();
+        Cal.ns[ns]("inline", {
+          elementOrSelector: '#' + elementId,
+          config: {
+            layout: "month_view",
+            useSlotsViewOnSmallScreen: "true",
+            theme: "light",
+            name: displayName,
+            email: form.elements['email'].value,
+            notes: buildCalNotes()
+          },
+          calLink: calLink
+        });
+        Cal.ns[ns]("ui", { theme: "light", cssVarsPerTheme: { light: { "cal-brand": "#2b3a5f" } }, hideEventTypeDetails: true, layout: "month_view" });
+      }
+
+      /* ---------- "Other" reveals a required explanation box ---------- */
+      function wireOther(selectId, fieldId) {
+        var sel = document.getElementById(selectId);
+        var wrap = document.getElementById(fieldId);
+        var input = wrap.querySelector('input');
+        sel.addEventListener('change', function () {
+          var isOther = sel.value === 'Other';
+          wrap.hidden = !isOther;
+          input.disabled = !isOther;
+          if (!isOther) input.value = '';
+        });
+      }
+      wireOther('f-role', 'role-other-field');
+      wireOther('f-situation', 'situation-other-field');
+
+      function show(idx) {
+        current = idx;
+        var order = stepOrder();
+        document.querySelectorAll('.form-step').forEach(function (s) { s.classList.remove('active'); });
+        document.querySelector('.form-step[data-step="' + order[idx] + '"]').classList.add('active');
+        progress.textContent = 'Step ' + (idx + 1) + ' of ' + order.length;
+        btnBack.style.visibility = idx === 0 ? 'hidden' : 'visible';
+        btnNext.textContent = idx === order.length - 1 ? 'Submit' : 'Next';
+        errorMsg.classList.remove('show');
+      }
+
+      function validateStep() {
+        var panel = document.querySelector('.form-step.active');
+        var ok = true;
+        panel.querySelectorAll('input[required], select[required]').forEach(function (el) {
+          if (el.disabled) return;
+          if (el.type === 'radio') {
+            if (!form.querySelector('input[name="' + el.name + '"]:checked')) ok = false;
+          } else if (!el.checkValidity()) {
+            ok = false;
+          }
+        });
+        return ok;
+      }
+
+      function submitForm() {
+        var us = usCheck();
+        var accr = accreditationCheck();
+        // Route: US + not-cash + (accredited investor, or any non-investor role) → 25min;
+        // anything not accredited, outside the US, or a cash investor → consultation.
+        var route = (us.isUS && !isCashInvestor() && accr.accredited) ? '25min' : 'consultation';
+
+        var data = new URLSearchParams();
+        data.append('form-name', 'request-investment-access');
+        var order = stepOrder();
+        Array.prototype.forEach.call(form.elements, function (el) {
+          if (!el.name) return;
+          if (el.disabled) return;
+          if (el.type === 'radio' && !el.checked) return;
+          // Only send fields from steps that were part of this path
+          var panel = el.closest('.form-step');
+          if (panel && order.indexOf(panel.getAttribute('data-step')) === -1) return;
+          data.append(el.name, el.value);
+        });
+        data.append('us_check', us.detail);
+        data.append('accreditation_check', accr.detail);
+        data.append('routed_to', route);
+
+        btnNext.disabled = true;
+        fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: data.toString()
+        }).then(function () { showThanks(route); })
+          .catch(function () { showThanks(route); }); // shown either way while designing; real delivery requires Netlify hosting
+      }
+
+      function showThanks(route) {
+        form.style.display = 'none';
+        progress.style.display = 'none';
+        thanks.classList.add('show');
+        if (!route) return; // design-mode skip preview: plain thank-you, no calendar
+        document.querySelector('.modal').classList.add('modal-wide');
+        var isConsult = route === 'consultation';
+        thanks.querySelector('p').textContent = isConsult
+          ? 'Thanks for the details. The right next step is a quick consultation call. Pick a time that works for you below.'
+          : 'Your request is in. Pick a time below and we’ll walk through the current offering menu together.';
+        var id = isConsult ? 'my-cal-inline-consultation' : 'my-cal-inline-25min';
+        if (!document.getElementById(id)) {
+          var holder = document.createElement('div');
+          holder.id = id;
+          holder.className = 'cal-holder';
+          thanks.appendChild(holder);
+          initCalEmbed(isConsult ? 'consultation' : '25min', id,
+            isConsult ? 'jerry-baker-yn6qn1/consultation' : 'jerry-baker-yn6qn1/25min');
+        }
+      }
+
+      btnNext.addEventListener('click', function () {
+        if (!validateStep()) {
+          var panel = document.querySelector('.form-step.active');
+          var debtEl = document.getElementById('f-debt');
+          errorMsg.textContent = (panel.getAttribute('data-step') === 'deal-1031' && debtEl && !debtEl.checkValidity())
+            ? 'Please complete the highlighted fields before continuing. If you have no debt on the property, enter 0.'
+            : 'Please complete the highlighted fields before continuing.';
+          errorMsg.classList.add('show');
+          var bad = panel.querySelector(':invalid:not(:disabled)');
+          if (bad) bad.focus();
+          return;
+        }
+        // Contact page gets the smart checks: name fixes, email typos, phone shape
+        if (document.querySelector('.form-step.active').getAttribute('data-step') === 'contact') {
+          var issue = smartContactCheck();
+          if (issue) {
+            errorMsg.textContent = issue;
+            errorMsg.classList.add('show');
+            return;
+          }
+        }
+        var order = stepOrder();
+        if (current >= order.length - 1) { submitForm(); return; }
+        show(current + 1);
+      });
+
+      btnBack.addEventListener('click', function () {
+        if (current > 0) show(current - 1);
+      });
+
+      function openModal(email) {
+        if (email) form.elements['email'].value = email;
+        form.style.display = '';
+        progress.style.display = '';
+        thanks.classList.remove('show');
+        document.querySelector('.modal').classList.remove('modal-wide');
+        ['my-cal-inline-25min', 'my-cal-inline-consultation'].forEach(function (id) {
+          var n = document.getElementById(id);
+          if (n) n.remove();
+        });
+        btnNext.disabled = false;
+        backdrop.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        show(0);
+      }
+
+      function closeModal() {
+        backdrop.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      document.getElementById('modal-close').addEventListener('click', closeModal);
+      // TEMPORARY (remove before launch): skip advances to the next page without validation.
+      // On the last page it previews the real routing + calendar, but submits nothing.
+      document.getElementById('modal-skip').addEventListener('click', function () {
+        var order = stepOrder();
+        if (current >= order.length - 1) {
+          var us = usCheck();
+          var accr = accreditationCheck();
+          var route = (us.isUS && !isCashInvestor() && accr.accredited) ? '25min' : 'consultation';
+          showThanks(route);
+          return;
+        }
+        show(current + 1);
+      });
+      backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+      // The two email bars now open the popup with the email carried over
+      document.querySelectorAll('.hero-form').forEach(function (f) {
+        f.addEventListener('submit', function (e) {
+          e.preventDefault();
+          var emailInput = f.querySelector('input[type="email"]');
+          openModal(emailInput ? emailInput.value : '');
+        });
+      });
+
+      // Header "Request Investment Access" opens the popup directly
+      document.querySelectorAll('.utility-bar a.request-access').forEach(function (a) {
+        a.addEventListener('click', function (e) { e.preventDefault(); openModal(''); });
+      });
+
+      // Strategy cards open the popup (the navy "+N more" card keeps its expand behavior)
+      document.querySelectorAll('.strategy-card').forEach(function (card) {
+        card.addEventListener('click', function () { openModal(''); });
+      });
+
+      // Full-cycle cards (created dynamically) — delegate on the grid
+      var cycleGrid = document.getElementById('cycle-grid');
+      if (cycleGrid) {
+        cycleGrid.addEventListener('click', function (e) {
+          if (e.target.closest('.cycle-card')) openModal('');
+        });
+      }
+
+      // Sponsor logos — delegate on the marquee
+      var marquee = document.querySelector('.sponsor-marquee');
+      if (marquee) {
+        marquee.addEventListener('click', function (e) {
+          if (e.target.closest('.logo-box')) openModal('');
+        });
+      }
+    })();
+
+    // Mobile hamburger menu
+    (function () {
+      var btn = document.querySelector('.menu-btn');
+      var nav = document.getElementById('primary-nav');
+      btn.addEventListener('click', function () {
+        var open = nav.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+      nav.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () {
+          nav.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    })();
+
+    // Chart hover tooltips
+    (function () {
+      var tooltip = document.getElementById('chart-tooltip');
+      var cols = document.querySelectorAll('.bar-col');
+      cols.forEach(function (col) {
+        col.addEventListener('mouseenter', function () {
+          tooltip.innerHTML = '<strong>' + col.getAttribute('data-name') + ' &middot; ' +
+            col.getAttribute('data-value') + '</strong>' + col.getAttribute('data-note');
+          tooltip.classList.add('show');
+        });
+        col.addEventListener('mousemove', function (e) {
+          var pad = 14;
+          var x = e.clientX + pad, y = e.clientY + pad;
+          var r = tooltip.getBoundingClientRect();
+          if (x + r.width > window.innerWidth - 8) x = e.clientX - r.width - pad;
+          if (y + r.height > window.innerHeight - 8) y = e.clientY - r.height - pad;
+          tooltip.style.left = x + 'px';
+          tooltip.style.top = y + 'px';
+        });
+        col.addEventListener('mouseleave', function () {
+          tooltip.classList.remove('show');
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

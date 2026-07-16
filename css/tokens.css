@@ -1,0 +1,35 @@
+/* ============================================================
+   Baker 1031 Investments — shared design tokens
+   Single source of truth for colors, type, and layout values.
+   Every page links this file BEFORE its page-specific styles.
+   ============================================================ */
+
+:root {
+  /* Brand */
+  --navy:         #2b3a5f;   /* primary accent — buttons, links, active states */
+  --navy-dark:    #22304f;   /* hover state for navy */
+  --navy-overlay: rgba(30, 42, 74, 0.72);  /* hero video/photo scrim */
+
+  /* Ink (text) */
+  --ink:      #2f3237;   /* primary text */
+  --ink-soft: #4a4a4a;   /* body / secondary text */
+  --muted:    #8a8f99;   /* labels, captions, fine print */
+
+  /* Surfaces & lines */
+  --hairline: #e4e4e4;   /* borders and dividers */
+  --wash:     #f7f8fa;   /* light panel background (stat tiles, cards) */
+
+  /* Status */
+  --good: #1e6b2e;   /* positive: Available chip, Advantages, Above Average */
+  --bad:  #a33a2a;   /* negative: Concerns, Below Average */
+
+  /* Type */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+
+  /* Layout */
+  --container-max: 78rem;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 12px;
+  --header-height: 72px;
+}
