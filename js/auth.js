@@ -23,13 +23,9 @@ async function init() {
     client_id: "2405a754fefd43828d42f3c83e806a36",
     domain: "https://baker1031investments.kinde.com",
     redirect_uri: window.location.origin,
-    on_redirect_callback: (user, appState) => {
-      // After login, return the user to where they were headed
-      if (appState && appState.returnTo) {
-        window.location.replace(appState.returnTo);
-      } else if (user) {
-        window.location.replace("/current-offerings.html");
-      }
+    on_redirect_callback: (user) => {
+      // Every successful login lands on the listings directory
+      if (user) window.location.replace("/current-offerings.html");
     }
   });
 
@@ -51,19 +47,14 @@ async function init() {
     }
   }
 
-  /* ---------- Generic hooks: any #login / #register button, per Kinde quickstart ---------- */
+  /* ---------- Generic hook: any #login button ---------- */
+  // No register hook on purpose: self-sign-up is disabled. Accounts are
+  // provisioned server-side after the request-access form + scheduled call.
   const genericLogin = document.getElementById("login");
   if (genericLogin) {
     genericLogin.addEventListener("click", async function (e) {
       e.preventDefault();
-      await kinde.login({ app_state: { returnTo: "/current-offerings.html" } });
-    });
-  }
-  const genericRegister = document.getElementById("register");
-  if (genericRegister) {
-    genericRegister.addEventListener("click", async function (e) {
-      e.preventDefault();
-      await kinde.register({ app_state: { returnTo: "/current-offerings.html" } });
+      await kinde.login();
     });
   }
 
@@ -71,8 +62,8 @@ async function init() {
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
     if (!authed) {
-      // Not signed in: send to Kinde, then back to this page
-      kinde.login({ app_state: { returnTo: window.location.pathname } });
+      // Not signed in: send to Kinde (successful logins land on the listings page)
+      kinde.login();
       return;
     }
     const nameEl = accountBox.querySelector('[data-field="First Name"]');

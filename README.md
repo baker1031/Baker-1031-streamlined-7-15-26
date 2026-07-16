@@ -29,3 +29,9 @@ The site is fully static and already loads with zero framework runtime, which is
 - Remove the form's "Skip (design mode)" button
 - Privacy policy live (the form collects accreditation answers)
 - Compress hero video (Cloudinary `q_auto,vc_auto,w_1920`), consider self-hosting the 84 sponsor logos (public logo.dev token)
+
+## Kinde auth setup
+
+- `js/auth.js` — Kinde PKCE client (CDN, no build). Login always routes to `current-offerings.html`; portal pages redirect unauthenticated visitors to Kinde; Log Out signs out. Self-sign-up is disabled by policy — accounts are provisioned by `netlify/functions/provision-user.mjs` after the request-access form is completed and a Cal.com meeting is booked (`bookingSuccessful` event).
+- Netlify env vars required: `KINDE_DOMAIN`, `KINDE_M2M_CLIENT_ID`, `KINDE_M2M_CLIENT_SECRET` (from a Kinde Machine-to-Machine app with Management API `create:users` scope).
+- Kinde dashboard: allowed callback + logout URLs must include the Netlify URL and production domain. Disable self-sign-up under the environment's policies.

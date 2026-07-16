@@ -2263,6 +2263,21 @@
           calLink: calLink
         });
         Cal.ns[ns]("ui", { theme: "light", cssVarsPerTheme: { light: { "cal-brand": "#2b3a5f" } }, hideEventTypeDetails: true, layout: "month_view" });
+        // Once the meeting is actually booked, provision the investor's Kinde account
+        Cal.ns[ns]("on", {
+          action: "bookingSuccessful",
+          callback: function () {
+            fetch("/.netlify/functions/provision-user", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                email: form.elements["email"].value,
+                given_name: form.elements["first_name"].value,
+                family_name: form.elements["last_name"].value
+              })
+            }).catch(function () {});
+          }
+        });
       }
 
       /* ---------- "Other" reveals a required explanation box ---------- */
