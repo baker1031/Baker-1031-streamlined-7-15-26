@@ -60,15 +60,40 @@ export default async (req) => {
     })
   });
 
-  if (createRes.ok) return json({ ok: true, created: true });
+  if (createRes.ok) {
+    await markPortalAccess(email).catch((e) => console.error("PD portal-access update failed:", e));
+    return json({ ok: true, created: true });
+  }
 
   const errText = await createRes.text();
   if (createRes.status === 400 && /exist|duplicate|already/i.test(errText)) {
+    await markPortalAccess(email).catch((e) => console.error("PD portal-access update failed:", e));
     return json({ ok: true, created: false });
   }
   console.error("Kinde user create failed:", createRes.status, errText);
   return json({ error: "create failed" }, 502);
 };
+
+/* Keep Pipedrive in sync: once a login exists, flip the person's
+   "Portal Access" field to Yes so the CRM reflects reality. */
+async function markPortalAccess(email) {
+  const token = process.env.PIPEDRIVE_API_TOKEN;
+  const fieldKey = process.env.PD_FIELD_PORTAL_ACCESS;
+  const yes = process.env.PD_PORTAL_YES;
+  if (!token || !fieldKey || !yes) return;
+
+  const search = await fetch(
+    `https://api.pipedrive.com/api/v2/persons/search?term=${encodeURIComponent(email)}&fields=email&exact_match=true&api_token=${token}`
+  ).then((r) => r.json()).catch(() => null);
+  const person = search && search.data && search.data.items && search.data.items[0] && search.data.items[0].item;
+  if (!person) return;
+
+  await fetch(`https://api.pipedrive.com/api/v2/persons/${person.id}?api_token=${token}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ custom_fields: { [fieldKey]: Number(yes) } })
+  });
+}
 
 function json(obj, status = 200) {
   return new Response(JSON.stringify(obj), {
