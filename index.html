@@ -2286,16 +2286,28 @@
         Cal.config = Cal.config || {};
         Cal.config.forwardQueryParams = true;
         var displayName = (form.elements['preferred_name'].value || (form.elements['first_name'].value + ' ' + form.elements['last_name'].value)).trim();
+        // Cal's "Attendee phone number" field wants E.164 (+14155550188)
+        var rawPhone = (form.elements['phone'].value || '').trim();
+        var digits = rawPhone.replace(/\D/g, '');
+        var e164Phone = rawPhone.charAt(0) === '+' ? '+' + digits
+          : digits.length === 10 ? '+1' + digits
+          : digits.length === 11 && digits.charAt(0) === '1' ? '+' + digits
+          : '';
+        var calConfig = {
+          layout: "month_view",
+          useSlotsViewOnSmallScreen: "true",
+          theme: "light",
+          name: displayName,
+          email: form.elements['email'].value,
+          notes: buildCalNotes()
+        };
+        if (e164Phone) {
+          calConfig.attendeePhoneNumber = e164Phone; // phone-call location field
+          calConfig.phone = e164Phone;               // generic phone booking question
+        }
         Cal.ns[ns]("inline", {
           elementOrSelector: '#' + elementId,
-          config: {
-            layout: "month_view",
-            useSlotsViewOnSmallScreen: "true",
-            theme: "light",
-            name: displayName,
-            email: form.elements['email'].value,
-            notes: buildCalNotes()
-          },
+          config: calConfig,
           calLink: calLink
         });
         Cal.ns[ns]("ui", { theme: "light", cssVarsPerTheme: { light: { "cal-brand": "#2b3a5f" } }, hideEventTypeDetails: true, layout: "month_view" });
