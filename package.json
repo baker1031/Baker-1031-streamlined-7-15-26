@@ -1,0 +1,15 @@
+{
+  "name": "baker1031-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Baker 1031 Investments site + Kinde custom auth pages",
+  "dependencies": {
+    "@kinde/infrastructure": "^0.2.2",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3"
+  }
+}

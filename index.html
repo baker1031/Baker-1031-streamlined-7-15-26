@@ -1660,6 +1660,17 @@
     <input type="text" name="us_check">
     <input type="text" name="accreditation_check">
     <input type="text" name="routed_to">
+    <input type="text" name="crs_accepted_at">
+  </form>
+
+  <!-- Static form so Netlify registers CRS receipts; notification target: crs@baker1031.com -->
+  <form name="crs-receipts" data-netlify="true" netlify-honeypot="company" hidden>
+    <input type="text" name="company">
+    <input type="text" name="first_name">
+    <input type="text" name="last_name">
+    <input type="email" name="email">
+    <input type="text" name="crs_accepted_at">
+    <input type="text" name="page">
   </form>
 
   <!-- Request-access popup -->
@@ -1811,6 +1822,18 @@
             </select>
           </div>
           <p class="modal-fineprint">Used only to confirm eligibility under SEC accredited-investor rules. Your information is never shared or sold.</p>
+        </div>
+
+        <!-- Step 6: Form CRS acknowledgment (always the final step, before scheduling) -->
+        <div class="form-step" data-step="crs">
+          <h4>Client Relationship Summary (Form CRS)</h4>
+          <p style="font-size:0.92rem;line-height:1.6;color:var(--ink-soft);margin-bottom:0.9rem">Before we schedule your call, please review our Client Relationship Summary &mdash; a short, SEC-required document that describes our services, fees, and obligations to you.</p>
+          <!-- Replace href with the hosted Form CRS PDF -->
+          <a id="crs-link" data-field="CRS URL" href="/documents/form-crs.pdf" target="_blank" rel="noopener" style="display:inline-block;font-size:0.95rem;font-weight:600;color:var(--navy);text-decoration:underline;margin-bottom:1rem">View the Form CRS (PDF) &rarr;</a>
+          <div class="radio-set">
+            <label><input type="checkbox" id="crs-accept" name="crs_accepted" value="accepted" required> I confirm that I have received and read the Form CRS.</label>
+          </div>
+          <p class="modal-fineprint">A receipt of your acknowledgment (name, email, date, and time) is recorded and emailed to crs@baker1031.com for our compliance records.</p>
         </div>
 
         <p class="form-error" id="form-error">Please complete the highlighted fields before continuing.</p>
@@ -2090,6 +2113,7 @@
         else order.push('deal-1031'); // placeholder until situation chosen
         order.push('dst');
         if (role === 'Investor' || !role) order.push('accreditation');
+        order.push('crs'); // Form CRS acknowledgment is always the final step
         return order;
       }
 
@@ -2353,8 +2377,12 @@
         // anything not accredited, outside the US, or a cash investor → consultation.
         var route = (us.isUS && !isCashInvestor() && accr.accredited) ? '25min' : 'consultation';
 
+        // CRS acknowledgment timestamp (checkbox is required on the final step)
+        var crsAcceptedAt = document.getElementById('crs-accept').checked ? new Date().toISOString() : '';
+
         var data = new URLSearchParams();
         data.append('form-name', 'request-investment-access');
+        data.append('crs_accepted_at', crsAcceptedAt);
         var order = stepOrder();
         Array.prototype.forEach.call(form.elements, function (el) {
           if (!el.name) return;
@@ -2376,6 +2404,22 @@
           body: data.toString()
         }).then(function () { showThanks(route); })
           .catch(function () { showThanks(route); }); // shown either way while designing; real delivery requires Netlify hosting
+
+        // CRS receipt: separate Netlify form whose notification emails crs@baker1031.com
+        if (crsAcceptedAt) {
+          var receipt = new URLSearchParams();
+          receipt.append('form-name', 'crs-receipts');
+          receipt.append('first_name', form.elements['first_name'].value);
+          receipt.append('last_name', form.elements['last_name'].value);
+          receipt.append('email', form.elements['email'].value);
+          receipt.append('crs_accepted_at', crsAcceptedAt);
+          receipt.append('page', window.location.href);
+          fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: receipt.toString()
+          }).catch(function () {});
+        }
       }
 
       function showThanks(route) {
@@ -2403,9 +2447,12 @@
         if (!validateStep()) {
           var panel = document.querySelector('.form-step.active');
           var debtEl = document.getElementById('f-debt');
-          errorMsg.textContent = (panel.getAttribute('data-step') === 'deal-1031' && debtEl && !debtEl.checkValidity())
-            ? 'Please complete the highlighted fields before continuing. If you have no debt on the property, enter 0.'
-            : 'Please complete the highlighted fields before continuing.';
+          var stepName = panel.getAttribute('data-step');
+          errorMsg.textContent = stepName === 'crs'
+            ? 'Please confirm you have received and read the Form CRS before continuing.'
+            : (stepName === 'deal-1031' && debtEl && !debtEl.checkValidity())
+              ? 'Please complete the highlighted fields before continuing. If you have no debt on the property, enter 0.'
+              : 'Please complete the highlighted fields before continuing.';
           errorMsg.classList.add('show');
           var bad = panel.querySelector(':invalid:not(:disabled)');
           if (bad) bad.focus();
