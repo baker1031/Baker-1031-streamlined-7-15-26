@@ -23,6 +23,10 @@ async function init() {
     client_id: "2405a754fefd43828d42f3c83e806a36",
     domain: "https://auth.baker1031.com",
     redirect_uri: window.location.origin,
+    // Persist the session across full page loads (static site = every
+    // navigation is a new page). Without this, portal pages always see
+    // "logged out" and bounce through Kinde in an endless loop.
+    is_dangerously_use_local_storage: true,
     on_redirect_callback: (user, appState) => {
       // Deep links win: if login started from a protected page, return there.
       // Otherwise every successful login lands on the listings directory.
@@ -36,7 +40,15 @@ async function init() {
 
   let user = null;
   try { user = kinde.getUser(); } catch (e) { user = null; }
-  const authed = !!(user && (user.id || user.email));
+  let authed = !!(user && (user.id || user.email));
+  // Fresh page load: tokens may need a silent refresh before getUser works
+  if (!authed) {
+    try {
+      await kinde.getToken();
+      user = kinde.getUser();
+      authed = !!(user && (user.id || user.email));
+    } catch (e) { /* stay logged out */ }
+  }
 
   // One-click portal entry after provisioning (email prefilled on the login screen)
   window.baker1031Login = function (email) {
@@ -76,10 +88,19 @@ async function init() {
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
     if (!authed) {
-      // Not signed in: send to Kinde, then back to the page they wanted
+      // Loop breaker: if we already bounced through Kinde seconds ago and
+      // still look logged out, stop redirecting instead of flickering.
+      const last = Number(sessionStorage.getItem("b1031-auth-redirect") || 0);
+      if (Date.now() - last < 30000) {
+        sessionStorage.removeItem("b1031-auth-redirect");
+        window.location.replace("/");
+        return;
+      }
+      sessionStorage.setItem("b1031-auth-redirect", String(Date.now()));
       kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
       return;
     }
+    sessionStorage.removeItem("b1031-auth-redirect");
     const nameEl = accountBox.querySelector('[data-field="First Name"]');
     if (nameEl) nameEl.textContent = user.given_name || user.email || "Investor";
     const logoutBtn = accountBox.querySelector(".logout");
