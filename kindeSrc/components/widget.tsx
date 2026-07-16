@@ -3,7 +3,7 @@
 import React from "react";
 import { getKindeWidget, getLogoUrl } from "@kinde/infrastructure";
 
-const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
+const SITE_URL = "https://baker1031.com";
 
 const font =
   "-apple-system, system-ui, BlinkMacSystemFont, Helvetica, Arial, 'Segoe UI', Roboto, sans-serif";

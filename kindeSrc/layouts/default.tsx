@@ -1,6 +1,6 @@
 import React from "react";
 
-const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
+const SITE_URL = "https://baker1031.com";
 
 // San Francisco skyline (Jerry-supplied), served from *.baker1031.com for Kinde's CSP
 const SKYLINE = "https://assets.baker1031.com/assets/login-skyline-sf.webp";

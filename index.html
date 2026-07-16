@@ -837,17 +837,6 @@
   }
   .modal-head h3 { font-size: 1.25rem; font-weight: 700; }
   .modal-controls { display: flex; align-items: center; gap: 0.75rem; }
-  .modal-skip {
-    background: none;
-    border: 1px dashed #cfd4dd;
-    border-radius: 6px;
-    color: #8a8f99;
-    font-family: inherit;
-    font-size: 0.72rem;
-    padding: 0.3rem 0.6rem;
-    cursor: pointer;
-  }
-  .modal-skip:hover { color: var(--ink); border-color: #9aa0ab; }
   .modal-close {
     background: none;
     border: none;
@@ -1679,7 +1668,6 @@
       <div class="modal-head">
         <h3 id="access-modal-title">Request Investment Access</h3>
         <div class="modal-controls">
-          <button type="button" class="modal-skip" id="modal-skip" title="Temporary — remove before launch">Skip (design mode)</button>
           <button type="button" class="modal-close" id="modal-close" aria-label="Close">&times;</button>
         </div>
       </div>
@@ -2515,19 +2503,6 @@
       }
 
       document.getElementById('modal-close').addEventListener('click', closeModal);
-      // TEMPORARY (remove before launch): skip advances to the next page without validation.
-      // On the last page it previews the real routing + calendar, but submits nothing.
-      document.getElementById('modal-skip').addEventListener('click', function () {
-        var order = stepOrder();
-        if (current >= order.length - 1) {
-          var us = usCheck();
-          var accr = accreditationCheck();
-          var route = (us.isUS && !isCashInvestor() && accr.accredited) ? '25min' : 'consultation';
-          showThanks(route);
-          return;
-        }
-        show(current + 1);
-      });
       backdrop.addEventListener('click', function (e) { if (e.target === backdrop) closeModal(); });
       document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
