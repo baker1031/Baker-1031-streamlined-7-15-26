@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Learn &mdash; Baker 1031 Investments</title>
+<title>Current Offerings &mdash; Baker 1031 Investments</title>
 
 <link rel="stylesheet" href="css/tokens.css">
 <style>
@@ -152,22 +152,54 @@
     pointer-events: none;
   }
 
+  .gl-term-layout { display: grid; grid-template-columns: 1fr 17rem; gap: 2.5rem; align-items: start; padding: 1.4rem 0 3rem; }
+  @media (max-width: 900px) { .gl-term-layout { grid-template-columns: 1fr; } }
+  .gl-term { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 2.2rem 2.6rem 2.4rem; max-width: 48rem; }
+  .gl-back { font-size: 0.82rem; font-weight: 600; color: var(--navy); }
+  .gl-term .cat-chip { display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); background: #e8edf6; border-radius: 999px; padding: 0.22rem 0.65rem; margin: 1rem 0 0.5rem; }
+  .gl-term h1 { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+  .gl-byline { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .gl-lead { font-size: 1.05rem; line-height: 1.7; color: var(--ink); font-weight: 500; margin-bottom: 1.6rem; }
+  .gl-term h2 { font-size: 1.1rem; font-weight: 700; margin: 1.8rem 0 0.6rem; }
+  .gl-term p, .gl-term li { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .gl-term ul, .gl-term ol { padding-left: 1.3rem; }
+  .gl-source { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.85rem 1.1rem; font-size: 0.85rem; margin: 1.4rem 0; }
+  .gl-source .label { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #7a8089; display: block; margin-bottom: 0.2rem; }
+  .related-terms { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .related-terms a { font-size: 0.84rem; font-weight: 600; color: var(--navy); background: #eef2f7; border-radius: 999px; padding: 0.35rem 0.85rem; }
+  .related-terms a:hover { background: #e0e7f1; }
+  .learn-more-links { list-style: none; padding: 0; }
+  .learn-more-links li { margin-bottom: 0.4rem; }
+  .learn-more-links a { font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+  .eeat { border-top: 1px solid var(--hairline); margin-top: 2rem; padding-top: 1.4rem; }
+  .eeat .author { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
+  .eeat .author img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; flex: 0 0 auto; background: var(--wash); }
+  .eeat .author .name { font-size: 0.9rem; font-weight: 700; }
+  .eeat .author .role { font-size: 0.76rem; color: var(--muted); }
+  .eeat .author p { font-size: 0.84rem; line-height: 1.6; margin: 0.4rem 0 0; }
+  .eeat .reviewer { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+  .gl-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 
-  .learn-hero { padding: 2.4rem 0 0.6rem; }
-  .learn-hero h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; }
-  .learn-hero p { color: var(--muted); font-size: 0.96rem; margin-top: 0.5rem; max-width: 46rem; line-height: 1.6; }
-  .learn-search { margin: 1.4rem 0 2rem; max-width: 34rem; }
-  .learn-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.8rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
-  .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; padding-bottom: 3rem; }
-  @media (max-width: 1000px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px)  { .pillar-grid { grid-template-columns: 1fr; } }
-  .pillar { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 1.5rem; transition: box-shadow 0.2s, transform 0.2s; }
-  .pillar:hover { box-shadow: 0 10px 28px rgba(9,14,26,0.08); transform: translateY(-2px); }
-  .pillar h3 { font-size: 1.02rem; font-weight: 700; color: var(--ink); margin-bottom: 0.45rem; }
-  .pillar p { font-size: 0.86rem; line-height: 1.55; color: var(--muted); flex: 1; }
-  .pillar-cta { font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-top: 1rem; }
+  /* right rail */
+  .gl-rail { position: sticky; top: 96px; display: flex; flex-direction: column; gap: 1.2rem; }
+  .rail-card { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 1.2rem 1.3rem; }
+  .rail-card h3 { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: #7a8089; margin-bottom: 0.7rem; }
+  .rail-card ul { list-style: none; padding: 0; }
+  .rail-card li { margin-bottom: 0.4rem; }
+  .rail-card a { font-size: 0.85rem; color: var(--ink-soft); }
+  .rail-card a:hover { color: var(--navy); }
+  .rail-cta { background: var(--navy); color: #fff; border-radius: 10px; padding: 1.3rem; }
+  .rail-cta h3 { color: rgba(255,255,255,0.7); }
+  .rail-cta p { font-size: 0.85rem; line-height: 1.5; color: rgba(255,255,255,0.9); margin-bottom: 0.9rem; }
+  .rail-cta a { display: inline-block; background: #fff; color: var(--navy); font-size: 0.82rem; font-weight: 700; padding: 0.5rem 0.9rem; border-radius: 6px; }
 </style>
+<title>[Term] &mdash; Glossary &mdash; Baker 1031 Investments</title>
+<meta name="description" content="[Meta description: a one-sentence plain-English definition of [Term] for accredited real estate investors, ~150 characters.]">
+<link rel="canonical" href="https://baker1031.com/glossary/term-template.html">
 <meta name="robots" content="noindex">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"DefinedTerm","name":"[Term]","description":"[Meta description / lead definition of the term in one sentence.]","inDefinedTermSet":{"@type":"DefinedTermSet","name":"Baker 1031 Investments Glossary","url":"https://baker1031.com/glossary.html"},"url":"https://baker1031.com/glossary/term-template.html"}
+</script>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -189,44 +221,87 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><span class="current">Learn</span></nav>
-    <div class="learn-hero"><h1>Learn</h1><p>Guides, explainers, and answers on 1031 exchanges, DSTs, and passive real estate investing &mdash; organized by topic.</p></div>
-    <div class="learn-search"><input type="search" placeholder="Search articles&hellip; (coming soon)" aria-label="Search articles" disabled></div>
-    <div class="pillar-grid">
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>1031 Exchange Basics</h3><p>Rules, deadlines, boot, and the mechanics of a successful exchange.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>DST Essentials</h3><p>How Delaware Statutory Trusts work, what to look for, and how to compare offerings.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>721 Exchanges &amp; REITs</h3><p>UPREIT transactions, operating partnership units, and when a 721 exit makes sense.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Opportunity Zones</h3><p>QOF timelines, basis step-ups, and how OZ investing compares to a 1031.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Mineral Royalties</h3><p>Direct-title mineral and royalty interests as 1031-eligible real property.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Taxes &amp; Planning</h3><p>Depreciation, estate planning, state considerations, and working with your CPA.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-    </div>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/glossary.html">Glossary</a><span class="sep">&rsaquo;</span><span class="current">[Term]</span></nav>
 
-    <div style="margin-top:0.5rem;padding:1.4rem 1.6rem;background:#f4f7fb;border:1px solid var(--hairline);border-radius:10px;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">
-      <div>
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.2rem">Glossary</h3>
-        <p style="font-size:0.86rem;color:var(--muted);margin:0">Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.</p>
-      </div>
-      <a href="/glossary.html" style="font-size:0.85rem;font-weight:700;color:#fff;background:var(--navy);padding:0.6rem 1.1rem;border-radius:6px;white-space:nowrap">Browse the glossary &rarr;</a>
+    <div class="gl-term-layout">
+      <article class="gl-term">
+        <a class="gl-back" href="/glossary.html">&larr; Back to full glossary</a>
+        <div class="cat-chip">[Category]</div>
+        <h1>[Term]</h1>
+        <div class="gl-byline">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated [Month Year] &middot; Reviewed by [Compliance Reviewer]</div>
+
+        <p class="gl-lead">[Lead definition &mdash; one or two sentences that fully answer &ldquo;what is [Term]?&rdquo; This doubles as the meta description and the schema definition.]</p>
+
+        <h2>Definition</h2>
+        <p>[Full definition, ~150&ndash;300 words. Explain what it is, why it matters to a 1031/DST investor, and how it works in practice. Use concrete numbers or a short example where helpful.]</p>
+
+        <h2>Key points</h2>
+        <ul>
+          <li>[Key point placeholder.]</li>
+          <li>[Key point placeholder.]</li>
+          <li>[Key point placeholder.]</li>
+        </ul>
+
+        <div class="gl-source">
+          <span class="label">Source / authority</span>
+          <a href="#" target="_blank" rel="noopener">[Cited authority &mdash; e.g. IRS Section 1031, Form 8824 instructions, SEC Reg D.]</a>
+        </div>
+
+        <h2>Related terms</h2>
+        <div class="related-terms">
+          <a href="/glossary/term-template.html">[Related term]</a>
+          <a href="/glossary/term-template.html">[Related term]</a>
+          <a href="/glossary/term-template.html">[Related term]</a>
+          <a href="/glossary/term-template.html">[Related term]</a>
+        </div>
+
+        <h2>Learn more</h2>
+        <ul class="learn-more-links">
+          <li><a href="/learn/article-template.html">[Related guide or article]</a></li>
+          <li><a href="/learn/article-template.html">[Related guide or article]</a></li>
+        </ul>
+
+        <!-- E-E-A-T: author + compliance reviewer -->
+        <div class="eeat" id="author">
+          <div class="author">
+            <img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto,w_120/v1783927734/jerry-baker_ovhy2w.jpg" alt="Jerry Baker" loading="lazy">
+            <div>
+              <div class="name">Gerald F. &ldquo;Jerry&rdquo; Baker, III</div>
+              <div class="role">Founder &amp; Managing Principal, Baker 1031 Investments &middot; FINRA Series 22 / 63 &middot; SIE</div>
+              <p>[One-paragraph author bio establishing expertise &mdash; institutional underwriting background, $10B+ transacted, etc. <a href="/#about">Read full bio &rarr;</a>]</p>
+            </div>
+          </div>
+          <p class="reviewer"><strong>Reviewed by [Compliance Reviewer]</strong> &mdash; [Title], Aurora Securities, Inc. (FINRA CRD #2805591). Last reviewed [Date]. Securities offered through Aurora Securities, member FINRA/SIPC.</p>
+        </div>
+
+        <p class="gl-disclosure">This glossary entry is educational and is not investment, tax, or legal advice, or an offer to sell or a solicitation to buy any security. Definitions are general and may not reflect your specific circumstances &mdash; consult your own CPA and attorney. Past performance does not guarantee future results.</p>
+      </article>
+
+      <!-- Right rail -->
+      <aside class="gl-rail">
+        <div class="rail-card">
+          <h3>In this category</h3>
+          <ul>
+            <li><a href="/glossary/term-template.html">[Sibling term]</a></li>
+            <li><a href="/glossary/term-template.html">[Sibling term]</a></li>
+            <li><a href="/glossary/term-template.html">[Sibling term]</a></li>
+            <li><a href="/glossary.html">View all &rarr;</a></li>
+          </ul>
+        </div>
+        <div class="rail-cta">
+          <h3>Ready to invest?</h3>
+          <p>Browse current 1031-eligible DST offerings vetted by Baker 1031.</p>
+          <a href="/current-offerings.html">View offerings</a>
+        </div>
+      </aside>
     </div>
   </main>
   <!-- PARTIAL:footer -->
-  <footer class="site-footer" id="contact">
+<footer class="site-footer" id="contact">
     <div class="footer-inner">
       <div class="footer-cols">
         <div class="footer-brand">
-          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
           <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
         </div>
         <div>
@@ -263,7 +338,7 @@
     </div>
       <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
 </footer>
-  <!-- /PARTIAL:footer -->
+<!-- /PARTIAL:footer -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

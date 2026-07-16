@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Offerings &mdash; Baker 1031 Investments</title>
+
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+  @media (max-width: 720px) {
+    .main-header-inner { position: relative; }
+    .nav-toggle { display: inline-flex; }
+    .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+      border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+      flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+    .account-box.open { display: flex; }
+    .nav-sep { width: 100%; height: 1px; }
+  }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+  .site-footer { overflow: hidden; }
+  .footer-love .love-heart { height: 0.82em; width: auto; vertical-align: -0.06em; }
+  .footer-love {
+    font-size: 9.3vw;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.18em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .gl-hero { padding: 2.4rem 0 0.6rem; }
+  .gl-hero h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; }
+  .gl-hero p { color: var(--muted); font-size: 0.96rem; margin-top: 0.5rem; max-width: 48rem; line-height: 1.6; }
+  .gl-search { margin: 1.3rem 0 1rem; max-width: 34rem; }
+  .gl-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.8rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
+  .gl-az { position: sticky; top: 96px; z-index: 20; display: flex; flex-wrap: wrap; gap: 0.15rem; padding: 0.6rem 0; background: #fff; border-bottom: 1px solid var(--hairline); margin-bottom: 1rem; }
+  .gl-az a { font-size: 0.82rem; font-weight: 700; color: var(--navy); padding: 0.25rem 0.5rem; border-radius: 5px; }
+  .gl-az a:hover { background: #edf1f7; }
+  .gl-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.6rem; }
+  .gl-chips button { font: inherit; font-size: 0.8rem; font-weight: 600; color: var(--ink-soft); background: #fff; border: 1px solid #cfd4dd; border-radius: 999px; padding: 0.35rem 0.85rem; cursor: pointer; }
+  .gl-chips button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+  .letter-group { margin-bottom: 2rem; scroll-margin-top: 150px; }
+  .letter-group h2 { font-size: 1.3rem; font-weight: 800; color: var(--navy); padding-bottom: 0.4rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.4rem; }
+  .term-row { display: grid; grid-template-columns: 15rem 1fr 9rem; gap: 1rem; align-items: baseline; padding: 0.75rem 0.5rem; border-bottom: 1px solid var(--hairline); }
+  .term-row:hover { background: #fafbfc; }
+  @media (max-width: 760px) { .term-row { grid-template-columns: 1fr; gap: 0.15rem; } .term-cat { display: none; } }
+  .term-name { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+  .term-def { font-size: 0.86rem; color: var(--muted); line-height: 1.5; }
+  .term-cat { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #9aa0ab; text-align: right; }
+  @media (max-width: 760px) { .term-cat { text-align: left; } }
+</style>
+<title>Glossary of 1031 Exchange, DST &amp; Real Estate Terms &mdash; Baker 1031 Investments</title>
+<meta name="robots" content="noindex">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <span class="nav-sep" style="display:none"></span>
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><span class="current">Glossary</span></nav>
+
+    <div class="gl-hero">
+      <h1>Glossary</h1>
+      <p>Plain-English definitions of the 1031 exchange, DST, 721 UPREIT, Opportunity Zone, REIT, and tax terms accredited real estate investors encounter &mdash; each with source authority and related terms.</p>
+    </div>
+
+    <div class="gl-search"><input type="search" id="gl-search" placeholder="Search terms&hellip;" aria-label="Search glossary terms"></div>
+
+    <div class="gl-chips" id="gl-chips" role="group" aria-label="Filter by category">
+      <button type="button" class="active" data-cat="all">All</button>
+      <button type="button" data-cat="1031 Exchange">1031 Exchange</button>
+      <button type="button" data-cat="DSTs">DSTs</button>
+      <button type="button" data-cat="721 / REITs">721 / REITs</button>
+      <button type="button" data-cat="Opportunity Zones">Opportunity Zones</button>
+      <button type="button" data-cat="Taxes">Taxes</button>
+      <button type="button" data-cat="Investing">Investing</button>
+    </div>
+
+    <nav class="gl-az" aria-label="Jump to letter"><a href="#ltr-num">#</a><a href="#ltr-A">A</a><a href="#ltr-B">B</a><a href="#ltr-C">C</a><a href="#ltr-D">D</a><a href="#ltr-F">F</a><a href="#ltr-I">I</a><a href="#ltr-L">L</a><a href="#ltr-M">M</a><a href="#ltr-N">N</a><a href="#ltr-O">O</a><a href="#ltr-P">P</a><a href="#ltr-Q">Q</a><a href="#ltr-R">R</a><a href="#ltr-S">S</a><a href="#ltr-T">T</a><a href="#ltr-U">U</a></nav>
+
+    <div id="gl-terms">
+      <section class="letter-group" id="ltr-num">
+        <h2>#</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">10-Year Hold</span>
+          <span class="term-def">[One-line definition placeholder for 10-Year Hold.]</span>
+          <span class="term-cat">Opportunity Zones</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">1031 Exchange</span>
+          <span class="term-def">[One-line definition placeholder for 1031 Exchange.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">180-Day Exchange Period</span>
+          <span class="term-def">[One-line definition placeholder for 180-Day Exchange Period.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">45-Day Identification Period</span>
+          <span class="term-def">[One-line definition placeholder for 45-Day Identification Period.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">721 Exchange</span>
+          <span class="term-def">[One-line definition placeholder for 721 Exchange.]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-A">
+        <h2>A</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Accredited Investor</span>
+          <span class="term-def">[One-line definition placeholder for Accredited Investor.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Accredited Investor vs. Qualified Purchaser</span>
+          <span class="term-def">[One-line definition placeholder for Accredited Investor vs. Qualified Purchaser.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Adjusted Basis</span>
+          <span class="term-def">[One-line definition placeholder for Adjusted Basis.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-B">
+        <h2>B</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Beneficial Interest</span>
+          <span class="term-def">[One-line definition placeholder for Beneficial Interest.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Boot</span>
+          <span class="term-def">[One-line definition placeholder for Boot.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-C">
+        <h2>C</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Cap Rate</span>
+          <span class="term-def">[One-line definition placeholder for Cap Rate.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Capital Gains Tax</span>
+          <span class="term-def">[One-line definition placeholder for Capital Gains Tax.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Cost Basis</span>
+          <span class="term-def">[One-line definition placeholder for Cost Basis.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-D">
+        <h2>D</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Debt Replacement</span>
+          <span class="term-def">[One-line definition placeholder for Debt Replacement.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Delaware Statutory Trust</span>
+          <span class="term-def">[One-line definition placeholder for Delaware Statutory Trust.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Depreciation Recapture</span>
+          <span class="term-def">[One-line definition placeholder for Depreciation Recapture.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Distribution Yield</span>
+          <span class="term-def">[One-line definition placeholder for Distribution Yield.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Drop and Swap</span>
+          <span class="term-def">[One-line definition placeholder for Drop and Swap.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">DST vs. TIC</span>
+          <span class="term-def">[One-line definition placeholder for DST vs. TIC.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-F">
+        <h2>F</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">FFO (Funds From Operations)</span>
+          <span class="term-def">[One-line definition placeholder for FFO (Funds From Operations).]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Full-Cycle</span>
+          <span class="term-def">[One-line definition placeholder for Full-Cycle.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-I">
+        <h2>I</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Improvement Exchange</span>
+          <span class="term-def">[One-line definition placeholder for Improvement Exchange.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-L">
+        <h2>L</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Like-Kind Property</span>
+          <span class="term-def">[One-line definition placeholder for Like-Kind Property.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-M">
+        <h2>M</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Master Lease</span>
+          <span class="term-def">[One-line definition placeholder for Master Lease.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Mortgage Boot</span>
+          <span class="term-def">[One-line definition placeholder for Mortgage Boot.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-N">
+        <h2>N</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">NAV (Net Asset Value)</span>
+          <span class="term-def">[One-line definition placeholder for NAV (Net Asset Value).]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Net Investment Income Tax</span>
+          <span class="term-def">[One-line definition placeholder for Net Investment Income Tax.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-O">
+        <h2>O</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">OP Units</span>
+          <span class="term-def">[One-line definition placeholder for OP Units.]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Opportunity Zone</span>
+          <span class="term-def">[One-line definition placeholder for Opportunity Zone.]</span>
+          <span class="term-cat">Opportunity Zones</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-P">
+        <h2>P</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Passive Income</span>
+          <span class="term-def">[One-line definition placeholder for Passive Income.]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">PPM (Private Placement Memorandum)</span>
+          <span class="term-def">[One-line definition placeholder for PPM (Private Placement Memorandum).]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-Q">
+        <h2>Q</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Qualified Intermediary</span>
+          <span class="term-def">[One-line definition placeholder for Qualified Intermediary.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Qualified Intermediary Bond</span>
+          <span class="term-def">[One-line definition placeholder for Qualified Intermediary Bond.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Qualified Opportunity Fund</span>
+          <span class="term-def">[One-line definition placeholder for Qualified Opportunity Fund.]</span>
+          <span class="term-cat">Opportunity Zones</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Qualified Opportunity Zone Business</span>
+          <span class="term-def">[One-line definition placeholder for Qualified Opportunity Zone Business.]</span>
+          <span class="term-cat">Opportunity Zones</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-R">
+        <h2>R</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Realized Gain vs. Recognized Gain</span>
+          <span class="term-def">[One-line definition placeholder for Realized Gain vs. Recognized Gain.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Regulation D (Reg D)</span>
+          <span class="term-def">[One-line definition placeholder for Regulation D (Reg D).]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Regulation D Rule 506(b)</span>
+          <span class="term-def">[One-line definition placeholder for Regulation D Rule 506(b).]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Regulation D Rule 506(c)</span>
+          <span class="term-def">[One-line definition placeholder for Regulation D Rule 506(c).]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">REIT</span>
+          <span class="term-def">[One-line definition placeholder for REIT.]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Replacement Property</span>
+          <span class="term-def">[One-line definition placeholder for Replacement Property.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Reverse Exchange</span>
+          <span class="term-def">[One-line definition placeholder for Reverse Exchange.]</span>
+          <span class="term-cat">1031 Exchange</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-S">
+        <h2>S</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Securitized Real Estate</span>
+          <span class="term-def">[One-line definition placeholder for Securitized Real Estate.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Sponsor</span>
+          <span class="term-def">[One-line definition placeholder for Sponsor.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Springing LLC</span>
+          <span class="term-def">[One-line definition placeholder for Springing LLC.]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Step-Up in Basis</span>
+          <span class="term-def">[One-line definition placeholder for Step-Up in Basis.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-T">
+        <h2>T</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Tenants in Common (TIC)</span>
+          <span class="term-def">[One-line definition placeholder for Tenants in Common (TIC).]</span>
+          <span class="term-cat">DSTs</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Triple-Net Lease (NNN)</span>
+          <span class="term-def">[One-line definition placeholder for Triple-Net Lease (NNN).]</span>
+          <span class="term-cat">Investing</span>
+        </a>
+      </section>
+      <section class="letter-group" id="ltr-U">
+        <h2>U</h2>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">Unrecaptured Section 1250 Gain</span>
+          <span class="term-def">[One-line definition placeholder for Unrecaptured Section 1250 Gain.]</span>
+          <span class="term-cat">Taxes</span>
+        </a>
+        <a class="term-row" href="/glossary/term-template.html">
+          <span class="term-name">UPREIT</span>
+          <span class="term-def">[One-line definition placeholder for UPREIT.]</span>
+          <span class="term-cat">721 / REITs</span>
+        </a>
+      </section>
+    </div>
+  </main>
+  <!-- PARTIAL:footer -->
+<footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>Securities are offered through Aurora Securities, Inc., member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments, LLC is independent of Aurora Securities, Inc. and is not a registered broker-dealer or investment adviser. <a href="https://brokercheck.finra.org/firm/summary/46147" target="_blank" rel="noopener">Check Aurora Securities, Inc. on FINRA BrokerCheck</a>.</p>
+        <p>This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security. Offerings are made only by a sponsor&rsquo;s private placement memorandum, are available solely to accredited investors, and are subject to suitability requirements. Real estate investments involve substantial risk, including illiquidity, potential loss of principal, and market and interest-rate risk. DST interests are long-term investments and generally cannot be sold on demand. Past performance, including full-cycle results shown on this page, is not a guarantee of future results.</p>
+        <p>Baker 1031 Investments is not a tax or legal advisor. Prospective investors should consult their own CPA and attorney regarding their individual circumstances before investing.</p>
+        <p style="font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">Not FDIC Insured &nbsp;&middot;&nbsp; Not Bank Guaranteed &nbsp;&middot;&nbsp; Not a Deposit &nbsp;&middot;&nbsp; May Lose Value</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html">Employee Login</a></span>
+      </div>
+    </div>
+      <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
+</footer>
+<!-- /PARTIAL:footer -->
+
+  <script>
+    (function () {
+      var search = document.getElementById("gl-search");
+      var chips = document.querySelectorAll("#gl-chips button");
+      var rows = Array.prototype.slice.call(document.querySelectorAll(".term-row"));
+      var cat = "all";
+      function apply() {
+        var q = search.value.toLowerCase().trim();
+        rows.forEach(function (r) {
+          var name = r.querySelector(".term-name").textContent.toLowerCase();
+          var rcat = r.querySelector(".term-cat").textContent;
+          var show = (cat === "all" || rcat === cat) && (!q || name.indexOf(q) !== -1);
+          r.style.display = show ? "" : "none";
+        });
+        document.querySelectorAll(".letter-group").forEach(function (g) {
+          var any = Array.prototype.some.call(g.querySelectorAll(".term-row"), function (r) { return r.style.display !== "none"; });
+          g.style.display = any ? "" : "none";
+        });
+      }
+      search.addEventListener("input", apply);
+      chips.forEach(function (b) { b.addEventListener("click", function () {
+        chips.forEach(function (x) { x.classList.remove("active"); });
+        b.classList.add("active"); cat = b.getAttribute("data-cat"); apply();
+      }); });
+    })();
+  </script>
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>

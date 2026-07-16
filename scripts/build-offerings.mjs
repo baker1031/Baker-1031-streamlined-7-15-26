@@ -701,7 +701,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   mkdirSync(dist, { recursive: true });
   const COPY = [
     "index.html", "current-offerings.html", "performance.html", "employee.html",
-    "learn.html", "learn",
+    "learn.html", "learn", "glossary.html", "glossary",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt"
   ];
