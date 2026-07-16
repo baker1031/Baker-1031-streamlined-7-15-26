@@ -23,9 +23,14 @@ async function init() {
     client_id: "2405a754fefd43828d42f3c83e806a36",
     domain: "https://baker1031investments.kinde.com",
     redirect_uri: window.location.origin,
-    on_redirect_callback: (user) => {
-      // Every successful login lands on the listings directory
-      if (user) window.location.replace("/current-offerings.html");
+    on_redirect_callback: (user, appState) => {
+      // Deep links win: if login started from a protected page, return there.
+      // Otherwise every successful login lands on the listings directory.
+      if (appState && appState.returnTo) {
+        window.location.replace(appState.returnTo);
+      } else if (user) {
+        window.location.replace("/current-offerings.html");
+      }
     }
   });
 
@@ -62,8 +67,8 @@ async function init() {
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
     if (!authed) {
-      // Not signed in: send to Kinde (successful logins land on the listings page)
-      kinde.login();
+      // Not signed in: send to Kinde, then back to the page they wanted
+      kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
       return;
     }
     const nameEl = accountBox.querySelector('[data-field="First Name"]');
