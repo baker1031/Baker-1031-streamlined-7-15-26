@@ -229,8 +229,24 @@ function buildPage(o) {
      the login link to everyone else (the soft gate handles access). ----- */
   html = html.replace(
     /<div class="account-box">[\s\S]*?<\/div>/,
-    `<div class="account-box">
-        <a class="listings-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+    `<style>
+        .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+        @media (max-width: 720px) {
+          .main-header-inner { position: relative; }
+          .nav-toggle { display: inline-flex; }
+          .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+            border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+            flex-direction: column; align-items: flex-start; gap: 0.9rem;
+            box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+          .account-box.open { display: flex; }
+        }
+      </style>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
         <a class="logout" id="investor-login" href="#">Investor Login</a>
@@ -496,7 +512,54 @@ console.log(`Wrote ${pageCount} offering pages under /offerings/`);
   console.log(`Baked ${sorted.length} cards + ${types.length} filter pills into current-offerings.html`);
 }
 
-/* ---------------- 4) sitemap.xml ---------------- */
+/* ---------------- 4) performance.html — Sponsor Track Record ---------------- */
+{
+  const PERF_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
+  const resP = await fetch(PERF_CSV_URL, { redirect: "follow" });
+  if (!resP.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resP.status}`);
+  const pRows = parseCSV(await resP.text());
+  const ph = pRows[0].map((h) => h.trim());
+  const pi = (n) => ph.indexOf(n);
+  for (const need of ["Sponsor", "Investment", "Hold Period", "Equity Multiple", "Annual Return"]) {
+    if (pi(need) === -1) throw new Error(`Sponsor Trackrecord tab is missing '${need}'`);
+  }
+  const deals = pRows.slice(1)
+    .filter((r) => (r[pi("Sponsor")] || "").trim() && (r[pi("Investment")] || "").trim())
+    .map((r) => ({
+      sponsor: r[pi("Sponsor")].trim(),
+      investment: r[pi("Investment")].trim(),
+      location: (r[pi("Location")] || "").trim(),
+      assetClass: (r[pi("Asset Class")] || "").trim(),
+      hold: (r[pi("Hold Period")] || "").trim(),
+      multiple: (r[pi("Equity Multiple")] || "").trim(),
+      annual: (r[pi("Annual Return")] || "").trim()
+    }));
+  if (deals.length < 50) throw new Error(`Only ${deals.length} track-record rows — refusing to build.`);
+
+  // Clean malformed multiples like "2.x" / ".x" (missing digits in the sheet)
+  const cleanMult = (m) => /^\d*\.?\d+x$/i.test(m) ? m : "";
+  deals.sort((a, b) => a.sponsor.localeCompare(b.sponsor) || a.investment.localeCompare(b.investment));
+
+  const rowsHtml = deals.map((d) => `          <tr>
+            <td>${esc(d.sponsor)}</td>
+            <td>${esc(d.investment)}</td>
+            <td>${esc(d.location || "—")}</td>
+            <td>${esc(d.assetClass || "—")}</td>
+            <td class="num">${esc(d.hold || "—")}</td>
+            <td class="num">${esc(cleanMult(d.multiple) || "—")}</td>
+            <td class="num">${esc(d.annual || "—")}</td>
+          </tr>`).join("\n");
+  const sponsors = [...new Set(deals.map((d) => d.sponsor))].sort();
+  const optionsHtml = sponsors.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
+
+  let perf = readFileSync(join(ROOT, "performance-template.html"), "utf8");
+  perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
+  perf = perf.replace("<!-- PERF:SPONSORS -->", optionsHtml);
+  writeFileSync(join(ROOT, "performance.html"), perf);
+  console.log(`Wrote performance.html (${deals.length} full-cycle programs, ${sponsors.length} sponsors).`);
+}
+
+/* ---------------- 5) sitemap.xml ---------------- */
 {
   const urls = [
     { loc: `${SITE}/`, priority: "1.0" },

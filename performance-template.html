@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sponsor Performance &mdash; Baker 1031 Investments</title>
+<meta name="robots" content="noindex">
+<link rel="stylesheet" href="css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+  @media (max-width: 720px) {
+    .main-header-inner { position: relative; }
+    .nav-toggle { display: inline-flex; }
+    .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+      border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+      flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+    .account-box.open { display: flex; }
+  }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+</style>
+<style>
+  /* ---------- Performance page ---------- */
+  .page-head { padding: 2.2rem 0 1.4rem; }
+  .page-head h1 { font-size: clamp(1.7rem, 3.4vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; }
+  .page-head p { color: var(--muted); font-size: 0.95rem; margin-top: 0.5rem; max-width: 46rem; line-height: 1.6; }
+
+  .perf-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0.4rem 0 1.2rem; align-items: center; }
+  .perf-controls select, .perf-controls input {
+    font: inherit; font-size: 0.88rem; color: var(--ink);
+    border: 1px solid #cfd4dd; border-radius: 6px; padding: 0.55rem 0.75rem; background: #fff;
+  }
+  .perf-controls input { width: min(20rem, 100%); }
+  .perf-count { font-size: 0.82rem; color: var(--muted); margin-left: auto; }
+
+  .perf-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 10px; }
+  table.perf { width: 100%; border-collapse: collapse; font-size: 0.88rem; min-width: 46rem; }
+  table.perf thead th {
+    position: sticky; top: 0; background: #f6f7f9; z-index: 2;
+    text-align: left; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: #7a8089; padding: 0.7rem 0.9rem; border-bottom: 1px solid var(--hairline);
+    cursor: pointer; user-select: none; white-space: nowrap;
+  }
+  table.perf thead th .dir { color: var(--navy); }
+  table.perf tbody td { padding: 0.6rem 0.9rem; border-bottom: 1px solid var(--hairline); }
+  table.perf tbody tr:last-child td { border-bottom: none; }
+  table.perf tbody tr:hover { background: #fafbfc; }
+  table.perf td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .page-note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 1.5rem; max-width: 66rem; }
+</style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <a class="listings-link portal-link" href="/current-offerings.html" style="font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="font-weight:600;font-size:0.9rem">Performance</a>
+        <span class="welcome">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a>
+      <span class="sep">&rsaquo;</span>
+      <span class="current">Sponsor Performance</span>
+    </nav>
+
+    <div class="page-head">
+      <h1>Sponsor Track Record</h1>
+      <p>Every completed, full-cycle program from our sponsor roster &mdash; realized results from offering through final sale. Sort any column, or filter by sponsor.</p>
+    </div>
+
+    <div class="perf-controls">
+      <select id="perf-sponsor" aria-label="Filter by sponsor">
+        <option value="">All sponsors</option>
+        <!-- PERF:SPONSORS -->
+      </select>
+      <input type="search" id="perf-search" placeholder="Search investments&hellip;" aria-label="Search investments">
+      <span class="perf-count" id="perf-count"></span>
+    </div>
+
+    <div class="perf-wrap">
+      <table class="perf" id="perf-table">
+        <thead>
+          <tr>
+            <th data-sort="text">Sponsor</th>
+            <th data-sort="text">Investment</th>
+            <th data-sort="text">Location</th>
+            <th data-sort="text">Asset Class</th>
+            <th data-sort="num">Hold (Yrs)</th>
+            <th data-sort="num">Equity Multiple</th>
+            <th data-sort="num">Annual Return</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- PERF:ROWS -->
+        </tbody>
+      </table>
+    </div>
+
+    <p class="page-note">Shown to verified accredited investors only. Results are historical, realized outcomes for completed programs as reported by each sponsor and have not been independently verified except as described in the applicable offering materials. Equity multiple and average annual return are net to investor over each program&rsquo;s full hold period. Past performance does not guarantee future results; individual program results vary widely and losses can occur.</p>
+
+  </main>
+
+  <!-- Footer (same as offering page / homepage) -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>Securities are offered through Aurora Securities, Inc., member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments, LLC is independent of Aurora Securities, Inc. and is not a registered broker-dealer or investment adviser. <a href="https://brokercheck.finra.org/firm/summary/46147" target="_blank" rel="noopener">Check Aurora Securities, Inc. on FINRA BrokerCheck</a>.</p>
+        <p>This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security. Offerings are made only by a sponsor&rsquo;s private placement memorandum, are available solely to accredited investors, and are subject to suitability requirements. Real estate investments involve substantial risk, including illiquidity, potential loss of principal, and market and interest-rate risk. DST interests are long-term investments and generally cannot be sold on demand. Past performance, including full-cycle results shown on this page, is not a guarantee of future results.</p>
+        <p>Baker 1031 Investments is not a tax or legal advisor. Prospective investors should consult their own CPA and attorney regarding their individual circumstances before investing.</p>
+        <p style="font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">Not FDIC Insured &nbsp;&middot;&nbsp; Not Bank Guaranteed &nbsp;&middot;&nbsp; Not a Deposit &nbsp;&middot;&nbsp; May Lose Value</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Sponsor filter + search + column sorting (data baked in at build time)
+    (function () {
+      var tbody = document.querySelector('#perf-table tbody');
+      var rows = Array.prototype.slice.call(tbody.rows);
+      var select = document.getElementById('perf-sponsor');
+      var search = document.getElementById('perf-search');
+      var count = document.getElementById('perf-count');
+
+      function apply() {
+        var sp = select.value.toLowerCase();
+        var q = search.value.toLowerCase().trim();
+        var shown = 0;
+        rows.forEach(function (r) {
+          var okSponsor = !sp || r.cells[0].textContent.toLowerCase() === sp;
+          var okSearch = !q || r.textContent.toLowerCase().indexOf(q) !== -1;
+          var show = okSponsor && okSearch;
+          r.style.display = show ? '' : 'none';
+          if (show) shown++;
+        });
+        count.textContent = shown + ' of ' + rows.length + ' full-cycle programs';
+      }
+      select.addEventListener('change', apply);
+      search.addEventListener('input', apply);
+
+      var lastCol = -1, asc = true;
+      document.querySelectorAll('#perf-table thead th').forEach(function (th, i) {
+        th.addEventListener('click', function () {
+          asc = (lastCol === i) ? !asc : true;
+          lastCol = i;
+          var numeric = th.getAttribute('data-sort') === 'num';
+          rows.sort(function (a, b) {
+            var av = a.cells[i].textContent.trim(), bv = b.cells[i].textContent.trim();
+            if (numeric) {
+              var an = parseFloat(av.replace(/[^0-9.\-]/g, '')), bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
+              if (isNaN(an)) an = -Infinity; if (isNaN(bn)) bn = -Infinity;
+              return asc ? an - bn : bn - an;
+            }
+            return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+          });
+          rows.forEach(function (r) { tbody.appendChild(r); });
+          document.querySelectorAll('#perf-table thead th .dir').forEach(function (d) { d.remove(); });
+          var dir = document.createElement('span');
+          dir.className = 'dir';
+          dir.textContent = asc ? ' \u2191' : ' \u2193';
+          th.appendChild(dir);
+        });
+      });
+      apply();
+    })();
+  </script>
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>

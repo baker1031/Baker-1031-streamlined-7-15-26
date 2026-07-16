@@ -156,8 +156,7 @@ ready.then(function (s) {
     if (nameEl) nameEl.textContent = user.given_name || user.email || "Investor";
     const welcomeEl = accountBox.querySelector(".welcome");
     if (welcomeEl) welcomeEl.style.display = "";
-    const listingsEl = accountBox.querySelector(".listings-link");
-    if (listingsEl) listingsEl.style.display = "";
+    accountBox.querySelectorAll(".portal-link").forEach(function (el) { el.style.display = ""; });
     const boxLogin = accountBox.querySelector("#investor-login");
     if (boxLogin) boxLogin.style.display = "none";
     const logoutBtn = accountBox.querySelector(".logout:not(#investor-login)");
