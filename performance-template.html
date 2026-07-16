@@ -263,6 +263,10 @@
   .page-note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 2rem; max-width: 66rem; }
 
     /* ---------- Performance page ---------- */
+  .pref-chip { display: inline-block; margin-left: 0.5rem; font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy);
+    background: #e8edf6; border-radius: 999px; padding: 0.18rem 0.55rem; vertical-align: middle; }
+
   .perf-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0.4rem 0 1.2rem; align-items: center; }
   .perf-controls select, .perf-controls input {
     font: inherit; font-size: 0.88rem; color: var(--ink);
@@ -291,6 +295,21 @@
   table.perf tbody tr:hover { background: #fafbfc; }
   table.perf td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
   .page-note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 1.5rem; max-width: 66rem; }
+  .site-footer { overflow: hidden; }
+  .footer-love {
+    font-size: clamp(3.5rem, 13vw, 10.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.42em;
+    user-select: none;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -453,7 +472,8 @@
         <span><a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a></span>
       </div>
     </div>
-  </footer>
+      <div class="footer-love" aria-hidden="true">We &#128153; 1031 Exchanges</div>
+</footer>
 
   <script>
     // Tab switching

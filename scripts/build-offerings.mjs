@@ -322,13 +322,13 @@ function buildPage(o) {
 
   /* ----- special values ----- */
   html = setField(html, "Debt", displayDebt(o));
-  // Tax Adj Label: drop the ⁹ footnote marker until the methodology
-  // footnote clears compliance review (bracket placeholders removed below)
-  html = setField(html, "Tax Adj Label", (o["Tax Adj Label"] || "").replace(/⁹|⁹/g, "").trim());
+  html = setField(html, "Tax Adj Label", o["Tax Adj Label"] || "");
 
-  /* ----- compliance-pending footnote placeholders: remove for now ----- */
-  html = html.replace(/\s*&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/, "");
-  html = html.replace(/\s*<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/, "");
+  /* ----- methodology footnotes (language recovered from the prior live site) ----- */
+  html = html.replace(/&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/,
+    "&#8313; Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate; individual tax outcomes vary &mdash; consult your CPA regarding your specific situation. Cap Rate Equivalent is a Baker 1031 Investments calculation intended to allow comparison with direct property ownership; it is not a sponsor-reported figure and does not represent a rate of return.");
+  html = html.replace(/<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/,
+    `<p class="note">Benchmarks compare this offering&rsquo;s projected figures against sector medians computed across current offerings tracked by Baker 1031 Investments as of the last-updated date shown. Benchmark data is internal, unaudited, and subject to change.</p>`);
 
   /* ----- soft gate: full page content stays in the HTML (crawlable), but
      js/auth.js shows this overlay to human visitors who aren't logged in.
@@ -595,7 +595,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     })
     .sort((a, b) => a[sci("Investment Firm")].localeCompare(b[sci("Investment Firm")]))
     .map((r) => `          <tr>
-            <td>${esc(r[sci("Investment Firm")])}</td>
+            <td>${esc(r[sci("Investment Firm")])}${/^yes$/i.test((r[sci("Preferred?")] || "").trim()) ? ' <span class="pref-chip">Preferred</span>' : ""}</td>
             <td class="num">${esc(noData(r[sci("Year Founded")]) || "—")}</td>
             <td class="num">${esc(noData(r[sci("AUM")]) || "—")}</td>
             <td class="num">${esc(noData(r[sci("Full-Cycle Deals")]) || "—")}</td>

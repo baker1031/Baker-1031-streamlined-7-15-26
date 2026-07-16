@@ -445,6 +445,21 @@
     color: #8a8f99;
   }
   .footer-bottom a { color: #8a8f99; }
+  .site-footer { overflow: hidden; }
+  .footer-love {
+    font-size: clamp(3.5rem, 13vw, 10.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.42em;
+    user-select: none;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
@@ -705,7 +720,8 @@
         <span><a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a></span>
       </div>
     </div>
-  </footer>
+      <div class="footer-love" aria-hidden="true">We &#128153; 1031 Exchanges</div>
+</footer>
 
   <script>
     // Section nav: collapse to a dropdown when the links overflow the bar
