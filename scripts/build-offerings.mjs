@@ -322,11 +322,13 @@ function buildPage(o) {
 
   /* ----- special values ----- */
   html = setField(html, "Debt", displayDebt(o));
-  html = setField(html, "Tax Adj Label", o["Tax Adj Label"] || "");
+  // Renumber the sheet's legacy footnote marker (⁹) to ¹ — it's the first
+  // and only footnote on the generated pages
+  html = setField(html, "Tax Adj Label", (o["Tax Adj Label"] || "").replace(/⁹/g, "¹"));
 
   /* ----- methodology footnotes (language recovered from the prior live site) ----- */
   html = html.replace(/&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/,
-    "&#8313; Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate; individual tax outcomes vary &mdash; consult your CPA regarding your specific situation. Cap Rate Equivalent is a Baker 1031 Investments calculation intended to allow comparison with direct property ownership; it is not a sponsor-reported figure and does not represent a rate of return.");
+    "&#185; Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate; individual tax outcomes vary &mdash; consult your CPA regarding your specific situation. Cap Rate Equivalent is a Baker 1031 Investments calculation intended to allow comparison with direct property ownership; it is not a sponsor-reported figure and does not represent a rate of return.");
   html = html.replace(/<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/,
     `<p class="note">Benchmarks compare this offering&rsquo;s projected figures against sector medians computed across current offerings tracked by Baker 1031 Investments as of the last-updated date shown. Benchmark data is internal, unaudited, and subject to change.</p>`);
 
@@ -674,6 +676,18 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     idx = idx.slice(0, gStart) + group + idx.slice(gEnd);
     idx = idx.replace(/(aria-label="Bar chart: Baker 1031 preferred sponsors )[\d.]+%/, `$1${v}%`);
     writeFileSync(idxPath, idx);
+    // FAQ: live average-hold sentence from the full track record
+    const holds = deals.map((d) => numVal(d.hold)).filter((x) => x !== null);
+    if (holds.length > 100) {
+      const avgHold = (holds.reduce((a, x) => a + x, 0) / holds.length).toFixed(1);
+      const minHold = Math.min(...holds).toFixed(1);
+      const maxHold = Math.max(...holds).toFixed(1);
+      idx = readFileSync(idxPath, "utf8");
+      idx = idx.replace(/(<span id="faq-hold-stat">)[\s\S]*?(<\/span>)/,
+        (_, open, close) => `${open}Across the ${holds.length} completed sponsor programs in our track record, the average hold has been ${avgHold} years, with a range of ${minHold} to ${maxHold} years.${close}`);
+      writeFileSync(idxPath, idx);
+      console.log(`FAQ hold stat: ${holds.length} programs, avg ${avgHold} yrs (${minHold}–${maxHold}).`);
+    }
     console.log(`Homepage chart: Baker 1031 Preferred bar set to ${v}% (live from ${prefDeals.length} preferred programs).`);
   }
 
