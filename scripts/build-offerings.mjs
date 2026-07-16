@@ -467,10 +467,9 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   // Closed offerings move off the inventory and onto the Performance page
   const open = offerings.filter((o) => !isClosed(o));
   const closed = offerings.filter(isClosed);
-  const sorted = [...open].sort((a, b) =>
-    statusRank(a["Status"]) - statusRank(b["Status"]) ||
-    a["Investment Name"].localeCompare(b["Investment Name"])
-  );
+  // Default order: newest first — the sheet grows downward, so reverse the
+  // worksheet row order (bottom of the sheet = newest = top of the page)
+  const sorted = [...open].reverse();
 
   const makeCard = (o) => {
     const page = `/offerings/${o._slug}/`;
@@ -680,13 +679,16 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const holds = deals.map((d) => numVal(d.hold)).filter((x) => x !== null);
     if (holds.length > 100) {
       const avgHold = (holds.reduce((a, x) => a + x, 0) / holds.length).toFixed(1);
-      const minHold = Math.min(...holds).toFixed(1);
-      const maxHold = Math.max(...holds).toFixed(1);
+      // Typical range = middle 90% of programs (5th–95th percentile), so a
+      // single outlier exit doesn't distort the FAQ answer
+      const hSorted = [...holds].sort((a, b) => a - b);
+      const p5 = hSorted[Math.round(0.05 * (hSorted.length - 1))].toFixed(1);
+      const p95 = hSorted[Math.round(0.95 * (hSorted.length - 1))].toFixed(1);
       idx = readFileSync(idxPath, "utf8");
       idx = idx.replace(/(<span id="faq-hold-stat">)[\s\S]*?(<\/span>)/,
-        (_, open, close) => `${open}Across the ${holds.length} completed sponsor programs in our track record, the average hold has been ${avgHold} years, with a range of ${minHold} to ${maxHold} years.${close}`);
+        (_, open, close) => `${open}Across the ${holds.length} completed sponsor programs in our track record, the average hold has been ${avgHold} years, with most programs running between ${p5} and ${p95} years.${close}`);
       writeFileSync(idxPath, idx);
-      console.log(`FAQ hold stat: ${holds.length} programs, avg ${avgHold} yrs (${minHold}–${maxHold}).`);
+      console.log(`FAQ hold stat: ${holds.length} programs, avg ${avgHold} yrs (typical ${p5}–${p95}).`);
     }
     console.log(`Homepage chart: Baker 1031 Preferred bar set to ${v}% (live from ${prefDeals.length} preferred programs).`);
   }
