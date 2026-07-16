@@ -5,7 +5,7 @@ const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker
 
 // Navy-duotone skyline (frame pulled from the homepage hero video via Cloudinary)
 const SKYLINE =
-  "https://res.cloudinary.com/opoazlei/video/upload/so_2,w_1920,h_1080,c_fill,g_north,q_auto,f_jpg/Baker_1031_Homepage_Video_q9k7ca.jpg";
+  "https://assets.baker1031.com/assets/login-skyline.jpg";
 
 const styles: Record<string, React.CSSProperties> = {
   page: {
