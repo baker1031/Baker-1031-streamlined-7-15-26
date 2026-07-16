@@ -128,6 +128,15 @@ const docsByName = new Map(); // normalized Investment Name -> [{label, file, ga
   }
   console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
 }
+/* Google Drive file links → direct-download links.
+   https://drive.google.com/file/d/<ID>/view?...  →  https://drive.google.com/uc?export=download&id=<ID>
+   Non-Drive-file URLs (folders, external sites) pass through unchanged. */
+function directDownload(url) {
+  const m = String(url || "").match(/drive\.google\.com\/file\/d\/([\w-]+)/) ||
+            String(url || "").match(/drive\.google\.com\/(?:open|uc)\?[^#]*\bid=([\w-]+)/);
+  return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : url;
+}
+
 /* Find an offering's documents: exact normalized-name match first, then a
    unique token-subset match (handles small naming variants between tabs). */
 function docsFor(name) {
@@ -367,9 +376,11 @@ function buildPage(o) {
     const docList = docsFor(name);
     let items;
     if (docList && docList.length) {
-      items = docList.map((d) =>
-        `        <li><span data-field="Label">${esc(d.label)}</span><a class="download" href="${esc(d.file)}" target="_blank" rel="noopener" data-gated="${esc(d.gated || "No")}">View</a></li>`
-      ).join("\n");
+      items = docList.map((d) => {
+        const href = directDownload(d.file);
+        const isVideo = /vimeo\.com|youtube\.com|youtu\.be/.test(href);
+        return `        <li><span data-field="Label">${esc(d.label)}</span><a class="download" href="${esc(href)}" target="_blank" rel="noopener" data-gated="${esc(d.gated || "No")}">${isVideo ? "Watch" : "Download"}</a></li>`;
+      }).join("\n");
     } else {
       const label = o["DD Label"] || "Offering Documents Available By Request";
       const link = o["DD Folder Link"] || "";
