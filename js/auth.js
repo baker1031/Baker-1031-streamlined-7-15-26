@@ -4,20 +4,29 @@
 
    Page detection:
    - Public page  (homepage): has #investor-login in the utility bar
-   - Portal pages (offerings): have .account-box (Welcome + Log Out)
+   - Offering pages: have #offering-gate (soft gate) + .account-box
+     with hidden Welcome/Log Out that auth.js reveals when signed in
+   - Portal pages (offerings directory): have .account-box and NO
+     #offering-gate → hard gate (redirect to login)
+
+   Buttons are wired IMMEDIATELY on page load; clicks await the auth
+   client (which loads from a CDN and can take a few seconds), so a
+   fast click after navigation still works.
 
    Kinde dashboard requirements (Settings → Applications → this app):
    - Allowed callback URLs:  https://<your-domain>/  (and the Netlify URL)
    - Allowed logout URLs:    https://<your-domain>/
    ============================================================ */
 
-import createKindeClient from "https://esm.sh/@kinde-oss/kinde-auth-pkce-js@4";
-
 // Local file previews can't do OAuth redirects — skip auth entirely there
 const isLocalPreview = window.location.protocol === "file:";
 
-async function init() {
-  if (isLocalPreview) return;
+/* ---------- Auth client boots in the background ---------- */
+const ready = (async function () {
+  if (isLocalPreview) return null;
+
+  const { default: createKindeClient } =
+    await import("https://esm.sh/@kinde-oss/kinde-auth-pkce-js@4");
 
   const kinde = await createKindeClient({
     client_id: "2405a754fefd43828d42f3c83e806a36",
@@ -59,78 +68,103 @@ async function init() {
     });
   };
 
-  /* ---------- Public page: Investor Login ---------- */
-  const loginLink = document.getElementById("investor-login");
-  if (loginLink) {
-    if (authed) {
-      loginLink.textContent = "Investor Portal";
-      loginLink.href = "/current-offerings.html";
-    } else {
-      loginLink.addEventListener("click", function (e) {
-        e.preventDefault();
-        kinde.login({ app_state: { returnTo: "/current-offerings.html" } });
-      });
-    }
-  }
+  return { kinde, user, authed };
+})();
 
-  /* ---------- Generic hook: any #login button ---------- */
+/* ---------- Wire buttons NOW; act when the client is ready ---------- */
+
+const loginLink = document.getElementById("investor-login");
+if (loginLink) {
+  loginLink.addEventListener("click", async function (e) {
+    e.preventDefault();
+    const s = await ready;
+    if (!s) return;
+    if (s.authed) {
+      window.location.href = "/current-offerings.html";
+    } else {
+      s.kinde.login({ app_state: { returnTo: "/current-offerings.html" } });
+    }
+  });
+}
+
+const genericLogin = document.getElementById("login");
+if (genericLogin) {
   // No register hook on purpose: self-sign-up is disabled. Accounts are
   // provisioned server-side after the request-access form + scheduled call.
-  const genericLogin = document.getElementById("login");
-  if (genericLogin) {
-    genericLogin.addEventListener("click", async function (e) {
-      e.preventDefault();
-      await kinde.login();
-    });
+  genericLogin.addEventListener("click", async function (e) {
+    e.preventDefault();
+    const s = await ready;
+    if (s) await s.kinde.login();
+  });
+}
+
+const gateEl = document.getElementById("offering-gate");
+const gateLogin = document.getElementById("offering-gate-login");
+if (gateLogin) {
+  gateLogin.addEventListener("click", async function (e) {
+    e.preventDefault();
+    const s = await ready;
+    if (s) s.kinde.login({ app_state: { returnTo: window.location.pathname } });
+  });
+}
+
+/* ---------- Once auth state is known, update the page ---------- */
+ready.then(function (s) {
+  if (!s) return;
+  const { kinde, user, authed } = s;
+
+  // Public-page login link: flip to a portal link when signed in
+  if (loginLink && authed) {
+    loginLink.textContent = "Investor Portal";
+    loginLink.href = "/current-offerings.html";
   }
 
-  /* ---------- Offering pages: soft gate overlay ---------- */
-  // Content stays in the HTML for crawlers; humans without a session get
-  // a login overlay. Logged-in investors never see it.
-  const gate = document.getElementById("offering-gate");
-  if (gate) {
+  // Soft gate (offering pages): show overlay only to signed-out visitors
+  if (gateEl) {
     if (authed) {
-      gate.remove();
+      gateEl.remove();
     } else {
-      gate.style.display = "flex";
+      gateEl.style.display = "flex";
       document.documentElement.style.overflow = "hidden";
-      const gateLogin = document.getElementById("offering-gate-login");
-      if (gateLogin) {
-        gateLogin.addEventListener("click", function (e) {
-          e.preventDefault();
-          kinde.login({ app_state: { returnTo: window.location.pathname } });
-        });
-      }
     }
   }
 
-  /* ---------- Portal pages: guard + welcome + logout ---------- */
+  // Account box (Welcome + Log Out)
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
     if (!authed) {
-      // Loop breaker: if we already bounced through Kinde seconds ago and
-      // still look logged out, stop redirecting instead of flickering.
-      const last = Number(sessionStorage.getItem("b1031-auth-redirect") || 0);
-      if (Date.now() - last < 30000) {
-        sessionStorage.removeItem("b1031-auth-redirect");
-        window.location.replace("/");
-        return;
+      if (!gateEl) {
+        // Portal directory: hard gate — send to Kinde, then back here.
+        // Loop breaker: if we already bounced through Kinde seconds ago and
+        // still look logged out, stop redirecting instead of flickering.
+        const last = Number(sessionStorage.getItem("b1031-auth-redirect") || 0);
+        if (Date.now() - last < 30000) {
+          sessionStorage.removeItem("b1031-auth-redirect");
+          window.location.replace("/");
+          return;
+        }
+        sessionStorage.setItem("b1031-auth-redirect", String(Date.now()));
+        kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
       }
-      sessionStorage.setItem("b1031-auth-redirect", String(Date.now()));
-      kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
+      // Offering pages: leave the login link visible; the overlay handles the rest
       return;
     }
     sessionStorage.removeItem("b1031-auth-redirect");
+
+    // Signed in: reveal Welcome + Log Out, hide any login link in the box
     const nameEl = accountBox.querySelector('[data-field="First Name"]');
     if (nameEl) nameEl.textContent = user.given_name || user.email || "Investor";
-    const logoutBtn = accountBox.querySelector(".logout");
+    const welcomeEl = accountBox.querySelector(".welcome");
+    if (welcomeEl) welcomeEl.style.display = "";
+    const boxLogin = accountBox.querySelector("#investor-login");
+    if (boxLogin) boxLogin.style.display = "none";
+    const logoutBtn = accountBox.querySelector(".logout:not(#investor-login)");
     if (logoutBtn) {
+      logoutBtn.style.display = "";
       logoutBtn.addEventListener("click", function (e) {
         e.preventDefault();
         kinde.logout();
       });
     }
   }
-}
-
-init();
+});

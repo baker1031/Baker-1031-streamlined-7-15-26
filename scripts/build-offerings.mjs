@@ -224,12 +224,16 @@ function buildPage(o) {
   /* ----- asset paths (page lives two levels deep) ----- */
   html = html.replace(/(href|src)="(css|js|assets|documents)\//g, `$1="/$2/`);
 
-  /* ----- public header: swap the login-gated account box for a login link
-     (offering pages are public for SEO; .account-box would trigger the
-     client-side auth redirect in js/auth.js) ----- */
+  /* ----- header: same account box as the portal directory. Welcome/Log Out
+     start hidden; js/auth.js reveals them for signed-in investors and shows
+     the login link to everyone else (the soft gate handles access). ----- */
   html = html.replace(
     /<div class="account-box">[\s\S]*?<\/div>/,
-    `<div class="login-links" style="display:flex;align-items:center;gap:1.25rem"><a class="logout" id="investor-login" href="#">Investor Login</a></div>`
+    `<div class="account-box">
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
+        <a class="logout" id="investor-login" href="#">Investor Login</a>
+      </div>`
   );
 
   /* ----- breadcrumb / back links ----- */
