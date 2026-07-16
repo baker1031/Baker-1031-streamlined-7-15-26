@@ -230,6 +230,7 @@ function buildPage(o) {
   html = html.replace(
     /<div class="account-box">[\s\S]*?<\/div>/,
     `<div class="account-box">
+        <a class="listings-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
         <a class="logout" id="investor-login" href="#">Investor Login</a>
