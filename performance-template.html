@@ -137,7 +137,132 @@
   .footer-bottom a { color: #8a8f99; }
 </style>
 <style>
-  /* ---------- Performance page ---------- */
+
+  /* ---------- Tabs ---------- */
+  .perf-tabs { display: flex; gap: 0.25rem; border-bottom: 1px solid var(--hairline); margin-bottom: 1.5rem; overflow-x: auto; }
+  .perf-tabs button {
+    font: inherit; font-size: 0.9rem; font-weight: 600; color: var(--muted);
+    background: none; border: none; border-bottom: 2px solid transparent;
+    padding: 0.7rem 1rem; cursor: pointer; white-space: nowrap;
+  }
+  .perf-tabs button:hover { color: var(--navy); }
+  .perf-tabs button.active { color: var(--navy); border-bottom-color: var(--navy); }
+  .perf-panel { display: none; }
+  .perf-panel.active { display: block; }
+
+/* ---------- Offering cards ---------- */
+  .offering-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 1000px) { .offering-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .offering-grid { grid-template-columns: 1fr; } }
+
+  .offering-card {
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .offering-card:hover {
+    box-shadow: 0 10px 30px rgba(20, 30, 55, 0.12);
+    transform: translateY(-2px);
+  }
+  .offering-card.hidden { display: none; }
+  .card-photo { position: relative; }
+  .card-photo img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: var(--wash);
+  }
+  .status-chip {
+    position: absolute;
+    top: 0.8rem;
+    left: 0.8rem;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--good);
+  }
+  .status-chip.limited { color: #b7791f; }
+  .status-chip.backup { color: #b7791f; }
+  .status-chip.soon { color: var(--navy); }
+  .status-chip.closed { color: #8a8f99; }
+  .type-chip {
+    position: absolute;
+    top: 0.8rem;
+    right: 0.8rem;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(13, 20, 38, 0.72);
+    color: #fff;
+  }
+  .card-body { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
+  .card-body h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
+  .card-body .sponsor-line { font-size: 0.82rem; color: var(--muted); margin: 0.2rem 0 0.9rem; }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0.65rem 0.75rem;
+    border-top: 1px solid var(--hairline);
+    padding-top: 0.85rem;
+    margin-bottom: 0.95rem;
+  }
+  .card-stats .cs { min-width: 0; }
+  .card-stats .label {
+    display: block;
+    font-size: 0.58rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.15rem;
+    white-space: nowrap;
+  }
+  .card-stats .value { font-size: 0.85rem; font-weight: 700; }
+
+  .availability { margin-bottom: 1rem; }
+  .availability .bar {
+    height: 6px;
+    border-radius: 999px;
+    background: #e9ecf1;
+    overflow: hidden;
+    margin-bottom: 0.3rem;
+  }
+  .availability .fill { height: 100%; background: var(--navy); border-radius: 999px; }
+  .availability .cap { font-size: 0.72rem; color: var(--muted); }
+
+  .view-btn {
+    margin-top: auto;
+    display: block;
+    text-align: center;
+    background: var(--navy);
+    color: #fff;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+  }
+  .view-btn:hover { background: var(--navy-dark); }
+
+  .page-note { font-size: 0.74rem; line-height: 1.55; color: var(--muted); margin-top: 2rem; max-width: 66rem; }
+
+    /* ---------- Performance page ---------- */
   .perf-controls { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 0.4rem 0 1.2rem; align-items: center; }
   .perf-controls select, .perf-controls input {
     font: inherit; font-size: 0.88rem; color: var(--ink);
@@ -195,9 +320,40 @@
     </nav>
 
     <div class="page-head">
-      <h1>Sponsor Track Record</h1>
-      <p>Every completed, full-cycle program from our sponsor roster &mdash; realized results from offering through final sale. Sort any column, or filter by sponsor.</p>
+      <h1>Performance</h1>
+      <p>Realized, full-cycle results across our sponsor roster &mdash; sponsor by sponsor, deal by deal, and the most recently completed offerings.</p>
     </div>
+
+    <div class="perf-tabs" role="tablist">
+      <button type="button" class="active" data-tab="sponsors">Performance by Sponsor</button>
+      <button type="button" data-tab="deals">Full Track Record</button>
+      <button type="button" data-tab="closed">Recently Closed Offerings</button>
+    </div>
+
+    <section class="perf-panel active" id="panel-sponsors">
+      <div class="perf-wrap">
+        <table class="perf" id="sponsor-table">
+          <thead>
+            <tr>
+              <th data-sort="text">Sponsor</th>
+              <th data-sort="num">Founded</th>
+              <th data-sort="num">AUM</th>
+              <th data-sort="num">Full-Cycle Deals</th>
+              <th data-sort="num">Avg Annual Return</th>
+              <th data-sort="num">Avg Equity Multiple</th>
+              <th data-sort="num">Avg Hold</th>
+              <th data-sort="num">Success Rate</th>
+            </tr>
+          </thead>
+          <tbody>
+          <!-- PERF:SPONSOR_ROWS -->
+          </tbody>
+        </table>
+      </div>
+      <p class="page-note">Sponsor-level figures are provided by each sponsor and have not been independently verified except as described in the applicable offering materials. Averages are across each sponsor&rsquo;s completed full-cycle programs, net to investor over each program&rsquo;s hold. Past performance does not guarantee future results.</p>
+    </section>
+
+    <section class="perf-panel" id="panel-deals">
 
     <div class="perf-controls">
       <select id="perf-sponsor" aria-label="Filter by sponsor">
@@ -228,6 +384,14 @@
     </div>
 
     <p class="page-note">Shown to verified accredited investors only. Results are historical, realized outcomes for completed programs as reported by each sponsor and have not been independently verified except as described in the applicable offering materials. Equity multiple and average annual return are net to investor over each program&rsquo;s full hold period. Past performance does not guarantee future results; individual program results vary widely and losses can occur.</p>
+    </section>
+
+    <section class="perf-panel" id="panel-closed">
+      <div class="offering-grid">
+      <!-- PERF:CLOSED_CARDS -->
+      </div>
+      <p class="page-note">Offerings move here automatically when their status changes to Closed &mdash; they are fully subscribed or have completed and are no longer available. Details pages are retained for reference. Past performance does not guarantee future results.</p>
+    </section>
 
   </main>
 
@@ -274,7 +438,51 @@
   </footer>
 
   <script>
-    // Sponsor filter + search + column sorting (data baked in at build time)
+    // Tab switching
+    (function () {
+      var tabs = document.querySelectorAll('.perf-tabs button');
+      tabs.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          tabs.forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          document.querySelectorAll('.perf-panel').forEach(function (pn) { pn.classList.remove('active'); });
+          document.getElementById('panel-' + btn.getAttribute('data-tab')).classList.add('active');
+        });
+      });
+    })();
+
+    // Column sorting for any .perf table
+    function makeSortable(table) {
+      var tbody = table.tBodies[0];
+      var lastCol = -1, asc = true;
+      table.querySelectorAll('thead th').forEach(function (th, i) {
+        th.addEventListener('click', function () {
+          asc = (lastCol === i) ? !asc : true;
+          lastCol = i;
+          var numeric = th.getAttribute('data-sort') === 'num';
+          var rows = Array.prototype.slice.call(tbody.rows);
+          rows.sort(function (a, b) {
+            var av = a.cells[i].textContent.trim(), bv = b.cells[i].textContent.trim();
+            if (numeric) {
+              var an = parseFloat(av.replace(/[^0-9.\-]/g, '')), bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
+              if (isNaN(an)) an = -Infinity; if (isNaN(bn)) bn = -Infinity;
+              return asc ? an - bn : bn - an;
+            }
+            return asc ? av.localeCompare(bv) : bv.localeCompare(av);
+          });
+          rows.forEach(function (r) { tbody.appendChild(r); });
+          table.querySelectorAll('thead th .dir').forEach(function (d) { d.remove(); });
+          var dir = document.createElement('span');
+          dir.className = 'dir';
+          dir.textContent = asc ? ' \u2191' : ' \u2193';
+          th.appendChild(dir);
+        });
+      });
+    }
+    makeSortable(document.getElementById('sponsor-table'));
+    makeSortable(document.getElementById('perf-table'));
+
+    // Sponsor filter + search (deals tab)
     (function () {
       var tbody = document.querySelector('#perf-table tbody');
       var rows = Array.prototype.slice.call(tbody.rows);
@@ -297,30 +505,6 @@
       }
       select.addEventListener('change', apply);
       search.addEventListener('input', apply);
-
-      var lastCol = -1, asc = true;
-      document.querySelectorAll('#perf-table thead th').forEach(function (th, i) {
-        th.addEventListener('click', function () {
-          asc = (lastCol === i) ? !asc : true;
-          lastCol = i;
-          var numeric = th.getAttribute('data-sort') === 'num';
-          rows.sort(function (a, b) {
-            var av = a.cells[i].textContent.trim(), bv = b.cells[i].textContent.trim();
-            if (numeric) {
-              var an = parseFloat(av.replace(/[^0-9.\-]/g, '')), bn = parseFloat(bv.replace(/[^0-9.\-]/g, ''));
-              if (isNaN(an)) an = -Infinity; if (isNaN(bn)) bn = -Infinity;
-              return asc ? an - bn : bn - an;
-            }
-            return asc ? av.localeCompare(bv) : bv.localeCompare(av);
-          });
-          rows.forEach(function (r) { tbody.appendChild(r); });
-          document.querySelectorAll('#perf-table thead th .dir').forEach(function (d) { d.remove(); });
-          var dir = document.createElement('span');
-          dir.className = 'dir';
-          dir.textContent = asc ? ' \u2191' : ' \u2193';
-          th.appendChild(dir);
-        });
-      });
       apply();
     })();
   </script>

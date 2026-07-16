@@ -458,15 +458,19 @@ for (const o of offerings) {
 console.log(`Wrote ${pageCount} offering pages under /offerings/`);
 
 /* ---------------- 3) Listing cards + filter pills ---------------- */
+let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed" tab
 {
   const listingPath = join(ROOT, "current-offerings.html");
   let listing = readFileSync(listingPath, "utf8");
-  const sorted = [...offerings].sort((a, b) =>
+  // Closed offerings move off the inventory and onto the Performance page
+  const open = offerings.filter((o) => !isClosed(o));
+  const closed = offerings.filter(isClosed);
+  const sorted = [...open].sort((a, b) =>
     statusRank(a["Status"]) - statusRank(b["Status"]) ||
     a["Investment Name"].localeCompare(b["Investment Name"])
   );
 
-  const cards = sorted.map((o) => {
+  const makeCard = (o) => {
     const page = `/offerings/${o._slug}/`;
     const photo = o["Photo Link Use"] || o["Property Photo Link"] || "";
     const tag = slugify(o["Property Type"] || "other");
@@ -496,7 +500,20 @@ console.log(`Wrote ${pageCount} offering pages under /offerings/`);
           <a class="view-btn" href="${page}">View Offering</a>
         </div>
       </article>`;
-  }).join("\n");
+  };
+  const cards = sorted.map(makeCard).join("\n");
+
+  // "Recently closed" — newest Last Updated first (fall back to name order)
+  const dateVal = (o) => {
+    const t = Date.parse(o["Last Updated"] || "");
+    return Number.isNaN(t) ? 0 : t;
+  };
+  const closedSorted = [...closed].sort((a, b) =>
+    dateVal(b) - dateVal(a) || a["Investment Name"].localeCompare(b["Investment Name"])
+  );
+  closedCardsHtml = closedSorted.length
+    ? closedSorted.map(makeCard).join("\n")
+    : `      <p class="page-note">No recently closed offerings.</p>`;
 
   // Filter pills from the property types actually present
   const types = [...new Set(sorted.map((o) => (o["Property Type"] || "").trim()).filter(Boolean))].sort();
@@ -512,7 +529,7 @@ console.log(`Wrote ${pageCount} offering pages under /offerings/`);
   listing = put(listing, "<!-- OFFERINGS:START -->", "<!-- OFFERINGS:END -->", cards);
   listing = put(listing, "<!-- FILTERS:START -->", "<!-- FILTERS:END -->", pills);
   writeFileSync(listingPath, listing);
-  console.log(`Baked ${sorted.length} cards + ${types.length} filter pills into current-offerings.html`);
+  console.log(`Baked ${sorted.length} open cards + ${types.length} filter pills into current-offerings.html (${closed.length} closed → performance page)`);
 }
 
 /* ---------------- 4) performance.html — Sponsor Track Record ---------------- */
@@ -555,11 +572,47 @@ console.log(`Wrote ${pageCount} offering pages under /offerings/`);
   const sponsors = [...new Set(deals.map((d) => d.sponsor))].sort();
   const optionsHtml = sponsors.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
 
+  // Sponsor-level table from the "Sponsor Connection" tab (sponsors with track records)
+  const SC_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
+  const resSC = await fetch(SC_CSV_URL, { redirect: "follow" });
+  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
+  const scRows = parseCSV(await resSC.text());
+  const sch = scRows[0].map((h) => h.trim());
+  const sci = (n) => sch.indexOf(n);
+  for (const need of ["Investment Firm", "Full-Cycle Deals", "Average Annual Return"]) {
+    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
+  }
+  const noData = (v) => {
+    const t = (v || "").trim();
+    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t)) return "";
+    if (/^\d*\.?x$/i.test(t) || t === ".x") return ""; // malformed multiples like "2.x"
+    return t;
+  };
+  const sponsorRows = scRows.slice(1)
+    .filter((r) => {
+      const fc = (r[sci("Full-Cycle Deals")] || "").trim();
+      return (r[sci("Investment Firm")] || "").trim() && fc && fc !== "0" && !/^no data$/i.test(fc);
+    })
+    .sort((a, b) => a[sci("Investment Firm")].localeCompare(b[sci("Investment Firm")]))
+    .map((r) => `          <tr>
+            <td>${esc(r[sci("Investment Firm")])}</td>
+            <td class="num">${esc(noData(r[sci("Year Founded")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("AUM")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("Full-Cycle Deals")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("Average Annual Return")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("Average Equity Multiple")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("Average Hold Period")]) || "—")}</td>
+            <td class="num">${esc(noData(r[sci("Success Rate")]) || "—")}</td>
+          </tr>`);
+  if (sponsorRows.length < 5) throw new Error(`Only ${sponsorRows.length} sponsor rows — refusing to build.`);
+
   let perf = readFileSync(join(ROOT, "performance-template.html"), "utf8");
+  perf = perf.replace("<!-- PERF:SPONSOR_ROWS -->", sponsorRows.join("\n"));
   perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
   perf = perf.replace("<!-- PERF:SPONSORS -->", optionsHtml);
+  perf = perf.replace("<!-- PERF:CLOSED_CARDS -->", closedCardsHtml);
   writeFileSync(join(ROOT, "performance.html"), perf);
-  console.log(`Wrote performance.html (${deals.length} full-cycle programs, ${sponsors.length} sponsors).`);
+  console.log(`Wrote performance.html (${sponsorRows.length} sponsors, ${deals.length} programs, closed cards included).`);
 }
 
 /* ---------------- 5) sitemap.xml ---------------- */
