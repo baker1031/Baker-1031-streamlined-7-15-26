@@ -648,6 +648,35 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     groupStats("All Investment Sponsors", deals)
   ].join("\n");
 
+  /* ---- Homepage chart: tie the "Baker 1031 Preferred*" bar to the same
+     live calculation (average annual return across completed preferred-
+     sponsor programs). Chart scale: 0% = y310, 25% = y54 → 10.24 px/%. ---- */
+  {
+    const prefAnnual = mean(prefDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
+    if (prefAnnual === null || prefAnnual < 5 || prefAnnual > 24.5) {
+      throw new Error(`Preferred-sponsor average ${prefAnnual}% outside sane chart range — refusing to build.`);
+    }
+    const v = prefAnnual.toFixed(1);
+    const top = +(310 - prefAnnual * 10.24).toFixed(1);
+    const idxPath = join(ROOT, "index.html");
+    let idx = readFileSync(idxPath, "utf8");
+
+    const gStart = idx.indexOf('data-name="Baker 1031 Preferred*"');
+    if (gStart === -1) throw new Error("Homepage chart: Baker 1031 Preferred group not found");
+    const gEnd = idx.indexOf("</g>", gStart);
+    let group = idx.slice(gStart, gEnd);
+    group = group
+      .replace(/data-value="[\d.]+%"/, `data-value="${v}%"`)
+      .replace(/<path class="bar" d="M92,310 V[\d.]+ Q92,[\d.]+ 96,[\d.]+ H164 Q168,[\d.]+ 168,[\d.]+ V310 Z"/,
+        `<path class="bar" d="M92,310 V${(top + 4).toFixed(1)} Q92,${top} 96,${top} H164 Q168,${top} 168,${(top + 4).toFixed(1)} V310 Z"`)
+      .replace(/<text x="130" y="[\d.]+" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">[\d.]+%\*<\/text>/,
+        `<text x="130" y="${(top - 9).toFixed(1)}" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">${v}%*</text>`);
+    idx = idx.slice(0, gStart) + group + idx.slice(gEnd);
+    idx = idx.replace(/(aria-label="Bar chart: Baker 1031 preferred sponsors )[\d.]+%/, `$1${v}%`);
+    writeFileSync(idxPath, idx);
+    console.log(`Homepage chart: Baker 1031 Preferred bar set to ${v}% (live from ${prefDeals.length} preferred programs).`);
+  }
+
   let perf = readFileSync(join(ROOT, "performance-template.html"), "utf8");
   perf = perf.replace("<!-- PERF:SUMMARY_ROWS -->", summaryRows);
   perf = perf.replace("<!-- PERF:SPONSOR_ROWS -->", sponsorRows.join("\n"));
