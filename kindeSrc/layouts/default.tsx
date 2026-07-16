@@ -1,4 +1,5 @@
 import React from "react";
+import { getDarkModeLogoUrl } from "@kinde/infrastructure";
 
 const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
 
@@ -60,7 +61,7 @@ export const DefaultLayout = (props: { children: React.ReactNode }) => {
       <div style={styles.cardWrap}>
         <a href={SITE_URL} style={styles.plaque} aria-label="Baker 1031 Investments">
           <img
-            src={`${SITE_URL}/assets/logo-dark.png`}
+            src={getDarkModeLogoUrl()}
             alt="Baker 1031 Investments"
             style={styles.plaqueImg}
           />
