@@ -324,6 +324,7 @@
       <div class="account-box">
         <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
         <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
         <span class="nav-sep" style="display:none"></span>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
@@ -331,7 +332,7 @@
     </div>
   </header>
 
-  <main class="container">
+  <main class="container" id="main-content">
 
     <nav class="breadcrumbs" aria-label="Breadcrumb">
       <a href="/">Home</a>
@@ -434,11 +435,12 @@
   </main>
 
   <!-- Footer (same as offering page / homepage) -->
-  <footer class="site-footer" id="contact">
+  <!-- PARTIAL:footer -->
+<footer class="site-footer" id="contact">
     <div class="footer-inner">
       <div class="footer-cols">
         <div class="footer-brand">
-          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
           <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
         </div>
         <div>
@@ -475,6 +477,7 @@
     </div>
       <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
 </footer>
+<!-- /PARTIAL:footer -->
 
   <script>
     // Tab switching

@@ -4,3 +4,4 @@ data/offerings.json
 sitemap.xml
 node_modules/
 performance.html
+dist/

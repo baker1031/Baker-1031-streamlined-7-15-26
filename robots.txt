@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /employee.html
+Disallow: /partials/
+Disallow: /templates/
+Disallow: /docs/
 
 Sitemap: https://baker1031.com/sitemap.xml

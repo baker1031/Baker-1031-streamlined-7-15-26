@@ -1,62 +1,72 @@
 /* ============================================================
-   Cal.com → Pipedrive webhook receiver.
+   Cal.com → Pipedrive + Kinde webhook receiver.
 
-   Add this URL as a webhook subscriber in Cal.com
-   (Settings → Developer → Webhooks):
-
+   Webhook URL (Cal.com → Settings → Developer → Webhooks):
      https://<site>/.netlify/functions/cal-booking?secret=<CAL_WEBHOOK_SECRET>
 
-   Triggers handled:
-   - BOOKING_CREATED     → find Person by attendee email, create a
-                           scheduled Activity (call) at the booking
-                           time, linked to the person + their most
-                           recent open Deal, with a booking note.
-   - BOOKING_RESCHEDULED → same as created (new time), note says so.
-   - BOOKING_CANCELLED   → note on the person (and deal) that the
-                           call was cancelled.
+   Auth: prefers Cal's HMAC header (X-Cal-Signature-256, signed with the
+   same secret); falls back to the ?secret= URL check. Fails closed.
 
-   Env: PIPEDRIVE_API_TOKEN, CAL_WEBHOOK_SECRET
+   BOOKING_CREATED:
+     - find/create the Person, link their most recent open Deal
+     - create (or update, on re-delivery) a call Activity
+     - PROVISION the investor portal login server-side (Kinde) and set
+       Pipedrive "Portal Access" = Yes — the browser never triggers
+       provisioning (the old public provision-user endpoint is gone)
+   BOOKING_RESCHEDULED:
+     - update the SAME activity (uid → activity_id map in Netlify Blobs)
+       instead of creating a duplicate
+   BOOKING_CANCELLED:
+     - mark the mapped activity done + note the cancellation on the person
+
+   Env: PIPEDRIVE_API_TOKEN, CAL_WEBHOOK_SECRET,
+        KINDE_DOMAIN, KINDE_M2M_CLIENT_ID, KINDE_M2M_CLIENT_SECRET,
+        PD_FIELD_PORTAL_ACCESS, PD_PORTAL_YES
    ============================================================ */
 
-const API = "https://api.pipedrive.com/v1";
+import { getStore } from "@netlify/blobs";
+import { json, ok, verifyCalSignature } from "./lib/http.mjs";
+import { pd, findPersonByEmail, findOpenDeal, esc } from "./lib/pipedrive.mjs";
+import { kindeToken, createUser, findUserByEmail, unsuspendUser } from "./lib/kinde.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
 
   const secret = process.env.CAL_WEBHOOK_SECRET;
-  const url = new URL(req.url);
-  // Fail closed: no configured secret means no access
-  if (!secret || url.searchParams.get("secret") !== secret) {
-    return new Response("forbidden", { status: 403 });
-  }
+  if (!secret) return new Response("forbidden", { status: 403 }); // fail closed
+
+  const rawBody = await req.text();
+  const sigOk = await verifyCalSignature(rawBody, req.headers.get("x-cal-signature-256"), secret);
+  const urlOk = new URL(req.url).searchParams.get("secret") === secret;
+  if (!sigOk && !urlOk) return new Response("forbidden", { status: 403 });
 
   const token = process.env.PIPEDRIVE_API_TOKEN;
   if (!token) return ok("pipedrive not configured");
 
   let body;
-  try { body = await req.json(); } catch { return ok("bad payload"); }
+  try { body = JSON.parse(rawBody); } catch { return ok("bad payload"); }
 
   const event = body.triggerEvent || body.event || "";
   const p = body.payload || {};
   const attendee = (p.attendees && p.attendees[0]) || {};
-  const email = attendee.email || (p.responses && p.responses.email && p.responses.email.value);
+  const email = String(
+    attendee.email || (p.responses && p.responses.email && p.responses.email.value) || ""
+  ).trim().toLowerCase();
   const attendeeName = attendee.name || (p.responses && p.responses.name && p.responses.name.value) || email;
   if (!email) return ok("no attendee email");
 
-  // ---------- Person (find, or create so no booking is lost) ----------
-  let person = await findPerson(token, email);
+  /* ---------- Person (find, or create so no booking is lost) ---------- */
+  let person = await findPersonByEmail(token, email);
   if (!person) {
-    const created = await pd("POST", `/persons`, token, {
-      name: attendeeName || email,
-      emails: [{ value: email, primary: true }]
-    }, 2);
+    const created = await pd(`/persons`, token, {
+      method: "POST", v: 2,
+      body: { name: attendeeName || email, emails: [{ value: email, primary: true }] }
+    });
     person = created && created.data;
   }
   if (!person) return ok("person unavailable");
 
-  // Most recent open deal for this person, if any
-  const dealsRes = await pd("GET", `/deals&person_id=${person.id}&status=open&sort_by=add_time&sort_direction=desc&limit=1`, token, null, 2);
-  const deal = dealsRes && dealsRes.data && dealsRes.data[0];
+  const deal = await findOpenDeal(token, person.id);
 
   const eventTitle = (p.eventType && p.eventType.title) || p.title || "Call";
   const start = p.startTime ? new Date(p.startTime) : null;
@@ -64,9 +74,12 @@ export default async (req) => {
   const uid = p.uid || "";
   const tz = attendee.timeZone || p.organizer?.timeZone || "";
 
+  const store = getStore("cal-bookings");
+  const mapKey = uid ? `uid:${uid}` : null;
+
   if (event === "BOOKING_CREATED" || event === "BOOKING_RESCHEDULED") {
     const rescheduled = event === "BOOKING_RESCHEDULED";
-    await pd("POST", `/activities`, token, clean({
+    const fields = clean({
       subject: `${eventTitle} — ${attendeeName}${rescheduled ? " (rescheduled)" : ""}`,
       type: "call",
       person_id: person.id,
@@ -79,46 +92,81 @@ export default async (req) => {
         start ? `Starts: ${start.toISOString()}${tz ? ` (attendee TZ: ${tz})` : ""}` : "",
         uid ? `Cal booking UID: ${uid}` : ""
       ].filter(Boolean).join("<br>")
-    }));
-    return ok("activity created");
+    });
+
+    // Same booking already has an activity? Update it instead of duplicating.
+    let existingId = mapKey ? await store.get(mapKey).catch(() => null) : null;
+    if (existingId) {
+      const upd = await pd(`/activities/${existingId}`, token, { method: "PUT", body: fields });
+      if (!upd || upd.success === false) existingId = null; // stale mapping — recreate
+    }
+    if (!existingId) {
+      const createdAct = await pd(`/activities`, token, { method: "POST", body: fields });
+      const newId = createdAct && createdAct.data && createdAct.data.id;
+      if (newId && mapKey) await store.set(mapKey, String(newId)).catch(() => {});
+    }
+
+    /* ---------- Server-side portal provisioning (BOOKING_CREATED only) ---------- */
+    if (!rescheduled) {
+      try {
+        const kt = await kindeToken();
+        if (kt) {
+          const nameParts = String(attendeeName || "").trim().split(/\s+/);
+          const res = await createUser(kt, {
+            email,
+            given: person.first_name || nameParts[0] || "",
+            family: person.last_name || nameParts.slice(1).join(" ") || ""
+          });
+          if (res.ok && !res.created) {
+            // pre-existing user: make sure they aren't suspended
+            const u = await findUserByEmail(kt, email);
+            if (u && u.is_suspended) await unsuspendUser(kt, u.id);
+          }
+          if (res.ok) await markPortalAccess(token, person.id);
+        }
+      } catch (e) {
+        console.error("provisioning failed:", e);
+      }
+    }
+
+    return ok(rescheduled ? "activity updated" : "activity created + provisioned");
   }
 
   if (event === "BOOKING_CANCELLED") {
-    await pd("POST", `/notes`, token, clean({
-      content: `<b>Cal.com booking cancelled</b><br>${esc(eventTitle)}${start ? ` — was scheduled for ${start.toISOString()}` : ""}${uid ? `<br>Cal booking UID: ${uid}` : ""}`,
-      person_id: person.id,
-      deal_id: deal ? deal.id : undefined
-    }));
+    const existingId = mapKey ? await store.get(mapKey).catch(() => null) : null;
+    if (existingId) {
+      await pd(`/activities/${existingId}`, token, {
+        method: "PUT",
+        body: { subject: `${eventTitle} — ${attendeeName} (cancelled)`, done: 1 }
+      });
+    }
+    await pd(`/notes`, token, {
+      method: "POST",
+      body: clean({
+        content: `<b>Cal.com booking cancelled</b><br>${esc(eventTitle)}${start ? ` — was scheduled for ${start.toISOString()}` : ""}${uid ? `<br>Cal booking UID: ${uid}` : ""}`,
+        person_id: person.id,
+        deal_id: deal ? deal.id : undefined
+      })
+    });
     return ok("cancellation noted");
   }
 
   return ok(`event ${event} ignored`);
 };
 
-async function findPerson(token, email) {
-  const res = await pd("GET", `/persons/search&term=${encodeURIComponent(email)}&fields=email&exact_match=true`, token);
-  const item = res && res.data && res.data.items && res.data.items[0];
-  return item ? item.item : null;
-}
-
-async function pd(method, path, token, body, v) {
-  const base = v === 2 ? "https://api.pipedrive.com/api/v2" : API;
-  const [p, extra] = path.split("&");
-  const url = `${base}${p}${extra ? "?" + extra : ""}`;
-  const res = await fetch(url, {
-    method,
-    headers: { "x-api-token": token, ...(body ? { "Content-Type": "application/json" } : {}) },
-    body: body ? JSON.stringify(body) : undefined
+async function markPortalAccess(token, personId) {
+  const fieldKey = process.env.PD_FIELD_PORTAL_ACCESS;
+  const yes = process.env.PD_PORTAL_YES;
+  if (!fieldKey || !yes) return;
+  await pd(`/persons/${personId}`, token, {
+    method: "PATCH", v: 2,
+    body: { custom_fields: { [fieldKey]: Number(yes) } }
   });
-  try { return await res.json(); } catch { return {}; }
 }
 
 function msToHHMM(ms) {
   const mins = Math.max(0, Math.round(ms / 60000));
   return `${String(Math.floor(mins / 60)).padStart(2, "0")}:${String(mins % 60).padStart(2, "0")}`;
-}
-function esc(s) {
-  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 function clean(obj) {
   const out = {};
@@ -126,7 +174,4 @@ function clean(obj) {
     if (obj[k] !== undefined && obj[k] !== "" && obj[k] !== null) out[k] = obj[k];
   }
   return out;
-}
-function ok(note) {
-  return new Response(JSON.stringify({ ok: true, note }), { status: 200, headers: { "Content-Type": "application/json" } });
 }

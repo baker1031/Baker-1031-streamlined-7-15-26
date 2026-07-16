@@ -100,6 +100,7 @@
     <div class="tool-grid">
       <div class="panel">
         <h3>Exchange Inputs</h3>
+        <div class="field"><label for="in-client">Client name (optional)</label><input type="text" id="in-client" placeholder="e.g. Jane Smith"></div>
         <div class="field"><label for="in-equity">Equity from sale ($)</label><input type="text" id="in-equity" inputmode="numeric" placeholder="1,000,000"></div>
         <div class="field"><label for="in-debt">Debt to replace ($)</label><input type="text" id="in-debt" inputmode="numeric" placeholder="500,000"></div>
         <div class="field"><label for="in-date">Exchange start date (sale closing)</label><input type="date" id="in-date"></div>
@@ -116,6 +117,7 @@
           </select>
         </div>
         <div class="field"><label>Asset classes</label><div class="classes" id="f-classes"></div></div>
+        <label class="check" style="margin-top:0.6rem"><input type="checkbox" id="f-viewall"> Also list every eligible offering</label>
         <button type="button" class="run-btn" id="run">Build Portfolios</button>
       </div>
 
@@ -327,8 +329,10 @@
     var D = money(document.getElementById("in-debt").value) || 0;
     var results = document.getElementById("results");
     if (!E || E <= 0) { results.innerHTML = '<div class="warn">Enter the equity amount.</div>'; return; }
-
+    var client = document.getElementById("in-client").value.trim();
     var dateVal = document.getElementById("in-date").value;
+    var clientHead = client ? '<h2 style="font-size:1.15rem;font-weight:800;margin-bottom:0.3rem">Portfolio scenarios for ' + client.replace(/</g,"&lt;") + '</h2><p style="font-size:0.82rem;color:var(--muted);margin-bottom:1.2rem">' + fmt$(E) + ' equity &middot; ' + fmt$(D) + ' debt to replace' + (dateVal ? " &middot; exchange started " + new Date(dateVal+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}) : "") + '</p>' : "";
+
     var dl = document.getElementById("deadlines");
     if (dateVal) {
       var start = new Date(dateVal + "T00:00:00");
@@ -353,11 +357,47 @@
       return 0.5 * ny + 0.5 * ng;
     }, E, D);
 
-    results.innerHTML =
+    // Diversified: maximize spread across asset classes while hitting the target.
+    // Score rewards offerings in classes not yet represented (greedy diversity)
+    // then falls back to balanced score.
+    var seenTypes = {};
+    var diversified = build(pool.slice(), function (o) {
+      var ny = yMax > yMin ? (o.yieldPct - yMin) / (yMax - yMin) : 0.5;
+      var ng = gMax > gMin ? (o.growthPct - gMin) / (gMax - gMin) : 0.5;
+      var noveltyBonus = seenTypes[o.type] ? 0 : 1.0;
+      seenTypes[o.type] = true;
+      return noveltyBonus + 0.25 * (ny + ng);
+    }, E, D);
+
+    var html = clientHead +
       card("Maximum Income", "Optimized for blended average yield", maxIncome, E, D) +
       card("Maximum Growth", "Optimized for projected growth benchmark", maxGrowth, E, D) +
-      card("Balanced", "Even weighting of income and growth", balanced, E, D);
+      card("Balanced", "Even weighting of income and growth", balanced, E, D) +
+      card("Diversified", "Spread across the most asset classes", diversified, E, D);
+
+    if (document.getElementById("f-viewall").checked) {
+      html += allTable();
+    }
+    results.innerHTML = html;
   });
+
+  function allTable() {
+    var cands = candidates("yieldPct").slice().sort(function (a, b) {
+      return (b.yieldPct || 0) - (a.yieldPct || 0);
+    });
+    if (!cands.length) return '';
+    var rows = cands.map(function (o) {
+      return "<tr><td><a href='" + o.page + "' target='_blank'>" + o.name + "</a></td><td>" + o.type +
+        "</td><td class='num'>" + o.status + "</td><td class='num'>" + fmtPct(o.ltv * 100, 1) +
+        "</td><td class='num'>" + (o.yieldPct === null ? "—" : fmtPct(o.yieldPct)) +
+        "</td><td class='num'>" + (o.growthPct === null ? "—" : fmtPct(o.growthPct, 1)) +
+        "</td><td class='num'>" + fmt$(o.min) + "</td></tr>";
+    }).join("");
+    return '<div class="strategy"><div class="strategy-head"><h2>All Eligible Offerings</h2><span class="sub">' + cands.length +
+      ' offerings match the current filters</span></div>' +
+      '<table class="alloc"><thead><tr><th>Offering</th><th>Type</th><th class="num">Status</th><th class="num">LTV</th><th class="num">Avg Yield</th><th class="num">Growth</th><th class="num">Min. Investment</th></tr></thead><tbody>' +
+      rows + '</tbody></table></div>';
+  }
 })();
 </script>
 </body>

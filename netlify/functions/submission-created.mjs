@@ -98,7 +98,11 @@ export default async (req) => {
     [df["Routed To"]]: data.routed_to
   });
 
-  const dealRes = await pd("POST", `/deals`, token, {
+  // Re-submissions update the person's existing open deal instead of
+  // creating a duplicate
+  const existing = await pd("GET", `/deals&person_id=${person.id}&status=open&sort_by=add_time&sort_direction=desc&limit=1`, token, null, 2);
+  const openDeal = existing && existing.data && existing.data[0];
+  const dealFields = {
     title: `${name} — ${data.situation || "Investment"}`,
     person_id: person.id,
     pipeline_id: Number(process.env.PD_PIPELINE_ID || 2),
@@ -107,8 +111,11 @@ export default async (req) => {
     currency: "USD",
     expected_close_date: day45 || undefined, // 45-day deadline drives expected close
     custom_fields: dealCustom
-  }, 2);
-  const dealId = dealRes && dealRes.data && dealRes.data.id;
+  };
+  const dealRes = openDeal
+    ? await pd("PATCH", `/deals/${openDeal.id}`, token, dealFields, 2)
+    : await pd("POST", `/deals`, token, dealFields, 2);
+  const dealId = (dealRes && dealRes.data && dealRes.data.id) || (openDeal && openDeal.id);
 
   // ---------- Full submission as a note (pinned to person + deal) ----------
   const note = buildSubmissionNote(data);

@@ -14,6 +14,8 @@
      PD_PORTAL_YES            option ID (or label) meaning Yes
    ============================================================ */
 
+import { createUser, findUserByEmail, suspendUser, unsuspendUser } from "./lib/kinde.mjs";
+
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
 
@@ -67,34 +69,22 @@ export default async (req) => {
   if (!token) return json({ error: "kinde auth failed" }, 502);
 
   if (grant) {
-    const res = await fetch(process.env.KINDE_DOMAIN + "/api/v1/user", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + token, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        profile: { given_name: given, family_name: family },
-        identities: [{ type: "email", details: { email } }]
-      })
-    });
+    const res = await createUser(token, { email, given, family });
+    if (res.ok && !res.created) {
+      // pre-existing (possibly suspended) user: reinstate
+      const user = await findUserByEmail(token, email);
+      if (user && user.is_suspended) await unsuspendUser(token, user.id);
+      return json({ ok: true, action: "already exists (unsuspended if needed)", email });
+    }
     if (res.ok) return json({ ok: true, action: "created", email });
-    const t = await res.text();
-    if (res.status === 400 && /exist|duplicate|already/i.test(t)) return json({ ok: true, action: "already exists", email });
-    console.error("Kinde create failed:", res.status, t);
     return json({ error: "create failed" }, 502);
   } else {
-    // Revoke: find the Kinde user by email, then delete
-    const lookup = await fetch(process.env.KINDE_DOMAIN + "/api/v1/users?email=" + encodeURIComponent(email), {
-      headers: { Authorization: "Bearer " + token }
-    });
-    if (!lookup.ok) return json({ error: "lookup failed" }, 502);
-    const found = await lookup.json();
-    const user = (found.users || [])[0];
+    // Revoke: suspend (preserves the record; falls back to delete if the
+    // M2M app lacks update:users)
+    const user = await findUserByEmail(token, email);
     if (!user) return json({ ok: true, action: "no kinde user to revoke", email });
-    const del = await fetch(process.env.KINDE_DOMAIN + "/api/v1/user?id=" + encodeURIComponent(user.id), {
-      method: "DELETE",
-      headers: { Authorization: "Bearer " + token }
-    });
-    if (del.ok) return json({ ok: true, action: "revoked", email });
-    console.error("Kinde delete failed:", del.status, await del.text());
+    const res = await suspendUser(token, user.id);
+    if (res.ok) return json({ ok: true, action: res.action, email });
     return json({ error: "revoke failed" }, 502);
   }
 };

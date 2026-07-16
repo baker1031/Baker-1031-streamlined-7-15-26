@@ -29,7 +29,17 @@ export default async () => {
   if (!ttToken || !pdToken || !projectId) return json({ ok: false, note: "not configured" });
 
   const store = getStore("ticktick-sync");
+
+  // Cheap lock: skip this run if another instance started < 10 min ago
+  const lock = await store.get("lock").catch(() => null);
+  if (lock && Date.now() - Number(lock) < 10 * 60 * 1000) {
+    return json({ ok: true, note: "previous run still in progress — skipped" });
+  }
+  await store.set("lock", String(Date.now())).catch(() => {});
+
   const map = (await store.get("map", { type: "json" })) || {}; // pdActivityId -> {ttId, subject, due, lastContent}
+  const MAX_OPS = 60; // cap mutation work per run; the 15-min cadence catches up
+  let ops = 0;
 
   // ---------- Pipedrive: open activities ----------
   const open = [];
@@ -45,8 +55,13 @@ export default async () => {
   const summary = { completedInPd: 0, notesSynced: 0, created: 0, updated: 0, closedInTt: 0 };
 
   // ---------- Pass 1: TickTick → Pipedrive (completions + notes) ----------
-  for (const [pdId, m] of Object.entries(map)) {
-    const task = await tt(`/project/${projectId}/task/${m.ttId}`, ttToken).catch(() => null);
+  const entries = Object.entries(map);
+  const taskReads = await Promise.allSettled(
+    entries.map(([, m]) => tt(`/project/${projectId}/task/${m.ttId}`, ttToken))
+  );
+  for (let i = 0; i < entries.length; i++) {
+    const [pdId, m] = entries[i];
+    const task = taskReads[i].status === "fulfilled" ? taskReads[i].value : null;
     if (!task) {
       // Task deleted in TickTick: forget the mapping, do NOT touch Pipedrive.
       if (!openById[pdId]) delete map[pdId];
@@ -61,6 +76,7 @@ export default async () => {
       });
       m.lastContent = content;
       summary.notesSynced++;
+      ops++;
     }
     // Completed in TickTick → mark done in Pipedrive
     if (task.status === 2 && openById[pdId]) {
@@ -68,8 +84,11 @@ export default async () => {
       delete openById[pdId];
       delete map[pdId];
       summary.completedInPd++;
+      ops++;
     }
+    if (ops >= MAX_OPS) break;
   }
+  await store.setJSON("map", map); // persist pass-1 state before pass 2
 
   // ---------- Pass 2: Pipedrive → TickTick (create / update / close) ----------
   for (const [pdId, a] of Object.entries(openById)) {
@@ -87,6 +106,8 @@ export default async () => {
       if (created && created.id) {
         map[pdId] = { ttId: created.id, subject: title, due: due || "", marker, lastContent: "" };
         summary.created++;
+        ops++;
+        if (ops >= MAX_OPS) break;
       }
     } else if (map[pdId].subject !== title || (map[pdId].due || "") !== (due || "")) {
       await tt(`/task/${map[pdId].ttId}`, ttToken, "POST", {
@@ -108,7 +129,8 @@ export default async () => {
   }
 
   await store.setJSON("map", map);
-  return json({ ok: true, openActivities: open.length, ...summary });
+  await store.delete("lock").catch(() => {});
+  return json({ ok: true, openActivities: open.length, capped: ops >= MAX_OPS, ...summary });
 };
 
 export const config = { schedule: "*/15 * * * *" };

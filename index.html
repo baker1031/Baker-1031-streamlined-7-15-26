@@ -1123,10 +1123,12 @@
     user-select: none;
     pointer-events: none;
   }
+  .skip-link { position: absolute; left: -9999px; top: 0; z-index: 500; background: var(--navy); color: #fff; padding: 0.6rem 1rem; border-radius: 0 0 6px 0; font-weight: 600; }
+  .skip-link:focus { left: 0; }
 </style>
 </head>
 <body>
-
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <!-- Upper nav level -->
   <div class="utility-bar">
     <div class="utility-bar-inner">
@@ -1158,6 +1160,7 @@
 
     </div>
   </header>
+  <div id="main-content"></div>
 
   <!-- First content area: navy-overlay video -->
   <div class="video-hero-wrap">
@@ -1274,6 +1277,7 @@
           </g>
 
           <!-- Baker 1031 Preferred -->
+          <!-- CHART:PREFERRED -->
           <g class="bar-col" data-name="Baker 1031 Preferred*" data-value="21.7%" data-note="Average realized, full-cycle, net-to-investor annualized return across completed preferred-sponsor programs. Multi-year, not a 2025 calendar-year return.">
             <rect x="56" y="54" width="148" height="256" fill="transparent"/>
             <path class="bar" d="M92,310 V92.1 Q92,88.1 96,88.1 H164 Q168,88.1 168,92.1 V310 Z" fill="#2b3a5f"/>
@@ -1281,6 +1285,7 @@
             <text x="130" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Baker 1031</text>
             <text x="130" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Preferred*</text>
           </g>
+<!-- /CHART:PREFERRED -->
           <!-- S&P 500 -->
           <g class="bar-col" data-name="S&amp;P 500" data-value="17.9%" data-note="2025 total return, 17.88% (Slickcharts).">
             <rect x="204" y="54" width="148" height="256" fill="transparent"/>
@@ -1372,6 +1377,7 @@
             <div class="logo-box"><img src="assets/sponsors/nuveen.png" alt="Nuveen" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/pimco.png" alt="PIMCO" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/starwood.png" alt="Starwood Capital" loading="lazy" width="200" height="100"></div>
+            <div aria-hidden="true" style="display: contents">
             <div class="logo-box"><img src="assets/sponsors/apollo.png" alt="Apollo Global Management" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/ares.png" alt="Ares Management" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/baker-tilly.png" alt="Baker Tilly" loading="lazy" width="200" height="100"></div>
@@ -1390,6 +1396,7 @@
             <div class="logo-box"><img src="assets/sponsors/nuveen.png" alt="Nuveen" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/pimco.png" alt="PIMCO" loading="lazy" width="200" height="100"></div>
             <div class="logo-box"><img src="assets/sponsors/starwood.png" alt="Starwood Capital" loading="lazy" width="200" height="100"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -1723,7 +1730,8 @@
     </div>
   </div>
 
-  <footer class="site-footer" id="contact">
+  <!-- PARTIAL:footer -->
+<footer class="site-footer" id="contact">
     <div class="footer-inner">
       <div class="footer-cols">
         <div class="footer-brand">
@@ -1741,11 +1749,11 @@
         <div>
           <h5>Explore</h5>
           <ul class="footer-links">
-            <li><a href="#strategies">Strategies</a></li>
-            <li><a href="#why">Difference</a></li>
-            <li><a href="#full-cycle">Performance</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#request-access">Request Investment Access</a></li>
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
           </ul>
         </div>
       </div>
@@ -1764,6 +1772,7 @@
     </div>
       <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
 </footer>
+<!-- /PARTIAL:footer -->
 
   <script>
     (function () {
@@ -2198,15 +2207,8 @@
           action: "bookingSuccessful",
           callback: function () {
             var email = form.elements["email"].value;
-            fetch("/.netlify/functions/provision-user", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                email: email,
-                given_name: form.elements["first_name"].value,
-                family_name: form.elements["last_name"].value
-              })
-            }).catch(function () {});
+            // Account provisioning happens server-side via the Cal.com
+            // booking webhook — nothing to call from the browser.
             // Their account now exists: offer one-click entry to the portal.
             // (Login is a one-time email code; we prefill their address.)
             if (!document.getElementById('portal-cta')) {

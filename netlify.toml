@@ -1,5 +1,5 @@
 [build]
-  publish = "."
+  publish = "dist"
   command = "node scripts/build-offerings.mjs"
 
 # ---------- Caching ----------
@@ -22,6 +22,16 @@
   for = "/documents/*"
   [headers.values]
     Cache-Control = "public, max-age=86400"
+
+[[headers]]
+  for = "/data/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+[[headers]]
+  for = "/employee.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
 
 # ---------- Security ----------
 [[headers]]

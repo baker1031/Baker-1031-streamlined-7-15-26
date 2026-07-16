@@ -16,9 +16,13 @@
      node scripts/build-offerings.mjs
    ============================================================ */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parseCSV } from "./lib/csv.mjs";
+import { esc, truncate, slugify, put } from "./lib/html.mjs";
+import { optimizedPhoto, directDownload } from "./lib/images.mjs";
+import { injectPartials } from "./lib/partials.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const SHEET_ID = "1vTqb5YX8pFjZxToGd2pJ_ncPbny2PXpW5gXx-7IlyZg";
@@ -28,45 +32,16 @@ const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=
 const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(DOCS_TAB)}`;
 const SITE = "https://baker1031.com";
 
-/* ---------------- CSV parsing (quoted fields, embedded commas/newlines) ---------------- */
-function parseCSV(text) {
-  const rows = [];
-  let row = [], field = "", inQuotes = false;
-  for (let i = 0; i < text.length; i++) {
-    const c = text[i];
-    if (inQuotes) {
-      if (c === '"') {
-        if (text[i + 1] === '"') { field += '"'; i++; }
-        else inQuotes = false;
-      } else field += c;
-    } else {
-      if (c === '"') inQuotes = true;
-      else if (c === ",") { row.push(field); field = ""; }
-      else if (c === "\n") { row.push(field); rows.push(row); row = []; field = ""; }
-      else if (c === "\r") { /* skip */ }
-      else field += c;
-    }
-  }
-  if (field !== "" || row.length) { row.push(field); rows.push(row); }
-  return rows;
-}
 
-/* ---------------- Helpers ---------------- */
-const esc = (s) => String(s ?? "")
-  .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
-  .replace(/"/g, "&quot;");
 
-function truncate(s, n) {
-  s = String(s || "").replace(/\s+/g, " ").trim();
-  if (s.length <= n) return s;
-  const cut = s.slice(0, n);
-  return cut.slice(0, cut.lastIndexOf(" ")) + "…";
+/* ---------------- Partial injection (footer etc.) ----------------
+   partials/*.html are the single source of truth; every page keeps its
+   last-baked copy between PARTIAL markers so it still previews locally. */
+for (const shell of ["index.html", "current-offerings.html", "templates/offering.html", "templates/performance.html"]) {
+  const p = join(ROOT, shell);
+  writeFileSync(p, injectPartials(readFileSync(p, "utf8"), ROOT, shell));
 }
-
-function slugify(s) {
-  return String(s || "").toLowerCase().trim()
-    .replace(/&/g, " and ").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
-}
+console.log("Partials injected into page shells + templates.");
 
 /* ---------------- Fetch & normalize ---------------- */
 console.log("Fetching Master Listings…");
@@ -91,17 +66,23 @@ const offerings = rows.slice(1)
 if (offerings.length < 10) {
   throw new Error(`Only ${offerings.length} offerings parsed — refusing to build (sheet problem?).`);
 }
-// De-dupe slugs so no page silently overwrites another
+// De-dupe slugs deterministically (append the sponsor, then a counter)
+// so no page silently overwrites another; log every collision.
 {
   const seen = new Set();
+  const dupes = [];
   for (const o of offerings) {
     if (seen.has(o._slug)) {
-      let n = 2;
-      while (seen.has(`${o._slug}-${n}`)) n++;
-      o._slug = `${o._slug}-${n}`;
+      const base = o._slug;
+      const withSponsor = `${base}-${slugify(o["Sponsor"])}`;
+      o._slug = seen.has(withSponsor) ? `${withSponsor}-2` : withSponsor;
+      let n = 3;
+      while (seen.has(o._slug)) o._slug = `${withSponsor}-${n++}`;
+      dupes.push(`"${o["Investment Name"]}" → ${o._slug}`);
     }
     seen.add(o._slug);
   }
+  if (dupes.length) console.warn(`WARNING: duplicate slugs de-duped:\n  ${dupes.join("\n  ")}`);
 }
 console.log(`Parsed ${offerings.length} offerings, ${headers.length} columns.`);
 
@@ -128,22 +109,7 @@ const docsByName = new Map(); // normalized Investment Name -> [{label, file, ga
   }
   console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
 }
-/* Proxy remote photos (Google Drive/lh3) through Cloudinary fetch for
-   format/quality/size optimization — 1.2MB Drive originals become ~30KB. */
-function optimizedPhoto(url, width) {
-  if (!url || !/^https?:\/\//.test(url)) return url;
-  if (url.includes("res.cloudinary.com")) return url; // already optimized
-  return `https://res.cloudinary.com/opoazlei/image/fetch/f_auto,q_auto,w_${width}/${encodeURIComponent(url)}`;
-}
 
-/* Google Drive file links → direct-download links.
-   https://drive.google.com/file/d/<ID>/view?...  →  https://drive.google.com/uc?export=download&id=<ID>
-   Non-Drive-file URLs (folders, external sites) pass through unchanged. */
-function directDownload(url) {
-  const m = String(url || "").match(/drive\.google\.com\/file\/d\/([\w-]+)/) ||
-            String(url || "").match(/drive\.google\.com\/(?:open|uc)\?[^#]*\bid=([\w-]+)/);
-  return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : url;
-}
 
 /* Find an offering's documents: exact normalized-name match first, then a
    unique token-subset match (handles small naming variants between tabs). */
@@ -193,11 +159,11 @@ writeFileSync(join(ROOT, "data", "offerings.json"), JSON.stringify({
     for (const h of headers) if (h) out[h] = o[h];
     return out;
   })
-}, null, 1));
+}));
 console.log("Wrote data/offerings.json");
 
 /* ---------------- 2) Per-offering static pages ---------------- */
-const template = readFileSync(join(ROOT, "offering-template.html"), "utf8");
+const template = readFileSync(join(ROOT, "templates", "offering.html"), "utf8");
 
 const reEsc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -257,6 +223,7 @@ function buildPage(o) {
       <div class="account-box">
         <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
         <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
         <span class="nav-sep" style="display:none"></span>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
@@ -495,7 +462,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
           <span class="type-chip">${esc(o["Property Type"] || "")}</span>
         </a>
         <div class="card-body">
-          <h3>${esc(o["Investment Name"])}</h3>
+          <h3><a href="${page}" style="color:inherit">${esc(o["Investment Name"])}</a></h3>
           <div class="sponsor-line">${esc(o["Sponsor"] || "")}</div>
           <div class="card-stats">
             <div class="cs"><span class="label">Min Investment</span><span class="value">${esc(o["Minimum Investment"] || "—")}</span></div>
@@ -673,17 +640,14 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const idxPath = join(ROOT, "index.html");
     let idx = readFileSync(idxPath, "utf8");
 
-    const gStart = idx.indexOf('data-name="Baker 1031 Preferred*"');
-    if (gStart === -1) throw new Error("Homepage chart: Baker 1031 Preferred group not found");
-    const gEnd = idx.indexOf("</g>", gStart);
-    let group = idx.slice(gStart, gEnd);
-    group = group
-      .replace(/data-value="[\d.]+%"/, `data-value="${v}%"`)
-      .replace(/<path class="bar" d="M92,310 V[\d.]+ Q92,[\d.]+ 96,[\d.]+ H164 Q168,[\d.]+ 168,[\d.]+ V310 Z"/,
-        `<path class="bar" d="M92,310 V${(top + 4).toFixed(1)} Q92,${top} 96,${top} H164 Q168,${top} 168,${(top + 4).toFixed(1)} V310 Z"`)
-      .replace(/<text x="130" y="[\d.]+" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">[\d.]+%\*<\/text>/,
-        `<text x="130" y="${(top - 9).toFixed(1)}" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">${v}%*</text>`);
-    idx = idx.slice(0, gStart) + group + idx.slice(gEnd);
+    const barGroup = `<g class="bar-col" data-name="Baker 1031 Preferred*" data-value="${v}%" data-note="Average realized, full-cycle, net-to-investor annualized return across completed preferred-sponsor programs. Multi-year, not a 2025 calendar-year return.">
+            <rect x="56" y="54" width="148" height="256" fill="transparent"/>
+            <path class="bar" d="M92,310 V${(top + 4).toFixed(1)} Q92,${top} 96,${top} H164 Q168,${top} 168,${(top + 4).toFixed(1)} V310 Z" fill="#2b3a5f"/>
+            <text x="130" y="${(top - 9).toFixed(1)}" font-size="14" font-weight="700" fill="#2b3a5f" text-anchor="middle">${v}%*</text>
+            <text x="130" y="332" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Baker 1031</text>
+            <text x="130" y="349" font-size="13.5" fill="#4a4a4a" text-anchor="middle">Preferred*</text>
+          </g>`;
+    idx = put(idx, "<!-- CHART:PREFERRED -->", "<!-- /CHART:PREFERRED -->", "          " + barGroup, "index.html");
     idx = idx.replace(/(aria-label="Bar chart: Baker 1031 preferred sponsors )[\d.]+%/, `$1${v}%`);
     writeFileSync(idxPath, idx);
     // FAQ: live average-hold sentence from the full track record
@@ -704,7 +668,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     console.log(`Homepage chart: Baker 1031 Preferred bar set to ${v}% (live from ${prefDeals.length} preferred programs).`);
   }
 
-  let perf = readFileSync(join(ROOT, "performance-template.html"), "utf8");
+  let perf = readFileSync(join(ROOT, "templates", "performance.html"), "utf8");
   perf = perf.replace("<!-- PERF:SUMMARY_ROWS -->", summaryRows);
   perf = perf.replace("<!-- PERF:SPONSOR_ROWS -->", sponsorRows.join("\n"));
   perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
@@ -718,7 +682,6 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
 {
   const urls = [
     { loc: `${SITE}/`, priority: "1.0" },
-    { loc: `${SITE}/current-offerings.html`, priority: "0.8" },
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -727,6 +690,29 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><priority>${u.priority}</priority></url>`).join("\n")}\n</urlset>\n`;
   writeFileSync(join(ROOT, "sitemap.xml"), sitemap);
   console.log(`Wrote sitemap.xml (${urls.length} URLs)`);
+}
+
+/* ---------------- Publish directory (dist/) ----------------
+   Only the public whitelist is served; templates, partials, docs, kindeSrc,
+   scripts and functions never reach the CDN. */
+{
+  const dist = join(ROOT, "dist");
+  rmSync(dist, { recursive: true, force: true });
+  mkdirSync(dist, { recursive: true });
+  const COPY = [
+    "index.html", "current-offerings.html", "performance.html", "employee.html",
+    "learn.html", "learn",
+    "offerings", "data", "css", "js", "assets", "documents",
+    "sitemap.xml", "robots.txt"
+  ];
+  let copied = 0;
+  for (const item of COPY) {
+    const src = join(ROOT, item);
+    if (!existsSync(src)) { console.warn(`dist: skipping missing ${item}`); continue; }
+    cpSync(src, join(dist, item), { recursive: true });
+    copied++;
+  }
+  console.log(`dist/ assembled (${copied} top-level items).`);
 }
 
 console.log("Build complete.");
