@@ -98,7 +98,7 @@ export default async (req) => {
     [df["Routed To"]]: data.routed_to
   });
 
-  await pd("POST", `/deals`, token, {
+  const dealRes = await pd("POST", `/deals`, token, {
     title: `${name} — ${data.situation || "Investment"}`,
     person_id: person.id,
     pipeline_id: Number(process.env.PD_PIPELINE_ID || 2),
@@ -108,9 +108,58 @@ export default async (req) => {
     expected_close_date: day45 || undefined, // 45-day deadline drives expected close
     custom_fields: dealCustom
   }, 2);
+  const dealId = dealRes && dealRes.data && dealRes.data.id;
+
+  // ---------- Full submission as a note (pinned to person + deal) ----------
+  const note = buildSubmissionNote(data);
+  await pd("POST", `/notes`, token, clean({
+    content: note,
+    person_id: person.id,
+    deal_id: dealId || undefined,
+    pinned_to_person_flag: 1,
+    pinned_to_deal_flag: dealId ? 1 : undefined
+  }));
 
   return ok("synced");
 };
+
+// Every submitted answer, in form order, as one readable note.
+const NOTE_FIELDS = [
+  ["first_name", "First Name"],
+  ["last_name", "Last Name"],
+  ["preferred_name", "Preferred Name"],
+  ["email", "Email"],
+  ["phone", "Phone"],
+  ["state", "State of Residence"],
+  ["role", "Role"],
+  ["role_other", "Role — details"],
+  ["situation", "Current Situation"],
+  ["situation_other", "Situation — details"],
+  ["closing_date", "Closing Date"],
+  ["equity_amount", "Equity"],
+  ["debt_amount", "Debt"],
+  ["investment_amount", "Anticipated Investment"],
+  ["dst_familiarity", "DST Familiarity"],
+  ["current_plan", "Where DSTs Fit"],
+  ["marital_status", "Marital Status"],
+  ["household_income", "Household Income"],
+  ["net_worth", "Net Worth (excl. residence)"],
+  ["us_check", "US Check"],
+  ["accreditation_check", "Accreditation Check"],
+  ["routed_to", "Routed To"],
+  ["crs_accepted_at", "CRS Accepted At"]
+];
+
+function buildSubmissionNote(data) {
+  const rows = NOTE_FIELDS
+    .filter(([k]) => data[k] !== undefined && data[k] !== "" && data[k] !== null)
+    .map(([k, label]) => `<b>${label}:</b> ${esc(String(data[k]))}`);
+  return `<b>Request Investment Access — full submission</b><br><br>${rows.join("<br>")}`;
+}
+
+function esc(s) {
+  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 
 async function findPerson(token, email) {
   if (!email) return null;
