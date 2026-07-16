@@ -28,6 +28,14 @@ export const getStyles = (): string => `
   }
 
   body { margin: 0; }
+  /* Widget field + button styling to match the card design */
+  [data-kinde-control-label] { font-weight: 600; color: #2f3237; }
+  [data-kinde-button-variant="primary"] {
+    width: 100%;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 600;
+  }
   [data-kinde-choice-separator] { text-transform: uppercase; }
   [data-kinde-layout-auth-buttons] { display: flex; justify-content: center; }
   [data-kinde-layout-auth-buttons-item] { width: 3rem; height: 3rem; }

@@ -2,54 +2,70 @@ import React from "react";
 
 const SITE_URL = "https://streamlined-baker-1031.netlify.app"; // swap for baker1031.com at launch
 
+// Navy-duotone skyline (frame pulled from the homepage hero video via Cloudinary)
+const SKYLINE =
+  "https://res.cloudinary.com/opoazlei/video/upload/so_2,w_1920,h_1080,c_fill,g_north,q_auto,f_jpg/Baker_1031_Homepage_Video_q9k7ca.jpg";
+
 const styles: Record<string, React.CSSProperties> = {
-  container: { display: "flex", minHeight: "100vh", background: "#ffffff" },
-  sidePanel: {
-    background: "linear-gradient(135deg, #2b3a5f 0%, #1e2a47 100%)",
-    flex: 1,
-    margin: "0.5rem",
-    borderRadius: "1rem",
-    maxWidth: "1024px",
+  page: {
+    minHeight: "100vh",
     display: "flex",
     flexDirection: "column",
+    alignItems: "center",
     justifyContent: "center",
-    padding: "3rem",
-    color: "#ffffff",
+    padding: "4.5rem 1rem 3rem",
+    boxSizing: "border-box",
+    backgroundColor: "#2b3a5f",
+    backgroundImage: `linear-gradient(rgba(43, 58, 95, 0.82), rgba(30, 42, 71, 0.88)), url(${SKYLINE})`,
+    backgroundBlendMode: "multiply",
+    backgroundSize: "cover",
+    backgroundPosition: "center top",
+    backgroundRepeat: "no-repeat",
   },
-  brand: { fontSize: "1.4rem", fontWeight: 700, letterSpacing: "0.14em", marginBottom: "1.25rem" },
-  tagline: { fontSize: "2rem", fontWeight: 700, lineHeight: 1.2, marginBottom: "1rem" },
-  copy: { fontSize: "1rem", lineHeight: 1.6, color: "rgba(255,255,255,0.85)", marginBottom: "2rem", maxWidth: "34rem" },
-  cta: {
-    display: "inline-block",
-    background: "#ffffff",
-    color: "#2b3a5f",
-    fontWeight: 600,
-    fontSize: "0.95rem",
-    padding: "0.8rem 1.5rem",
-    borderRadius: "6px",
-    textDecoration: "none",
-    alignSelf: "flex-start",
+  cardWrap: {
+    position: "relative",
+    width: "min(92vw, 26.5rem)",
+  },
+  plaque: {
+    position: "absolute",
+    top: "-3.1rem",
+    left: "50%",
+    transform: "translateX(-50%)",
+    background: "linear-gradient(160deg, #2b3a5f 0%, #1e2a47 100%)",
+    border: "1px solid rgba(255,255,255,0.85)",
+    boxShadow: "0 10px 24px rgba(9, 14, 26, 0.45)",
+    padding: "1.1rem 1.4rem",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 2,
+  },
+  plaqueImg: {
+    width: "11.5rem",
+    height: "auto",
+    display: "block",
+  },
+  card: {
+    position: "relative",
+    background: "#fbfbfc",
+    boxShadow: "0 18px 48px rgba(9, 14, 26, 0.5)",
+    padding: "4.4rem 2.4rem 2.1rem",
+    boxSizing: "border-box",
   },
 };
 
 export const DefaultLayout = (props: { children: React.ReactNode }) => {
   return (
-    <div style={styles.container}>
-      {props.children}
-      <div style={styles.sidePanel}>
-        <div style={styles.brand}>BAKER 1031 INVESTMENTS</div>
-        <div style={styles.tagline}>
-          Defer the tax.
-          <br />
-          Stay invested in real estate.
-        </div>
-        <p style={styles.copy}>
-          Institutional DST, 721 exchange, mineral royalty, and Opportunity Zone
-          investments for accredited 1031 exchange investors.
-        </p>
-        <a href={`${SITE_URL}/?request-access=1`} style={styles.cta}>
-          New here? Request Investment Access &rarr;
+    <div style={styles.page}>
+      <div style={styles.cardWrap}>
+        <a href={SITE_URL} style={styles.plaque} aria-label="Baker 1031 Investments">
+          <img
+            src={`${SITE_URL}/assets/logo-dark.png`}
+            alt="Baker 1031 Investments"
+            style={styles.plaqueImg}
+          />
         </a>
+        <div style={styles.card}>{props.children}</div>
       </div>
     </div>
   );
