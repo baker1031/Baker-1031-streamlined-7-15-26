@@ -21,7 +21,7 @@ async function init() {
 
   const kinde = await createKindeClient({
     client_id: "2405a754fefd43828d42f3c83e806a36",
-    domain: "https://baker1031investments.kinde.com",
+    domain: "https://auth.baker1031.com",
     redirect_uri: window.location.origin,
     on_redirect_callback: (user, appState) => {
       // Deep links win: if login started from a protected page, return there.
