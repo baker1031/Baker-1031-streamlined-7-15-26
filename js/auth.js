@@ -193,16 +193,20 @@ function showSoftGate(kinde) {
   const el = document.createElement("div");
   el.id = "soft-gate";
   el.innerHTML =
-    '<div class="soft-gate-card" role="dialog" aria-modal="true" aria-label="Sign in or register">' +
+    '<div class="soft-gate-card" role="dialog" aria-modal="true" aria-label="Sign in or request access">' +
     '<div class="soft-gate-kicker">Baker 1031 &middot; Investor access</div>' +
     '<h2>Sign in to view this page</h2>' +
-    '<p>This content is available to registered investors. Create a free account or sign in to continue &mdash; no cost, no obligation.</p>' +
-    '<button type="button" class="soft-gate-btn" id="soft-gate-register">Register free &rarr;</button>' +
+    '<p>This content is available to registered investors. Request free access &mdash; it takes about two minutes, and there&rsquo;s no cost or obligation. Access is provisioned after a brief introductory call.</p>' +
+    '<button type="button" class="soft-gate-btn" id="soft-gate-register">Request free access &rarr;</button>' +
     '<button type="button" class="soft-gate-dismiss" id="soft-gate-login">Already have an account? Sign in</button>' +
     "</div>";
   document.body.appendChild(el);
   document.getElementById("soft-gate-register").addEventListener("click", function () {
-    kinde.register({ app_state: { returnTo: window.location.pathname + window.location.search } });
+    // Self-sign-up is disabled in Kinde (accounts are provisioned after the
+    // access-request form + intro call), so do NOT call kinde.register() —
+    // it dead-ends on "organization is not accepting registrations".
+    // Route to the homepage access-request popup instead.
+    window.location.href = "/?request-access=1";
   });
   document.getElementById("soft-gate-login").addEventListener("click", function () {
     kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
