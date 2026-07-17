@@ -696,6 +696,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     { loc: `${SITE}/learn.html`, priority: "0.6" },
     { loc: `${SITE}/glossary.html`, priority: "0.6" },
     { loc: `${SITE}/markets.html`, priority: "0.6" },
+    { loc: `${SITE}/audiences.html`, priority: "0.6" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...offerings.map((o) => ({
@@ -885,6 +886,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   const COPY = [
     "index.html", "current-offerings.html", "performance.html", "employee.html",
     "learn.html", "learn", "glossary.html", "glossary", "markets.html", "markets",
+    "audiences.html", "audiences",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt"
   ];
@@ -897,6 +899,9 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   }
   // Templates are authoring scaffolds — never publish them, even under a whitelisted dir.
   let stripped = 0;
+  // NOTE: audiences/audience-template.html is intentionally NOT stripped yet — the
+  // audiences hub links to it as a live preview until real audience pages are
+  // generated. It is noindex and absent from the sitemap, so it stays out of search.
   for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html"]) {
     const p = join(dist, rel);
     if (existsSync(p)) { rmSync(p); stripped++; }

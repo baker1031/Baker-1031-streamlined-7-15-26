@@ -67,6 +67,10 @@
   box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); padding: 0.4rem;
   display: none; flex-direction: column; z-index: 200;
 }
+/* Invisible bridge over the visual gap so the cursor can travel from "Home"
+   into the menu without the hover dropping and closing it. */
+.nav-home-menu::before { content: ""; position: absolute; top: -0.5rem; left: 0; right: 0; height: 0.5rem; }
+.nav-home { padding-bottom: 0.15rem; }
 .nav-home:hover .nav-home-menu, .nav-home.open .nav-home-menu { display: flex; }
 .nav-home:hover .nav-home-toggle svg, .nav-home.open .nav-home-toggle svg { transform: rotate(180deg); }
 .nav-home-menu a { font-size: 0.88rem; color: var(--ink-soft); padding: 0.45rem 0.6rem; border-radius: 6px; text-decoration: none; }
@@ -76,3 +80,12 @@
   .account-box .nav-home-toggle { display: none; }
   .account-box .nav-home-menu { position: static; display: flex; margin-top: 0.2rem; box-shadow: none; border: none; padding: 0 0 0 0.6rem; min-width: 0; }
 }
+
+/* "Back to Learn" link — top of the left sidebar on every Learn-area page
+   (glossary, markets, articles) so readers can always return to the hub. */
+.learn-back {
+  display: inline-flex; align-items: center; gap: 0.35rem;
+  font-size: 0.82rem; font-weight: 600; color: var(--navy); text-decoration: none;
+  padding: 0.3rem 0.6rem 0.7rem;
+}
+.learn-back:hover { text-decoration: underline; }
