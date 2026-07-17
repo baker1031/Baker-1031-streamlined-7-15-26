@@ -283,6 +283,13 @@ ready.then(function (s) {
     const displayName = user.given_name || user.email || "Investor";
     sessionStorage.setItem("b1031-name", displayName);
     applyAuthedNav(displayName);
+    // Investor-only site search (Algolia): loaded ONLY after auth is
+    // confirmed, so signed-out visitors never get a search UI at all.
+    // SEARCHJS_V is stamped with search.js's content hash at build time —
+    // /js/* is cached immutable, so the import URL must change with the file.
+    import(new URL("./search.js?v=SEARCHJS_V", import.meta.url).href)
+      .then(function (m) { m.initSearch(); })
+      .catch(function () { /* search is optional — never break the page */ });
     const logoutBtn = accountBox.querySelector(".logout:not(#investor-login)");
     if (logoutBtn) {
       logoutBtn.addEventListener("click", function (e) {
