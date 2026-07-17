@@ -515,6 +515,12 @@
       "name": "Secure Properties",
       "preferred": false,
       "deals": 0
+    },
+    {
+      "slug": "blue-door",
+      "name": "Blue Door",
+      "preferred": false,
+      "deals": 2
     }
   ]
 }

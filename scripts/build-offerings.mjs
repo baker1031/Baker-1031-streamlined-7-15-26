@@ -826,6 +826,40 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       };
     });
   if (sponsors.length < 20) throw new Error(`Only ${sponsors.length} sponsors — refusing to build.`);
+
+  /* Build-side supplement (data/sponsor-overrides.json): fills only BLANK
+     fields (sheet wins once populated) and adds sponsors that have
+     track-record deals but no Sponsor Connection row (e.g. Blue Door). */
+  {
+    const supPath = join(ROOT, "data", "sponsor-overrides.json");
+    if (existsSync(supPath)) {
+      const sup = JSON.parse(readFileSync(supPath, "utf8"));
+      const byNorm = new Map(sponsors.map((s) => [normName(s.name), s]));
+      for (const [k, patch] of Object.entries(sup.fills || {})) {
+        const s = byNorm.get(k);
+        if (!s) continue;
+        for (const [f, v] of Object.entries(patch)) if (v && !s[f]) s[f] = v; // blank-only
+      }
+      let added = 0;
+      for (const a of sup.additions || []) {
+        const nn = normName(a.name || "");
+        if (!nn || byNorm.get(nn)) continue; // sheet row wins if present
+        const website = a.website || "";
+        const s = {
+          name: a.name, slug: slugify(a.name), preferred: !!a.preferred,
+          founded: a.founded || "", aum: a.aum || "", description: a.description || "",
+          advantages: a.advantages || [], website,
+          domain: website.replace(/^https?:\/\//i, "").replace(/\/.*$/, ""),
+          hq: a.hq || "", logo: a.logo || "",
+          fullCycle: a.fullCycle || "", avgAnnual: "", avgMultiple: "", avgHold: "", success: "",
+          deals: dealsBy.get(nn) || []
+        };
+        sponsors.push(s); byNorm.set(nn, s); added++;
+      }
+      if (added) console.log(`Sponsors: +${added} from sponsor-overrides.json`);
+    }
+  }
+
   // de-dupe slugs (keep first)
   { const seen = new Set(); for (const s of sponsors) { let sl = s.slug, n = 2; while (seen.has(sl)) sl = `${s.slug}-${n++}`; s.slug = sl; seen.add(sl); } }
 

@@ -1,0 +1,20 @@
+{
+  "_comment": "Build-side supplement for sponsor data that isn't (yet) in the Google Sheet. 'fills' only writes a field when the sheet cell is BLANK, so the sheet always wins once populated. 'additions' add sponsors that have track-record deals but no Sponsor Connection row. Keys use the generator's field names (name, preferred, founded, aum, description, advantages[], website, hq, logo). Remove an entry once the same data lives in the sheet.",
+  "additions": [
+    {
+      "name": "Blue Door",
+      "preferred": false,
+      "hq": "Ladera Ranch, CA",
+      "website": "",
+      "founded": "",
+      "aum": "",
+      "description": "Blue Door Asset Management I is a self-storage DST sponsor and a subsidiary of Strategic Storage Growth Trust III, an entity sponsored by an affiliate of SmartStop Self Storage REIT (NYSE: SMA). It packages SmartStop-operated self-storage facilities into Delaware Statutory Trusts for 1031-exchange investors, in both all-cash and leveraged structures. Across its trusts, Blue Door holds roughly 5,420 storage units and about 697,400 net rentable square feet, backed by SmartStop's national self-storage operating and management platform.",
+      "advantages": [
+        "Self-storage specialist backed by SmartStop's national operating and management platform (NYSE: SMA).",
+        "Offers both all-cash (no-mortgage) and leveraged DST structures.",
+        "Institutional sponsor lineage through Strategic Storage Growth Trust III and SmartStop."
+      ]
+    }
+  ],
+  "fills": {}
+}
