@@ -70,6 +70,18 @@
   .warn { background: #fdf6ec; border: 1px solid #f0dcb8; color: #8a6116; border-radius: 8px; padding: 0.8rem 1.1rem; font-size: 0.85rem; margin-bottom: 1.2rem; }
   .note { font-size: 0.72rem; line-height: 1.55; color: var(--muted); padding: 0.9rem 1.4rem; border-top: 1px solid var(--hairline); }
   #results:empty::after { content: "Enter the exchange details on the left and press Build Portfolios."; display: block; color: var(--muted); font-size: 0.9rem; padding: 2rem 0; }
+
+  /* ---------- Proposal builder ---------- */
+  .pp-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem 1rem; margin-left: auto; }
+  .pp-controls label.check { margin: 0; font-size: 0.8rem; font-weight: 600; color: var(--navy); }
+  .pp-name { font: inherit; font-size: 0.82rem; padding: 0.35rem 0.55rem; border: 1px solid #cfd4dd; border-radius: 6px; min-width: 15rem; }
+  #proposal-bar { display: none; background: #fff; border: 1px solid var(--hairline); border-left: 3px solid var(--navy); border-radius: 10px; padding: 1rem 1.4rem; margin-bottom: 1.5rem; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  #proposal-bar .pb-title { font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #7a8089; margin-right: auto; }
+  #proposal-bar .field { margin: 0; }
+  #proposal-bar input { font: inherit; font-size: 0.85rem; padding: 0.45rem 0.6rem; border: 1px solid #cfd4dd; border-radius: 6px; width: 11rem; }
+  #pp-generate { font: inherit; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; background: var(--navy); color: #fff; border: none; border-radius: 6px; padding: 0.65rem 1.2rem; cursor: pointer; }
+  #pp-generate:disabled { background: #aab1bd; cursor: not-allowed; }
+  #pp-hint { font-size: 0.72rem; color: var(--muted); width: 100%; }
 </style>
 </head>
 <body>
@@ -126,12 +138,19 @@
           <div class="deadline"><div class="label">45-Day Identification</div><div class="value" id="d45"></div><div class="sub">Identify replacement property by this date</div></div>
           <div class="deadline"><div class="label">180-Day Closing</div><div class="value" id="d180"></div><div class="sub">Complete the exchange by this date</div></div>
         </div>
+        <div id="proposal-bar">
+          <span class="pb-title">Client Proposal</span>
+          <div class="field"><input type="text" id="pp-tracking" title="Tracking code" aria-label="Tracking code"></div>
+          <button type="button" id="pp-generate">Generate Proposal PDF</button>
+          <span id="pp-hint">Tick &ldquo;Include in proposal&rdquo; on the portfolios below, adjust each portfolio&rsquo;s display name, then generate. The PDF gets a cover, contents, one sheet per portfolio, and a back cover &mdash; choose &ldquo;Save as PDF&rdquo; in the print dialog.</span>
+        </div>
         <div id="results"></div>
         <p style="font-size:0.72rem;color:var(--muted);line-height:1.55;margin-top:0.5rem">Internal planning tool only &mdash; illustrations are hypothetical allocations built from current inventory data and are not investment advice or a recommendation. Yields are sponsor projections; availability changes daily. Verify minimums, availability, and suitability before presenting to a client.</p>
       </div>
     </div>
   </main>
 
+<script src="/js/proposal-print.js"></script>
 <script>
 (function () {
   /* ---------- Password gate (soft) ---------- */
@@ -162,6 +181,7 @@
         page: o.page,
         type: (o["Property Type"] || "Other").trim(),
         yieldPct: pct(o["Average Yield"]),
+        y1Pct: pct(o["Y1"]),
         growthPct: pct(o["BM: Growth - Deal"]),
         ltv: ltv === null ? null : ltv / 100,
         min: money(o["Minimum Investment"]) || 100000,
@@ -295,10 +315,19 @@
     return { error: "Couldn't satisfy the minimum-investment constraints with this mix. Try a larger equity amount or looser filters." };
   }
 
-  function card(title, subtitle, res, E, D) {
+  var LAST = {};          // strategy key -> {title, res}
+  var PF_NAMES = { income: "The Maximum Income Portfolio", growth: "The Maximum Growth Portfolio",
+                   balanced: "The Balanced Portfolio", diversified: "The Diversified Portfolio" };
+
+  function card(title, subtitle, res, E, D, key) {
     if (res.error) {
       return '<div class="strategy"><div class="strategy-head"><h2>' + title + '</h2><span class="sub">' + subtitle + '</span></div><div class="warn" style="margin:1.2rem 1.4rem">' + res.error + "</div></div>";
     }
+    if (key) LAST[key] = { title: title, res: res };
+    var ppControls = key ?
+      '<span class="pp-controls">' +
+      '<input type="text" class="pp-name" data-pf="' + key + '" value="' + PF_NAMES[key].replace(/"/g, "&quot;") + '" aria-label="Portfolio display name">' +
+      '<label class="check"><input type="checkbox" class="pp-include" data-pf="' + key + '"> Include in proposal</label></span>' : "";
     var a = res.alloc.slice().sort(function (x, y) { return y.eq - x.eq; });
     var totE = a.reduce(function (s, p) { return s + p.eq; }, 0);
     var totD = a.reduce(function (s, p) { return s + p.eq * p.o.d; }, 0);
@@ -311,7 +340,7 @@
         "</td><td class='num'>" + fmt$(p.eq) + "</td><td class='num'>" + fmt$(p.eq * p.o.d) + "</td><td class='num'>" + fmtPct(100 * p.eq / totE, 1) + "</td></tr>";
     }).join("");
     return '<div class="strategy">' +
-      '<div class="strategy-head"><h2>' + title + '</h2><span class="sub">' + subtitle + "</span></div>" +
+      '<div class="strategy-head"><h2>' + title + '</h2><span class="sub">' + subtitle + "</span>" + ppControls + "</div>" +
       '<div class="stats-row">' +
       '<div class="stat"><div class="label">Equity Placed</div><div class="value">' + fmt$(totE) + "</div></div>" +
       '<div class="stat"><div class="label">Debt Replaced</div><div class="value">' + fmt$(totD) + " <span style='font-weight:400;font-size:0.72rem;color:var(--muted)'>(target " + fmt$(D) + ")</span></div></div>" +
@@ -369,16 +398,80 @@
       return noveltyBonus + 0.25 * (ny + ng);
     }, E, D);
 
+    LAST = {};
     var html = clientHead +
-      card("Maximum Income", "Optimized for blended average yield", maxIncome, E, D) +
-      card("Maximum Growth", "Optimized for projected growth benchmark", maxGrowth, E, D) +
-      card("Balanced", "Even weighting of income and growth", balanced, E, D) +
-      card("Diversified", "Spread across the most asset classes", diversified, E, D);
+      card("Maximum Income", "Optimized for blended average yield", maxIncome, E, D, "income") +
+      card("Maximum Growth", "Optimized for projected growth benchmark", maxGrowth, E, D, "growth") +
+      card("Balanced", "Even weighting of income and growth", balanced, E, D, "balanced") +
+      card("Diversified", "Spread across the most asset classes", diversified, E, D, "diversified");
 
     if (document.getElementById("f-viewall").checked) {
       html += allTable();
     }
     results.innerHTML = html;
+
+    var bar = document.getElementById("proposal-bar");
+    var anyOk = Object.keys(LAST).length > 0;
+    bar.style.display = anyOk ? "flex" : "none";
+    if (anyOk && !document.getElementById("pp-tracking").value) {
+      document.getElementById("pp-tracking").value = newTracking();
+    }
+    updateGenerateLabel();
+  });
+
+  /* ---------- Client proposal PDF ---------- */
+  function newTracking() {
+    var d = new Date();
+    var ymd = String(d.getFullYear()).slice(2) + String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+    var alpha = "ABCDEFGHJKMNPQRSTVWXYZ23456789", suf = "";
+    for (var i = 0; i < 3; i++) suf += alpha[Math.floor(Math.random() * alpha.length)];
+    return "B1031-" + ymd + "-" + suf;
+  }
+  function selectedKeys() {
+    return Array.prototype.slice.call(document.querySelectorAll(".pp-include:checked"))
+      .map(function (c) { return c.getAttribute("data-pf"); }).filter(function (k) { return LAST[k]; });
+  }
+  function updateGenerateLabel() {
+    var n = selectedKeys().length;
+    var btn = document.getElementById("pp-generate");
+    btn.textContent = "Generate Proposal PDF" + (n ? " (" + n + ")" : "");
+    btn.disabled = n === 0;
+  }
+  document.getElementById("results").addEventListener("change", function (e) {
+    if (e.target && e.target.classList.contains("pp-include")) updateGenerateLabel();
+  });
+  document.getElementById("pp-generate").addEventListener("click", function () {
+    var keys = selectedKeys();
+    if (!keys.length) return;
+    var fdate = function (dt) { return dt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }); };
+    var dateVal = document.getElementById("in-date").value;
+    var saleClose = "", day45 = "", day180 = "";
+    if (dateVal) {
+      var start = new Date(dateVal + "T00:00:00");
+      var a = new Date(start); a.setDate(a.getDate() + 45);
+      var b = new Date(start); b.setDate(b.getDate() + 180);
+      saleClose = fdate(start); day45 = fdate(a); day180 = fdate(b);
+    }
+    var portfolios = keys.map(function (k) {
+      var nameInput = document.querySelector('.pp-name[data-pf="' + k + '"]');
+      var name = (nameInput && nameInput.value.trim()) || PF_NAMES[k];
+      var alloc = LAST[k].res.alloc.slice().sort(function (x, y) { return y.eq - x.eq; });
+      var positions = alloc.map(function (a) {
+        return { name: a.o.name, type: a.o.type, page: a.o.page,
+                 ltv: a.o.ltv * 100, y1: a.o.y1Pct, avg: a.o.yieldPct, alloc: Math.round(a.eq) };
+      });
+      // reconcile rounding so the sheet's equity total matches the exchange exactly
+      var target = Math.round(alloc.reduce(function (s, a) { return s + a.eq; }, 0));
+      var got = positions.reduce(function (s, p) { return s + p.alloc; }, 0);
+      if (positions.length && got !== target) positions[0].alloc += target - got;
+      return { name: name, strategy: k, positions: positions };
+    });
+    B1031Proposal.print({
+      investor: document.getElementById("in-client").value.trim(),
+      saleClose: saleClose, day45: day45, day180: day180,
+      tracking: document.getElementById("pp-tracking").value.trim() || newTracking(),
+      portfolios: portfolios
+    });
   });
 
   function allTable() {
