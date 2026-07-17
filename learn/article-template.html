@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}</style>
 <title>Article Template &mdash; Learn &mdash; Baker 1031 Investments</title>
-
+<!-- L:HEAD --><meta name="description" content=""><link rel="canonical" href=""><!-- /L:HEAD -->
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -177,6 +177,18 @@
   .learn-article ul, .learn-article ol { padding-left: 1.3rem; margin-bottom: 0.9rem; }
   .learn-article .callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
   .article-footer-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--hairline); font-size: 0.86rem; font-weight: 600; }
+  .article-footer-nav a { max-width: 48%; }
+  .learn-article .takeaways { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 1rem 1.25rem 0.6rem; margin: 1.4rem 0 1.8rem; }
+  .learn-article .takeaways strong { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.55rem; }
+  .learn-article .takeaways ul { margin-bottom: 0.4rem; }
+  .learn-article .takeaways li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .learn-article .faq-h { font-size: 1.15rem; font-weight: 700; margin: 2.2rem 0 0.4rem; }
+  .learn-article details.faq { border-bottom: 1px solid var(--hairline); }
+  .learn-article details.faq summary { list-style: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--ink); padding: 0.85rem 1.6rem 0.85rem 0; position: relative; }
+  .learn-article details.faq summary::-webkit-details-marker { display: none; }
+  .learn-article details.faq summary::after { content: "+"; position: absolute; right: 0.2rem; top: 0.75rem; font-size: 1.1rem; color: #9aa0ab; }
+  .learn-article details.faq[open] summary::after { content: "\2212"; }
+  .learn-article details.faq p { margin: 0 0 0.9rem; }
 </style>
 <meta name="robots" content="noindex">
 </head>
@@ -210,34 +222,23 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><span class="current">[Article Title]</span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><span class="current"><!-- L:CRUMB -->[Article Title]<!-- /L:CRUMB --></span></nav>
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Learn topics">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
+        <!-- L:FOLDERS -->
         <details open><summary>1031 Exchange Basics</summary><ul>
           <li><a class="active" href="#">[Article Title]</a></li>
-          <li><a href="#">[Article placeholder]</a></li>
-          <li><a href="#">[Article placeholder]</a></li>
         </ul></details>
-        <details><summary>DST Essentials</summary><ul>
-          <li><a href="#">[Article placeholder]</a></li>
-          <li><a href="#">[Article placeholder]</a></li>
-        </ul></details>
-        <details><summary>721 Exchanges &amp; REITs</summary><ul><li><a href="#">[Article placeholder]</a></li></ul></details>
-        <details><summary>Opportunity Zones</summary><ul><li><a href="#">[Article placeholder]</a></li></ul></details>
-        <details><summary>Mineral Royalties</summary><ul><li><a href="#">[Article placeholder]</a></li></ul></details>
-        <details><summary>Taxes &amp; Planning</summary><ul><li><a href="#">[Article placeholder]</a></li></ul></details>
+        <!-- /L:FOLDERS -->
       </nav>
       <article class="learn-article">
+        <!-- L:ARTICLE -->
         <div class="kicker">[Pillar Name]</div>
         <h1>[Article Title]</h1>
         <div class="meta">Updated [Month Year] &middot; [X] min read</div>
         <p>[Lead paragraph &mdash; two to three sentences framing the question this article answers.]</p>
-        <h2>[Section heading]</h2><p>[Body copy placeholder.]</p>
-        <div class="callout">[Callout placeholder &mdash; a key rule, deadline, or tip worth highlighting.]</div>
-        <h2>[Section heading]</h2><p>[Body copy placeholder.]</p>
-        <ul><li>[List item placeholder]</li><li>[List item placeholder]</li></ul>
-        <div class="article-footer-nav"><a href="#">&larr; [Previous article]</a><a href="#">[Next article] &rarr;</a></div>
+        <!-- /L:ARTICLE -->
       </article>
     </div>
   </main>

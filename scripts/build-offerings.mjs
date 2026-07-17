@@ -703,6 +703,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -1034,6 +1035,131 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   hub = put(hub, "<!-- CALC:LIST -->", "<!-- /CALC:LIST -->", cards, "calculators.html");
   writeFileSync(join(ROOT, "calculators.html"), hub);
   console.log(`Calculators: ${count} calculator pages + hub (${items.length} calculators).`);
+}
+
+/* ---------------- Learn articles: generate article pages + hub from data/learn-articles.json ---------------- */
+{
+  const articles = JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8"));
+  if (articles.length < 50) throw new Error(`Only ${articles.length} learn articles — refusing to build.`);
+  const tpl = readFileSync(join(ROOT, "learn", "article-template.html"), "utf8");
+
+  const PILLARS = [
+    ["1031-basics", "1031 Exchange Basics", "Rules, deadlines, boot, and the mechanics of a successful exchange."],
+    ["dst-essentials", "DST Essentials", "How Delaware Statutory Trusts work, what to look for, and how to compare offerings."],
+    ["721-reits", "721 Exchanges &amp; REITs", "UPREIT transactions, operating partnership units, and when a 721 exit makes sense."],
+    ["opportunity-zones", "Opportunity Zones", "QOF timelines, basis step-ups, and how OZ investing compares to a 1031."],
+    ["mineral-royalties", "Mineral &amp; Royalty Interests", "Direct-title mineral and royalty interests as 1031-eligible real property."],
+    ["taxes-planning", "Taxes &amp; Planning", "Depreciation, estate planning, state considerations, and working with your CPA."],
+  ];
+  const byPillar = {};
+  for (const [k] of PILLARS) byPillar[k] = [];
+  for (const a of articles) (byPillar[a.pillar] || (byPillar[a.pillar] = [])).push(a);
+  // articles.json is already sorted by title; each pillar list stays alphabetical.
+
+  const foldersFor = (activePillar, activeSlug) =>
+    PILLARS.filter(([k]) => (byPillar[k] || []).length)
+      .map(([k, label]) => {
+        const open = k === activePillar ? " open" : "";
+        const lis = byPillar[k]
+          .map((a) => `          <li><a${a.slug === activeSlug ? ' class="active"' : ""} href="/learn/${a.slug}/">${esc(a.title)}</a></li>`)
+          .join("\n");
+        return `        <details${open}><summary>${label}</summary><ul>\n${lis}\n        </ul></details>`;
+      })
+      .join("\n");
+
+  const paraHtml = (p) => `        <p>${esc(p)}</p>`;
+
+  let count = 0;
+  for (let i = 0; i < articles.length; i++) {
+    const a = articles[i];
+    const canonical = `${SITE}/learn/${a.slug}/`;
+
+    // ----- article inner -----
+    const parts = [];
+    parts.push(`        <div class="kicker">${esc(a.kicker)}</div>`);
+    parts.push(`        <h1>${esc(a.title)}</h1>`);
+    parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${esc(a.updated)} &middot; ${a.readMin} min read</div>`);
+    for (const p of a.lead) parts.push(paraHtml(p));
+    if (a.takeaways && a.takeaways.length) {
+      parts.push(`        <div class="takeaways"><strong>Key takeaways</strong><ul>${a.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`);
+    }
+    for (const s of a.sections) {
+      if (s.heading && s.paras.length) {
+        parts.push(`        <h2>${esc(s.heading)}</h2>`);
+        for (const p of s.paras) parts.push(paraHtml(p));
+      } else if (s.heading) {
+        parts.push(paraHtml(s.heading)); // flattened table fragment — demote to paragraph
+      } else {
+        for (const p of s.paras) parts.push(paraHtml(p));
+      }
+    }
+    const faq = (a.faq || []).filter((f) => f.a && f.a.length);
+    if (faq.length) {
+      parts.push(`        <h2 class="faq-h">Frequently asked questions</h2>`);
+      for (const f of faq) {
+        parts.push(`        <details class="faq"><summary>${esc(f.q)}</summary>${f.a.map((p) => `<p>${esc(p)}</p>`).join("")}</details>`);
+      }
+    }
+    const prev = i > 0 ? articles[i - 1] : null;
+    const next = i < articles.length - 1 ? articles[i + 1] : null;
+    const footNav =
+      `        <div class="article-footer-nav">` +
+      (prev ? `<a href="/learn/${prev.slug}/">&larr; ${esc(prev.title)}</a>` : `<span></span>`) +
+      (next ? `<a href="/learn/${next.slug}/">${esc(next.title)} &rarr;</a>` : `<span></span>`) +
+      `</div>`;
+    parts.push(footNav);
+    const articleInner = "\n" + parts.join("\n") + "\n        ";
+
+    // ----- head fields -----
+    const articleLd = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: a.title,
+      description: a.metaDesc,
+      dateModified: "2026-06-01",
+      author: { "@type": "Person", name: 'Gerald F. "Jerry" Baker, III' },
+      publisher: { "@type": "Organization", name: "Baker 1031 Investments" },
+      mainEntityOfPage: canonical,
+    });
+    const faqLd = faq.length
+      ? `<script type="application/ld+json">${JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })),
+        })}</script>`
+      : "";
+    const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><script type="application/ld+json">${articleLd}</script>${faqLd}`;
+
+    let html = tpl;
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} &mdash; Baker 1031 Investments</title>`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // articles are public/indexable
+    html = put(html, "<!-- L:HEAD -->", "<!-- /L:HEAD -->", headBlock, a.slug);
+    html = put(html, "<!-- L:CRUMB -->", "<!-- /L:CRUMB -->", esc(a.title), a.slug);
+    html = put(html, "<!-- L:FOLDERS -->", "<!-- /L:FOLDERS -->", foldersFor(a.pillar, a.slug), a.slug);
+    html = put(html, "<!-- L:ARTICLE -->", "<!-- /L:ARTICLE -->", articleInner, a.slug);
+
+    const dir = join(ROOT, "learn", a.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+  console.log(`Learn articles: ${count} pages generated.`);
+
+  // ----- hub: fill learn.html pillar cards (if markered) -----
+  if (existsSync(join(ROOT, "learn.html"))) {
+    let hub = readFileSync(join(ROOT, "learn.html"), "utf8");
+    if (hub.includes("<!-- LEARN:PILLARS -->")) {
+      const cards = PILLARS.filter(([k]) => (byPillar[k] || []).length)
+        .map(([k, label, desc]) => {
+          const list = byPillar[k];
+          const n = list.length;
+          return `      <a class="pillar" href="/learn/${list[0].slug}/">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">Browse ${n} article${n === 1 ? "" : "s"} &rarr;</span>\n      </a>`;
+        })
+        .join("\n");
+      hub = put(hub, "<!-- LEARN:PILLARS -->", "<!-- /LEARN:PILLARS -->", cards, "learn.html");
+      writeFileSync(join(ROOT, "learn.html"), hub);
+    }
+  }
 }
 
 /* ---------------- Publish directory (dist/) ----------------

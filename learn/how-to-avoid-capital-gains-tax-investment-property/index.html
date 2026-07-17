@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}</style>
+<title>7 Legal Ways to Avoid Capital Gains Tax on Investment Property &mdash; Baker 1031 Investments</title>
+<!-- L:HEAD -->
+<meta name="description" content="You can't make capital gains tax disappear by wishing — but the tax code offers several legitimate ways to defer or even eliminate it. Here are seven, and"><link rel="canonical" href="https://baker1031.com/learn/how-to-avoid-capital-gains-tax-investment-property/"><script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"7 Legal Ways to Avoid Capital Gains Tax on Investment Property","description":"You can't make capital gains tax disappear by wishing — but the tax code offers several legitimate ways to defer or even eliminate it. Here are seven, and","dateModified":"2026-06-01","author":{"@type":"Person","name":"Gerald F. \"Jerry\" Baker, III"},"publisher":{"@type":"Organization","name":"Baker 1031 Investments"},"mainEntityOfPage":"https://baker1031.com/learn/how-to-avoid-capital-gains-tax-investment-property/"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is the best way to avoid capital gains tax on investment property?","acceptedAnswer":{"@type":"Answer","text":"There is no single best way, it depends on your goal. A 1031 exchange or its passive version, a DST, is the workhorse for deferring real-estate gain if you want to stay invested. An Opportunity Zone fund can eliminate tax on future growth after ten years. Holding until death gives heirs a stepped-up basis that can erase the gain entirely. Match the tool to whether you want to keep owning property, get out of management, diversify, or pass wealth on."}},{"@type":"Question","name":"Can I avoid capital gains tax entirely, not just defer it?","acceptedAnswer":{"@type":"Answer","text":"Sometimes. An Opportunity Zone fund can eliminate tax on the fund's own appreciation after a ten-year hold, and holding property until death gives heirs a stepped-up basis that can wipe out the deferred gain and depreciation recapture. The Section 121 exclusion erases up to $250,000 single or $500,000 joint of gain on a primary home. Most other strategies defer the tax rather than eliminate it."}},{"@type":"Question","name":"Does an installment sale defer depreciation recapture too?","acceptedAnswer":{"@type":"Answer","text":"No. An installment sale spreads the capital gain over the years you collect payments, but Section 1250 depreciation recapture is generally taxed in full in the year of sale. That can leave you with a recapture bill larger than the cash you receive in year one, so plan for it before structuring the deal."}},{"@type":"Question","name":"Can I use the home-sale exclusion on a rental property?","acceptedAnswer":{"@type":"Answer","text":"Only partly, and only after you convert it to your primary residence and live there for at least two of the five years before selling. The exclusion is reduced for the years the property was a rental (\"nonqualified use\"), and any depreciation you claimed while renting it is still recaptured and taxed. The Section 121 exclusion is built for a home, not an investment property."}},{"@type":"Question","name":"What happens to Opportunity Zone investments in 2026?","acceptedAnswer":{"@type":"Answer","text":"Gains invested under the original program recognize their deferred tax on December 31, 2026, the longstanding sunset date, so plan for that recognition now. Separately, the program was made permanent starting January 1, 2027, with a rolling five-year deferral and a single 10% basis step-up for new investments. The ten-year benefit that can eliminate tax on fund appreciation survives in both versions."}},{"@type":"Question","name":"Is a DST different from a 1031 exchange?","acceptedAnswer":{"@type":"Answer","text":"A DST is a way to do a 1031 exchange passively. The IRS recognizes a properly structured DST interest as like-kind replacement property, so you defer the same capital gains, recapture, and NIIT while owning a managed fractional interest instead of buying and running a property yourself. It also reports on a 1099 and grantor letter rather than a K-1."}},{"@type":"Question","name":"How much does capital gains tax actually cost on a sale?","acceptedAnswer":{"@type":"Answer","text":"It stacks up. Long-term federal capital gains run 0%, 15%, or 20% depending on income; unrecaptured Section 1250 gain is taxed up to 25%; the net investment income tax adds 3.8% over $200,000 single or $250,000 joint; and most states tax the gain again. Combined, a sale can cost roughly a quarter to a third of the profit, which is what every strategy here is designed to defer, reduce, or eliminate."}},{"@type":"Question","name":"Can these strategies be combined?","acceptedAnswer":{"@type":"Answer","text":"Yes, and they often are. You can 1031 a real-estate gain while placing a separate stock gain in an Opportunity Zone fund, 1031 into a DST and later move into a REIT, or finance part of a sale on installment while exchanging the rest. Combinations should be designed with your CPA and attorney, because the deadlines and dollar requirements interact."}}]}</script>
+<!-- /L:HEAD -->
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+  @media (max-width: 720px) {
+    .main-header-inner { position: relative; }
+    .nav-toggle { display: inline-flex; }
+    .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+      border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+      flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+    .account-box.open { display: flex; }
+    .nav-sep { width: 100%; height: 1px; }
+  }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+  .site-footer { overflow: hidden; }
+  .footer-love .love-heart { height: 0.82em; width: auto; vertical-align: -0.06em; }
+  .footer-love {
+    font-size: 9.3vw;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.18em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+
+  .learn-layout { display: grid; grid-template-columns: 17rem 1fr; gap: 2.5rem; align-items: start; padding: 1.5rem 0 3rem; }
+  @media (max-width: 900px) { .learn-layout { grid-template-columns: 1fr; } }
+  .learn-nav { position: sticky; top: 96px; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 0.8rem; max-height: calc(100vh - 130px); overflow-y: auto; }
+  .learn-nav details { border-bottom: 1px solid var(--hairline); }
+  .learn-nav details:last-child { border-bottom: none; }
+  .learn-nav summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.86rem; font-weight: 700; color: var(--ink); padding: 0.7rem 0.6rem; }
+  .learn-nav summary::-webkit-details-marker { display: none; }
+  .learn-nav summary::after { content: "\203A"; color: #9aa0ab; transition: transform 0.15s; font-size: 1rem; }
+  .learn-nav details[open] summary::after { transform: rotate(90deg); }
+  .learn-nav ul { list-style: none; padding: 0 0.6rem 0.7rem 0.9rem; }
+  .learn-nav li { margin-bottom: 0.15rem; }
+  .learn-nav li a { display: block; font-size: 0.83rem; color: var(--ink-soft); padding: 0.32rem 0.5rem; border-radius: 6px; }
+  .learn-nav li a:hover { background: #f3f5f8; color: var(--navy); }
+  .learn-nav li a.active { background: #edf1f7; color: var(--navy); font-weight: 600; }
+  .learn-article { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 2.4rem 2.8rem 2.8rem; max-width: 50rem; }
+  .learn-article .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
+  .learn-article h1 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.01em; margin: 0.4rem 0 0.6rem; }
+  .learn-article .meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .learn-article h2 { font-size: 1.15rem; font-weight: 700; margin: 1.8rem 0 0.6rem; }
+  .learn-article p, .learn-article li { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .learn-article ul, .learn-article ol { padding-left: 1.3rem; margin-bottom: 0.9rem; }
+  .learn-article .callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .article-footer-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--hairline); font-size: 0.86rem; font-weight: 600; }
+  .article-footer-nav a { max-width: 48%; }
+  .learn-article .takeaways { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 1rem 1.25rem 0.6rem; margin: 1.4rem 0 1.8rem; }
+  .learn-article .takeaways strong { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.55rem; }
+  .learn-article .takeaways ul { margin-bottom: 0.4rem; }
+  .learn-article .takeaways li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .learn-article .faq-h { font-size: 1.15rem; font-weight: 700; margin: 2.2rem 0 0.4rem; }
+  .learn-article details.faq { border-bottom: 1px solid var(--hairline); }
+  .learn-article details.faq summary { list-style: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--ink); padding: 0.85rem 1.6rem 0.85rem 0; position: relative; }
+  .learn-article details.faq summary::-webkit-details-marker { display: none; }
+  .learn-article details.faq summary::after { content: "+"; position: absolute; right: 0.2rem; top: 0.75rem; font-size: 1.1rem; color: #9aa0ab; }
+  .learn-article details.faq[open] summary::after { content: "\2212"; }
+  .learn-article details.faq p { margin: 0 0 0.9rem; }
+</style>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <div class="nav-home portal-link" style="display:none">
+          <a class="nav-home-link" href="/">Home</a>
+          <button class="nav-home-toggle" type="button" aria-label="Homepage sections" aria-expanded="false" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="nav-home-menu" role="menu">
+            <a role="menuitem" href="/#strategies">Strategies</a>
+            <a role="menuitem" href="/#why">Difference</a>
+            <a role="menuitem" href="/#full-cycle">Performance</a>
+            <a role="menuitem" href="/#about">About</a>
+          </div>
+        </div>
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <span class="nav-sep" style="display:none"></span>
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><span class="current"><!-- L:CRUMB -->
+7 Legal Ways to Avoid Capital Gains Tax on Investment Property
+<!-- /L:CRUMB --></span></nav>
+    <div class="learn-layout">
+      <nav class="learn-nav" aria-label="Learn topics">
+        <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
+        <!-- L:FOLDERS -->
+        <details><summary>1031 Exchange Basics</summary><ul>
+          <li><a href="/learn/1031-exchange-across-state-lines/">1031 Exchange Across State Lines</a></li>
+          <li><a href="/learn/1031-exchange-dealer-inventory-property/">1031 Exchange and Dealer / Inventory Property</a></li>
+          <li><a href="/learn/1031-exchange-and-installment-sales/">1031 Exchange and Installment Sales</a></li>
+          <li><a href="/learn/1031-exchange-passive-activity-loss-carryforwards/">1031 Exchange and Passive Activity Loss Carryforwards</a></li>
+          <li><a href="/learn/1031-exchange-related-party-transactions/">1031 Exchange and Related-Party Transactions</a></li>
+          <li><a href="/learn/1031-exchange-restarting-depreciation/">1031 Exchange and Restarting Depreciation</a></li>
+          <li><a href="/learn/1031-exchange-seller-financing/">1031 Exchange and Seller Financing</a></li>
+          <li><a href="/learn/1031-exchange-step-up-in-basis-at-death/">1031 Exchange and Step-Up in Basis at Death</a></li>
+          <li><a href="/learn/1031-exchange-net-investment-income-tax-niit/">1031 Exchange and the Net Investment Income Tax (NIIT)</a></li>
+          <li><a href="/learn/1031-exchange-basics-first-time-investors/">1031 Exchange Basics for First-Time Investors</a></li>
+          <li><a href="/learn/1031-exchange-success-stories-case-studies/">1031 Exchange Case Studies: 5 Illustrative Scenarios</a></li>
+          <li><a href="/learn/1031-exchange-cost/">1031 Exchange Costs &amp; Fees: What You'll Actually Pay</a></li>
+          <li><a href="/learn/1031-exchange-debt-replacement-mortgage-boot/">1031 Exchange Debt Replacement &amp; Mortgage Boot</a></li>
+          <li><a href="/learn/1031-exchange-equity-debt-matching/">1031 Exchange Equity &amp; Debt Matching Explained</a></li>
+          <li><a href="/learn/1031-exchange-exit-strategies-swap-till-you-drop/">1031 Exchange Exit Strategies: Swap Till You Drop</a></li>
+          <li><a href="/learn/1031-exchange-faq/">1031 Exchange FAQ</a></li>
+          <li><a href="/learn/1031-exchange-for-commercial-property/">1031 Exchange for Commercial Property</a></li>
+          <li><a href="/learn/1031-exchange-for-farmers-and-ranchers/">1031 Exchange for Farmers &amp; Ranchers</a></li>
+          <li><a href="/learn/1031-exchange-farmland-agricultural-land/">1031 Exchange for Farmland &amp; Agricultural Land</a></li>
+          <li><a href="/learn/1031-exchange-for-hotel-hospitality-owners/">1031 Exchange for Hotel &amp; Hospitality Owners</a></li>
+          <li><a href="/learn/1031-exchange-for-industrial-property-owners/">1031 Exchange for Industrial Property Owners</a></li>
+          <li><a href="/learn/1031-exchange-for-land-and-vacant-lots/">1031 Exchange for Land and Vacant Lots</a></li>
+          <li><a href="/learn/1031-exchange-for-multifamily-apartment-owners/">1031 Exchange for Multifamily &amp; Apartment Owners</a></li>
+          <li><a href="/learn/1031-exchange-raw-land-development/">1031 Exchange for Raw Land Development</a></li>
+          <li><a href="/learn/1031-exchange-rental-vacation-homes/">1031 Exchange for Rental &amp; Vacation Homes</a></li>
+          <li><a href="/learn/1031-exchange-for-retail-nnn-owners/">1031 Exchange for Retail &amp; NNN Owners</a></li>
+          <li><a href="/learn/1031-exchange-fraud-qualified-intermediary-safety/">1031 Exchange Fraud &amp; Qualified Intermediary Safety</a></li>
+          <li><a href="/learn/1031-exchange-glossary-of-terms/">1031 Exchange Glossary of Terms</a></li>
+          <li><a href="/learn/1031-exchange-holding-period-how-long/">1031 Exchange Holding Period: How Long Must You Hold?</a></li>
+          <li><a href="/learn/1031-exchange-into-a-dst-passive-option/">1031 Exchange Into a DST: The Passive Option</a></li>
+          <li><a href="/learn/1031-exchange-into-multiple-replacement-properties/">1031 Exchange Into Multiple Replacement Properties</a></li>
+          <li><a href="/learn/1031-exchange-into-oil-gas-minerals-royalties/">1031 Exchange Into Oil &amp; Gas, Minerals &amp; Royalties</a></li>
+          <li><a href="/learn/1031-exchange-marketplace-finding-dst-nnn-deals/">1031 Exchange Marketplace: Finding DST &amp; NNN Deals</a></li>
+          <li><a href="/learn/1031-exchange-on-inherited-property/">1031 Exchange on Inherited Property</a></li>
+          <li><a href="/learn/1031-exchange-recordkeeping-and-documentation/">1031 Exchange Recordkeeping &amp; Documentation</a></li>
+          <li><a href="/learn/1031-exchange-replacement-property-options-compared/">1031 Exchange Replacement Property Options Compared</a></li>
+          <li><a href="/learn/1031-exchange-rules-requirements/">1031 Exchange Rules: The Requirements You Must Follow</a></li>
+          <li><a href="/learn/1031-exchange-timeline/">1031 Exchange Timeline: The 45-Day and 180-Day Deadlines</a></li>
+          <li><a href="/learn/1031-exchange-vs-cash-out-refinance/">1031 Exchange vs. Cash-Out Refinance</a></li>
+          <li><a href="/learn/1031-exchange-vs-paying-capital-gains-tax/">1031 Exchange vs. Paying Capital Gains Tax</a></li>
+          <li><a href="/learn/1031-exchange-vs-selling-investing-stocks/">1031 Exchange vs. Selling and Investing in Stocks</a></li>
+          <li><a href="/learn/1031-exchange-vs-selling/">1031 Exchange vs. Selling and Paying the Tax</a></li>
+          <li><a href="/learn/1031-exchange-multiple-relinquished-properties/">1031 Exchange With Multiple Relinquished Properties</a></li>
+          <li><a href="/learn/1031-exchange-primary-residence-vs-investment/">1031 Exchange: Primary Residence vs. Investment Property</a></li>
+          <li><a href="/learn/1031-exchanges-for-llcs-partnerships/">1031 Exchanges for LLCs &amp; Partnerships</a></li>
+          <li><a href="/learn/1031-exchange-identification-rules/">1031 Identification Rules: The 3-Property, 200% and 95% Rules</a></li>
+          <li><a href="/learn/tax-deferral-strategies-compared/">1031 vs. DST vs. Opportunity Zone vs. 721: Which Fits Your Gain?</a></li>
+          <li><a href="/learn/1033-exchange-condemnation-casualty/">1033 Exchange: Deferring Tax After Condemnation or Casualty</a></li>
+          <li><a href="/learn/active-vs-passive-real-estate-investing/">Active vs. Passive Real Estate Investing</a></li>
+          <li><a href="/learn/boot-debt-replacement-full-deferral/">Boot, Debt Replacement, and Full Deferral</a></li>
+          <li><a href="/learn/1031-exchange-primary-residence/">Can You 1031 Exchange a Primary Residence or Vacation Home?</a></li>
+          <li><a href="/learn/refinance-before-after-1031-exchange/">Can You Refinance Before or After a 1031 Exchange?</a></li>
+          <li><a href="/learn/capital-gains-tax-deferral-1031-exchange/">Capital Gains Tax Deferral Through a 1031 Exchange</a></li>
+          <li><a href="/learn/capital-gains-tax-rates-investment-property/">Capital Gains Tax Rates on Investment Property</a></li>
+          <li><a href="/learn/common-1031-exchange-mistakes-to-avoid/">Common 1031 Exchange Mistakes to Avoid</a></li>
+          <li><a href="/learn/converting-vacation-home-1031-eligible/">Converting a Vacation Home Into 1031-Eligible Property</a></li>
+          <li><a href="/learn/delayed-forward-1031-exchange-explained/">Delayed (Forward) 1031 Exchange Explained</a></li>
+          <li><a href="/learn/depreciation-recapture-1031-exchange/">Depreciation Recapture and the 1031 Exchange</a></li>
+          <li><a href="/learn/drop-and-swap-1031-exchanges-explained/">Drop-and-Swap 1031 Exchanges Explained</a></li>
+          <li><a href="/learn/dst-investment-minimums-by-sponsor-and-offering/">DST Investment Minimums by Sponsor &amp; Offering</a></li>
+          <li><a href="/learn/dst-vs-opportunity-zone/">DST vs. Opportunity Zone Fund: Which Fits Your Gain?</a></li>
+          <li><a href="/learn/failed-1031-exchange-what-happens-to-funds/">Failed 1031 Exchange: What Happens to Your Funds?</a></li>
+          <li><a href="/learn/fee-simple-vs-fractional-replacement-property/">Fee-Simple vs. Fractional Replacement Property</a></li>
+          <li><a href="/learn/form-8824-reporting-1031-exchange/">Form 8824: Reporting Your 1031 Exchange</a></li>
+          <li><a href="/learn/how-a-1031-exchange-builds-long-term-wealth/">How a 1031 Exchange Builds Long-Term Wealth</a></li>
+          <li><a href="/learn/how-much-tax-does-a-1031-exchange-defer/">How Much Tax Does a 1031 Exchange Defer?</a></li>
+          <li><a href="/learn/how-to-choose-a-1031-exchange-company/">How to Choose a 1031 Exchange Company</a></li>
+          <li><a href="/learn/how-to-choose-a-qualified-intermediary/">How to Choose a Qualified Intermediary</a></li>
+          <li><a href="/learn/how-to-find-1031-replacement-property-fast/">How to Find a 1031 Replacement Property Fast</a></li>
+          <li><a href="/learn/how-to-review-a-ppm/">How to Review a PPM: A Deep Dive</a></li>
+          <li><a href="/learn/how-to-start-a-1031-exchange-beginners-roadmap/">How to Start a 1031 Exchange: A Beginner's Roadmap</a></li>
+          <li><a href="/learn/how-to-write-a-1031-identification-letter/">How to Write a 1031 Identification Letter</a></li>
+          <li><a href="/learn/identifying-replacement-property-strategy-backups/">Identifying Replacement Property: Strategy &amp; Backups</a></li>
+          <li><a href="/learn/improvement-construction-1031-exchanges/">Improvement (Construction) 1031 Exchanges</a></li>
+          <li><a href="/learn/inherited-rental-property-tax-options/">Inherited Rental Property: Your Tax Options as an Heir</a></li>
+          <li><a href="/learn/is-the-1031-exchange-going-away-policy-outlook/">Is the 1031 Exchange Going Away? Policy Outlook</a></li>
+          <li><a href="/learn/jerry-baker-globest-aspiring-leaders-2026/">Jerry Baker Named to GlobeSt.'s 2026 CRE Aspiring Leaders List</a></li>
+          <li><a href="/learn/like-kind-property-what-qualifies-1031/">Like-Kind Property: What Qualifies for a 1031?</a></li>
+          <li><a href="/learn/net-lease-nnn-properties-as-1031-replacement/">Net-Lease (NNN) Properties as 1031 Replacement</a></li>
+          <li><a href="/learn/partial-1031-exchange-taking-cash-out/">Partial 1031 Exchanges: Taking Some Cash Out</a></li>
+          <li><a href="/learn/proposed-1031-exchange-caps-and-limits/">Proposed 1031 Exchange Caps &amp; Limits</a></li>
+          <li><a href="/learn/reverse-1031-exchange/">Reverse 1031 Exchange: How to Buy Before You Sell</a></li>
+          <li><a href="/learn/sector-watch-dst-yields-2026/">Sector Watch: Where DST Yields Stand in 2026</a></li>
+          <li><a href="/learn/sell-rental-property-without-paying-taxes/">Sell Rental Property Without Paying Taxes? What's Actually Possible</a></li>
+          <li><a href="/learn/simultaneous-1031-exchange-explained/">Simultaneous 1031 Exchange Explained</a></li>
+          <li><a href="/learn/state-specific-1031-rules-california-clawback/">State-Specific 1031 Rules: California Clawback &amp; More</a></li>
+          <li><a href="/learn/swap-and-drop-1031-exchanges-explained/">Swap-and-Drop 1031 Exchanges Explained</a></li>
+          <li><a href="/learn/1031-exchange-process-step-by-step/">The 1031 Exchange Process, Step by Step</a></li>
+          <li><a href="/learn/1031-napkin-test-explained/">The 1031 Napkin Test Explained</a></li>
+          <li><a href="/learn/2026-1031-exchange-outlook/">The 2026 1031 Exchange Outlook</a></li>
+          <li><a href="/learn/the-45-day-trap/">The 45-Day Trap: Avoiding a Failed 1031 Exchange</a></li>
+          <li><a href="/learn/history-of-the-1031-exchange/">The History of the 1031 Exchange</a></li>
+          <li><a href="/learn/the-real-estate-investors-1031-exchange-checklist/">The Real Estate Investor's 1031 Exchange Checklist</a></li>
+          <li><a href="/learn/role-of-your-attorney-in-a-1031-exchange/">The Role of Your Attorney in a 1031 Exchange</a></li>
+          <li><a href="/learn/role-of-your-cpa-in-a-1031-exchange/">The Role of Your CPA in a 1031 Exchange</a></li>
+          <li><a href="/learn/tic-tenants-in-common-1031-exchanges/">TIC (Tenants-in-Common) 1031 Exchanges Explained</a></li>
+          <li><a href="/learn/what-disqualifies-a-1031-exchange/">What Disqualifies a 1031 Exchange?</a></li>
+          <li><a href="/learn/what-does-a-1031-exchange-specialist-do/">What Does a 1031 Exchange Specialist Do?</a></li>
+          <li><a href="/learn/what-is-boot-1031-exchange-how-to-avoid/">What Is 'Boot' in a 1031 Exchange (and How to Avoid It)?</a></li>
+          <li><a href="/learn/what-is-a-qualified-intermediary/">What Is a Qualified Intermediary (QI)?</a></li>
+          <li><a href="/learn/1031-exchange-boot/">What Is Boot in a 1031 Exchange?</a></li>
+          <li><a href="/learn/what-is-replacement-property-1031/">What Is Replacement Property in a 1031 Exchange?</a></li>
+          <li><a href="/learn/180-day-exchange-period/">What Is the 180-Day Exchange Period?</a></li>
+          <li><a href="/learn/45-day-identification-period/">What Is the 45-Day Identification Period?</a></li>
+          <li><a href="/learn/when-partners-disagree-1031-solutions/">When Partners Disagree: 1031 Exchange Solutions</a></li>
+          <li><a href="/learn/why-work-with-a-1031-exchange-advisor/">Why Work With a 1031 Exchange Advisor</a></li>
+          <li><a href="/learn/working-with-real-estate-agent-1031-exchange/">Working With a Real Estate Agent on a 1031 Exchange</a></li>
+          <li><a href="/learn/zero-boot-exchanges-structuring-full-tax-deferral/">Zero-Boot Exchanges: Structuring Full Tax Deferral</a></li>
+        </ul></details>
+        <details><summary>DST Essentials</summary><ul>
+          <li><a href="/learn/all-cash-debt-free-vs-leveraged-dsts/">All-Cash/Debt-Free vs. Leveraged DSTs</a></li>
+          <li><a href="/learn/building-a-diversified-dst-portfolio-by-asset-class/">Building a Diversified DST Portfolio by Asset Class</a></li>
+          <li><a href="/learn/building-a-dst-ladder-for-staggered-liquidity/">Building a DST Ladder for Staggered Liquidity</a></li>
+          <li><a href="/learn/common-dst-myths-and-misconceptions/">Common DST Myths and Misconceptions</a></li>
+          <li><a href="/learn/data-center-dsts-explained/">Data Center DSTs Explained</a></li>
+          <li><a href="/learn/delaware-statutory-trust-faq/">Delaware Statutory Trust FAQ</a></li>
+          <li><a href="/learn/delaware-statutory-trust-glossary-of-terms/">Delaware Statutory Trust Glossary of Terms</a></li>
+          <li><a href="/learn/diversifying-a-1031-across-multiple-dsts/">Diversifying a 1031 Across Multiple DSTs</a></li>
+          <li><a href="/learn/dst-1031-exchange-case-study-from-rental-to-passive-income/">DST 1031 Exchange Case Study: From Rental to Passive Income</a></li>
+          <li><a href="/learn/dst-1031-exchange-using-a-dst-as-replacement-property/">DST 1031 Exchange: Using a DST as Replacement Property</a></li>
+          <li><a href="/learn/dst-cash-flow-vs-appreciation-setting-expectations/">DST Cash Flow vs. Appreciation: Setting Expectations</a></li>
+          <li><a href="/learn/dst-cost-basis-and-depreciation-schedules/">DST Cost Basis &amp; Depreciation Schedules</a></li>
+          <li><a href="/learn/dst-distribution-yield-vs-total-return/">DST Distribution Yield vs. Total Return</a></li>
+          <li><a href="/learn/dst-due-diligence-checklist-for-investors/">DST Due Diligence Checklist for Investors</a></li>
+          <li><a href="/learn/dst-fees-and-load-explained/">DST Fees and Load Explained</a></li>
+          <li><a href="/learn/dst-full-cycle/">DST Full-Cycle: What Happens When the Trust Sells</a></li>
+          <li><a href="/learn/dst-hold-periods-and-exit-timing/">DST Hold Periods and Exit Timing</a></li>
+          <li><a href="/learn/dst-income-and-distributions-what-to-expect/">DST Income &amp; Distributions: What to Expect</a></li>
+          <li><a href="/learn/dst-investing-for-retirement-income/">DST Investing for Retirement Income</a></li>
+          <li><a href="/learn/dst-investing-in-california-and-the-clawback/">DST Investing in California and the Clawback</a></li>
+          <li><a href="/learn/dst-investing-in-florida/">DST Investing in Florida</a></li>
+          <li><a href="/learn/dst-investing-in-texas/">DST Investing in Texas</a></li>
+          <li><a href="/learn/dst-investing-with-retirement-funds-and-iras/">DST Investing With Retirement Funds &amp; IRAs</a></li>
+          <li><a href="/learn/dst-liquidity-the-secondary-market-reality/">DST Liquidity: The Secondary Market Reality</a></li>
+          <li><a href="/learn/dst-loan-and-leverage-matching-debt-in-a-1031/">DST Loan &amp; Leverage: Matching Debt in a 1031</a></li>
+          <li><a href="/learn/dst-loan-assumption-and-lender-requirements/">DST Loan Assumption &amp; Lender Requirements</a></li>
+          <li><a href="/learn/dst-master-lease-structure-explained/">DST Master Lease Structure Explained</a></li>
+          <li><a href="/learn/dst-minimum-investment-and-accreditation-requirements/">DST Minimum Investment &amp; Accreditation Requirements</a></li>
+          <li><a href="/learn/dst-properties-whats-available-and-how-to-browse-offerings/">DST Properties: What's Available and How to Browse Offerings</a></li>
+          <li><a href="/learn/dst-pros-and-cons-for-1031-investors/">DST Pros and Cons for 1031 Investors</a></li>
+          <li><a href="/learn/dst-pros-and-cons/">DST Pros and Cons: Is a Delaware Statutory Trust Right for Your 1031?</a></li>
+          <li><a href="/learn/dst-reserves-and-capital-expenditures/">DST Reserves &amp; Capital Expenditures</a></li>
+          <li><a href="/learn/dst-returns-and-fees/">DST Returns and Fees: What You Actually Keep</a></li>
+          <li><a href="/learn/dst-risk-factors-in-the-ppm-explained/">DST Risk Factors in the PPM Explained</a></li>
+          <li><a href="/learn/dst-risks-what-every-1031-investor-should-know/">DST Risks: What Every 1031 Investor Should Know</a></li>
+          <li><a href="/learn/dst-sponsor-due-diligence-what-to-investigate/">DST Sponsor Due Diligence: What to Investigate</a></li>
+          <li><a href="/learn/dst-subscription-agreement-and-ppm-walkthrough/">DST Subscription Agreement &amp; PPM Walkthrough</a></li>
+          <li><a href="/learn/dst-suitability-and-finra-reg-bi/">DST Suitability &amp; Regulation Best Interest (Reg BI)</a></li>
+          <li><a href="/learn/dst-tax-reporting-depreciation-and-pass-through-income/">DST Tax Reporting: Depreciation &amp; Pass-Through Income</a></li>
+          <li><a href="/learn/dst-tenant-default-and-vacancy-risk/">DST Tenant Default &amp; Vacancy Risk</a></li>
+          <li><a href="/learn/dst-vs-buying-a-rental-property/">DST vs. Buying a Rental Property</a></li>
+          <li><a href="/learn/dst-vs-direct-property-ownership-in-a-1031-exchange/">DST vs. Direct Property Ownership in a 1031 Exchange</a></li>
+          <li><a href="/learn/dst-vs-nnn-direct-ownership/">DST vs. NNN Direct Ownership</a></li>
+          <li><a href="/learn/dst-vs-nnn-cash-flow-and-cap-rates/">DST vs. NNN: Cash Flow, Cap Rates, and Why the Numbers Mislead…</a></li>
+          <li><a href="/learn/dst-vs-private-reit/">DST vs. Non-Traded REIT: How NAV Pricing Changes the Picture</a></li>
+          <li><a href="/learn/dst-vs-real-estate-crowdfunding/">DST vs. Real Estate Crowdfunding: Which Fits a 1031 Investor?</a></li>
+          <li><a href="/learn/dst-vs-real-estate-syndication/">DST vs. Real Estate Syndication</a></li>
+          <li><a href="/learn/dst-vs-reit/">DST vs. REIT: Key Differences for 1031 Exchange Investors</a></li>
+          <li><a href="/learn/dst-vs-selling-and-paying-tax-the-math/">DST vs. Selling and Paying Tax: The Math</a></li>
+          <li><a href="/learn/dst-vs-tic-comparing-1031-co-ownership-structures/">DST vs. TIC: Comparing 1031 Co-Ownership Structures</a></li>
+          <li><a href="/learn/dsts-and-charitable-remainder-trusts/">DSTs and Charitable Remainder Trusts</a></li>
+          <li><a href="/learn/dsts-and-the-1031-same-taxpayer-rule/">DSTs and the 1031 Same-Taxpayer Rule</a></li>
+          <li><a href="/learn/dsts-for-1031-exchanges-under-500k/">DSTs for 1031 Exchanges Under $500K</a></li>
+          <li><a href="/learn/dsts-for-accidental-landlords/">DSTs for Accidental Landlords: An Exit Without a Tax Hit</a></li>
+          <li><a href="/learn/dsts-for-cash-non-1031-investors/">DSTs for Cash (Non-1031) Investors</a></li>
+          <li><a href="/learn/dsts-for-dividing-property-in-a-divorce/">DSTs for Dividing Property in a Divorce</a></li>
+          <li><a href="/learn/dsts-for-large-5m-plus-exchanges/">DSTs for Large ($5M+) Exchanges</a></li>
+          <li><a href="/learn/dsts-for-out-of-state-landlords/">DSTs for Out-of-State Landlords: Going Passive</a></li>
+          <li><a href="/learn/dsts-for-trust-and-estate-beneficiaries/">DSTs for Trust &amp; Estate Beneficiaries</a></li>
+          <li><a href="/learn/end-of-a-dst-reinvest-721-roll-up-or-cash-out/">End of a DST: Reinvest, 721 Roll-Up, or Cash Out</a></li>
+          <li><a href="/learn/estate-planning-benefits-of-dsts-step-up-in-basis/">Estate Planning Benefits of DSTs: Step-Up in Basis</a></li>
+          <li><a href="/learn/government-leased-gsa-dsts/">Government-Leased (GSA) DSTs</a></li>
+          <li><a href="/learn/grocery-anchored-retail-dsts/">Grocery-Anchored Retail DSTs</a></li>
+          <li><a href="/learn/holding-a-dst-in-an-llc-or-trust/">Holding a DST in an LLC or Trust</a></li>
+          <li><a href="/learn/hotel-and-hospitality-dsts/">Hotel &amp; Hospitality DSTs</a></li>
+          <li><a href="/learn/how-dst-sponsors-are-vetted-and-ranked/">How DST Sponsors Are Vetted and Ranked</a></li>
+          <li><a href="/learn/how-dst-sponsors-project-cash-flow/">How DST Sponsors Project Cash Flow</a></li>
+          <li><a href="/learn/how-dsts-satisfy-the-irs-like-kind-rule-rev-rul-2004-86/">How DSTs Satisfy the IRS Like-Kind Rule (Rev. Rul. 2004-86)</a></li>
+          <li><a href="/learn/how-dsts-work-structure-beneficial-interests-and-trustees/">How DSTs Work: Structure, Beneficial Interests &amp; Trustees</a></li>
+          <li><a href="/learn/how-many-dsts-should-you-own/">How Many DSTs Should You Own?</a></li>
+          <li><a href="/learn/how-to-buy-a-dst-step-by-step-process/">How to Buy a DST: Step-by-Step Process</a></li>
+          <li><a href="/learn/how-to-choose-a-dst-sponsor-company/">How to Choose a DST Sponsor Company</a></li>
+          <li><a href="/learn/dst-sponsor-due-diligence/">How to Evaluate a DST Sponsor: A Due-Diligence Checklist</a></li>
+          <li><a href="/learn/how-to-identify-dsts-within-the-45-day-window/">How to Identify DSTs Within the 45-Day Window</a></li>
+          <li><a href="/learn/how-to-read-a-dst-offering/">How to Read a DST Offering: Fees, Debt, and Distributions</a></li>
+          <li><a href="/learn/how-to-stop-being-a-landlord/">How to Stop Being a Landlord: A Retiring Owner's Exit Playbook</a></li>
+          <li><a href="/learn/industrial-dsts-warehouse-and-logistics-investing/">Industrial DSTs: Warehouse &amp; Logistics Investing</a></li>
+          <li><a href="/learn/inherited-property-and-dst-1031-exchanges/">Inherited Property and DST 1031 Exchanges</a></li>
+          <li><a href="/learn/interest-rate-risk-on-leveraged-dsts/">Interest-Rate Risk on Leveraged DSTs</a></li>
+          <li><a href="/learn/manufactured-housing-dsts/">Manufactured Housing DSTs</a></li>
+          <li><a href="/learn/medical-office-dsts-a-defensive-1031-option/">Medical Office DSTs: A Defensive 1031 Option</a></li>
+          <li><a href="/learn/multifamily-dsts-apartment-investing-for-your-1031/">Multifamily DSTs: Apartment Investing for Your 1031</a></li>
+          <li><a href="/learn/net-lease-nnn-dsts-explained/">Net-Lease (NNN) DSTs Explained</a></li>
+          <li><a href="/learn/office-dst-investing-and-its-risks/">Office DST Investing and Its Risks</a></li>
+          <li><a href="/learn/pharmacy-and-dollar-store-nnn-dsts/">Pharmacy &amp; Dollar-Store NNN DSTs</a></li>
+          <li><a href="/learn/reading-a-dst-full-cycle-track-record/">Reading a DST Full-Cycle Track Record</a></li>
+          <li><a href="/learn/reg-d-506c-and-dst-offerings-explained/">Reg D 506(c) and DST Offerings Explained</a></li>
+          <li><a href="/learn/retail-dst-investing-pros-cons-and-risks/">Retail DST Investing: Pros, Cons &amp; Risks</a></li>
+          <li><a href="/learn/self-storage-dsts-recession-resilient-income/">Self-Storage DSTs: Recession-Resilient Income</a></li>
+          <li><a href="/learn/senior-housing-dsts-demographics-and-demand/">Senior Housing DSTs: Demographics &amp; Demand</a></li>
+          <li><a href="/learn/single-family-rental-and-build-to-rent-dsts/">Single-Family Rental &amp; Build-to-Rent DSTs</a></li>
+          <li><a href="/learn/student-housing-dsts-pros-cons-and-risks/">Student Housing DSTs: Pros, Cons &amp; Risks</a></li>
+          <li><a href="/learn/sunbelt-vs-coastal-dst-markets/">Sunbelt vs. Coastal DST Markets</a></li>
+          <li><a href="/learn/the-seven-deadly-sins-dst-trustee-restrictions/">The 'Seven Deadly Sins': DST Trustee Restrictions</a></li>
+          <li><a href="/learn/the-7-deadly-sins-of-dst-investing/">The 7 Deadly Sins of DST Investing</a></li>
+          <li><a href="/learn/the-dst-closing-process-and-timeline/">The DST Closing Process &amp; Timeline</a></li>
+          <li><a href="/learn/the-springing-llc-how-dsts-handle-refinancing/">The Springing LLC: How DSTs Handle Refinancing</a></li>
+          <li><a href="/learn/understanding-dst-projected-returns-and-irr/">Understanding DST Projected Returns &amp; IRR</a></li>
+          <li><a href="/learn/using-dsts-as-backups-in-your-1031-identification/">Using DSTs as Backups in Your 1031 Identification</a></li>
+          <li><a href="/learn/what-happens-if-a-dst-sponsor-goes-bankrupt/">What Happens If a DST Sponsor Goes Bankrupt?</a></li>
+          <li><a href="/learn/what-is-a-free-dst-property-list-and-how-to-use-one/">What Is a Free DST Property List and How to Use One</a></li>
+          <li><a href="/learn/who-can-invest-in-a-dst-accredited-investor-rules/">Who Can Invest in a DST? Accredited Investor Rules</a></li>
+          <li><a href="/learn/zero-coupon-dsts-for-high-debt-exchanges/">Zero-Coupon DSTs for High-Debt Exchanges</a></li>
+        </ul></details>
+        <details><summary>721 Exchanges &amp; REITs</summary><ul>
+          <li><a href="/learn/1031-vs-721-exchange-key-differences/">1031 vs. 721 Exchange: Key Differences and When to Use Each</a></li>
+          <li><a href="/learn/721-exchange-and-depreciation-recapture/">721 Exchange and Depreciation Recapture</a></li>
+          <li><a href="/learn/721-exchange-and-existing-debt-on-your-property/">721 Exchange and Existing Debt on Your Property</a></li>
+          <li><a href="/learn/721-exchange-case-study-rental-portfolio-to-reit-units/">721 Exchange Case Study: From Rental Portfolio to REIT Units</a></li>
+          <li><a href="/learn/721-exchange-closing-documents-explained/">721 Exchange Closing Documents Explained</a></li>
+          <li><a href="/learn/721-exchange-diversification-by-property-sector/">721 Exchange Diversification by Property Sector</a></li>
+          <li><a href="/learn/721-exchange-downsides/">721 Exchange Downsides: Risks Every Investor Should Weigh</a></li>
+          <li><a href="/learn/721-exchange-eligibility-what-property-qualifies/">721 Exchange Eligibility: What Property Qualifies</a></li>
+          <li><a href="/learn/721-exchange-explained-convert-property-into-reit-units/">721 Exchange Explained: How to Convert Property Into REIT Units</a></li>
+          <li><a href="/learn/721-exchange-faq-your-top-questions-answered/">721 Exchange FAQ: Your Top Questions Answered</a></li>
+          <li><a href="/learn/721-exchange-for-apartment-owners/">721 Exchange for Apartment Owners</a></li>
+          <li><a href="/learn/721-exchange-for-commercial-property-owners/">721 Exchange for Commercial Property Owners</a></li>
+          <li><a href="/learn/721-exchange-for-net-lease-nnn-owners/">721 Exchange for Net-Lease (NNN) Owners</a></li>
+          <li><a href="/learn/721-exchange-for-retiring-real-estate-investors/">721 Exchange for Retiring Real Estate Investors</a></li>
+          <li><a href="/learn/721-exchange-glossary-of-terms/">721 Exchange Glossary of Terms</a></li>
+          <li><a href="/learn/721-exchange-liquidity-windows-and-redemption-programs/">721 Exchange Liquidity Windows &amp; Redemption Programs</a></li>
+          <li><a href="/learn/721-exchange-lock-up-periods-explained/">721 Exchange Lock-Up Periods Explained</a></li>
+          <li><a href="/learn/721-exchange-minimum-investment-and-suitability/">721 Exchange Minimum Investment &amp; Suitability</a></li>
+          <li><a href="/learn/721-exchange-myths-and-misconceptions/">721 Exchange Myths and Misconceptions</a></li>
+          <li><a href="/learn/721-exchange-pros-and-cons-for-real-estate-investors/">721 Exchange Pros and Cons for Real Estate Investors</a></li>
+          <li><a href="/learn/721-exchange-reporting-tax-forms-youll-file/">721 Exchange Reporting: Tax Forms You'll File</a></li>
+          <li><a href="/learn/721-exchange-risks-and-drawbacks-to-know/">721 Exchange Risks and Drawbacks to Know</a></li>
+          <li><a href="/learn/721-exchange-risks-reit-underperformance/">721 Exchange Risks: REIT Underperformance</a></li>
+          <li><a href="/learn/721-exchange-tax-benefits-deferral-diversification-estate-planning/">721 Exchange Tax Benefits: Deferral &amp; Estate Planning</a></li>
+          <li><a href="/learn/721-exchange-timeline-and-closing-process/">721 Exchange Timeline and Closing Process</a></li>
+          <li><a href="/learn/721-exchange-valuation-how-your-property-is-priced/">721 Exchange Valuation: How Your Property Is Priced</a></li>
+          <li><a href="/learn/721-exchange-vs-1031-exchange/">721 Exchange vs. 1031 Exchange: Which One Fits?</a></li>
+          <li><a href="/learn/721-exchange-vs-cash-out-refinance/">721 Exchange vs. Cash-Out Refinance</a></li>
+          <li><a href="/learn/721-exchange-vs-dst-which-should-you-use-first/">721 Exchange vs. DST: Which Should You Use First?</a></li>
+          <li><a href="/learn/721-exchange-vs-opportunity-zone-fund/">721 Exchange vs. Opportunity Zone Fund</a></li>
+          <li><a href="/learn/721-exchange-vs-selling-outright-tax-comparison/">721 Exchange vs. Selling Outright: A Tax Comparison</a></li>
+          <li><a href="/learn/721-exchanges-and-estate-liquidity-for-heirs/">721 Exchanges and Estate Liquidity for Heirs</a></li>
+          <li><a href="/learn/721-exchanges-and-interest-rate-sensitivity/">721 Exchanges and Interest-Rate Sensitivity</a></li>
+          <li><a href="/learn/721-exchanges-and-non-traded-reits/">721 Exchanges and Non-Traded REITs</a></li>
+          <li><a href="/learn/721-exchanges-and-the-45-180-day-rules-when-a-dst-is-involved/">721 Exchanges and the 45/180-Day Rules When a DST Is Involved</a></li>
+          <li><a href="/learn/721-exchanges-and-the-step-transaction-doctrine/">721 Exchanges and the Step-Transaction Doctrine</a></li>
+          <li><a href="/learn/721-exchanges-and-the-step-up-in-basis-for-heirs/">721 Exchanges and the Step-Up in Basis for Heirs</a></li>
+          <li><a href="/learn/affo-vs-ffo-which-metric-matters-more/">AFFO vs. FFO: Which Metric Matters More?</a></li>
+          <li><a href="/learn/are-private-reits-safe/">Are Private REITs Safe? Understanding the Risks</a></li>
+          <li><a href="/learn/are-reits-a-good-investment-pros-and-cons/">Are REITs a Good Investment? Pros and Cons</a></li>
+          <li><a href="/learn/bdcs-vs-reits/">BDCs vs. REITs</a></li>
+          <li><a href="/learn/best-reit-sectors-residential-industrial-healthcare-and-more/">Best REIT Sectors: Residential, Industrial, Healthcare &amp; More</a></li>
+          <li><a href="/learn/building-a-reit-income-ladder/">Building a REIT Income Ladder</a></li>
+          <li><a href="/learn/can-you-1031-into-a-reit-the-dst-plus-721-path/">Can You 1031 Into a REIT? The DST + 721 Path</a></li>
+          <li><a href="/learn/can-you-1031-then-721-dst-bridge-strategy/">Can You 1031 Then 721? The DST Bridge Strategy</a></li>
+          <li><a href="/learn/can-you-partially-721-exchange-a-property/">Can You Partially 721 Exchange a Property?</a></li>
+          <li><a href="/learn/cell-tower-and-infrastructure-reits/">Cell Tower &amp; Infrastructure REITs</a></li>
+          <li><a href="/learn/commercial-real-estate-cycles-and-reit-performance/">Commercial Real Estate Cycles and REIT Performance</a></li>
+          <li><a href="/learn/commercial-real-estate-investing-through-reits/">Commercial Real Estate Investing Through REITs</a></li>
+          <li><a href="/learn/commercial-vs-residential-mortgage-reits/">Commercial vs. Residential Mortgage REITs</a></li>
+          <li><a href="/learn/common-mistakes-in-a-721-upreit-exchange/">Common Mistakes in a 721 / UPREIT Exchange</a></li>
+          <li><a href="/learn/common-reit-investing-mistakes/">Common REIT Investing Mistakes</a></li>
+          <li><a href="/learn/converting-op-units-to-cash-tax-smart-timing/">Converting OP Units to Cash: Tax-Smart Timing</a></li>
+          <li><a href="/learn/data-center-reits-explained/">Data Center REITs Explained</a></li>
+          <li><a href="/learn/diversification-benefits-of-an-upreit-conversion/">Diversification Benefits of an UPREIT Conversion</a></li>
+          <li><a href="/learn/diversified-reits-explained/">Diversified REITs Explained</a></li>
+          <li><a href="/learn/dividend-reinvestment-drip-with-reits/">Dividend Reinvestment (DRIP) With REITs</a></li>
+          <li><a href="/learn/donating-op-units-721-exchanges-and-charitable-giving/">Donating OP Units: 721 Exchanges and Charitable Giving</a></li>
+          <li><a href="/learn/dst-to-reit-via-721-exchange-two-step-strategy/">DST-to-REIT via 721 Exchange: The Two-Step Strategy</a></li>
+          <li><a href="/learn/721-exchange-estate-planning/">Estate Planning With a 721 Exchange: The Step-Up Advantage</a></li>
+          <li><a href="/learn/evaluating-a-reits-dividend-yield/">Evaluating a REIT's Dividend Yield</a></li>
+          <li><a href="/learn/evaluating-the-reit-behind-a-721-exchange/">Evaluating the REIT Behind a 721 Exchange</a></li>
+          <li><a href="/learn/farmland-reits-explained/">Farmland REITs Explained</a></li>
+          <li><a href="/learn/foreign-investors-and-reit-taxation-firpta/">Foreign Investors and REIT Taxation (FIRPTA)</a></li>
+          <li><a href="/learn/from-dst-to-reit-721-rollup/">From DST to REIT: How a 721 Roll-Up Actually Works</a></li>
+          <li><a href="/learn/gaming-reits-explained/">Gaming REITs Explained</a></li>
+          <li><a href="/learn/growth-reit-sectors-where-appreciation-comes-from/">Growth REIT Sectors: Where Appreciation Comes From</a></li>
+          <li><a href="/learn/growth-reit-vs-income-reit-choosing-your-objective/">Growth REIT vs. Income REIT: Choosing Your Objective</a></li>
+          <li><a href="/learn/growth-reits-investing-for-appreciation/">Growth REITs: Investing for Appreciation</a></li>
+          <li><a href="/learn/healthcare-reits-explained/">Healthcare REITs Explained</a></li>
+          <li><a href="/learn/hotel-and-lodging-reits-explained/">Hotel &amp; Lodging REITs Explained</a></li>
+          <li><a href="/learn/how-a-721-exchange-works-step-by-step-process/">How a 721 Exchange Works: Step-by-Step Process</a></li>
+          <li><a href="/learn/how-interest-rates-affect-reit-returns/">How Interest Rates Affect REIT Returns</a></li>
+          <li><a href="/learn/how-much-of-your-portfolio-should-be-reits/">How Much of Your Portfolio Should Be REITs?</a></li>
+          <li><a href="/learn/how-non-traded-reits-are-valued/">How Non-Traded REITs Are Valued</a></li>
+          <li><a href="/learn/how-op-unit-distributions-are-taxed/">How OP Unit Distributions Are Taxed</a></li>
+          <li><a href="/learn/private-reit-dividends-tax/">How Private REIT Dividends Are Taxed</a></li>
+          <li><a href="/learn/how-reits-have-performed-vs-the-sp-500/">How REITs Have Performed vs. the S&amp;P 500</a></li>
+          <li><a href="/learn/how-reits-pay-dividends-the-90-percent-distribution-rule/">How REITs Pay Dividends: The 90% Distribution Rule</a></li>
+          <li><a href="/learn/how-reits-use-upreits-to-acquire-property/">How REITs Use UPREITs to Acquire Property</a></li>
+          <li><a href="/learn/how-to-analyze-a-reits-balance-sheet/">How to Analyze a REIT's Balance Sheet</a></li>
+          <li><a href="/learn/how-to-evaluate-a-reit-ffo-affo-and-nav/">How to Evaluate a REIT: FFO, AFFO &amp; NAV</a></li>
+          <li><a href="/learn/how-to-invest-in-a-private-reit/">How to Invest in a Private REIT: Minimums, Yield &amp; Liquidity</a></li>
+          <li><a href="/learn/how-to-read-a-reits-ffo/">How to Read a REIT's FFO</a></li>
+          <li><a href="/learn/income-and-distributions-op-units-vs-direct-ownership/">Income &amp; Distributions: OP Units vs. Direct Ownership</a></li>
+          <li><a href="/learn/income-reit-case-study-building-passive-cash-flow/">Income REIT Case Study: Building Passive Cash Flow</a></li>
+          <li><a href="/learn/income-reit-distribution-strategies/">Income REIT Distribution Strategies</a></li>
+          <li><a href="/learn/income-reits-explained-investing-for-cash-flow/">Income REITs Explained: Investing for Cash Flow</a></li>
+          <li><a href="/learn/industrial-and-logistics-reits-explained/">Industrial &amp; Logistics REITs Explained</a></li>
+          <li><a href="/learn/721-upreit-trading-control-for-liquidity/">Inside the 721 UPREIT Exchange: Trading Control for Liquidity</a></li>
+          <li><a href="/learn/international-and-global-reits/">International &amp; Global REITs</a></li>
+          <li><a href="/learn/interval-funds-vs-non-traded-reits/">Interval Funds vs. Non-Traded REITs</a></li>
+          <li><a href="/learn/investing-in-reits-with-a-self-directed-ira/">Investing in REITs With a Self-Directed IRA</a></li>
+          <li><a href="/learn/life-science-reits-explained/">Life Science REITs Explained</a></li>
+          <li><a href="/learn/liquidity-after-721-exchange-converting-op-units-to-reit-shares/">Liquidity After a 721 Exchange: Converting OP Units to REIT Shares</a></li>
+          <li><a href="/learn/manufactured-housing-reits/">Manufactured Housing REITs</a></li>
+          <li><a href="/learn/mortgage-reits-mreits-explained/">Mortgage REITs (mREITs) Explained</a></li>
+          <li><a href="/learn/nav-reits-explained/">NAV REITs Explained</a></li>
+          <li><a href="/learn/net-lease-reits-explained/">Net-Lease REITs Explained</a></li>
+          <li><a href="/learn/non-traded-reit-liquidity-events-ipo-merger/">Non-Traded REIT Liquidity Events (IPO, Merger)</a></li>
+          <li><a href="/learn/non-traded-reit-liquidity-fees-and-risks/">Non-Traded REIT Liquidity, Fees &amp; Risks</a></li>
+          <li><a href="/learn/non-traded-reit-redemption-programs-explained/">Non-Traded REIT Redemption Programs Explained</a></li>
+          <li><a href="/learn/non-traded-reit-share-classes-explained/">Non-Traded REIT Share Classes Explained</a></li>
+          <li><a href="/learn/occupancy-and-leasing-spreads-in-reit-analysis/">Occupancy &amp; Leasing Spreads in REIT Analysis</a></li>
+          <li><a href="/learn/office-reits-in-a-hybrid-work-world/">Office REITs in a Hybrid-Work World</a></li>
+          <li><a href="/learn/op-unit-income-vs-rental-income-comparison/">OP Unit Income vs. Rental Income: A Comparison</a></li>
+          <li><a href="/learn/op-units-explained/">OP Units Explained: How Operating Partnership Units Work</a></li>
+          <li><a href="/learn/private-reit-vs-syndication/">Private REIT vs. Syndication vs. DST</a></li>
+          <li><a href="/learn/private-reit-vs-public-reit/">Private vs. Public vs. Non-Traded REITs</a></li>
+          <li><a href="/learn/public-non-listed-reits-pnlrs-explained/">Public Non-Listed REITs (PNLRs) Explained</a></li>
+          <li><a href="/learn/public-vs-non-traded-reits/">Public vs. Non-Traded REITs: A Liquidity Trade-Off</a></li>
+          <li><a href="/learn/recession-resistant-reit-sectors/">Recession-Resistant REIT Sectors</a></li>
+          <li><a href="/learn/reit-bear-markets-history-and-lessons/">REIT Bear Markets: History &amp; Lessons</a></li>
+          <li><a href="/learn/reit-dividends-and-the-20-percent-qbi-deduction/">REIT Dividends and the 20% QBI Deduction</a></li>
+          <li><a href="/learn/reit-due-diligence-checklist/">REIT Due Diligence Checklist</a></li>
+          <li><a href="/learn/reit-etfs-explained/">REIT ETFs Explained</a></li>
+          <li><a href="/learn/reit-glossary-of-terms/">REIT Glossary of Terms</a></li>
+          <li><a href="/learn/reit-index-funds-vs-individual-reits/">REIT Index Funds vs. Individual REITs</a></li>
+          <li><a href="/learn/reit-investing-faq/">REIT Investing FAQ</a></li>
+          <li><a href="/learn/reit-investing-for-beginners-how-to-get-started/">REIT Investing for Beginners: How to Get Started</a></li>
+          <li><a href="/learn/reit-leverage-and-debt-coverage-metrics/">REIT Leverage &amp; Debt Coverage Metrics</a></li>
+          <li><a href="/learn/reit-nav-premiums-and-discounts-explained/">REIT NAV Premiums and Discounts Explained</a></li>
+          <li><a href="/learn/reit-payout-ratios-explained/">REIT Payout Ratios Explained</a></li>
+          <li><a href="/learn/reit-risks-every-investor-should-know/">REIT Risks Every Investor Should Know</a></li>
+          <li><a href="/learn/reit-taxation-how-reit-dividends-are-taxed/">REIT Taxation: How REIT Dividends Are Taxed</a></li>
+          <li><a href="/learn/reit-total-return-income-plus-appreciation/">REIT Total Return: Income Plus Appreciation</a></li>
+          <li><a href="/learn/reit-vs-direct-real-estate-after-tax-returns/">REIT vs. Direct Real Estate: After-Tax Returns</a></li>
+          <li><a href="/learn/reit-vs-dst-for-retirement-income/">REIT vs. DST for Retirement Income: Which Funds Decumulation Better?</a></li>
+          <li><a href="/learn/reit-vs-dst-vs-direct-ownership-a-full-comparison/">REIT vs. DST vs. Direct Ownership: The Three-Way Comparison</a></li>
+          <li><a href="/learn/reit-vs-real-estate-crowdfunding/">REIT vs. Real Estate Crowdfunding</a></li>
+          <li><a href="/learn/reit-vs-real-estate-mutual-fund/">REIT vs. Real Estate Mutual Fund</a></li>
+          <li><a href="/learn/reit-vs-rental-property-for-passive-income/">REIT vs. Rental Property for Passive Income</a></li>
+          <li><a href="/learn/reits-and-1031-exchanges-why-reit-shares-dont-qualify/">REITs and 1031 Exchanges: Why REIT Shares Don't Qualify</a></li>
+          <li><a href="/learn/reits-and-inflation-hedge-or-headwind/">REITs and Inflation: Hedge or Headwind?</a></li>
+          <li><a href="/learn/reits-and-rising-rates-a-sector-playbook/">REITs and Rising Rates: A Sector Playbook</a></li>
+          <li><a href="/learn/reits-and-ubit-in-retirement-accounts/">REITs and UBIT in Retirement Accounts</a></li>
+          <li><a href="/learn/reits-explained-how-real-estate-investment-trusts-work/">REITs Explained: How Real Estate Investment Trusts Work</a></li>
+          <li><a href="/learn/reits-for-retirement-income/">REITs for Retirement Income</a></li>
+          <li><a href="/learn/reits-in-a-diversified-portfolio/">REITs in a Diversified Portfolio</a></li>
+          <li><a href="/learn/reits-in-taxable-vs-tax-advantaged-accounts/">REITs in Taxable vs. Tax-Advantaged Accounts</a></li>
+          <li><a href="/learn/reits-vs-bonds-for-income/">REITs vs. Bonds for Income</a></li>
+          <li><a href="/learn/reits-vs-direct-real-estate-ownership/">REITs vs. Direct Real Estate Ownership</a></li>
+          <li><a href="/learn/reits-vs-dividend-stocks/">REITs vs. Dividend Stocks</a></li>
+          <li><a href="/learn/residential-and-apartment-reits-explained/">Residential &amp; Apartment REITs Explained</a></li>
+          <li><a href="/learn/retail-reits-malls-strip-centers-and-net-lease/">Retail REITs: Malls, Strip Centers &amp; Net-Lease</a></li>
+          <li><a href="/learn/return-of-capital-in-reit-distributions/">Return of Capital in REIT Distributions</a></li>
+          <li><a href="/learn/same-store-noi-explained/">Same-Store NOI Explained</a></li>
+          <li><a href="/learn/section-721-exchange-tax-code-behind-upreit-conversions/">Section 721 Exchange: The Tax Code Behind UPREIT Conversions</a></li>
+          <li><a href="/learn/self-storage-reits-explained/">Self-Storage REITs Explained</a></li>
+          <li><a href="/learn/simplify-real-estate-portfolio-in-retirement/">Simplify Your Real Estate Portfolio in Retirement</a></li>
+          <li><a href="/learn/single-family-rental-reits/">Single-Family Rental REITs</a></li>
+          <li><a href="/learn/specialty-reits-billboards-prisons-and-more/">Specialty REITs: Billboards, Prisons &amp; More</a></li>
+          <li><a href="/learn/state-taxation-of-reit-dividends/">State Taxation of REIT Dividends</a></li>
+          <li><a href="/learn/tax-consequences-of-converting-op-units-to-reit-shares/">Tax Consequences of Converting OP Units to REIT Shares</a></li>
+          <li><a href="/learn/721-exchange-one-way-door-losing-1031-eligibility/">The 721 Exchange One-Way Door: Losing 1031 Eligibility</a></li>
+          <li><a href="/learn/dst-to-721-timeline-from-exchange-to-reit-units/">The DST-to-721 Timeline: From Exchange to REIT Units</a></li>
+          <li><a href="/learn/1031-to-721-exchange/">The Two-Step 1031-to-721 Exchange: DST Now, UPREIT Later</a></li>
+          <li><a href="/learn/timberland-reits-explained/">Timberland REITs Explained</a></li>
+          <li><a href="/learn/types-of-reits-equity-mortgage-and-hybrid/">Types of REITs: Equity, Mortgage &amp; Hybrid</a></li>
+          <li><a href="/learn/upreit-conversion-and-capital-gains-deferral/">UPREIT Conversion and Capital Gains Deferral</a></li>
+          <li><a href="/learn/upreit-vs-downreit-whats-the-difference/">UPREIT vs. DownREIT: What's the Difference?</a></li>
+          <li><a href="/learn/upreit-vs-traditional-reit-structure/">UPREIT vs. Traditional REIT Structure</a></li>
+          <li><a href="/learn/what-is-an-upreit-umbrella-partnership-reit-basics/">What Is an UPREIT? Umbrella Partnership REIT Basics</a></li>
+          <li><a href="/learn/which-reit-sectors-best-hedge-inflation/">Which REIT Sectors Best Hedge Inflation</a></li>
+          <li><a href="/learn/who-should-consider-a-721-exchange-investor-profiles/">Who Should Consider a 721 Exchange? Investor Profiles</a></li>
+          <li><a href="/learn/who-should-not-do-a-721-exchange/">Who Should NOT Do a 721 Exchange?</a></li>
+          <li><a href="/learn/why-reits-cut-dividends/">Why REITs Cut Dividends</a></li>
+        </ul></details>
+        <details><summary>Opportunity Zones</summary><ul>
+          <li><a href="/learn/building-a-diversified-qof-portfolio/">Building a Diversified QOF Portfolio</a></li>
+          <li><a href="/learn/can-you-combine-a-1031-exchange-and-an-opportunity-zone/">Can You Combine a 1031 Exchange and an Opportunity Zone?</a></li>
+          <li><a href="/learn/concentrated-stock-to-real-estate/">Concentrated Stock to Real Estate: Using a Stock Gain to Buy Property</a></li>
+          <li><a href="/learn/defer-capital-gains-on-a-business-sale/">Defer Capital Gains on a Business Sale: Your Accurate Options</a></li>
+          <li><a href="/learn/eligible-vs-ineligible-opportunity-zone-investments/">Eligible vs. Ineligible Opportunity Zone Investments</a></li>
+          <li><a href="/learn/how-opportunity-zone-investing-works-step-by-step/">How Opportunity Zone Investing Works Step by Step</a></li>
+          <li><a href="/learn/how-opportunity-zones-reduce-capital-gains-tax/">How Opportunity Zones Reduce Capital Gains Tax</a></li>
+          <li><a href="/learn/how-to-vet-an-opportunity-zone-fund-sponsor/">How to Vet an Opportunity Zone Fund Sponsor</a></li>
+          <li><a href="/learn/inside-basis-vs-outside-basis-in-a-qof/">Inside Basis vs. Outside Basis in a QOF</a></li>
+          <li><a href="/learn/investing-a-partnership-or-k-1-gain-in-a-qof/">Investing a Partnership or K-1 Gain in a QOF</a></li>
+          <li><a href="/learn/investing-crypto-and-stock-gains-in-an-opportunity-zone/">Investing Crypto &amp; Stock Gains in an Opportunity Zone</a></li>
+          <li><a href="/learn/investing-section-1231-gains-in-an-opportunity-zone/">Investing Section 1231 Gains in an Opportunity Zone</a></li>
+          <li><a href="/learn/opportunity-zone-case-study-deferring-a-500k-gain/">Opportunity Zone Case Study: Deferring a $500K Gain</a></li>
+          <li><a href="/learn/opportunity-zone-deadlines-and-program-timeline/">Opportunity Zone Deadlines and Program Timeline</a></li>
+          <li><a href="/learn/opportunity-zone-due-diligence-checklist/">Opportunity Zone Due Diligence Checklist</a></li>
+          <li><a href="/learn/opportunity-zone-exit-strategies/">Opportunity Zone Exit Strategies</a></li>
+          <li><a href="/learn/opportunity-zone-fund-fees-explained/">Opportunity Zone Fund Fees Explained</a></li>
+          <li><a href="/learn/opportunity-zone-fund-liquidity-and-exit-timing/">Opportunity Zone Fund Liquidity &amp; Exit Timing</a></li>
+          <li><a href="/learn/opportunity-zone-vs-1031-exchange/">Opportunity Zone Fund vs. 1031 Exchange: Which Fits Your Gain?</a></li>
+          <li><a href="/learn/opportunity-zone-funds-and-depreciation-benefits/">Opportunity Zone Funds and Depreciation Benefits</a></li>
+          <li><a href="/learn/opportunity-zone-funds-and-real-estate-development/">Opportunity Zone Funds and Real Estate Development</a></li>
+          <li><a href="/learn/opportunity-zone-funds-faq/">Opportunity Zone Funds FAQ</a></li>
+          <li><a href="/learn/opportunity-zone-funds-for-high-income-earners/">Opportunity Zone Funds for High-Income Earners</a></li>
+          <li><a href="/learn/opportunity-zone-funds-for-hospitality/">Opportunity Zone Funds for Hospitality</a></li>
+          <li><a href="/learn/opportunity-zone-funds-for-industrial-and-logistics/">Opportunity Zone Funds for Industrial &amp; Logistics</a></li>
+          <li><a href="/learn/opportunity-zone-funds-for-multifamily-development/">Opportunity Zone Funds for Multifamily Development</a></li>
+          <li><a href="/learn/opportunity-zone-funds-for-self-storage/">Opportunity Zone Funds for Self-Storage</a></li>
+          <li><a href="/learn/opportunity-zone-funds-glossary/">Opportunity Zone Funds Glossary</a></li>
+          <li><a href="/learn/opportunity-zone-funds-in-a-self-directed-ira/">Opportunity Zone Funds in a Self-Directed IRA</a></li>
+          <li><a href="/learn/opportunity-zones-vs-1031/">Opportunity Zone Funds vs. 1031: Choosing Your Deferral</a></li>
+          <li><a href="/learn/opportunity-zone-funds-vs-direct-oz-investment/">Opportunity Zone Funds vs. Direct OZ Investment</a></li>
+          <li><a href="/learn/opportunity-zone-funds-vs-reits/">Opportunity Zone Funds vs. REITs</a></li>
+          <li><a href="/learn/opportunity-zone-gain-recognition-the-2026-deadline-and-beyond/">Opportunity Zone Gain Recognition: The 2026 Deadline &amp; Beyond</a></li>
+          <li><a href="/learn/opportunity-zone-investing-for-stock-and-business-sale-gains/">Opportunity Zone Investing for Stock &amp; Business-Sale Gains</a></li>
+          <li><a href="/learn/opportunity-zone-investing-risks/">Opportunity Zone Investing Risks: What Can Go Wrong</a></li>
+          <li><a href="/learn/opportunity-zone-investment-minimums-and-accreditation/">Opportunity Zone Investment Minimums &amp; Accreditation</a></li>
+          <li><a href="/learn/opportunity-zone-map-changes-and-new-designations/">Opportunity Zone Map Changes &amp; New Designations</a></li>
+          <li><a href="/learn/opportunity-zone-map-how-to-find-qualified-zones/">Opportunity Zone Map: How to Find Qualified Zones</a></li>
+          <li><a href="/learn/opportunity-zone-penalties-for-non-compliance/">Opportunity Zone Penalties for Non-Compliance</a></li>
+          <li><a href="/learn/opportunity-zone-risks-development-delays-and-cost-overruns/">Opportunity Zone Risks: Development Delays &amp; Cost Overruns</a></li>
+          <li><a href="/learn/opportunity-zone-sin-business-exclusions-explained/">Opportunity Zone Sin-Business Exclusions Explained</a></li>
+          <li><a href="/learn/opportunity-zone-tax-benefits-after-2026-what-changed/">Opportunity Zone Tax Benefits After 2026: What Changed</a></li>
+          <li><a href="/learn/opportunity-zone-tax-benefits-deferral-and-10-year-exclusion/">Opportunity Zone Tax Benefits: Deferral &amp; 10-Year Exclusion</a></li>
+          <li><a href="/learn/opportunity-zone-vs-dst-vs-721-full-comparison/">Opportunity Zone vs. DST vs. 721: Full Comparison</a></li>
+          <li><a href="/learn/opportunity-zones-2-0/">Opportunity Zones 2.0: What the One Big Beautiful Bill Changed</a></li>
+          <li><a href="/learn/opportunity-zones-and-estate-planning/">Opportunity Zones and Estate Planning</a></li>
+          <li><a href="/learn/opportunity-zones-at-the-ten-year-mark/">Opportunity Zones at the 10-Year Mark: What Investors Should Know</a></li>
+          <li><a href="/learn/oz-real-estate-vs-operating-business-investments/">OZ Real Estate vs. Operating Business Investments</a></li>
+          <li><a href="/learn/qof-reporting-and-compliance-requirements/">QOF Reporting &amp; Compliance Requirements</a></li>
+          <li><a href="/learn/qof-vs-qozb/">QOF vs. QOZB: Fund vs. Business, Explained</a></li>
+          <li><a href="/learn/opportunity-zone-tax-forms/">Reporting Opportunity Zone Investments: Forms 8997 &amp; 8949</a></li>
+          <li><a href="/learn/self-certifying-a-qualified-opportunity-fund-form-8996/">Self-Certifying a Qualified Opportunity Fund (Form 8996)</a></li>
+          <li><a href="/learn/should-you-start-your-own-qof-diy-vs-fund/">Should You Start Your Own QOF? DIY vs. Fund</a></li>
+          <li><a href="/learn/single-asset-vs-multi-asset-qofs/">Single-Asset vs. Multi-Asset QOFs</a></li>
+          <li><a href="/learn/the-10-year-hold-tax-free-appreciation-explained/">The 10-Year Hold: potentially tax-free Appreciation Explained</a></li>
+          <li><a href="/learn/the-180-day-rule-for-investing-capital-gains-in-a-qof/">The 180-Day Rule for Investing Capital Gains in a QOF</a></li>
+          <li><a href="/learn/opportunity-zone-10-year-rule/">The Opportunity Zone 10-Year Rule: potentially excluding tax on Growth</a></li>
+          <li><a href="/learn/the-opportunity-zone-90-percent-asset-test-deep-dive/">The Opportunity Zone 90% Asset Test Deep Dive</a></li>
+          <li><a href="/learn/the-opportunity-zone-working-capital-safe-harbor/">The Opportunity Zone Working Capital Safe Harbor</a></li>
+          <li><a href="/learn/the-substantial-improvement-requirement-explained/">The Substantial Improvement Requirement Explained</a></li>
+          <li><a href="/learn/what-gains-qualify-for-opportunity-zone-investment/">What Gains Qualify for Opportunity Zone Investment?</a></li>
+          <li><a href="/learn/what-is-a-qualified-opportunity-fund-qof/">What Is a Qualified Opportunity Fund (QOF)?</a></li>
+          <li><a href="/learn/who-should-invest-in-opportunity-zone-funds/">Who Should Invest in Opportunity Zone Funds?</a></li>
+        </ul></details>
+        <details><summary>Mineral &amp; Royalty Interests</summary><ul>
+          <li><a href="/learn/oil-and-gas-1031-exchange-mineral-royalty-owners/">1031 Exchange for Oil &amp; Gas: How Mineral &amp; Royalty Owners Defer Taxes</a></li>
+          <li><a href="/learn/1031-exchange-into-oil-and-gas-step-by-step/">1031 Exchange Into Oil &amp; Gas: A Step-by-Step Guide</a></li>
+          <li><a href="/learn/1031-mineral-rights-exchanges-by-state/">1031 Mineral Rights Exchanges by State: TX, OK, NM, ND &amp; More</a></li>
+          <li><a href="/learn/45-day-180-day-deadlines-oil-gas-1031/">45-Day and 180-Day Deadlines for Oil &amp; Gas 1031 Exchanges</a></li>
+          <li><a href="/learn/7-mistakes-oil-gas-1031-exchange/">7 Mistakes That Blow Up an Oil &amp; Gas 1031 Exchange</a></li>
+          <li><a href="/learn/adding-mineral-royalties-to-a-replacement-mix/">Adding Mineral Royalties to a 1031 Replacement Mix</a></li>
+          <li><a href="/learn/are-oil-gas-royalties-eligible-1031-exchange/">Are Oil &amp; Gas Royalties Eligible for a 1031 Exchange?</a></li>
+          <li><a href="/learn/diversified-1031-portfolio-minerals-plus-dsts/">Building a Diversified 1031 Portfolio: Minerals + DSTs Together</a></li>
+          <li><a href="/learn/oil-gas-losses-w2-income/">Can Oil &amp; Gas Losses Offset W-2 Income?</a></li>
+          <li><a href="/learn/can-you-1031-exchange-mineral-rights/">Can You 1031 Exchange Mineral Rights? Eligibility Rules Explained</a></li>
+          <li><a href="/learn/capital-gains-tax-selling-mineral-rights-defer/">Capital Gains Tax on Selling Mineral Rights — and How to Defer It</a></li>
+          <li><a href="/learn/depletion-basis-recapture-mineral-rights-1031/">Depletion, Basis &amp; Recapture in a Mineral Rights 1031 Exchange</a></li>
+          <li><a href="/learn/do-production-payments-qualify-1031-exchange/">Do Production Payments Qualify for a 1031 Exchange?</a></li>
+          <li><a href="/learn/exchange-mineral-rights-for-real-estate/">Exchanging Mineral Rights for Real Estate (and Real Estate for…</a></li>
+          <li><a href="/learn/how-to-sell-mineral-rights-defer-capital-gains-1031/">How to Sell Mineral Rights and Defer Capital Gains With a 1031…</a></li>
+          <li><a href="/learn/how-to-value-mineral-rights-1031-exchange/">How to Value Mineral Rights for a 1031 Exchange</a></li>
+          <li><a href="/learn/oil-gas-sponsor-due-diligence/">How to Vet an Oil &amp; Gas Drilling Program Sponsor</a></li>
+          <li><a href="/learn/inherited-mineral-rights-step-up-basis-vs-1031/">Inherited Mineral Rights: Step-Up Basis vs. 1031 Exchange</a></li>
+          <li><a href="/learn/intangible-drilling-costs/">Intangible Drilling Costs (IDCs): The First-Year Deduction</a></li>
+          <li><a href="/learn/irs-rulings-tax-court-oil-gas-like-kind-exchanges/">IRS Rulings &amp; Tax Court Cases on Oil &amp; Gas Like-Kind Exchanges</a></li>
+          <li><a href="/learn/mineral-rights-vs-royalty-interests-1031/">Mineral Rights vs. Royalty Interests in a 1031 Exchange</a></li>
+          <li><a href="/learn/net-profits-interest-npi-1031-exchange/">Net Profits Interest (NPI): Does It Qualify for 1031?</a></li>
+          <li><a href="/learn/oil-and-gas-1031-exchange-faq/">Oil &amp; Gas 1031 Exchange FAQ: 25 Questions Answered</a></li>
+          <li><a href="/learn/oil-and-gas-dst-royalty-pool-replacement-property/">Oil &amp; Gas DSTs: Royalty-Pool Replacement Property for Your 1031</a></li>
+          <li><a href="/learn/oil-gas-investment-risks/">Oil &amp; Gas Investment Risks Every Investor Should Know</a></li>
+          <li><a href="/learn/overriding-royalty-interest-orri-1031-exchange/">Overriding Royalty Interest (ORRI) and 1031 Exchanges</a></li>
+          <li><a href="/learn/oil-gas-depletion-allowance/">Percentage vs. Cost Depletion: The Depletion Allowance</a></li>
+          <li><a href="/learn/qualified-intermediary-mineral-rights-exchange/">Qualified Intermediary Requirements for Mineral Rights Exchanges</a></li>
+          <li><a href="/learn/retiring-from-oil-and-gas-1031-into-passive-real-estate/">Retiring From Oil &amp; Gas: 1031 Into Passive Real Estate</a></li>
+          <li><a href="/learn/reverse-1031-exchange-mineral-rights/">Reverse 1031 Exchange for Mineral Rights: When You Buy First</a></li>
+          <li><a href="/learn/royalty-income-vs-dst-distributions/">Royalty Income vs. DST Distributions: Your Cash Flow After the…</a></li>
+          <li><a href="/learn/term-vs-perpetual-royalties-1031-like-kind/">Term vs. Perpetual Royalties: The 1031 Like-Kind Distinction</a></li>
+          <li><a href="/learn/perpetual-interest-rule-oil-gas-real-property/">The 'Perpetual Interest' Rule: When Oil &amp; Gas Qualifies as Real…</a></li>
+          <li><a href="/learn/mineral-royalty-owner-1031-exchange-checklist/">The Mineral &amp; Royalty Owner's 1031 Exchange Checklist</a></li>
+          <li><a href="/learn/mineral-rights-as-replacement-property-1031/">Using Mineral Rights as Replacement Property in a 1031 Exchange</a></li>
+          <li><a href="/learn/why-mineral-royalties-yield-more/">Why Mineral Royalties Yield More — and What You're Taking On</a></li>
+          <li><a href="/learn/working-interest-vs-royalty-interest/">Working Interest vs. Royalty Interest</a></li>
+        </ul></details>
+        <details open><summary>Taxes &amp; Planning</summary><ul>
+          <li><a class="active" href="/learn/how-to-avoid-capital-gains-tax-investment-property/">7 Legal Ways to Avoid Capital Gains Tax on Investment Property</a></li>
+          <li><a href="/learn/cost-segregation/">Cost Segregation: Accelerating Depreciation</a></li>
+          <li><a href="/learn/depreciation-recapture-real-estate/">Depreciation Recapture Explained for Real Estate Investors</a></li>
+          <li><a href="/learn/capital-gains-tax-on-real-estate/">How Capital Gains Tax on Real Estate Works</a></li>
+          <li><a href="/learn/installment-sale-real-estate/">Installment Sales of Real Estate (Section 453)</a></li>
+          <li><a href="/learn/real-estate-tax-forms/">Real Estate Tax Forms, Explained</a></li>
+          <li><a href="/learn/section-1033-involuntary-conversion/">Section 1033 Involuntary Conversions</a></li>
+          <li><a href="/learn/net-investment-income-tax/">The 3.8% Net Investment Income Tax on Real Estate</a></li>
+          <li><a href="/learn/accredited-investor-requirements/">What Is an Accredited Investor? 2026 Requirements</a></li>
+        </ul></details>
+<!-- /L:FOLDERS -->
+      </nav>
+      <article class="learn-article">
+        <!-- L:ARTICLE -->
+
+        <div class="kicker">Capital Gains</div>
+        <h1>7 Legal Ways to Avoid Capital Gains Tax on Investment Property</h1>
+        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated June 2026 &middot; 17 min read</div>
+        <p>You can't make capital gains tax disappear by wishing — but the tax code offers several legitimate ways to defer or even eliminate it. Here are seven, and when each fits.</p>
+        <p>Sell an investment property at a profit and the IRS wants a cut of the gain, often a large one. Between federal capital gains tax, depreciation recapture, the net investment income tax, and a second bite from most states, a clean sale can hand over a third of your profit before you reinvest a dollar. Real estate is unusual, though, in how many legal routes the tax code gives you to defer that bill, shrink it, or in a few cases erase it. This article walks through seven of them, what each actually does, who it fits, and the catch that comes with it. It is educational, not advice. Run the specifics past your own CPA and attorney before you act.</p>
+        <div class="takeaways"><strong>Key takeaways</strong><ul><li>Most of these tools defer the tax. A couple can reduce it, and two can eliminate the gain on future growth or at death.</li><li>The 1031 exchange is the workhorse for staying in real estate, and the DST is its passive version for investors done with toilets and tenants.</li><li>Opportunity Zone funds take any capital gain, defer it, and can wipe out tax on the fund's appreciation after a ten-year hold.</li><li>An installment sale spreads the gain over years, but depreciation recapture still gets taxed in the year of sale.</li><li>The quiet endgame is the step-up at death : hold, swap, and let your heirs inherit at fair market value with the gain erased.</li><li>None of these is a loophole. They are deliberate provisions with deadlines, dollar limits, and trade-offs that decide which one fits.</li></ul></div>
+        <h2>Why the gain gets taxed so hard</h2>
+        <p>Before the strategies, the bill they target. When you sell investment real estate held more than a year, the profit is a long-term capital gain, taxed federally at 0%, 15%, or 20% depending on your taxable income. In 2026 the 0% rate runs up to roughly $49,450 of taxable income for single filers and about $98,900 for married couples filing jointly. The 20% rate kicks in above roughly $545,500 single and $613,700 joint. Most sellers of a meaningful property land in the 15% band, but a large gain can push part of it into 20% in the year you sell.</p>
+        <p>That headline rate is rarely the whole story. If you took depreciation deductions while you owned the property, and you almost certainly did, the IRS recaptures them when you sell. Unrecaptured Section 1250 gain is taxed at a rate up to 25% , higher than the long-term capital gains rate. On top of that, the net investment income tax adds 3.8% once your modified adjusted gross income clears $200,000 (single) or $250,000 (joint). Then most states tax the gain again , anywhere from a few percent to north of ten in the highest-tax states. Stack federal rate, recapture, NIIT, and state, and a sale can cost a quarter to a third of the profit. That is the number every strategy below is trying to defer, reduce, or eliminate. For the mechanics underneath, see how capital gains tax on real estate works and depreciation recapture .</p>
+        <h2>Defer, reduce, or eliminate</h2>
+        <p>It helps to sort these tools by what they actually do, because investors often lump them together and pick the wrong one. Most defer . They postpone the tax, sometimes for decades, sometimes forever, but the gain is still on the books waiting. A couple reduce , smoothing the gain into lower brackets or across more years. Two can eliminate outright: the Opportunity Zone fund on its own future growth after ten years, and the step-up in basis on everything at death. None of these is a trick. Each is a deliberate provision Congress wrote to encourage reinvestment, charitable giving, or long-term holding. As you read, hold your own goal in mind. Do you want to keep owning real estate, get out of management, diversify, draw income, or pass wealth to your kids? That goal, more than the size of the tax bill, should pick the tool.</p>
+        <h2>1. The 1031 exchange</h2>
+        <p>The cornerstone. A 1031 exchange lets you sell investment real estate and defer the entire tax, capital gains, depreciation recapture, and the NIIT, by reinvesting the proceeds into like-kind replacement property. &quot;Like-kind&quot; is broad for real estate: you can swap an apartment building for raw land, a rental house for a retail strip, a duplex for a share of a warehouse. The gain does not vanish. It carries over into the basis of the new property and rides along until you eventually sell without exchanging, or until you die holding it.</p>
+        <p>The rules are strict and the clock is unforgiving. From the day you close the sale, you have 45 days to identify replacement property in writing and 180 days to close on it. Both run at the same time, so the 180 is not a fresh window after the 45. The proceeds must pass through a qualified intermediary , never your own bank account, or the exchange is blown. To defer the full tax you generally need to buy equal or up in value and replace the debt you paid off, or bring in fresh cash to cover the difference. Any cash you pocket, or debt you fail to replace, is &quot;boot&quot; and gets taxed. The 1031 suits anyone who wants to stay invested in real estate and keep compounding pre-tax. Its limits are those deadlines and the discipline they demand.</p>
+        <h2>2. Delaware Statutory Trust (a passive 1031)</h2>
+        <p>A Delaware Statutory Trust is a way to complete a 1031 exchange without becoming a landlord again. The IRS recognizes a properly structured DST interest as eligible like-kind replacement property, so you defer the same capital gains, recapture, and NIIT you would in a direct exchange. The difference is what you own: a fractional, professionally managed beneficial interest in institutional real estate, often a large multifamily, industrial, or net-lease asset, with a sponsor handling every operating decision. No tenants, no repairs, no 3 a.m. phone calls.</p>
+        <p>Two practical advantages stand out. First, a DST can absorb an exact dollar amount , which solves the common problem of leftover 1031 equity that a single direct purchase cannot soak up to the penny. Second, the 45-day identification problem nearly disappears, because pre-packaged DST offerings are available to identify and close quickly. On reporting, a DST is structured as a grantor trust, so your share of income shows up on a Form 1099 and an accompanying grantor letter, not a K-1 . That keeps your tax filing closer to owning property directly than to being a partner in a partnership. The trade-offs are real: these are illiquid, speculative securities sold only to accredited investors through a private placement memorandum, you give up control to the sponsor, and you can lose principal. A DST fits an investor who wants the deferral of a 1031 but is finished with active management.</p>
+        <h2>3. Opportunity Zone fund</h2>
+        <p>An Opportunity Zone fund is the only tool here that accepts any capital gain, not just real estate. Sell a building, a stock portfolio, a business, or a crypto position, and you can roll the gain , not the full proceeds, into a qualified opportunity fund within 180 days and defer it. This is a key difference from a 1031, where the whole sale price has to be reinvested. With an OZ fund you only need to move the taxable gain, keeping your original basis free to use elsewhere. The bigger prize comes from the hold: stay invested in the fund for at least ten years and the appreciation inside the fund can be permanently potentially tax-free when you exit.</p>
+        <p>The program changed meaningfully under the 2025 tax law, so the timing matters in 2026. The Opportunity Zone program was made permanent starting January 1, 2027 , with a rolling five-year deferral and a single 10% basis step-up for gains invested under the new rules. Investments made under the original program still recognize their deferred gain on December 31, 2026 , the longstanding sunset date, so an investor sitting on an older OZ position should plan for that recognition event now. The ten-year elimination benefit on fund appreciation survives in both versions. OZ funds fit an investor with a large gain of any type, a genuine decade-long horizon, and tolerance for development and lease-up risk. They are private placements with all the illiquidity and principal risk that implies.</p>
+        <h2>4. Installment sale (Section 453)</h2>
+        <p>An installment sale under Section 453 spreads your gain, and the tax on it, across the years you actually collect payments instead of recognizing it all the year you sell. You act as the lender, the buyer pays you over time, and you report a slice of the gain as each payment arrives. The appeal is bracket management. A single large gain can shove part of your income into the 20% capital gains band, trigger the 3.8% NIIT, and balloon your state bill all in one year. Stretch that same gain across five or ten years and you may keep more of it in the 15% band, stay under the NIIT thresholds, and soften the state hit.</p>
+        <p>Two cautions matter. First, an installment sale does not defer depreciation recapture . Section 1250 recapture is generally taxed in full in the year of sale , even though you have not collected most of the money yet, which can produce a tax bill larger than your first year's cash. Second, you are now the bank. If the buyer defaults, you are left chasing a property you no longer fully control. An installment sale fits a seller comfortable carrying paper on a buyer they trust, especially when spreading the gain produces a real bracket benefit. Compared with the exchanges above, it is simpler and more limited, but it can pair with them, financing part of a sale while exchanging the rest.</p>
+        <h2>5. Section 1033 involuntary conversion</h2>
+        <p>Sometimes you do not choose to sell. If your property is taken by eminent domain , condemned, or destroyed by fire, flood, or storm, Section 1033 lets you defer the gain on the insurance or condemnation proceeds by reinvesting in similar property. It is the involuntary cousin of the 1031, and in several ways it is friendlier. The replacement window is longer , typically two years from the end of the tax year in which you realize the gain, and three years for real property taken by condemnation, versus the 1031's tight 180 days. You also are not required to use a qualified intermediary, since you can receive the proceeds directly and still reinvest in time.</p>
+        <p>The &quot;similar use&quot; standard for a 1033 is generally a bit stricter than the broad like-kind test for a 1031, so the replacement should serve a comparable function to what you lost. You only need to reinvest the proceeds , and any amount you keep is taxable gain. This is not a strategy you plan for, it is one you reach for when the government or a disaster forces a sale you did not want. When that happens, 1033 keeps a forced event from becoming a forced tax bill.</p>
+        <h2>6. Section 121 primary-residence exclusion</h2>
+        <p>This one is for a home, not a rental , but it belongs on the list because so many investors eventually live in, or move out of, a property they also rented. Section 121 lets you exclude up to $250,000 of gain if single, or $500,000 if married filing jointly , on the sale of a home you owned and used as your main residence for at least two of the last five years . The two years do not have to be continuous, and the exclusion is not once-in-a-lifetime, you can use it again every two years on a qualifying home. For a couple sitting on $500,000 of appreciation in a long-held primary home, that is a clean, complete elimination, no exchange or reinvestment required.</p>
+        <p>The investor angle is the nuance. If you convert a rental into your residence and later sell, you do not get to exclude all the gain. The exclusion is reduced for periods of &quot;nonqualified use,&quot; the years the property was a rental rather than your home, so a portion of the gain stays taxable in proportion to that rental time. And any depreciation you claimed while it was a rental is still recaptured and taxed, the exclusion never covers that. The mirror move also exists: an investor who has a personal home with a large gain can in some cases combine residence and investment rules over time. The interplay between 1031s and a residence is its own topic, covered in 1031 exchanges and a primary residence . Section 121 fits anyone selling a true primary home, and it can partly shelter a converted rental, but never the recapture.</p>
+        <h2>7. Hold and step up at death</h2>
+        <p>The most complete elimination of all is also the simplest: do not sell. If you hold appreciated real estate, or DST and OP-unit interests, until you die, your heirs generally receive a stepped-up basis equal to the property's fair market value on the date of death. The built-in capital gain and all that deferred depreciation recapture are erased . Heirs who sell shortly after inheriting owe little or no capital gains tax, because their basis resets to current value.</p>
+        <p>Pair this with serial 1031 exchanges during life and you get the strategy practitioners call &quot;swap till you drop.&quot; You exchange from property to property for decades, never paying the deferred tax, then die holding the final property. The step-up wipes the slate clean and your heirs start fresh. Decades of compounding gain pass to the next generation untaxed at the capital gains level. This sits inside broader estate planning for real estate , and it is not a free lunch, large estates can face estate tax, and the rules around basis at death do get debated in Congress, so it deserves real planning. But for an investor focused on legacy who does not need to liquidate, holding to the step-up is the quiet endgame behind much long-term real estate tax planning.</p>
+        <h2>A bonus: the charitable remainder trust</h2>
+        <p>One more tool earns a mention even though it keeps the headline at seven. A charitable remainder trust (CRT) lets you contribute appreciated property to an irrevocable trust, which can then sell it without immediate capital gains tax , pay you an income stream for life or a term of years, and leave whatever remains to a charity you name. You get an upfront income-tax deduction for the present value of the eventual gift, an income stream, and avoidance of the immediate gain, in exchange for giving the remainder away. It fits charitably inclined investors who want income and tax efficiency in the same move. Because a CRT is irrevocable, it is a serious commitment that calls for an attorney and a CPA, not a checklist.</p>
+        <h2>The seven strategies side by side</h2>
+        <p>Each tool answers a different question. The table below lines them up so you can match your situation to the right one before you read the deeper guides. For a fuller head-to-head on the deferral options in particular, see tax deferral strategies compared .</p>
+        <h2>Strategy What it does Best for Key catch</h2>
+        <p>1031 exchange Defers all gain, recapture, and NIIT by swapping into like-kind real estate Investors who want to stay in real estate and keep compounding pre-tax Strict 45/180-day deadlines; must buy equal-or-up and replace debt</p>
+        <p>DST (Delaware Statutory Trust) Same 1031 deferral, passively, via a fractional interest in institutional property Investors done with active management who still want deferral Illiquid, accredited-only security; no control; can lose principal</p>
+        <p>Opportunity Zone fund Defers any capital gain; can eliminate tax on fund appreciation after 10 years Large gain of any kind, 10-year horizon, development-risk tolerance 2026 sunset on original-program gains; illiquid private placement</p>
+        <p>Installment sale (§453) Spreads the gain and tax over the years you collect payments Sellers willing to finance the buyer and benefit from bracket smoothing Depreciation recapture is taxed in full in the year of sale</p>
+        <p>§1033 involuntary conversion Defers gain when property is condemned or destroyed, by reinvesting in similar property Owners hit by eminent domain, condemnation, or casualty Only triggered by a forced event; stricter &quot;similar use&quot; test</p>
+        <p>Step-up in basis at death Erases the built-in gain and recapture; heirs inherit at fair market value Legacy-focused investors who do not need to liquidate Requires holding until death; large estates may face estate tax</p>
+        <p>§121 primary-residence exclusion Excludes $250k single / $500k joint of gain on a qualifying home Owners selling a true primary residence (or a converted rental) Residence, not rental; reduced for rental years; recapture still taxed</p>
+        <p>Illustrative summary. Figures are general 2026 references, not advice. Confirm current rules with your own CPA and attorney.</p>
+        <h2>How to choose among them</h2>
+        <p>Start with what you want, not with the tax. Want to keep owning real estate and keep your money working pre-tax? Run a 1031 . Want that same deferral but you are finished managing property? A DST . Sitting on a big gain of any kind, real estate or not, and willing to lock up capital for a decade in exchange for potentially tax-free growth? An Opportunity Zone fund , with one eye on the 2026 and 2027 timing. Selling to a buyer you trust and worried a single-year gain will spike your brackets? An installment sale , remembering recapture comes due up front. Property being taken or destroyed against your will? Section 1033 . Selling the home you actually live in? The Section 121 exclusion. Focused on legacy and able to hold for good? Let the step-up at death do the work, ideally after a lifetime of 1031s.</p>
+        <p>Several of these combine. You can 1031 the proceeds from a rental while placing a separate stock gain in an OZ fund. You can 1031 into a DST and later move into a REIT. You can finance part of a sale on installment and exchange the rest. The one universal rule is that these are fact-specific strategies with real money and real deadlines riding on the details. The right move depends on your basis, your debt, your brackets, your state, your timeline, and your heirs. Read the deeper guides, then choose with a CPA and an attorney, not from a summary table alone.</p>
+        <h2 class="faq-h">Frequently asked questions</h2>
+        <details class="faq"><summary>What is the best way to avoid capital gains tax on investment property?</summary><p>There is no single best way, it depends on your goal. A 1031 exchange or its passive version, a DST, is the workhorse for deferring real-estate gain if you want to stay invested. An Opportunity Zone fund can eliminate tax on future growth after ten years. Holding until death gives heirs a stepped-up basis that can erase the gain entirely. Match the tool to whether you want to keep owning property, get out of management, diversify, or pass wealth on.</p></details>
+        <details class="faq"><summary>Can I avoid capital gains tax entirely, not just defer it?</summary><p>Sometimes. An Opportunity Zone fund can eliminate tax on the fund's own appreciation after a ten-year hold, and holding property until death gives heirs a stepped-up basis that can wipe out the deferred gain and depreciation recapture. The Section 121 exclusion erases up to $250,000 single or $500,000 joint of gain on a primary home. Most other strategies defer the tax rather than eliminate it.</p></details>
+        <details class="faq"><summary>Does an installment sale defer depreciation recapture too?</summary><p>No. An installment sale spreads the capital gain over the years you collect payments, but Section 1250 depreciation recapture is generally taxed in full in the year of sale. That can leave you with a recapture bill larger than the cash you receive in year one, so plan for it before structuring the deal.</p></details>
+        <details class="faq"><summary>Can I use the home-sale exclusion on a rental property?</summary><p>Only partly, and only after you convert it to your primary residence and live there for at least two of the five years before selling. The exclusion is reduced for the years the property was a rental (&quot;nonqualified use&quot;), and any depreciation you claimed while renting it is still recaptured and taxed. The Section 121 exclusion is built for a home, not an investment property.</p></details>
+        <details class="faq"><summary>What happens to Opportunity Zone investments in 2026?</summary><p>Gains invested under the original program recognize their deferred tax on December 31, 2026, the longstanding sunset date, so plan for that recognition now. Separately, the program was made permanent starting January 1, 2027, with a rolling five-year deferral and a single 10% basis step-up for new investments. The ten-year benefit that can eliminate tax on fund appreciation survives in both versions.</p></details>
+        <details class="faq"><summary>Is a DST different from a 1031 exchange?</summary><p>A DST is a way to do a 1031 exchange passively. The IRS recognizes a properly structured DST interest as like-kind replacement property, so you defer the same capital gains, recapture, and NIIT while owning a managed fractional interest instead of buying and running a property yourself. It also reports on a 1099 and grantor letter rather than a K-1.</p></details>
+        <details class="faq"><summary>How much does capital gains tax actually cost on a sale?</summary><p>It stacks up. Long-term federal capital gains run 0%, 15%, or 20% depending on income; unrecaptured Section 1250 gain is taxed up to 25%; the net investment income tax adds 3.8% over $200,000 single or $250,000 joint; and most states tax the gain again. Combined, a sale can cost roughly a quarter to a third of the profit, which is what every strategy here is designed to defer, reduce, or eliminate.</p></details>
+        <details class="faq"><summary>Can these strategies be combined?</summary><p>Yes, and they often are. You can 1031 a real-estate gain while placing a separate stock gain in an Opportunity Zone fund, 1031 into a DST and later move into a REIT, or finance part of a sale on installment while exchanging the rest. Combinations should be designed with your CPA and attorney, because the deadlines and dollar requirements interact.</p></details>
+        <div class="article-footer-nav"><a href="/learn/45-day-180-day-deadlines-oil-gas-1031/">&larr; 45-Day and 180-Day Deadlines for Oil &amp; Gas 1031 Exchanges</a><a href="/learn/7-mistakes-oil-gas-1031-exchange/">7 Mistakes That Blow Up an Oil &amp; Gas 1031 Exchange &rarr;</a></div>
+        
+<!-- /L:ARTICLE -->
+      </article>
+    </div>
+  </main>
+  <!-- PARTIAL:footer -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>Securities are offered through Aurora Securities, Inc., member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments, LLC is independent of Aurora Securities, Inc. and is not a registered broker-dealer or investment adviser. <a href="https://brokercheck.finra.org/firm/summary/46147" target="_blank" rel="noopener">Check Aurora Securities, Inc. on FINRA BrokerCheck</a>.</p>
+        <p>This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security. Offerings are made only by a sponsor&rsquo;s private placement memorandum, are available solely to accredited investors, and are subject to suitability requirements. Real estate investments involve substantial risk, including illiquidity, potential loss of principal, and market and interest-rate risk. DST interests are long-term investments and generally cannot be sold on demand. Past performance, including full-cycle results shown on this page, is not a guarantee of future results.</p>
+        <p>Baker 1031 Investments is not a tax or legal advisor. Prospective investors should consult their own CPA and attorney regarding their individual circumstances before investing.</p>
+        <p style="font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">Not FDIC Insured &nbsp;&middot;&nbsp; Not Bank Guaranteed &nbsp;&middot;&nbsp; Not a Deposit &nbsp;&middot;&nbsp; May Lose Value</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html">Employee Login</a></span>
+      </div>
+    </div>
+      <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
+</footer>
+  <!-- /PARTIAL:footer -->
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>
