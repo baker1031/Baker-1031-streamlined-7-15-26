@@ -13,7 +13,7 @@ const t = (s) => String(s == null ? "" : s)
 const attr = (s) => t(s).replace(/"/g, "&quot;");
 
 const rawTpl = readFileSync(join(ROOT, "audiences", "audience-template.html"), "utf8");
-function shell({ title, desc, canonical, jsonld = "", main, gate = "public" }) {
+function shell({ title, desc, canonical, jsonld = "", main, gate = "soft" }) {
   let h = rawTpl;
   h = h.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${title}</title>`);
   h = h.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${attr(desc)}">`);
@@ -117,7 +117,7 @@ for (const [slug, file, name, blurb] of TYPES) {
     : `        <p>${t(l)}</p>`).join("\n");
 
   const jsonld = `<script type="application/ld+json">${JSON.stringify([
-    { "@context": "https://schema.org", "@type": "Article", headline: `${name} for 1031 Exchange & DST Investors`, description: metaDesc, author: { "@type": "Person", name: 'Gerald F. "Jerry" Baker, III' }, publisher: { "@type": "Organization", name: "Baker 1031 Investments" }, url: canonical, inLanguage: "en-US", dateModified: "2026-07-01" },
+    { "@context": "https://schema.org", "@type": "Article", headline: `${name} for 1031 Exchange & DST Investors`, description: metaDesc, author: { "@type": "Person", name: 'Gerald F. "Jerry" Baker, III' }, publisher: { "@type": "Organization", name: "Baker 1031 Investments" }, url: canonical, inLanguage: "en-US", dateModified: "2026-07-01", isAccessibleForFree: false, hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" } },
     { "@context": "https://schema.org", "@type": "BreadcrumbList", itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: `${SITE}/` },
       { "@type": "ListItem", position: 2, name: "Property Types", item: `${SITE}/property-types.html` },

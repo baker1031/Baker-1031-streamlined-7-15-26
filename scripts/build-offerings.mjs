@@ -1162,7 +1162,7 @@ ${rows}
         inDefinedTermSet: { "@type": "DefinedTermSet", "@id": `${SITE}/glossary#set`, name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary` },
         url: canonical, ...(t.source && t.source.url ? { sameAs: t.source.url } : {}),
       },
-      { "@type": "WebPage", url: canonical, name: `${t.term} — Glossary`, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US" },
+      { "@type": "WebPage", url: canonical, name: `${t.term} — Glossary`, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US", isAccessibleForFree: false, hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" } },
       breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Glossary", `${SITE}/glossary`], [t.term, null]]),
     ]);
 
@@ -1250,7 +1250,7 @@ ${rows}
       ? { "@type": "City", name: placeName, ...(j.stateOf ? { containedInPlace: { "@type": "AdministrativeArea", name: j.stateOf } } : {}) }
       : { "@type": "AdministrativeArea", name: placeName, containedInPlace: { "@type": "Country", name: "United States" } };
     const jsonld = graphLd([
-      { "@type": "WebPage", url: canonical, name: `1031 Exchange & DST Investing in ${placeName}`, description: j.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, about: place, dateModified: "2026-07-01", inLanguage: "en-US" },
+      { "@type": "WebPage", url: canonical, name: `1031 Exchange & DST Investing in ${placeName}`, description: j.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, about: place, dateModified: "2026-07-01", inLanguage: "en-US", isAccessibleForFree: false, hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" } },
       (j.faq || []).length ? { "@type": "FAQPage", mainEntity: j.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
       breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Markets", `${SITE}/markets`], [placeName, null]]),
     ]);
@@ -1322,7 +1322,7 @@ ${rows}
     const helpLis = (a.helpPoints || []).map((p) => `          <li>${p}</li>`).join("\n");
     const faqHtml = (a.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
     const jsonld = graphLd([
-      { "@type": "WebPage", url: canonical, name: a.title || a.name, description: a.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, audience: { "@type": "Audience", audienceType: a.name }, dateModified: "2026-07-01", inLanguage: "en-US" },
+      { "@type": "WebPage", url: canonical, name: a.title || a.name, description: a.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, audience: { "@type": "Audience", audienceType: a.name }, dateModified: "2026-07-01", inLanguage: "en-US", isAccessibleForFree: false, hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" } },
       (a.faq || []).length ? { "@type": "FAQPage", mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
       breadcrumbLd([["Home", `${SITE}/`], ["Who We Help", `${SITE}/audiences`], [a.name, null]]),
     ]);
@@ -1399,7 +1399,7 @@ ${rows}
     const notesLis = (c.notes || []).map((n) => `          <li>${n}</li>`).join("\n");
     const faqHtml = (c.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
     const jsonld = graphLd([
-      { "@type": "WebApplication", name: c.name, description: c.metaDesc || c.lead, url: canonical, applicationCategory: "FinanceApplication", operatingSystem: "Any", isPartOf: WEBSITE_REF, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: PUBLISHER },
+      { "@type": "WebApplication", name: c.name, description: c.metaDesc || c.lead, url: canonical, applicationCategory: "FinanceApplication", operatingSystem: "Any", isPartOf: WEBSITE_REF, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: PUBLISHER, isAccessibleForFree: false, hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" } },
       (c.faq || []).length ? { "@type": "FAQPage", mainEntity: c.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
       breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Calculators", `${SITE}/calculators`], [c.name, null]]),
     ]);
