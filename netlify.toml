@@ -2,6 +2,16 @@
   publish = "dist"
   command = "node scripts/build-aux-pages.mjs . && node scripts/build-property-types.mjs . && node scripts/build-offerings.mjs && node scripts/build-search-index.mjs"
 
+[build.environment]
+  # GRANOLA_OWNER_EMAIL is Jerry's public email (jerry@baker1031.com). The
+  # Granola poller uses it to skip Jerry as a meeting attendee. That address
+  # legitimately appears throughout the public site (bio, proposal-print.js,
+  # article data), so Netlify's secret scanner flags it as a "leaked secret"
+  # and fails the build. It is NOT a secret — exclude only this key from the
+  # scan. The real secret (GRANOLA_API_KEY) is still scanned and never appears
+  # in build output.
+  SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL"
+
 # ---------- Caching ----------
 [[headers]]
   for = "/assets/*"
