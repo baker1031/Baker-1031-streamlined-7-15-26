@@ -86,6 +86,14 @@ function applyAuthedNav(name) {
   if (boxLogin) boxLogin.style.display = "none";
   const logoutBtn = box.querySelector(".logout:not(#investor-login)");
   if (logoutBtn) logoutBtn.style.display = "";
+  // Homepage only: swap the marketing nav for the portal nav
+  if (box.id === "home-account") {
+    box.classList.add("authed");
+    const pnav = document.querySelector(".primary-nav");
+    if (pnav) pnav.style.display = "none";
+    const ubar = document.querySelector(".utility-bar");
+    if (ubar) ubar.style.display = "none";
+  }
 }
 function applyLoggedOutNav() {
   const box = document.querySelector(".account-box");
@@ -93,6 +101,14 @@ function applyLoggedOutNav() {
   box.querySelectorAll(".portal-link, .nav-sep, .welcome, .logout:not(#investor-login)").forEach(function (el) { el.style.display = "none"; });
   const boxLogin = box.querySelector("#investor-login");
   if (boxLogin) boxLogin.style.display = "";
+  // Homepage only: restore the marketing nav
+  if (box.id === "home-account") {
+    box.classList.remove("authed", "open");
+    const pnav = document.querySelector(".primary-nav");
+    if (pnav) pnav.style.display = "";
+    const ubar = document.querySelector(".utility-bar");
+    if (ubar) ubar.style.display = "";
+  }
 }
 const cachedName = sessionStorage.getItem("b1031-name");
 if (cachedName) applyAuthedNav(cachedName);

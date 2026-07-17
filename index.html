@@ -121,6 +121,37 @@
     margin-top: 2px;
   }
 
+  /* ---------- Logged-in (portal) nav — shown on the homepage when signed in ---------- */
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  #home-account { display: none; }              /* hidden until auth.js reveals it */
+  #home-account.authed { display: flex; }
+  .account-box .portal-link { color: var(--ink); font-weight: 600; font-size: 0.9rem; }
+  .account-box .portal-link:hover { color: var(--navy); }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem; font-weight: 600; color: var(--ink-soft);
+    border: 1px solid #cfd4dd; border-radius: 6px; padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
+
+  /* Home dropdown (links to the marketing-page anchors) */
+  .nav-home { position: relative; display: inline-flex; align-items: center; gap: 0.1rem; }
+  .nav-home > .nav-home-link { color: var(--ink); font-weight: 600; font-size: 0.9rem; }
+  .nav-home > .nav-home-link:hover { color: var(--navy); }
+  .nav-home-toggle { background: none; border: none; cursor: pointer; padding: 0.2rem; color: var(--ink-soft); display: inline-flex; align-items: center; }
+  .nav-home-toggle svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.2; fill: none; transition: transform 0.15s; }
+  .nav-home-menu {
+    position: absolute; top: 100%; left: 0; margin-top: 0.4rem; min-width: 12rem;
+    background: #fff; border: 1px solid var(--hairline); border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); padding: 0.4rem;
+    display: none; flex-direction: column; z-index: 130;
+  }
+  .nav-home:hover .nav-home-menu, .nav-home.open .nav-home-menu { display: flex; }
+  .nav-home:hover .nav-home-toggle svg, .nav-home.open .nav-home-toggle svg { transform: rotate(180deg); }
+  .nav-home-menu a { font-size: 0.88rem; color: var(--ink-soft); padding: 0.45rem 0.6rem; border-radius: 6px; }
+  .nav-home-menu a:hover { background: #f3f5f8; color: var(--navy); }
+
   /* Hamburger (shown when the nav would get cramped) */
   .menu-btn {
     display: none;
@@ -164,6 +195,22 @@
     }
     .primary-nav li + li { border-top: 1px solid var(--hairline); }
     .primary-nav a { display: block; padding: 0.9rem 0; font-size: 1.05rem; }
+
+    /* Logged-in nav collapses into a menu-btn dropdown on mobile */
+    #home-account.authed {
+      display: none; position: absolute; top: 100%; right: 1rem;
+      background: #fff; border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 1rem 1.25rem; flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 120;
+    }
+    #home-account.authed.open { display: flex; }
+    #home-account .nav-sep { width: 100%; height: 1px; }
+    .nav-home { flex-direction: column; align-items: flex-start; width: 100%; gap: 0.3rem; }
+    .nav-home-toggle { display: none; }
+    #home-account .nav-home-menu {
+      position: static; display: flex; margin-top: 0.2rem;
+      box-shadow: none; border: none; padding: 0 0 0 0.6rem; min-width: 0;
+    }
   }
 
   /* ---------- Hero: navy-overlay video (constrained to content width) ---------- */
@@ -1158,6 +1205,28 @@
           <li><a href="#about">About</a></li>
         </ul>
       </nav>
+
+      <!-- Logged-in (portal) nav: revealed by auth.js when signed in; replaces the marketing nav -->
+      <div class="account-box" id="home-account" aria-label="Investor">
+        <div class="nav-home portal-link">
+          <a class="nav-home-link" href="/">Home</a>
+          <button class="nav-home-toggle" type="button" aria-label="Homepage sections" aria-expanded="false" aria-haspopup="true">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class="nav-home-menu" role="menu">
+            <a role="menuitem" href="/#strategies">Strategies</a>
+            <a role="menuitem" href="/#why">Difference</a>
+            <a role="menuitem" href="/#full-cycle">Performance</a>
+            <a role="menuitem" href="/#about">About</a>
+          </div>
+        </div>
+        <a class="listings-link portal-link" href="/current-offerings.html">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html">Learn</a>
+        <span class="nav-sep"></span>
+        <span class="welcome">Welcome, <span data-field="First Name">Investor</span></span>
+        <a class="logout" href="#">Log Out</a>
+      </div>
 
     </div>
   </header>
@@ -2445,12 +2514,16 @@
       }
     })();
 
-    // Mobile hamburger menu
+    // Mobile hamburger menu — toggles the portal dropdown when signed in, else the marketing nav
     (function () {
       var btn = document.querySelector('.menu-btn');
       var nav = document.getElementById('primary-nav');
+      var homeAcct = document.getElementById('home-account');
+      function activeMenu() {
+        return (homeAcct && homeAcct.classList.contains('authed')) ? homeAcct : nav;
+      }
       btn.addEventListener('click', function () {
-        var open = nav.classList.toggle('open');
+        var open = activeMenu().classList.toggle('open');
         btn.setAttribute('aria-expanded', open ? 'true' : 'false');
       });
       nav.querySelectorAll('a').forEach(function (a) {
@@ -2458,6 +2531,23 @@
           nav.classList.remove('open');
           btn.setAttribute('aria-expanded', 'false');
         });
+      });
+    })();
+
+    // Home dropdown (portal nav): click/keyboard toggle in addition to hover
+    (function () {
+      var home = document.querySelector('.nav-home');
+      if (!home) return;
+      var toggle = home.querySelector('.nav-home-toggle');
+      if (toggle) {
+        toggle.addEventListener('click', function (e) {
+          e.preventDefault();
+          var open = home.classList.toggle('open');
+          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        });
+      }
+      document.addEventListener('click', function (e) {
+        if (!home.contains(e.target)) home.classList.remove('open');
       });
     })();
 

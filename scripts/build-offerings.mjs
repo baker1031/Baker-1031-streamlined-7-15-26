@@ -686,6 +686,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     { loc: `${SITE}/glossary.html`, priority: "0.6" },
     { loc: `${SITE}/markets.html`, priority: "0.6" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -785,6 +786,82 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   hub = put(hub, "<!-- GL:TERMS -->", "<!-- /GL:TERMS -->", letters, "glossary.html");
   writeFileSync(join(ROOT, "glossary.html"), hub);
   console.log(`Glossary: ${count} term pages + hub index (${terms.length} terms).`);
+}
+
+/* ---------------- Markets: generate state/metro pages + hub from data/markets.json ---------------- */
+{
+  const mk = JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8"));
+  const items = mk.jurisdictions || [];
+  if (items.length < 40) throw new Error(`Only ${items.length} market jurisdictions — refusing to build.`);
+  const REGION_ORDER = ["West", "Midwest", "Southeast", "Southwest", "Northeast", "Top Metros"];
+  const byRegion = Object.fromEntries(REGION_ORDER.map((r) => [r, []]));
+  for (const j of items) (byRegion[j.region] || (byRegion[j.region] = [])).push(j);
+
+  const tpl = readFileSync(join(ROOT, "markets", "state-template.html"), "utf8");
+
+  // Collapsible region folder nav (shared by hub + pages); marks the active jurisdiction
+  const foldersFor = (activeSlug) => REGION_ORDER.map((r, i) => {
+    const list = byRegion[r] || [];
+    const lis = list.map((j) => `          <li><a${j.slug === activeSlug ? ' class="active"' : ""} href="/markets/${j.slug}/">${esc(j.name)}</a></li>`).join("\n");
+    const open = (activeSlug ? list.some((j) => j.slug === activeSlug) : i === 0) ? " open" : "";
+    return `        <details${open}><summary>${esc(r)}</summary><ul>\n${lis}\n        </ul></details>`;
+  }).join("\n");
+
+  // ----- pages -----
+  let count = 0;
+  for (const j of items) {
+    const canonical = `${SITE}/markets/${j.slug}/`;
+    const kicker = j.type === "metro" ? `Markets &middot; ${esc(j.name)}` : `1031 Exchange &middot; ${esc(j.name)}`;
+    const whyLis = (j.why || []).map((w) => `          <li>${esc(w)}</li>`).join("\n");
+    const faqHtml = (j.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
+    const jsonld = JSON.stringify({
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: (j.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
+    });
+
+    let html = tpl;
+    // head — function replacers so `$`/`%` in data is never read as a backreference
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
+    html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // market pages are public/indexable
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    // content — marker-based put() (immune to `$` in the data)
+    html = put(html, "<!-- M:CRUMB -->", "<!-- /M:CRUMB -->", esc(j.name), j.slug);
+    html = put(html, "<!-- M:FOLDERS -->", "<!-- /M:FOLDERS -->", foldersFor(j.slug), j.slug);
+    html = put(html, "<!-- M:KICKER -->", "<!-- /M:KICKER -->", kicker, j.slug);
+    html = put(html, "<!-- M:H1 -->", "<!-- /M:H1 -->", `1031 Exchange &amp; DST Investing in ${esc(j.name)}`, j.slug);
+    html = put(html, "<!-- M:META -->", "<!-- /M:META -->", "July 2026", j.slug);
+    html = put(html, "<!-- M:LEAD -->", "<!-- /M:LEAD -->", esc(j.lead), j.slug);
+    html = put(html, "<!-- M:CGRATE -->", "<!-- /M:CGRATE -->", esc(j.capGainsRate), j.slug);
+    html = put(html, "<!-- M:CONFORMS -->", "<!-- /M:CONFORMS -->", esc(j.conforms), j.slug);
+    html = put(html, "<!-- M:CLAWBACK -->", "<!-- /M:CLAWBACK -->", esc(j.clawback), j.slug);
+    html = put(html, "<!-- M:TAXBODY -->", "<!-- /M:TAXBODY -->", j.taxBody, j.slug);
+    html = put(html, "<!-- M:CALLOUT -->", "<!-- /M:CALLOUT -->", esc(j.callout), j.slug);
+    html = put(html, "<!-- M:MARKET -->", "<!-- /M:MARKET -->", j.market, j.slug);
+    html = put(html, "<!-- M:WHY -->", "<!-- /M:WHY -->", whyLis, j.slug);
+    html = put(html, "<!-- M:REPLACE -->", "<!-- /M:REPLACE -->", j.replace, j.slug);
+    html = put(html, "<!-- M:FAQ -->", "<!-- /M:FAQ -->", faqHtml, j.slug);
+
+    const dir = join(ROOT, "markets", j.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+
+  // ----- hub (fills the region grid + folder nav in markets.html) -----
+  let hub = readFileSync(join(ROOT, "markets.html"), "utf8");
+  let sections = "";
+  for (const r of REGION_ORDER) {
+    const list = byRegion[r] || [];
+    if (!list.length) continue;
+    const cells = list.map((j) => `          <a class="mk-state" href="/markets/${j.slug}/">${esc(j.name)}</a>`).join("\n");
+    sections += `\n        <section class="region-group">\n          <h2>${esc(r)}</h2>\n          <div class="state-grid">\n${cells}\n          </div>\n        </section>`;
+  }
+  hub = put(hub, "<!-- MK:FOLDERS -->", "<!-- /MK:FOLDERS -->", foldersFor(null), "markets.html");
+  hub = put(hub, "<!-- MK:LIST -->", "<!-- /MK:LIST -->", sections, "markets.html");
+  writeFileSync(join(ROOT, "markets.html"), hub);
+  console.log(`Markets: ${count} state/metro pages + hub (${items.length} jurisdictions).`);
 }
 
 /* ---------------- Publish directory (dist/) ----------------
