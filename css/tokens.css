@@ -49,3 +49,30 @@
   text-decoration: none;
 }
 .skip-link:focus { left: 0; }
+
+/* ============================================================
+   Portal-nav "Home" dropdown — shared across every logged-in page.
+   Links to the marketing homepage's anchor sections. Hover opens on
+   desktop; a caret button + auth.js handle click/keyboard. On mobile
+   (inside the collapsed account-box) the links render as a static list.
+   ============================================================ */
+.nav-home { position: relative; display: inline-flex; align-items: center; gap: 0.1rem; }
+.nav-home > .nav-home-link { color: var(--ink); font-weight: 600; font-size: 0.9rem; text-decoration: none; }
+.nav-home > .nav-home-link:hover { color: var(--navy); }
+.nav-home-toggle { background: none; border: none; cursor: pointer; padding: 0.2rem; color: var(--muted); display: inline-flex; align-items: center; }
+.nav-home-toggle svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2.2; fill: none; transition: transform 0.15s; }
+.nav-home-menu {
+  position: absolute; top: 100%; left: 0; margin-top: 0.4rem; min-width: 12rem;
+  background: #fff; border: 1px solid var(--hairline); border-radius: 8px;
+  box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); padding: 0.4rem;
+  display: none; flex-direction: column; z-index: 200;
+}
+.nav-home:hover .nav-home-menu, .nav-home.open .nav-home-menu { display: flex; }
+.nav-home:hover .nav-home-toggle svg, .nav-home.open .nav-home-toggle svg { transform: rotate(180deg); }
+.nav-home-menu a { font-size: 0.88rem; color: var(--ink-soft); padding: 0.45rem 0.6rem; border-radius: 6px; text-decoration: none; }
+.nav-home-menu a:hover { background: #f3f5f8; color: var(--navy); }
+@media (max-width: 720px) {
+  .account-box .nav-home { flex-direction: column; align-items: flex-start; width: 100%; gap: 0.3rem; }
+  .account-box .nav-home-toggle { display: none; }
+  .account-box .nav-home-menu { position: static; display: flex; margin-top: 0.2rem; box-shadow: none; border: none; padding: 0 0 0 0.6rem; min-width: 0; }
+}

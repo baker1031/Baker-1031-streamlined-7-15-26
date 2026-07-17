@@ -89,6 +89,7 @@ function applyAuthedNav(name) {
   // Homepage only: swap the marketing nav for the portal nav
   if (box.id === "home-account") {
     box.classList.add("authed");
+    document.body.classList.add("portal-nav"); // shrinks the homepage logo/header to match portal pages
     const pnav = document.querySelector(".primary-nav");
     if (pnav) pnav.style.display = "none";
     const ubar = document.querySelector(".utility-bar");
@@ -104,6 +105,7 @@ function applyLoggedOutNav() {
   // Homepage only: restore the marketing nav
   if (box.id === "home-account") {
     box.classList.remove("authed", "open");
+    document.body.classList.remove("portal-nav");
     const pnav = document.querySelector(".primary-nav");
     if (pnav) pnav.style.display = "";
     const ubar = document.querySelector(".utility-bar");
@@ -214,3 +216,22 @@ ready.then(function (s) {
     }
   }
 });
+
+/* ---------- Portal-nav "Home" dropdown: click/keyboard toggle (hover is CSS).
+   Runs on every page that has the dropdown, so behaviour is identical
+   across the homepage and all portal pages. ---------- */
+(function () {
+  const home = document.querySelector(".nav-home");
+  if (!home) return;
+  const toggle = home.querySelector(".nav-home-toggle");
+  if (toggle) {
+    toggle.addEventListener("click", function (e) {
+      e.preventDefault();
+      const open = home.classList.toggle("open");
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+  }
+  document.addEventListener("click", function (e) {
+    if (!home.contains(e.target)) home.classList.remove("open");
+  });
+})();

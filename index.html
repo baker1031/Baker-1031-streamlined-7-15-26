@@ -94,6 +94,10 @@
   .logo { display: flex; align-items: center; }
   .logo img { height: 40px; width: auto; display: block; }
 
+  /* When signed in, match the homepage header to the portal pages (36px logo, 72px bar) */
+  body.portal-nav .main-header-inner { min-height: 72px; }
+  body.portal-nav .logo img { height: 36px; }
+
   .primary-nav { display: flex; align-items: center; gap: 2.25rem; }
   .primary-nav ul {
     list-style: none;
@@ -2534,22 +2538,7 @@
       });
     })();
 
-    // Home dropdown (portal nav): click/keyboard toggle in addition to hover
-    (function () {
-      var home = document.querySelector('.nav-home');
-      if (!home) return;
-      var toggle = home.querySelector('.nav-home-toggle');
-      if (toggle) {
-        toggle.addEventListener('click', function (e) {
-          e.preventDefault();
-          var open = home.classList.toggle('open');
-          toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-        });
-      }
-      document.addEventListener('click', function (e) {
-        if (!home.contains(e.target)) home.classList.remove('open');
-      });
-    })();
+    // Home dropdown toggle is handled centrally in js/auth.js (shared across all pages)
 
     // Chart hover tooltips
     (function () {
