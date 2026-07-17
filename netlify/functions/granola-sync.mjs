@@ -13,20 +13,23 @@
    onto the JSON body below in the Zap's POST step (or send the whole
    payload — this function reads several common field names defensively).
 
-   What it does, for each attendee email that ALREADY matches a Pipedrive
-   person (the meeting owner's own email is skipped):
+   What it does, for each attendee (the meeting owner's own email is
+   skipped):
+     - finds the Pipedrive person by email, or CREATES them if missing
+       (so a new prospect from a meeting lands in the CRM automatically)
      - attaches the Granola summary as a Note on their most recent open
        Deal (or on the Person if they have no open deal)
      - logs a completed "meeting" Activity with the title + date
+     - creates an open "task" Activity for each action item / next step
+       from the meeting (parsed from the summary, or from an explicit
+       action-items field mapped in the Zap), due in a few days
      - de-dupes on (meeting id → person) via Netlify Blobs, so a Zap that
-       re-fires doesn't create duplicate notes
-
-   By default it does NOT create new persons — random external attendees
-   shouldn't land in the CRM. Set GRANOLA_CREATE_PERSONS=1 to change that.
+       re-fires doesn't create duplicate notes/tasks
 
    Env: PIPEDRIVE_API_TOKEN, GRANOLA_WEBHOOK_SECRET
         GRANOLA_OWNER_EMAIL (your own address, skipped as an attendee)
-        GRANOLA_CREATE_PERSONS=1 (optional — create unknown attendees)
+        GRANOLA_TASK_DUE_DAYS (optional, default 3 — task due-date horizon)
+        GRANOLA_SKIP_UNKNOWN=1 (optional — do NOT create missing people)
         GRANOLA_INCLUDE_TRANSCRIPT=1 (optional — append full transcript)
    ============================================================ */
 
@@ -42,6 +45,25 @@ function pick(obj, keys) {
     if (obj && obj[k] != null && String(obj[k]).trim() !== "") return obj[k];
   }
   return "";
+}
+
+/* Pull action items / next steps out of a Granola summary, or from an
+   explicit field the Zap mapped in. Returns a de-duped list of task lines. */
+function extractActionItems(md, explicit) {
+  let lines = [];
+  if (explicit) {
+    lines = Array.isArray(explicit) ? explicit.map(String) : String(explicit).split(/\n|;/);
+  } else {
+    const text = String(md || "");
+    // Grab the block under an "Action items / Next steps / To-dos / Follow-ups" heading.
+    const m = text.match(/(?:^|\n)\s*#{0,6}\s*(?:action items?|next steps?|to-?dos?|follow[- ]?ups?|tasks?)\s*:?\s*\n([\s\S]*?)(?:\n\s*#{1,6}\s|\n\s*\n\s*\n|$)/i);
+    if (m) lines = m[1].split(/\n/).filter((l) => /^\s*(?:[-*•]|\d+[.)])\s+/.test(l));
+  }
+  const seen = new Set();
+  return lines
+    .map((l) => String(l).replace(/^\s*(?:[-*•]|\d+[.)])\s*/, "").replace(/^\[[ x]\]\s*/i, "").trim())
+    .filter((l) => l.length > 2 && !seen.has(l.toLowerCase()) && seen.add(l.toLowerCase()))
+    .slice(0, 15);
 }
 
 /* Normalize attendees from any of: array of {email,name} | array of strings
@@ -95,8 +117,12 @@ export default async (req) => {
 
   const ownerEmail = lower(process.env.GRANOLA_OWNER_EMAIL);
   const creatorEmail = lower(pick(p, ["creator_email", "organizer_email", "owner_email"]));
-  const createPersons = process.env.GRANOLA_CREATE_PERSONS === "1";
+  const createPersons = process.env.GRANOLA_SKIP_UNKNOWN !== "1"; // create missing people by default
   const includeTranscript = process.env.GRANOLA_INCLUDE_TRANSCRIPT === "1";
+
+  const actionItems = extractActionItems(summaryMd, p.action_items || p.actionItems || p.next_steps || p.tasks);
+  const dueDays = Number(process.env.GRANOLA_TASK_DUE_DAYS || 3) || 3;
+  const dueDate = new Date(Date.now() + dueDays * 86400000).toISOString().slice(0, 10);
 
   // Build the note HTML once (same content per matched person).
   let noteHtml = `<b>${esc(title)}</b>${dateStr ? ` &mdash; ${esc(dateStr)}` : ""} (Granola meeting notes)<br><br>`;
@@ -111,6 +137,7 @@ export default async (req) => {
     if (a.email === ownerEmail || a.email === creatorEmail) continue; // skip yourself
 
     let person = await findPersonByEmail(token, a.email);
+    let createdPerson = false;
     if (!person) {
       if (!createPersons) { results.push({ email: a.email, action: "skipped (not in Pipedrive)" }); continue; }
       const created = await pd(`/persons`, token, {
@@ -119,6 +146,7 @@ export default async (req) => {
       });
       person = created && created.data;
       if (!person) { results.push({ email: a.email, action: "person create failed" }); continue; }
+      createdPerson = true;
     }
 
     // De-dupe: one note per (meeting, person). Skip if we've already logged it.
@@ -144,9 +172,31 @@ export default async (req) => {
       }
     });
 
+    // Open follow-up tasks from the meeting's action items.
+    let tasksCreated = 0;
+    for (const item of actionItems) {
+      const t = await pd(`/activities`, token, {
+        method: "POST",
+        body: {
+          subject: item.slice(0, 240),
+          type: "task",
+          done: 0,
+          person_id: person.id,
+          deal_id: deal ? deal.id : undefined,
+          due_date: dueDate,
+          note: `Follow-up from Granola meeting &ldquo;${esc(title)}&rdquo;${shareUrl ? ` — ${esc(shareUrl)}` : ""}`
+        }
+      });
+      if (t && t.data && t.data.id) tasksCreated++;
+    }
+
     if (noteId) await store.set(dedupeKey, String(noteId)).catch(() => {});
-    results.push({ email: a.email, personId: person.id, dealId: deal ? deal.id : null, noteId: noteId || null, action: "note + activity created" });
+    results.push({
+      email: a.email, personId: person.id, dealId: deal ? deal.id : null,
+      noteId: noteId || null, personCreated: createdPerson, tasksCreated,
+      action: "note + meeting logged" + (tasksCreated ? ` + ${tasksCreated} task(s)` : "")
+    });
   }
 
-  return json({ ok: true, meeting: title, meetingId, synced: results });
+  return json({ ok: true, meeting: title, meetingId, actionItems: actionItems.length, synced: results });
 };
