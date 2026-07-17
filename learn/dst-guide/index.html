@@ -184,6 +184,12 @@
   .learn-article .takeaways strong { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.55rem; }
   .learn-article .takeaways ul { margin-bottom: 0.4rem; }
   .learn-article .takeaways li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .learn-stats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.4rem 0 1.8rem; }
+  .learn-stats .stat { flex: 1 1 8rem; min-width: 8rem; background: #f4f7fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+  .learn-stats .stat-v { font-size: 1.15rem; font-weight: 800; color: var(--navy); line-height: 1.1; }
+  .learn-stats .stat-l { font-size: 0.8rem; color: var(--muted); line-height: 1.35; }
+  .learn-contact { list-style: none; padding: 0; margin: 1rem 0 1.4rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; }
+  .learn-contact li { font-size: 0.9rem; color: var(--ink-soft); margin: 0; }
   .learn-article .faq-h { font-size: 1.15rem; font-weight: 700; margin: 2.2rem 0 0.4rem; }
   .learn-article details.faq { border-bottom: 1px solid var(--hairline); }
   .learn-article details.faq summary { list-style: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--ink); padding: 0.85rem 1.6rem 0.85rem 0; position: relative; }
@@ -847,10 +853,12 @@ Delaware Statutory Trusts: 2026 Guide
         <p>In a passive structure, you're really underwriting the operator. The metrics that matter are the number of full-cycle deals (deals taken start to finish — the only proof of results), average annual return, equity multiple (MOIC), average hold, and success rate. Judge them against a benchmark, never in isolation — and watch the sponsors with no completed cycle at all.</p>
         <p>The explorer below runs on Baker 1031's proprietary data covering 82 sponsors. Sort it, filter it, search it — then click any sponsor to open a full profile with its description, metrics versus the platform benchmark, and its deal-by-deal track record where we have it.</p>
         <p>Data as of Q2 2026 · 82 sponsors Sponsor explorer</p>
-        <p>Sponsors tracked 82</p>
-        <p>Preferred 8</p>
-        <p>With track record 21</p>
-        <p>No record yet 61</p>
+        <div class="learn-stats">
+          <div class="stat"><span class="stat-v">82</span><span class="stat-l">Sponsors tracked</span></div>
+          <div class="stat"><span class="stat-v">8</span><span class="stat-l">Preferred</span></div>
+          <div class="stat"><span class="stat-v">21</span><span class="stat-l">With track record</span></div>
+          <div class="stat"><span class="stat-v">61</span><span class="stat-l">No record yet</span></div>
+        </div>
         <p>Benchmark · all sponsors Return 14.9% MOIC 1.46x Hold 4.7 yr Win 96.5%</p>
         <p>★ Benchmark · preferred cohort Return 20.8% MOIC 1.53x Hold 3.6 yr Win 98.1%</p>
         <p>Data as of Q2 2026, from Baker 1031's proprietary dataset of realized, full-cycle DST deals. &quot;Full-cycle&quot; means a deal carried from acquisition through final sale; &quot;Return&quot; is the average annualized return across those realized deals; &quot;Win&quot; means the share of full-cycle deals that returned at least the capital invested. Only 21 of the 82 sponsors tracked have any full-cycle track record, so these figures reflect a limited sample and are subject to survivorship bias. Past performance is not indicative of future results, and DST investments can lose value, including loss of principal.</p>

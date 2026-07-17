@@ -294,7 +294,7 @@ function parseOne(p, category) {
 
   // Group runs of bullet ("❯ …") / numbered ("01 …") lines into real lists,
   // and tidy entity + link-spacing remnants across all text.
-  const cleanParas = (arr) => groupLists(arr.map(tidy), category).map((x) => (typeof x === "string" ? x : { t: x.t, items: x.items.map(tidy) }));
+  const cleanParas = (arr) => groupStats(groupLists(arr.map(tidy), category).map((x) => (typeof x === "string" ? x : { t: x.t, items: x.items.map(tidy) })));
   const leadClean = cleanParas(lead);
   const takeClean = takeaways.map(tidy);
   const sectionsClean = sections
@@ -323,6 +323,42 @@ function parseOne(p, category) {
       metaDesc,
     },
   };
+}
+
+// Group runs of short "tile" lines into stat bands / contact blocks. Flattened
+// stat tiles ("80+ Sponsors under coverage") and contact rows ("Email" /
+// "invest@…") otherwise render as loose paragraphs. Flattened tables/charts
+// (lines with 3+ numbers or " · " columns) are left untouched — reconstructing
+// them reliably from flattened text isn't possible.
+function groupStats(items) {
+  const isContactLine = (s) => typeof s === "string" && s.length <= 52 && !/[.!?]$/.test(s) && /@|\+\d|^Phone$|^Email$|^Fax$|Mon[–-]|[AP]M PT/i.test(s);
+  // A stat tile is a clean "value + short label" (or label + value), NOT a table row.
+  const isStatTile = (s) => {
+    if (typeof s !== "string" || s.length > 46 || /[.!?]$/.test(s)) return false;
+    if (/ — | · |\//.test(s)) return false; // em-dash / column / slash → chart or table row
+    if (/\b(calculator|Open|Explore|Reset|Print|Save|View|Read more|button)\b/i.test(s)) return false; // UI/nav remnant
+    if (/^(Feature|Factor|Compare|Comparison|Scenario|Allocation|Property type|People|Rule|Data as of)\b/i.test(s)) return false; // table header
+    const nums = s.match(/[$~]?\d[\d.,]*\s*(?:%|x|yr|bps?|K|M|B|SF)?\+?/g) || [];
+    if (nums.length === 0) return s.split(/\s+/).length <= 4; // short label tile ("Full-Cycle Track record, defined")
+    if (nums.length >= 2) return false; // multiple numbers → table row
+    const n = nums[0].trim();
+    if (!(s.startsWith(n) || s.trim().endsWith(n))) return false; // single value at an edge
+    return (s.replace(nums[0], "").match(/[A-Za-z]{2,}/g) || []).length >= 1; // needs a text label besides the value
+  };
+  const out = [];
+  let run = [];
+  const flush = () => {
+    if (run.length >= 2 && run.some(isContactLine)) out.push({ t: "contact", items: [...run] });
+    else if (run.length >= 2 && run.filter((s) => /\d/.test(s)).length >= 2) out.push({ t: "stats", items: [...run] });
+    else out.push(...run);
+    run = [];
+  };
+  for (const it of items) {
+    if (isContactLine(it) || isStatTile(it)) run.push(it);
+    else { flush(); out.push(it); }
+  }
+  flush();
+  return out;
 }
 
 // Group consecutive bullet/numbered lines into list objects {t:'ul'|'ol', items:[…]}.

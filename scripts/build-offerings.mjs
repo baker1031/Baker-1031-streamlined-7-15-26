@@ -1082,7 +1082,38 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       .join("\n");
     return `        <${tag}>\n${lis}\n        </${tag}>`;
   };
-  const blockHtml = (p) => (typeof p === "string" ? `        <p>${esc(p)}</p>` : listHtml(p));
+  const statHtml = (node) => {
+    const tiles = node.items
+      .map((it) => {
+        // value = a leading or trailing number/$ token; the rest is the label
+        let m = /^([$~]?[\d][\d.,]*\s*(?:%|x|yr|bps?|K|M|B|\+)*\+?)\s+(.+)$/.exec(it) || null;
+        let v, l;
+        if (m) { v = m[1]; l = m[2]; }
+        else { m = /^(.+?)\s+([$~]?[\d][\d.,]*\s*(?:%|x|yr|bps?|K|M|B|\+)*\+?)$/.exec(it); if (m) { v = m[2]; l = m[1]; } }
+        if (v) return `          <div class="stat"><span class="stat-v">${esc(v)}</span><span class="stat-l">${esc(l)}</span></div>`;
+        return `          <div class="stat"><span class="stat-l">${esc(it)}</span></div>`;
+      })
+      .join("\n");
+    return `        <div class="learn-stats">\n${tiles}\n        </div>`;
+  };
+  const contactHtml = (node) => {
+    const items = node.items;
+    const lis = [];
+    for (let i = 0; i < items.length; i++) {
+      const cur = items[i], nxt = items[i + 1];
+      if (/^(Email|Phone|Fax|Address|Hours|Web)$/i.test(cur) && nxt && !/^(Email|Phone|Fax|Address|Hours|Web)$/i.test(nxt)) {
+        lis.push(`          <li><strong>${esc(cur)}</strong> ${esc(nxt)}</li>`);
+        i++;
+      } else lis.push(`          <li>${esc(cur)}</li>`);
+    }
+    return `        <ul class="learn-contact">\n${lis.join("\n")}\n        </ul>`;
+  };
+  const blockHtml = (p) => {
+    if (typeof p === "string") return `        <p>${esc(p)}</p>`;
+    if (p.t === "stats") return statHtml(p);
+    if (p.t === "contact") return contactHtml(p);
+    return listHtml(p);
+  };
 
   let count = 0;
   for (let i = 0; i < articles.length; i++) {

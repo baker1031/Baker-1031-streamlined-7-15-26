@@ -184,6 +184,12 @@
   .learn-article .takeaways strong { display: block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.55rem; }
   .learn-article .takeaways ul { margin-bottom: 0.4rem; }
   .learn-article .takeaways li { font-size: 0.9rem; margin-bottom: 0.4rem; }
+  .learn-stats { display: flex; flex-wrap: wrap; gap: 0.75rem; margin: 1.4rem 0 1.8rem; }
+  .learn-stats .stat { flex: 1 1 8rem; min-width: 8rem; background: #f4f7fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.9rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; }
+  .learn-stats .stat-v { font-size: 1.15rem; font-weight: 800; color: var(--navy); line-height: 1.1; }
+  .learn-stats .stat-l { font-size: 0.8rem; color: var(--muted); line-height: 1.35; }
+  .learn-contact { list-style: none; padding: 0; margin: 1rem 0 1.4rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1.6rem; }
+  .learn-contact li { font-size: 0.9rem; color: var(--ink-soft); margin: 0; }
   .learn-article .faq-h { font-size: 1.15rem; font-weight: 700; margin: 2.2rem 0 0.4rem; }
   .learn-article details.faq { border-bottom: 1px solid var(--hairline); }
   .learn-article details.faq summary { list-style: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; color: var(--ink); padding: 0.85rem 1.6rem 0.85rem 0; position: relative; }
@@ -781,10 +787,12 @@ About Us
         <p>Most exchanges are won or lost on two things: the quality of the replacement options on the table, and the discipline to move before the 45- and 180-day clocks run out. We exist to give accredited investors both.</p>
         <p>We are independent and sponsor-agnostic. We do not manufacture our own deals or push proprietary product. Our work is to understand an investor's exchange, surface the offerings that actually fit, and bring institutional-grade diligence to a decision that has to be made on a deadline.</p>
         <p>We serve accredited investors only, because the strategies we work in — DSTs and private real-estate securities — are sold exclusively to them.</p>
-        <p>80+ Sponsors under coverage</p>
-        <p>Full-Cycle Track record, defined</p>
-        <p>3 Generations in real estate</p>
-        <p>$10B+ In prior transactions</p>
+        <div class="learn-stats">
+          <div class="stat"><span class="stat-v">80+</span><span class="stat-l">Sponsors under coverage</span></div>
+          <div class="stat"><span class="stat-l">Full-Cycle Track record, defined</span></div>
+          <div class="stat"><span class="stat-v">3</span><span class="stat-l">Generations in real estate</span></div>
+          <div class="stat"><span class="stat-v">$10B+</span><span class="stat-l">In prior transactions</span></div>
+        </div>
         <h2>Three generations on the same side of the table</h2>
         <p>The name carries a history. Real estate has been the family's business across three generations — through cycles, downturns, and recoveries that taught a simple lesson: the deal matters, but the standard you hold it to matters more.</p>
         <p>That inheritance shows up in how we work. We have sat on the ownership side of buildings, not just the brokerage side of trades, and we bring that operator's instinct to every sponsor and offering we evaluate. It is also why accountability is not a marketing word here — it is the family business.</p>
@@ -835,11 +843,11 @@ About Us
         <h2>Where is Baker 1031 located?</h2>
         <p>650 California Street, 7th Floor, San Francisco, CA 94108 — with clients served nationwide.</p>
         <h2>Start a conversation</h2>
-        <p>Email</p>
-        <p>invest@baker1031.com</p>
-        <p>Phone</p>
-        <p>+1 415 579 1660</p>
-        <p>Mon–Fri, 6am–5pm PT</p>
+        <ul class="learn-contact">
+          <li><strong>Email</strong> invest@baker1031.com</li>
+          <li><strong>Phone</strong> +1 415 579 1660</li>
+          <li>Mon–Fri, 6am–5pm PT</li>
+        </ul>
         <h2>650 California Street, 7th Floor San Francisco, CA 94108</h2>
         <p>Baker 1031 Investments provides information about 1031 exchange, DST, Qualified Opportunity Zone, and 721 UPREIT strategies to accredited investors as defined under SEC Rule 501 of Regulation D. Securities offered through Aurora Securities, Inc. (ASI) — CRD #46147, SEC #8-51322 — member FINRA/SIPC. Gerald F. 'Jerry' Baker, III is a registered representative of ASI (FINRA CRD #7537416). Baker 1031 Investments, LLC is independent of ASI and is not a registered broker-dealer or investment adviser. This page is informational only and is not an offer to sell or a solicitation of an offer to buy any security, or tax or legal advice; any offer is made solely through a sponsor's private placement memorandum following a suitability determination. DST and related securities are speculative and illiquid, for accredited investors only, and involve substantial risk including possible loss of principal.</p>
         <div class="article-footer-nav"><a href="/learn/721-exchanges-and-the-step-up-in-basis-for-heirs/">&larr; 721 Exchanges and the Step-Up in Basis for Heirs</a><a href="/learn/active-vs-passive-real-estate-investing/">Active vs. Passive Real Estate Investing &rarr;</a></div>
