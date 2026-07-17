@@ -682,6 +682,10 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
 {
   const urls = [
     { loc: `${SITE}/`, priority: "1.0" },
+    { loc: `${SITE}/learn.html`, priority: "0.6" },
+    { loc: `${SITE}/glossary.html`, priority: "0.6" },
+    { loc: `${SITE}/markets.html`, priority: "0.6" },
+    ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -690,6 +694,97 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><priority>${u.priority}</priority></url>`).join("\n")}\n</urlset>\n`;
   writeFileSync(join(ROOT, "sitemap.xml"), sitemap);
   console.log(`Wrote sitemap.xml (${urls.length} URLs)`);
+}
+
+
+/* ---------------- Glossary: generate term pages + hub index from data/glossary.json ---------------- */
+{
+  const gl = JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8"));
+  const terms = gl.terms || [];
+  if (terms.length < 10) throw new Error(`Only ${terms.length} glossary terms — refusing to build.`);
+  const bySlug = new Map(terms.map((t) => [t.slug, t]));
+  const CAT_ORDER = ["1031 Exchange", "DSTs", "721 / REITs", "Opportunity Zones", "Taxes", "Investing"];
+  const byCat = Object.fromEntries(CAT_ORDER.map((c) => [c, []]));
+  for (const t of terms) (byCat[t.category] || (byCat[t.category] = [])).push(t);
+
+  const tpl = readFileSync(join(ROOT, "glossary", "term-template.html"), "utf8");
+
+  // Collapsible category folder nav (shared by hub + term pages); marks the active term
+  const foldersFor = (activeSlug, activeCat) => CAT_ORDER.map((c, i) => {
+    const items = [...byCat[c]].sort((a, b) => a.term.localeCompare(b.term))
+      .map((t) => `          <li><a${t.slug === activeSlug ? ' class="active"' : ""} href="/glossary/${t.slug}/">${esc(t.term)}</a></li>`).join("\n");
+    const open = (activeCat ? c === activeCat : i === 0) ? " open" : "";
+    return `        <details${open}><summary>${esc(c)}</summary><ul>\n${items}\n        </ul></details>`;
+  }).join("\n");
+
+  // ----- term pages -----
+  const alpha = [...terms].sort((a, b) => a.term.toLowerCase().localeCompare(b.term.toLowerCase()));
+  const nextOf = new Map(alpha.map((t, i) => [t.slug, alpha[(i + 1) % alpha.length]]));
+  let count = 0;
+  for (const t of terms) {
+    const canonical = `${SITE}/glossary/${t.slug}/`;
+    const nxt = nextOf.get(t.slug);
+    const nextLink = `<a href="/glossary/${nxt.slug}/">${esc(nxt.term)} &rarr;</a>`;
+    const relChips = (t.related || []).map((s) => {
+      const r = bySlug.get(s); return r ? `<a href="/glossary/${r.slug}/">${esc(r.term)}</a>` : "";
+    }).filter(Boolean).join("\n          ");
+    const keyPts = (t.keyPoints || []).map((k) => `          <li>${esc(k)}</li>`).join("\n");
+    const jsonld = JSON.stringify({
+      "@context": "https://schema.org", "@type": "DefinedTerm", name: t.term, description: t.lead,
+      inDefinedTermSet: { "@type": "DefinedTermSet", name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary.html` },
+      url: canonical
+    });
+
+    const srcAnchor = `<a href="${esc(t.source.url)}" target="_blank" rel="noopener">${esc(t.source.label)}</a>`;
+    const metaLine = `By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated July 2026 &middot; Reviewed by Aurora Securities Compliance`;
+
+    let html = tpl;
+    // head — function replacers so `$` in data is never read as a backreference
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(t.term)} — Glossary — Baker 1031 Investments</title>`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(t.lead)}">`);
+    html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // glossary term pages are public/indexable
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    // nested one level deeper (/glossary/<slug>/) → asset paths already absolute (/css, /js) — good
+    // content — marker-based put() is fully immune to `$` in the data
+    html = put(html, "<!-- T:CRUMB -->", "<!-- /T:CRUMB -->", esc(t.term), t.slug);
+    html = put(html, "<!-- T:FOLDERS -->", "<!-- /T:FOLDERS -->", foldersFor(t.slug, t.category), t.slug);
+    html = put(html, "<!-- T:CAT -->", "<!-- /T:CAT -->", esc(t.category), t.slug);
+    html = put(html, "<!-- T:TERM -->", "<!-- /T:TERM -->", esc(t.term), t.slug);
+    html = put(html, "<!-- T:META -->", "<!-- /T:META -->", metaLine, t.slug);
+    html = put(html, "<!-- T:LEAD -->", "<!-- /T:LEAD -->", esc(t.lead), t.slug);
+    html = put(html, "<!-- T:DEF -->", "<!-- /T:DEF -->", t.definition, t.slug);
+    html = put(html, "<!-- T:KEYS -->", "<!-- /T:KEYS -->", keyPts, t.slug);
+    html = put(html, "<!-- T:SRC -->", "<!-- /T:SRC -->", srcAnchor, t.slug);
+    html = put(html, "<!-- T:REL -->", "<!-- /T:REL -->", relChips, t.slug);
+    html = put(html, "<!-- T:NEXT -->", "<!-- /T:NEXT -->", nextLink, t.slug);
+
+    const dir = join(ROOT, "glossary", t.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+
+  // ----- hub index (fills the term list + folder nav in glossary.html) -----
+  let hub = readFileSync(join(ROOT, "glossary.html"), "utf8");
+  const sorted = [...terms].sort((a, b) => a.term.toLowerCase().localeCompare(b.term.toLowerCase()));
+  const groups = new Map();
+  for (const t of sorted) {
+    let L = t.term[0].toUpperCase();
+    if (/[0-9]/.test(L)) L = "#";
+    if (!groups.has(L)) groups.set(L, []);
+    groups.get(L).push(t);
+  }
+  let letters = "";
+  for (const [L, items] of groups) {
+    const anchor = "ltr-" + (L === "#" ? "num" : L);
+    const rows = items.map((t) => `          <a class="term-row" href="/glossary/${t.slug}/"><span class="tn">${esc(t.term)}</span><span class="tc">${esc(t.category)}</span><span class="td">${esc(t.oneLine)}</span></a>`).join("\n");
+    letters += `\n        <section class="letter-group" id="${anchor}">\n          <h2>${L}</h2>\n${rows}\n        </section>`;
+  }
+  hub = put(hub, "<!-- GL:FOLDERS -->", "<!-- /GL:FOLDERS -->", foldersFor(null, null), "glossary.html");
+  hub = put(hub, "<!-- GL:TERMS -->", "<!-- /GL:TERMS -->", letters, "glossary.html");
+  writeFileSync(join(ROOT, "glossary.html"), hub);
+  console.log(`Glossary: ${count} term pages + hub index (${terms.length} terms).`);
 }
 
 /* ---------------- Publish directory (dist/) ----------------
@@ -701,7 +796,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   mkdirSync(dist, { recursive: true });
   const COPY = [
     "index.html", "current-offerings.html", "performance.html", "employee.html",
-    "learn.html", "learn", "glossary.html", "glossary",
+    "learn.html", "learn", "glossary.html", "glossary", "markets.html", "markets",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt"
   ];
@@ -712,7 +807,13 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     cpSync(src, join(dist, item), { recursive: true });
     copied++;
   }
-  console.log(`dist/ assembled (${copied} top-level items).`);
+  // Templates are authoring scaffolds — never publish them, even under a whitelisted dir.
+  let stripped = 0;
+  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html"]) {
+    const p = join(dist, rel);
+    if (existsSync(p)) { rmSync(p); stripped++; }
+  }
+  console.log(`dist/ assembled (${copied} top-level items, ${stripped} templates stripped).`);
 }
 
 console.log("Build complete.");

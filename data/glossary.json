@@ -1,0 +1,1213 @@
+{
+  "generated": "2026-07-16",
+  "terms": [
+    {
+      "slug": "10-year-hold",
+      "term": "10-Year Hold",
+      "category": "Opportunity Zones",
+      "lead": "Holding a Qualified Opportunity Fund investment for at least 10 years lets an investor eliminate capital gains tax on the fund's own appreciation when sold.",
+      "definition": "<p>The <strong>10-year hold</strong> is the centerpiece benefit of Opportunity Zone investing. If an investor keeps money in a Qualified Opportunity Fund (QOF) for at least 10 years, any appreciation in the fund itself can be permanently excluded from federal capital gains tax when the interest is sold.</p><p>Here is how it works in practice: you roll an eligible capital gain into a QOF, and the original deferred gain is still taxed later under current rules. But the new growth inside the fund is the prize. If you invest $500,000 and the interest is worth $900,000 after 11 years, the $400,000 of appreciation can be tax-free because you elect to step basis up to fair market value at sale.</p><p>The clock runs from the date you acquire your QOF interest, and the exclusion applies only to the QOF appreciation, not to the original rolled-in gain. This makes Opportunity Zone funds a long-horizon strategy suited to patient capital.</p>",
+      "keyPoints": [
+        "Requires holding the QOF interest for at least 10 years",
+        "Eliminates federal tax on the fund's post-investment appreciation",
+        "Investor elects to step basis up to fair market value at sale",
+        "Original deferred gain is still taxed separately",
+        "Clock starts on the date the QOF interest is acquired"
+      ],
+      "source": {
+        "label": "IRS - Opportunity Zones Frequently Asked Questions",
+        "url": "https://www.irs.gov/credits-deductions/opportunity-zones-frequently-asked-questions"
+      },
+      "related": [
+        "opportunity-zone",
+        "qualified-opportunity-fund",
+        "qualified-opportunity-zone-business",
+        "capital-gains-tax"
+      ],
+      "oneLine": "Holding a Qualified Opportunity Fund for 10+ years erases capital gains tax on its appreciation."
+    },
+    {
+      "slug": "1031-exchange",
+      "term": "1031 Exchange",
+      "category": "1031 Exchange",
+      "lead": "A 1031 exchange lets a real estate investor defer capital gains tax by reinvesting sale proceeds from one investment property into another like-kind property.",
+      "definition": "<p>A <strong>1031 exchange</strong>, named after Section 1031 of the Internal Revenue Code, lets an investor sell an investment or business property and defer federal capital gains and depreciation recapture taxes by reinvesting the proceeds into another like-kind property. The tax is not erased, it is carried forward into the new property's basis.</p><p>The rules are strict and deadline-driven. Proceeds must be held by a qualified intermediary, not the seller. The investor has 45 calendar days to identify replacement property and 180 calendar days to close. To fully defer tax, the replacement must be of equal or greater value and the investor must reinvest all equity and replace any debt paid off.</p><p>For example, selling a $1 million rental with a $400,000 gain could trigger six figures in tax; a properly structured exchange into a $1 million-plus replacement defers all of it. Many investors use DSTs as replacement property to avoid active management.</p>",
+      "keyPoints": [
+        "Defers capital gains and depreciation recapture, not eliminates them",
+        "Applies only to investment or business real property, not a primary home",
+        "45 calendar days to identify, 180 calendar days to close",
+        "Proceeds must be held by a qualified intermediary",
+        "Replacement must be equal or greater value to fully defer tax"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "like-kind-property",
+        "45-day-identification-period",
+        "180-day-exchange-period",
+        "qualified-intermediary"
+      ],
+      "oneLine": "Defer capital gains tax by reinvesting investment property proceeds into like-kind real estate."
+    },
+    {
+      "slug": "180-day-exchange-period",
+      "term": "180-Day Exchange Period",
+      "category": "1031 Exchange",
+      "lead": "The 180-day exchange period is the deadline in a 1031 exchange by which the investor must close on replacement property, 180 calendar days from the sale.",
+      "definition": "<p>The <strong>180-day exchange period</strong> is the second hard deadline in a 1031 exchange. Counting from the day the relinquished property closes, the investor has exactly 180 calendar days to complete the purchase of the replacement property identified during the 45-day window.</p><p>The 45-day and 180-day clocks run concurrently, not consecutively, so identifying property on day 44 leaves only 136 days to close. The deadline includes weekends and holidays with no extensions, except in certain federally declared disaster situations.</p><p>There is also a wrinkle: the period ends on the earlier of 180 days or the due date, including extensions, of the investor's tax return for the year the relinquished property was sold. Investors closing late in the year often file an extension to preserve the full 180 days. DSTs are popular because they can typically close quickly, reducing the risk of blowing the deadline.</p>",
+      "keyPoints": [
+        "180 calendar days from the relinquished sale to close",
+        "Runs concurrently with the 45-day identification period",
+        "No weekend or holiday extensions in normal circumstances",
+        "Can be cut short by the tax return due date without an extension"
+      ],
+      "source": {
+        "label": "IRS - Instructions for Form 8824 (Like-Kind Exchanges)",
+        "url": "https://www.irs.gov/instructions/i8824"
+      },
+      "related": [
+        "45-day-identification-period",
+        "1031-exchange",
+        "replacement-property",
+        "qualified-intermediary"
+      ],
+      "oneLine": "A 1031 investor has 180 calendar days from the sale to close on the replacement property."
+    },
+    {
+      "slug": "45-day-identification-period",
+      "term": "45-Day Identification Period",
+      "category": "1031 Exchange",
+      "lead": "The 45-day identification period is the window in a 1031 exchange during which the investor must formally identify potential replacement properties in writing.",
+      "definition": "<p>The <strong>45-day identification period</strong> is the first deadline in a 1031 exchange. Within 45 calendar days of selling the relinquished property, the investor must identify candidate replacement properties in a signed written notice delivered to the qualified intermediary.</p><p>Identification follows one of three rules. The <strong>three-property rule</strong> lets you name up to three properties of any value. The <strong>200% rule</strong> lets you name more than three as long as their combined value does not exceed 200% of what you sold. The <strong>95% rule</strong> allows naming any number if you acquire at least 95% of the total value identified.</p><p>The deadline is strict, 45 calendar days including weekends and holidays, with no extensions outside federal disaster relief. Because the clock is unforgiving, DSTs are frequently listed as backup identifications: they are readily available and can close fast if a primary target falls through.</p>",
+      "keyPoints": [
+        "45 calendar days from sale to identify replacement property in writing",
+        "Three-property rule: up to three properties of any value",
+        "200% rule: unlimited properties up to 200% of sale value",
+        "Identification must be signed and delivered to the qualified intermediary"
+      ],
+      "source": {
+        "label": "IRS - Instructions for Form 8824 (Like-Kind Exchanges)",
+        "url": "https://www.irs.gov/instructions/i8824"
+      },
+      "related": [
+        "180-day-exchange-period",
+        "1031-exchange",
+        "replacement-property",
+        "qualified-intermediary"
+      ],
+      "oneLine": "The 45 calendar days a 1031 investor has to name replacement properties in writing."
+    },
+    {
+      "slug": "721-exchange",
+      "term": "721 Exchange",
+      "category": "721 / REITs",
+      "lead": "A 721 exchange lets an investor contribute real estate to a REIT's operating partnership in exchange for OP units, deferring capital gains tax under Section 721.",
+      "definition": "<p>A <strong>721 exchange</strong>, sometimes called an UPREIT transaction, uses Section 721 of the tax code to let a property owner contribute real estate to a REIT's operating partnership in return for operating partnership (OP) units, without triggering an immediate taxable sale.</p><p>It is often the second step after a 1031 exchange into a DST: once the DST is contributed to the REIT, the investor holds OP units instead of direct property. OP units generally track the REIT's share value and pay distributions, and they can typically be converted to REIT shares later, though that conversion is usually a taxable event.</p><p>The appeal is diversification and truly passive ownership across a large portfolio, plus continued tax deferral and a potential step-up in basis at death. The trade-off is that once you convert to REIT shares or the REIT sells, you generally cannot 1031 back out, so it is often a one-way exit.</p>",
+      "keyPoints": [
+        "Contributes property to a REIT operating partnership for OP units",
+        "Defers capital gains tax under IRC Section 721",
+        "Commonly follows a 1031 exchange into a DST (the UPREIT path)",
+        "Converting OP units to REIT shares is usually taxable",
+        "Generally a one-way exit; you cannot 1031 out afterward"
+      ],
+      "source": {
+        "label": "Cornell LII - 26 U.S. Code Section 721",
+        "url": "https://www.law.cornell.edu/uscode/text/26/721"
+      },
+      "related": [
+        "upreit",
+        "op-units",
+        "reit",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "Contribute property to a REIT partnership for OP units and defer tax under Section 721."
+    },
+    {
+      "slug": "accredited-investor",
+      "term": "Accredited Investor",
+      "category": "Investing",
+      "lead": "An accredited investor is a person or entity that meets SEC income or net worth thresholds, allowing them to buy private, unregistered securities like DSTs.",
+      "definition": "<p>An <strong>accredited investor</strong> is someone the SEC considers financially sophisticated enough to invest in private offerings that are not registered with regulators. Most DSTs, Opportunity Zone funds, and private placements are sold only to accredited investors under Regulation D.</p><p>An individual qualifies with either income over <strong>$200,000</strong> (or <strong>$300,000</strong> jointly with a spouse) in each of the two most recent years with the same expected this year, or a net worth over <strong>$1 million</strong> excluding the value of a primary residence. Since 2020, certain professional licenses (Series 7, 65, or 82) also qualify a person regardless of wealth.</p><p>Entities such as trusts or LLCs can qualify with over $5 million in assets. The status matters because it unlocks access to investments unavailable to the general public, but those investments are illiquid and carry less regulatory protection, so the thresholds exist to gauge who can bear the risk.</p>",
+      "keyPoints": [
+        "Income over $200k single or $300k joint for the last two years",
+        "Or net worth over $1 million excluding primary residence",
+        "Series 7, 65, or 82 license holders also qualify",
+        "Required to purchase most Regulation D private placements",
+        "Entities generally qualify with over $5 million in assets"
+      ],
+      "source": {
+        "label": "SEC - Accredited Investors",
+        "url": "https://www.sec.gov/resources-small-businesses/capital-raising-building-blocks/accredited-investors"
+      },
+      "related": [
+        "accredited-investor-vs-qualified-purchaser",
+        "regulation-d",
+        "regulation-d-rule-506c",
+        "ppm"
+      ],
+      "oneLine": "Someone meeting SEC income or net worth limits who can buy private securities like DSTs."
+    },
+    {
+      "slug": "accredited-investor-vs-qualified-purchaser",
+      "term": "Accredited Investor vs. Qualified Purchaser",
+      "category": "Investing",
+      "lead": "Accredited investor and qualified purchaser are two SEC investor tiers; a qualified purchaser meets a much higher bar, generally $5 million in investments.",
+      "definition": "<p>Both terms describe who may buy certain private investments, but they sit at different levels. <strong>Accredited investor</strong> is the more common, lower threshold: $200,000/$300,000 in income or $1 million in net worth. <strong>Qualified purchaser</strong> is a much higher bar defined under the Investment Company Act, generally an individual or family owning at least <strong>$5 million in investments</strong>, or an entity managing $25 million.</p><p>The distinction matters for fund structure. Offerings under Section 3(c)(1) can admit up to 100 accredited investors, while 3(c)(7) funds may admit an unlimited number of qualified purchasers. Most DSTs and Opportunity Zone funds require only accredited status, so the higher tier rarely comes up for typical 1031 investors.</p><p>In short, every qualified purchaser is accredited, but few accredited investors reach the qualified-purchaser threshold. Sponsors choose the standard based on the fund they are structuring.</p>",
+      "keyPoints": [
+        "Accredited investor is the lower, more common threshold",
+        "Qualified purchaser generally requires $5 million in investments",
+        "Qualified purchaser is defined under the Investment Company Act",
+        "3(c)(7) funds admit unlimited qualified purchasers; 3(c)(1) caps accredited investors",
+        "Most DSTs require only accredited status"
+      ],
+      "source": {
+        "label": "SEC - Accredited Investors",
+        "url": "https://www.sec.gov/resources-small-businesses/capital-raising-building-blocks/accredited-investors"
+      },
+      "related": [
+        "accredited-investor",
+        "regulation-d",
+        "ppm",
+        "sponsor"
+      ],
+      "oneLine": "Two SEC tiers: accredited is the lower bar; qualified purchaser needs about $5M in investments."
+    },
+    {
+      "slug": "adjusted-basis",
+      "term": "Adjusted Basis",
+      "category": "Taxes",
+      "lead": "Adjusted basis is your original cost in a property increased by improvements and reduced by depreciation, used to calculate taxable gain when you sell.",
+      "definition": "<p><strong>Adjusted basis</strong> is your investment in a property for tax purposes after accounting for changes over time. You start with cost basis, generally the purchase price plus acquisition costs, then add capital improvements and subtract depreciation deductions taken during ownership.</p><p>It is the number that drives your taxable gain: sale price minus adjusted basis equals your gain. Because depreciation lowers basis every year, a long-held rental can have a much lower adjusted basis than its purchase price, inflating the taxable gain at sale. For example, a building bought for $800,000 with $200,000 of depreciation taken has a $600,000 adjusted basis; selling for $1 million produces a $400,000 gain.</p><p>In a 1031 exchange, the old property's adjusted basis carries over into the replacement, with adjustments, which is how tax deferral is preserved. Understanding adjusted basis is essential to estimating what an exchange actually saves.</p>",
+      "keyPoints": [
+        "Starts with cost basis, then adjusts for improvements and depreciation",
+        "Sale price minus adjusted basis equals taxable gain",
+        "Depreciation lowers basis, increasing gain at sale",
+        "Carries over into replacement property in a 1031 exchange"
+      ],
+      "source": {
+        "label": "IRS - Publication 551, Basis of Assets",
+        "url": "https://www.irs.gov/publications/p551"
+      },
+      "related": [
+        "cost-basis",
+        "capital-gains-tax",
+        "depreciation-recapture",
+        "step-up-in-basis"
+      ],
+      "oneLine": "Original cost plus improvements minus depreciation, the basis used to figure taxable gain."
+    },
+    {
+      "slug": "beneficial-interest",
+      "term": "Beneficial Interest",
+      "category": "DSTs",
+      "lead": "A beneficial interest is an investor's fractional ownership share in a Delaware Statutory Trust, entitling them to income and appreciation without holding title.",
+      "definition": "<p>A <strong>beneficial interest</strong> is the ownership stake an investor holds in a Delaware Statutory Trust (DST). Rather than holding legal title to real estate, the investor owns an undivided fractional interest in the trust, which itself owns the property. The trustee holds title; the beneficiaries hold the economic rights.</p><p>This structure is what makes DSTs work for 1031 exchanges. Under IRS Revenue Ruling 2004-86, a beneficial interest in a properly structured DST is treated as a direct interest in real estate, so it qualifies as like-kind replacement property. An investor might buy a $100,000 beneficial interest in a DST that owns a $50 million apartment complex, receiving a proportional share of rent and any sale proceeds.</p><p>Beneficial interests are passive: holders cannot make management decisions, negotiate leases, or refinance. They simply receive distributions and their share of eventual appreciation, which is precisely the appeal for investors seeking hands-off ownership.</p>",
+      "keyPoints": [
+        "Fractional ownership in a DST, not direct legal title",
+        "Treated as like-kind real estate under Rev. Rul. 2004-86",
+        "Entitles the holder to a proportional share of income and appreciation",
+        "Completely passive, with no management or decision rights"
+      ],
+      "source": {
+        "label": "IRS - Revenue Ruling 2004-86",
+        "url": "https://www.irs.gov/pub/irs-drop/rr-04-86.pdf"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "securitized-real-estate",
+        "tenants-in-common-tic",
+        "sponsor"
+      ],
+      "oneLine": "An investor's fractional ownership share in a DST that owns the underlying real estate."
+    },
+    {
+      "slug": "boot",
+      "term": "Boot",
+      "category": "1031 Exchange",
+      "lead": "Boot is any cash or non-like-kind value received in a 1031 exchange; it is taxable up to the amount of gain and reduces the deferral you achieve.",
+      "definition": "<p><strong>Boot</strong> is anything of value received in a 1031 exchange that is not like-kind real estate. The classic examples are cash left over (cash boot) and a reduction in debt (mortgage boot). Receiving boot does not disqualify the exchange, but it makes that portion taxable.</p><p>Boot is taxed as recognized gain up to the amount of your total realized gain. Say you sell a $1 million property with a $300,000 gain and buy a $900,000 replacement, pocketing $100,000. That $100,000 is boot and is taxable, while the remaining $200,000 of gain stays deferred.</p><p>To fully defer tax, an investor must trade equal or up in value, reinvest all equity, and replace all debt. Boot most often appears by accident: leftover proceeds, taking on a smaller mortgage, or receiving personal property with the real estate. Careful structuring with the qualified intermediary avoids it.</p>",
+      "keyPoints": [
+        "Any non-like-kind value received, such as cash or debt relief",
+        "Taxable up to the amount of realized gain",
+        "Cash boot and mortgage boot are the two main types",
+        "Avoided by trading equal or up and reinvesting all equity and debt"
+      ],
+      "source": {
+        "label": "IRS - Instructions for Form 8824 (Like-Kind Exchanges)",
+        "url": "https://www.irs.gov/instructions/i8824"
+      },
+      "related": [
+        "mortgage-boot",
+        "debt-replacement",
+        "1031-exchange",
+        "realized-gain-vs-recognized-gain"
+      ],
+      "oneLine": "Non-like-kind value (cash or debt relief) received in a 1031 exchange, taxable as gain."
+    },
+    {
+      "slug": "cap-rate",
+      "term": "Cap Rate",
+      "category": "Investing",
+      "lead": "Cap rate, or capitalization rate, is a property's annual net operating income divided by its price, expressing the unleveraged yield as a percentage.",
+      "definition": "<p>The <strong>capitalization rate</strong>, or cap rate, is a quick measure of a real estate investment's unleveraged return. It is calculated as annual net operating income (NOI) divided by the property's value or purchase price. A property generating $500,000 of NOI and priced at $10 million has a 5% cap rate.</p><p>Cap rate lets investors compare properties on an apples-to-apples basis, independent of financing. Lower cap rates generally signal lower perceived risk and higher-quality or higher-growth assets, while higher cap rates imply more risk or less demand. It is an income snapshot, not a total-return figure; it ignores appreciation, debt, and taxes.</p><p>For 1031 and DST investors, cap rate helps gauge whether replacement property income is competitive. But it is only a starting point: two properties with the same cap rate can differ widely in tenant quality, lease term, and location. It should be weighed alongside distribution yield and the underlying business plan.</p>",
+      "keyPoints": [
+        "Net operating income divided by property value",
+        "Measures unleveraged yield, ignoring financing",
+        "Lower cap rates typically mean lower perceived risk",
+        "A snapshot of income, not total return"
+      ],
+      "source": {
+        "label": "Investor.gov - Real Estate Investment Trusts (REITs)",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/real-estate-investment-trusts-reits"
+      },
+      "related": [
+        "distribution-yield",
+        "passive-income",
+        "triple-net-lease-nnn",
+        "reit"
+      ],
+      "oneLine": "Net operating income divided by price, a property's unleveraged yield as a percent."
+    },
+    {
+      "slug": "capital-gains-tax",
+      "term": "Capital Gains Tax",
+      "category": "Taxes",
+      "lead": "Capital gains tax is the federal tax on profit from selling an asset like real estate; long-term gains are taxed at 0%, 15%, or 20% depending on income.",
+      "definition": "<p><strong>Capital gains tax</strong> is the tax you owe on the profit when you sell a capital asset for more than your adjusted basis. For real estate held more than a year, the gain is long-term and taxed at preferential federal rates of <strong>0%, 15%, or 20%</strong> depending on taxable income. Assets held a year or less are taxed at ordinary income rates.</p><p>For real estate the picture is more layered. The portion of gain attributable to depreciation is unrecaptured Section 1250 gain, taxed at up to 25%. High earners may also owe the 3.8% Net Investment Income Tax, and most states add their own tax.</p><p>A $400,000 real estate gain could easily face a combined federal bill above $100,000. This is exactly what a 1031 exchange defers: by rolling proceeds into like-kind property, the investor postpones the capital gains tax and the depreciation recapture until a future sale, or potentially eliminates it through a step-up in basis at death.</p>",
+      "keyPoints": [
+        "Long-term gains taxed at 0%, 15%, or 20% federally",
+        "Short-term gains taxed as ordinary income",
+        "Depreciation portion taxed at up to 25% (unrecaptured Section 1250)",
+        "High earners may add the 3.8% Net Investment Income Tax",
+        "Deferred by a 1031 exchange, eliminated by step-up at death"
+      ],
+      "source": {
+        "label": "IRS - Topic No. 409, Capital Gains and Losses",
+        "url": "https://www.irs.gov/taxtopics/tc409"
+      },
+      "related": [
+        "depreciation-recapture",
+        "unrecaptured-section-1250-gain",
+        "net-investment-income-tax",
+        "1031-exchange"
+      ],
+      "oneLine": "Federal tax on the profit from selling an asset; long-term rates are 0%, 15%, or 20%."
+    },
+    {
+      "slug": "cost-basis",
+      "term": "Cost Basis",
+      "category": "Taxes",
+      "lead": "Cost basis is what you originally paid for a property, including purchase price and acquisition costs, and it is the starting point for calculating gain.",
+      "definition": "<p><strong>Cost basis</strong> is your original investment in a property for tax purposes. It generally equals the purchase price plus acquisition costs like legal fees, title charges, transfer taxes, and certain closing expenses. It is the foundation from which adjusted basis, and ultimately taxable gain, is calculated.</p><p>Over time, cost basis is adjusted upward for capital improvements and downward for depreciation, giving you adjusted basis. When you sell, subtracting adjusted basis from the sale price yields your gain. If you buy a rental for $500,000 and pay $20,000 in closing costs, your starting cost basis is $520,000.</p><p>How basis is established matters enormously in a 1031 exchange, where the old property's basis carries into the replacement, and in inheritance, where heirs receive a stepped-up basis equal to fair market value at death. Keeping thorough records of basis is essential to avoid overpaying tax later.</p>",
+      "keyPoints": [
+        "Original purchase price plus acquisition and closing costs",
+        "Starting point before improvements and depreciation adjustments",
+        "Used to calculate taxable gain at sale",
+        "Carries over to replacement property in a 1031 exchange"
+      ],
+      "source": {
+        "label": "IRS - Publication 551, Basis of Assets",
+        "url": "https://www.irs.gov/publications/p551"
+      },
+      "related": [
+        "adjusted-basis",
+        "capital-gains-tax",
+        "step-up-in-basis",
+        "depreciation-recapture"
+      ],
+      "oneLine": "What you originally paid for a property, the starting point for figuring taxable gain."
+    },
+    {
+      "slug": "debt-replacement",
+      "term": "Debt Replacement",
+      "category": "1031 Exchange",
+      "lead": "Debt replacement is the 1031 rule that an investor must take on debt on the replacement property equal to the mortgage paid off, or add cash, to defer all tax.",
+      "definition": "<p><strong>Debt replacement</strong> refers to a core requirement for full tax deferral in a 1031 exchange: the investor must replace any mortgage debt that was paid off on the relinquished property. If you sell a property with a $400,000 loan, your replacement must carry at least $400,000 of new debt, or you must contribute $400,000 of additional cash to make up the difference.</p><p>Falling short creates <strong>mortgage boot</strong>, the taxable relief from debt. The IRS treats debt reduction as if you received cash, so under-replacing debt triggers recognized gain even if you reinvest all your cash equity.</p><p>For DST investors, debt replacement is simplified: DSTs come with pre-arranged, non-recourse financing already in place at a set loan-to-value ratio. An investor simply selects a DST whose built-in leverage matches the debt they need to replace, satisfying the requirement without personally qualifying for a loan.</p>",
+      "keyPoints": [
+        "Must replace paid-off mortgage debt to fully defer tax",
+        "Can substitute additional cash for missing debt",
+        "Shortfall creates taxable mortgage boot",
+        "DSTs provide pre-arranged non-recourse debt to match"
+      ],
+      "source": {
+        "label": "IRS - Instructions for Form 8824 (Like-Kind Exchanges)",
+        "url": "https://www.irs.gov/instructions/i8824"
+      },
+      "related": [
+        "mortgage-boot",
+        "boot",
+        "1031-exchange",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "Matching the mortgage paid off with equal new debt (or cash) to fully defer tax in a 1031."
+    },
+    {
+      "slug": "delaware-statutory-trust",
+      "term": "Delaware Statutory Trust",
+      "category": "DSTs",
+      "lead": "A Delaware Statutory Trust is a legal entity that holds real estate and lets multiple investors own fractional, passive, 1031-eligible interests in the property.",
+      "definition": "<p>A <strong>Delaware Statutory Trust (DST)</strong> is a legal entity, formed under Delaware law, that holds title to income-producing real estate and divides ownership into fractional beneficial interests. It is a leading vehicle for 1031 exchange investors who want to defer tax without the hassle of managing property directly.</p><p>Under IRS Revenue Ruling 2004-86, a beneficial interest in a properly structured DST is treated as a direct interest in real property, so it qualifies as like-kind replacement property. A sponsor acquires an institutional-grade asset, say a $75 million medical office portfolio, and sells interests to accredited investors, often with minimums around $100,000.</p><p>DSTs are entirely passive: the trustee handles all decisions, and investors receive monthly distributions plus a share of appreciation when the property sells. The trade-offs are illiquidity, no control, and the seven deadly sins restrictions that limit the trust from raising new capital or refinancing after the offering closes.</p>",
+      "keyPoints": [
+        "A Delaware entity holding real estate in fractional interests",
+        "Qualifies as 1031 replacement property under Rev. Rul. 2004-86",
+        "Sold to accredited investors, often around $100,000 minimum",
+        "Fully passive; the trustee makes all decisions",
+        "Illiquid, with restrictions on refinancing and new capital"
+      ],
+      "source": {
+        "label": "IRS - Revenue Ruling 2004-86",
+        "url": "https://www.irs.gov/pub/irs-drop/rr-04-86.pdf"
+      },
+      "related": [
+        "beneficial-interest",
+        "dst-vs-tic",
+        "sponsor",
+        "master-lease"
+      ],
+      "oneLine": "An entity holding real estate that offers passive, 1031-eligible fractional interests."
+    },
+    {
+      "slug": "depreciation-recapture",
+      "term": "Depreciation Recapture",
+      "category": "Taxes",
+      "lead": "Depreciation recapture is the tax owed on gain attributable to depreciation deductions previously taken on a property, taxed at up to 25% for real estate.",
+      "definition": "<p><strong>Depreciation recapture</strong> is the IRS reclaiming some of the tax benefit you enjoyed from depreciation. While you own a rental, you deduct depreciation each year, lowering taxable income and your adjusted basis. When you sell, the gain attributable to those deductions is taxed, often at a higher rate than the rest of your gain.</p><p>For real property this is called <strong>unrecaptured Section 1250 gain</strong> and is taxed at a maximum federal rate of <strong>25%</strong>, rather than the 0/15/20% long-term capital gains rates. If you took $200,000 of depreciation over the years, that $200,000 of gain can face up to 25% tax at sale, a meaningful bill on top of ordinary capital gains.</p><p>A 1031 exchange defers depreciation recapture along with capital gains tax, since the transaction is not treated as a sale. If the investor holds until death, a step-up in basis can eliminate the recapture liability entirely for heirs.</p>",
+      "keyPoints": [
+        "Taxes gain created by prior depreciation deductions",
+        "Real property recapture is taxed at up to 25% (unrecaptured Section 1250)",
+        "Applies on top of ordinary capital gains tax",
+        "Deferred by a 1031 exchange, eliminated by step-up at death"
+      ],
+      "source": {
+        "label": "IRS - Topic No. 409, Capital Gains and Losses",
+        "url": "https://www.irs.gov/taxtopics/tc409"
+      },
+      "related": [
+        "unrecaptured-section-1250-gain",
+        "capital-gains-tax",
+        "adjusted-basis",
+        "step-up-in-basis"
+      ],
+      "oneLine": "Tax on the gain created by past depreciation deductions, taxed at up to 25% on real estate."
+    },
+    {
+      "slug": "distribution-yield",
+      "term": "Distribution Yield",
+      "category": "Investing",
+      "lead": "Distribution yield is the annual income a DST or REIT pays investors, expressed as a percentage of the amount invested, a key measure of cash flow.",
+      "definition": "<p><strong>Distribution yield</strong> is the annual cash an investment pays out, divided by the price or amount invested, expressed as a percentage. For a DST or REIT, if you invest $100,000 and receive $5,000 a year in distributions, the distribution yield is 5%.</p><p>It is the headline income number most 1031 and DST investors focus on, since many are trading an actively managed rental for passive cash flow. But yield alone can mislead. Distributions may include a return of capital rather than pure profit, and a high yield can signal higher risk or a property drawing down reserves.</p><p>Distribution yield differs from total return, which also includes appreciation realized when the property sells. A DST might pay a 4.5% yield during the hold and deliver additional gain at sale. Investors should look at whether distributions are covered by actual operating income, not just the advertised rate.</p>",
+      "keyPoints": [
+        "Annual distributions divided by amount invested",
+        "The main cash-flow metric for DSTs and REITs",
+        "May include return of capital, not just profit",
+        "Different from total return, which adds appreciation"
+      ],
+      "source": {
+        "label": "SEC - Investor Bulletin: Real Estate Investment Trusts (REITs)",
+        "url": "https://www.sec.gov/files/reits.pdf"
+      },
+      "related": [
+        "cap-rate",
+        "passive-income",
+        "reit",
+        "full-cycle"
+      ],
+      "oneLine": "The annual income a DST or REIT pays, shown as a percent of the amount you invested."
+    },
+    {
+      "slug": "drop-and-swap",
+      "term": "Drop and Swap",
+      "category": "1031 Exchange",
+      "lead": "A drop and swap is a technique where a partnership distributes property to partners as tenants in common before a 1031 exchange so each can exchange separately.",
+      "definition": "<p>A <strong>drop and swap</strong> is a strategy for partnerships, or LLCs taxed as partnerships, whose members want to go separate ways in a 1031 exchange. Section 1031 does not allow exchanging partnership interests themselves, so the partnership first drops the property down to the individual partners as tenants in common, then each partner swaps their share independently.</p><p>This lets one partner cash out and pay tax while another defers via a 1031 exchange, flexibility a single partnership-level exchange cannot provide. The catch is timing: the IRS may challenge the exchange if the conversion to tenant-in-common ownership happens too close to the sale, arguing the partner did not hold the property for investment long enough.</p><p>Because of that held for investment risk, practitioners generally recommend completing the drop well before listing the property, ideally in a prior tax year. It is a common but scrutinized maneuver requiring careful legal and tax guidance.</p>",
+      "keyPoints": [
+        "Partnership distributes property to partners as tenants in common",
+        "Lets each partner exchange or cash out independently",
+        "Partnership interests themselves cannot be 1031-exchanged",
+        "IRS may challenge if done too close to the sale"
+      ],
+      "source": {
+        "label": "Cornell LII - 26 U.S. Code Section 1031",
+        "url": "https://www.law.cornell.edu/uscode/text/26/1031"
+      },
+      "related": [
+        "1031-exchange",
+        "tenants-in-common-tic",
+        "like-kind-property",
+        "replacement-property"
+      ],
+      "oneLine": "Splitting partnership property into tenant-in-common shares so partners can 1031 separately."
+    },
+    {
+      "slug": "dst-vs-tic",
+      "term": "DST vs. TIC",
+      "category": "DSTs",
+      "lead": "DST vs. TIC compares two fractional real estate structures for 1031 exchanges; DSTs allow many passive investors while TICs cap owners at 35 with more control.",
+      "definition": "<p><strong>DST vs. TIC</strong> is a comparison of the two main fractional-ownership structures used as 1031 replacement property. Both let multiple investors co-own institutional real estate, but they differ in structure and flexibility.</p><p>A <strong>Tenancy in Common (TIC)</strong>, sanctioned by IRS Revenue Procedure 2002-22, gives each investor direct deeded title, limits the deal to 35 co-owners, and generally requires unanimous consent for major decisions, plus each investor typically signs on the loan. A <strong>DST</strong>, governed by Revenue Ruling 2004-86, holds title at the trust level, allows far more investors with lower minimums, requires no investor loan qualification, and is entirely passive.</p><p>DSTs have become far more popular because of lower minimums, non-recourse financing already in place, and no need for co-owner consensus. TICs offer more control and a voice in decisions, which some investors prefer despite the added complexity. Both qualify as like-kind property when properly structured.</p>",
+      "keyPoints": [
+        "TIC caps ownership at 35 investors; DST allows many more",
+        "TIC gives deeded title and voting rights; DST is fully passive",
+        "TIC investors usually sign the loan; DST debt is non-recourse and pre-arranged",
+        "TIC follows Rev. Proc. 2002-22; DST follows Rev. Rul. 2004-86"
+      ],
+      "source": {
+        "label": "IRS - Revenue Ruling 2004-86",
+        "url": "https://www.irs.gov/pub/irs-drop/rr-04-86.pdf"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "tenants-in-common-tic",
+        "beneficial-interest",
+        "master-lease"
+      ],
+      "oneLine": "Two 1031 fractional structures: DSTs allow many passive owners; TICs cap 35 with control."
+    },
+    {
+      "slug": "ffo",
+      "term": "FFO (Funds From Operations)",
+      "category": "721 / REITs",
+      "lead": "Funds from operations (FFO) is a REIT earnings measure that adds depreciation back to net income, giving a truer picture of cash generated by the properties.",
+      "definition": "<p><strong>Funds from operations (FFO)</strong> is the standard measure of a REIT's operating performance. Because real estate throws off large non-cash depreciation charges that depress net income, FFO adds depreciation and amortization back to earnings and removes gains or losses from property sales, better reflecting the recurring cash the portfolio produces.</p><p>The metric was defined by Nareit and is widely used because GAAP net income understates a REIT's earning power. Investors and analysts compare a REIT's price to its FFO per share much like a P/E ratio for stocks, and dividends are often evaluated against FFO to judge sustainability.</p><p>A refinement, <strong>adjusted FFO (AFFO)</strong>, further subtracts recurring capital expenditures to approximate true distributable cash. For 721 exchange and UPREIT investors holding OP units, FFO growth is a key signal of whether the REIT can maintain and grow distributions over time.</p>",
+      "keyPoints": [
+        "Net income plus depreciation, excluding property sale gains",
+        "Standard REIT performance metric defined by Nareit",
+        "Used like a P/E ratio to value REITs",
+        "AFFO refines it by subtracting recurring capital expenditures"
+      ],
+      "source": {
+        "label": "SEC - Investor Bulletin: Real Estate Investment Trusts (REITs)",
+        "url": "https://www.sec.gov/files/reits.pdf"
+      },
+      "related": [
+        "reit",
+        "nav",
+        "upreit",
+        "op-units"
+      ],
+      "oneLine": "A REIT earnings metric that adds depreciation back to net income to show true cash flow."
+    },
+    {
+      "slug": "full-cycle",
+      "term": "Full-Cycle",
+      "category": "Investing",
+      "lead": "Full-cycle describes a DST or non-traded REIT investment that has completed its life span, acquired, operated, and sold, returning capital to investors.",
+      "definition": "<p>A <strong>full-cycle</strong> investment is one that has gone the entire distance: the sponsor acquired the property, operated it through the planned hold period, and ultimately sold it, returning capital and any profit to investors. The term is common in the DST and non-traded REIT world, where investments are illiquid and designed to run a set course of roughly five to ten years.</p><p>A sponsor's track record of full-cycle offerings is one of the most useful due-diligence signals, because it shows realized results rather than projections. If a DST was purchased at a 5% projected yield and sold years later at a gain, investors can judge whether the business plan actually delivered.</p><p>At full-cycle, 1031 investors face a decision point: recognize the gain, roll into another 1031 exchange, or use a 721 exchange into a REIT. The event effectively resets the tax-deferral clock and the choice of what to do next.</p>",
+      "keyPoints": [
+        "An investment that has been acquired, operated, and sold",
+        "Common measure for DSTs and non-traded REITs",
+        "A sponsor's full-cycle history shows realized, not projected, results",
+        "Triggers a decision to cash out, 1031 again, or do a 721 exchange"
+      ],
+      "source": {
+        "label": "SEC - Investor Bulletin: Real Estate Investment Trusts (REITs)",
+        "url": "https://www.sec.gov/files/reits.pdf"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "sponsor",
+        "distribution-yield",
+        "721-exchange"
+      ],
+      "oneLine": "A DST or non-traded REIT that has been acquired, operated, and sold, returning investor capital."
+    },
+    {
+      "slug": "improvement-exchange",
+      "term": "Improvement Exchange",
+      "category": "1031 Exchange",
+      "lead": "An improvement exchange lets a 1031 investor use exchange funds to build or renovate the replacement property before taking title, counting the work toward value.",
+      "definition": "<p>An <strong>improvement exchange</strong>, also called a construction or build-to-suit exchange, lets a 1031 investor apply exchange proceeds toward improvements on the replacement property. It is useful when the replacement costs less than the relinquished property, since the added construction value can help the investor trade equal or up and avoid boot.</p><p>Because an investor cannot build on property they already own with exchange funds, an exchange accommodation titleholder (EAT) takes and holds title while improvements are made, using the safe harbor of Revenue Procedure 2000-37. All work must be completed and the property transferred to the investor within the standard <strong>180-day</strong> window.</p><p>For example, an investor selling a $2 million property could buy a $1.5 million building and use $500,000 of exchange funds for renovations, reaching the $2 million target. The tight deadline and added complexity make improvement exchanges more demanding than a standard exchange.</p>",
+      "keyPoints": [
+        "Uses exchange funds to improve the replacement property",
+        "An exchange accommodation titleholder holds title during construction",
+        "Improvements must be completed within the 180-day period",
+        "Helps trade equal-or-up when the replacement costs less"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "reverse-exchange",
+        "180-day-exchange-period",
+        "1031-exchange",
+        "boot"
+      ],
+      "oneLine": "Using 1031 funds to build or renovate the replacement property before taking title."
+    },
+    {
+      "slug": "like-kind-property",
+      "term": "Like-Kind Property",
+      "category": "1031 Exchange",
+      "lead": "Like-kind property refers to real estate held for investment or business use that can be exchanged tax-deferred under Section 1031; nearly all real estate qualifies.",
+      "definition": "<p><strong>Like-kind property</strong> is the class of assets eligible for a 1031 exchange. The term is broad for real estate: almost any investment or business real property in the U.S. is like-kind to almost any other. You can exchange an apartment building for raw land, a retail strip for a DST interest, or a rental house for a warehouse.</p><p>Like-kind refers to the nature or character of the property, not its grade or quality. The key requirement is that both the relinquished and replacement properties are held for productive use in a trade or business or for investment; a primary residence or property held primarily for resale (dealer property) does not qualify.</p><p>Since the 2017 tax law, only real property qualifies; equipment, vehicles, and other personal property no longer do. Foreign real estate is not like-kind to U.S. real estate. This flexibility is what lets investors reposition across property types while deferring tax.</p>",
+      "keyPoints": [
+        "Nearly all U.S. investment or business real estate qualifies",
+        "Refers to the character of property, not its quality or type",
+        "Must be held for business or investment, not personal use",
+        "Since 2018, only real property qualifies, not personal property"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "1031-exchange",
+        "replacement-property",
+        "45-day-identification-period",
+        "drop-and-swap"
+      ],
+      "oneLine": "Investment or business real estate that qualifies for a tax-deferred 1031 exchange."
+    },
+    {
+      "slug": "master-lease",
+      "term": "Master Lease",
+      "category": "DSTs",
+      "lead": "A master lease is an arrangement where a DST leases its entire property to a master tenant, who operates it and pays rent used to fund investor distributions.",
+      "definition": "<p>A <strong>master lease</strong> is a structure used in some DSTs to satisfy the strict IRS rules that limit a trust's operational activity. Because a DST generally cannot actively manage property or renegotiate leases after the offering closes (the seven deadly sins), the trust leases the entire property to a <strong>master tenant</strong>, often an affiliate of the sponsor, who handles day-to-day operations and subleasing.</p><p>The master tenant pays rent to the DST, which funds investor distributions, and keeps any operational upside or shoulders shortfalls. This lets the DST hold property that needs active management, like an apartment community, while preserving its passive, 1031-eligible status.</p><p>Master leases can be structured with a fixed base rent plus variable bonus rent tied to performance. Investors should understand that in a master-lease DST, distributions depend on the master tenant's ability to pay, a layer worth examining in the offering documents.</p>",
+      "keyPoints": [
+        "DST leases its whole property to a master tenant",
+        "Lets a DST hold actively managed property while staying passive",
+        "Master tenant operates the property and pays rent to the trust",
+        "Rent funds investor distributions, often with a variable component"
+      ],
+      "source": {
+        "label": "IRS - Revenue Ruling 2004-86",
+        "url": "https://www.irs.gov/pub/irs-drop/rr-04-86.pdf"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "springing-llc",
+        "sponsor",
+        "triple-net-lease-nnn"
+      ],
+      "oneLine": "A DST leases its whole property to a master tenant who operates it and pays rent."
+    },
+    {
+      "slug": "mortgage-boot",
+      "term": "Mortgage Boot",
+      "category": "1031 Exchange",
+      "lead": "Mortgage boot is the taxable gain created in a 1031 exchange when the debt on the replacement property is less than the debt paid off on the sold property.",
+      "definition": "<p><strong>Mortgage boot</strong>, also called debt-relief boot, arises in a 1031 exchange when you reduce your mortgage debt. The IRS treats being relieved of debt as if you received cash, so if your replacement property carries less debt than the property you sold, the difference is taxable.</p><p>Suppose you sell a property with a $500,000 mortgage and buy a replacement with only a $300,000 loan. The $200,000 of debt reduction is mortgage boot and is taxed as recognized gain, even if you reinvested all of your cash equity. You can offset mortgage boot by adding cash to the replacement purchase to cover the gap.</p><p>This is a common trap for investors who trade into a less-leveraged property. DSTs help avoid it by offering interests with built-in, pre-arranged debt at various loan-to-value ratios, letting an investor precisely match the debt they need to replace.</p>",
+      "keyPoints": [
+        "Taxable gain from reducing mortgage debt in an exchange",
+        "IRS treats debt relief as if it were cash received",
+        "Can be offset by adding cash to the replacement purchase",
+        "Avoided with DSTs that carry matching pre-arranged debt"
+      ],
+      "source": {
+        "label": "IRS - Instructions for Form 8824 (Like-Kind Exchanges)",
+        "url": "https://www.irs.gov/instructions/i8824"
+      },
+      "related": [
+        "boot",
+        "debt-replacement",
+        "1031-exchange",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "Taxable gain when the replacement property's debt is less than the debt you paid off."
+    },
+    {
+      "slug": "nav",
+      "term": "NAV (Net Asset Value)",
+      "category": "721 / REITs",
+      "lead": "Net asset value (NAV) is the per-share value of a fund or REIT, total assets minus liabilities divided by shares, used to price shares and track worth.",
+      "definition": "<p><strong>Net asset value (NAV)</strong> is the value of an investment's assets minus its liabilities, usually stated per share or per unit. For a mutual fund it is calculated daily; for a non-traded REIT it is typically appraised periodically. The formula is simple: total assets minus total liabilities, divided by the number of shares outstanding.</p><p>NAV matters most for NAV REITs and non-traded REITs, where there is no public market price. Instead, the sponsor computes NAV, often monthly or quarterly, based on independent appraisals of the underlying real estate, and investors buy and sell at that NAV. If a REIT owns $1 billion of property with $400 million of debt and 60 million shares, its NAV is $10 per share.</p><p>For 721 exchange investors holding OP units, NAV drives the value of their units and any share redemptions, so understanding how and how often it is calculated is important due diligence.</p>",
+      "keyPoints": [
+        "Total assets minus liabilities, divided by shares outstanding",
+        "Used to price non-traded and NAV REITs",
+        "Based on periodic independent property appraisals",
+        "Determines OP unit value for 721 exchange investors"
+      ],
+      "source": {
+        "label": "Investor.gov - Net Asset Value",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/net-asset-value"
+      },
+      "related": [
+        "reit",
+        "op-units",
+        "upreit",
+        "ffo"
+      ],
+      "oneLine": "Per-share value of a fund or REIT, assets minus liabilities divided by shares."
+    },
+    {
+      "slug": "net-investment-income-tax",
+      "term": "Net Investment Income Tax",
+      "category": "Taxes",
+      "lead": "The Net Investment Income Tax is a 3.8% federal surtax on investment income for higher earners, applying to rental income, capital gains, dividends, and more.",
+      "definition": "<p>The <strong>Net Investment Income Tax (NIIT)</strong> is an additional <strong>3.8%</strong> federal tax on net investment income, enacted to help fund Medicare. It applies to individuals whose modified adjusted gross income exceeds <strong>$200,000</strong> (single) or <strong>$250,000</strong> (married filing jointly), thresholds that are not indexed for inflation.</p><p>Net investment income includes interest, dividends, capital gains, rental and royalty income, and income from passive businesses. The tax applies to the lesser of net investment income or the amount by which MAGI exceeds the threshold. So a sizeable real estate capital gain can push a seller over the line and add 3.8% on top of capital gains and depreciation recapture taxes.</p><p>A 1031 exchange helps here too: by deferring the capital gain, it also defers the NIIT that the gain would otherwise trigger. For investors near the thresholds, the 3.8% is a meaningful part of the total tax an exchange postpones.</p>",
+      "keyPoints": [
+        "A 3.8% surtax on net investment income",
+        "Applies above $200k single or $250k married filing jointly MAGI",
+        "Covers capital gains, rents, dividends, interest, and royalties",
+        "Deferred along with the gain in a 1031 exchange"
+      ],
+      "source": {
+        "label": "IRS - Topic No. 559, Net Investment Income Tax",
+        "url": "https://www.irs.gov/taxtopics/tc559"
+      },
+      "related": [
+        "capital-gains-tax",
+        "depreciation-recapture",
+        "passive-income",
+        "1031-exchange"
+      ],
+      "oneLine": "A 3.8% federal surtax on investment income once income tops $200k single / $250k joint."
+    },
+    {
+      "slug": "op-units",
+      "term": "OP Units",
+      "category": "721 / REITs",
+      "lead": "OP units are operating partnership units received when contributing property to a REIT's partnership in a 721 exchange, deferring tax while paying distributions.",
+      "definition": "<p><strong>OP units</strong>, operating partnership units, are the ownership interests an investor receives when contributing real estate to a REIT's operating partnership through a 721 exchange. Instead of getting cash or REIT stock, which would be taxable, the investor gets OP units and defers the capital gains tax.</p><p>OP units generally have economic rights equivalent to REIT shares: they pay the same per-unit distributions and track the same value. Over time, holders can typically convert OP units into REIT common shares on a one-for-one basis, but that conversion is a taxable event, triggering the deferred gain.</p><p>The appeal is a passive, diversified interest in a large REIT portfolio with continued tax deferral, and if the investor holds the units until death, heirs may receive a step-up in basis that erases the deferred gain. The main limitation is that OP units are illiquid until converted, and you generally cannot 1031 exchange back out of them.</p>",
+      "keyPoints": [
+        "Received for contributing property in a 721 exchange",
+        "Defer tax and pay distributions like REIT shares",
+        "Convertible to REIT stock, but conversion is taxable",
+        "Eligible for step-up in basis if held until death"
+      ],
+      "source": {
+        "label": "SEC - Investor Bulletin: Real Estate Investment Trusts (REITs)",
+        "url": "https://www.sec.gov/files/reits.pdf"
+      },
+      "related": [
+        "721-exchange",
+        "upreit",
+        "reit",
+        "step-up-in-basis"
+      ],
+      "oneLine": "Partnership units from a 721 exchange that defer tax and pay REIT-like distributions."
+    },
+    {
+      "slug": "opportunity-zone",
+      "term": "Opportunity Zone",
+      "category": "Opportunity Zones",
+      "lead": "An Opportunity Zone is an IRS-designated distressed area where investing capital gains through a Qualified Opportunity Fund earns tax deferral and other breaks.",
+      "definition": "<p>An <strong>Opportunity Zone</strong> is an economically distressed community designated under the 2017 Tax Cuts and Jobs Act to attract long-term investment. By reinvesting capital gains into a Qualified Opportunity Fund (QOF) that deploys capital in these zones, investors receive powerful tax incentives.</p><p>The benefits are twofold. First, tax on the original rolled-in gain is deferred. Second, and most valuable, if the QOF investment is held at least 10 years, all appreciation of the fund itself becomes federal-income-tax-free. Thousands of zones were designated across all states and territories based on census tract data.</p><p>Opportunity Zones differ from 1031 exchanges in important ways: they accept gains from any asset (stocks, businesses, real estate), you invest only the gain rather than all proceeds, and there is no qualified intermediary or 45-day identification. They are a distinct strategy for deferring and potentially eliminating tax on capital gains.</p>",
+      "keyPoints": [
+        "IRS-designated distressed communities for incentivized investment",
+        "Accepts capital gains from any asset type, not just real estate",
+        "Only the gain must be reinvested, not total proceeds",
+        "10-year hold makes the fund's appreciation tax-free"
+      ],
+      "source": {
+        "label": "IRS - Opportunity Zones Frequently Asked Questions",
+        "url": "https://www.irs.gov/credits-deductions/opportunity-zones-frequently-asked-questions"
+      },
+      "related": [
+        "qualified-opportunity-fund",
+        "qualified-opportunity-zone-business",
+        "10-year-hold",
+        "capital-gains-tax"
+      ],
+      "oneLine": "An IRS-designated distressed area where fund investments earn capital gains tax breaks."
+    },
+    {
+      "slug": "passive-income",
+      "term": "Passive Income",
+      "category": "Investing",
+      "lead": "Passive income is earnings from investments requiring little ongoing effort, such as DST distributions or rental income, and is taxed under special IRS rules.",
+      "definition": "<p><strong>Passive income</strong> is money earned from an enterprise in which you do not materially participate, most commonly rental real estate and limited-partner interests. For 1031 and DST investors, it is the core appeal: replacing the work of being a landlord with distributions that arrive without active involvement.</p><p>The IRS has specific passive activity rules. Rental activities are generally passive by default, and passive losses can usually only offset passive income, not wages or portfolio income. This matters because depreciation from real estate can shelter passive distributions, sometimes making a portion of DST income tax-deferred during the hold.</p><p>For example, a retiree who sells a management-intensive apartment building and exchanges into DSTs trades active rental income for passive distributions, say $4,000 a month, while a property manager handles everything. Understanding the passive classification helps investors plan how that income, and any losses, will be taxed.</p>",
+      "keyPoints": [
+        "Income from investments you do not materially participate in",
+        "Rental real estate is generally passive by default",
+        "Passive losses typically offset only passive income",
+        "Depreciation can shelter part of DST distributions"
+      ],
+      "source": {
+        "label": "IRS - Topic No. 425, Passive Activities - Losses and Credits",
+        "url": "https://www.irs.gov/taxtopics/tc425"
+      },
+      "related": [
+        "distribution-yield",
+        "delaware-statutory-trust",
+        "cap-rate",
+        "net-investment-income-tax"
+      ],
+      "oneLine": "Earnings from investments that need little ongoing effort, like DST or rental distributions."
+    },
+    {
+      "slug": "ppm",
+      "term": "PPM (Private Placement Memorandum)",
+      "category": "Investing",
+      "lead": "A private placement memorandum is the detailed disclosure document a sponsor gives investors in a private offering like a DST, outlining terms, risks, and fees.",
+      "definition": "<p>A <strong>private placement memorandum (PPM)</strong> is the primary disclosure document for a private, unregistered securities offering such as a DST or Opportunity Zone fund. It serves the role that a prospectus does for public securities, giving prospective investors the information needed to evaluate the deal.</p><p>A PPM typically runs dozens or hundreds of pages and covers the business plan, property details, the sponsor's background and track record, the capital structure and debt, all fees and compensation, tax considerations, and, critically, an extensive risk-factors section. Because these offerings rely on the Regulation D exemption, the PPM is how the sponsor meets its disclosure and anti-fraud obligations.</p><p>Reading the PPM carefully is the heart of due diligence. Fees, load, projected versus guaranteed returns, and the sponsor's discretion are all disclosed there. Investors should review it, often with an advisor or attorney, before committing capital to any private real estate offering.</p>",
+      "keyPoints": [
+        "Disclosure document for a private (Reg D) securities offering",
+        "Covers business plan, sponsor, fees, tax, and risk factors",
+        "Serves the role a prospectus plays for public securities",
+        "The central document for investor due diligence"
+      ],
+      "source": {
+        "label": "SEC - Private Placements Under Rule 506(b)",
+        "url": "https://www.sec.gov/resources-small-businesses/exempt-offerings/private-placements-rule-506b"
+      },
+      "related": [
+        "regulation-d",
+        "sponsor",
+        "accredited-investor",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "The disclosure document detailing a private offering's terms, fees, risks, and sponsor."
+    },
+    {
+      "slug": "qualified-intermediary",
+      "term": "Qualified Intermediary",
+      "category": "1031 Exchange",
+      "lead": "A qualified intermediary is an independent third party that holds 1031 exchange proceeds and handles the paperwork so the investor never touches the cash.",
+      "definition": "<p>A <strong>qualified intermediary (QI)</strong>, also called an accommodator or exchange facilitator, is the independent party that makes a 1031 exchange work. IRS rules say that if the investor takes possession of the sale proceeds, even briefly, the exchange is disqualified and the gain becomes taxable. The QI holds the funds in escrow between the sale and the purchase.</p><p>The QI also prepares the exchange agreement, assignment documents, and instructions, and coordinates with the closing agents. It must be genuinely independent; your own attorney, accountant, agent, or relative generally cannot serve as your QI because they are considered disqualified persons.</p><p>Choosing a reputable, well-capitalized QI is critical because the firm holds potentially millions of dollars of your money with limited federal regulation. Investors should confirm the QI carries a fidelity bond and errors-and-omissions coverage, and holds client funds in segregated, qualified escrow accounts.</p>",
+      "keyPoints": [
+        "Independent party that holds exchange proceeds in escrow",
+        "Required so the investor never constructively receives the cash",
+        "Cannot be your attorney, CPA, agent, or a relative",
+        "Prepares the exchange documents and coordinates closings"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "qualified-intermediary-bond",
+        "1031-exchange",
+        "45-day-identification-period",
+        "180-day-exchange-period"
+      ],
+      "oneLine": "An independent party that holds 1031 proceeds so the investor never touches the cash."
+    },
+    {
+      "slug": "qualified-intermediary-bond",
+      "term": "Qualified Intermediary Bond",
+      "category": "1031 Exchange",
+      "lead": "A qualified intermediary bond is a fidelity bond protecting a 1031 investor's exchange funds against loss from theft or misappropriation by the intermediary.",
+      "definition": "<p>A <strong>qualified intermediary bond</strong> is a form of financial protection, typically a fidelity bond, that a qualified intermediary carries to safeguard the client funds it holds during a 1031 exchange. Because the QI industry is only lightly regulated at the federal level and QIs hold large sums between closings, this coverage is an important safeguard against fraud or insolvency.</p><p>A fidelity bond covers losses from dishonest acts like theft or misappropriation by the QI's employees. Reputable QIs also carry errors-and-omissions insurance for mistakes and hold client money in segregated qualified escrow or qualified trust accounts, so it is not commingled with company funds.</p><p>There have been cases where under-capitalized QIs failed and investors lost exchange funds. That is why due diligence should include asking about bonding levels, insurance limits, and how funds are held. Some states also impose their own bonding or licensing requirements on exchange facilitators.</p>",
+      "keyPoints": [
+        "Fidelity bond protecting client funds held by a QI",
+        "Guards against theft or misappropriation of exchange proceeds",
+        "Complements E&O insurance and segregated escrow accounts",
+        "Important because QIs are lightly regulated federally"
+      ],
+      "source": {
+        "label": "Cornell LII - 26 CFR Section 1.1031(k)-1",
+        "url": "https://www.law.cornell.edu/cfr/text/26/1.1031(k)-1"
+      },
+      "related": [
+        "qualified-intermediary",
+        "1031-exchange",
+        "delaware-statutory-trust",
+        "180-day-exchange-period"
+      ],
+      "oneLine": "A fidelity bond protecting a 1031 investor's funds from theft by the intermediary."
+    },
+    {
+      "slug": "qualified-opportunity-fund",
+      "term": "Qualified Opportunity Fund",
+      "category": "Opportunity Zones",
+      "lead": "A Qualified Opportunity Fund is an investment vehicle that pools capital gains and invests at least 90% of assets in Opportunity Zone property or businesses.",
+      "definition": "<p>A <strong>Qualified Opportunity Fund (QOF)</strong> is the investment vehicle through which investors access Opportunity Zone tax benefits. Organized as a corporation or partnership, a QOF must hold at least <strong>90%</strong> of its assets in qualified Opportunity Zone property, either real estate in a zone or interests in a qualified Opportunity Zone business.</p><p>To invest, a taxpayer rolls an eligible capital gain into the QOF within 180 days of realizing it. This defers tax on that gain, and holding the QOF interest for 10 years or more makes the fund's own appreciation tax-free. The 90% asset test is checked twice a year, and funds face penalties for falling short.</p><p>QOFs must also meet a substantial improvement requirement, generally doubling the basis of acquired buildings, to ensure capital genuinely revitalizes the zone. Investors self-certify a QOF on Form 8996. Because rules are technical, sponsors typically structure and manage QOFs for accredited investors.</p>",
+      "keyPoints": [
+        "Must hold at least 90% of assets in Opportunity Zone property",
+        "Funded by rolling in capital gains within 180 days",
+        "Organized as a corporation or partnership, self-certified on Form 8996",
+        "10-year hold makes fund appreciation tax-free"
+      ],
+      "source": {
+        "label": "IRS - Invest in a Qualified Opportunity Fund",
+        "url": "https://www.irs.gov/credits-deductions/businesses/invest-in-a-qualified-opportunity-fund"
+      },
+      "related": [
+        "opportunity-zone",
+        "qualified-opportunity-zone-business",
+        "10-year-hold",
+        "capital-gains-tax"
+      ],
+      "oneLine": "A fund that invests 90%+ of assets in Opportunity Zones to deliver capital gains tax breaks."
+    },
+    {
+      "slug": "qualified-opportunity-zone-business",
+      "term": "Qualified Opportunity Zone Business",
+      "category": "Opportunity Zones",
+      "lead": "A qualified opportunity zone business is an operating business meeting IRS tests that a Qualified Opportunity Fund can invest in to satisfy its 90% asset rule.",
+      "definition": "<p>A <strong>qualified opportunity zone business (QOZB)</strong> is an operating business located in an Opportunity Zone that a Qualified Opportunity Fund can invest in. Many QOFs invest indirectly through QOZBs rather than owning property outright, because the QOZB rules offer more flexibility, including a working-capital safe harbor that gives the business up to 31 months to deploy cash into a development plan.</p><p>To qualify, a QOZB must meet several tests: substantially all (at least 70%) of its tangible property must be in the zone, at least 50% of its gross income must come from active conduct in the zone, and it cannot be a sin business like a golf course, casino, or liquor store. It also must limit holdings of nonqualified financial property.</p><p>For investors, the QOZB structure is what allows ground-up development and business ventures in a zone to fit within the fund's 90% asset test, broadening the range of Opportunity Zone projects.</p>",
+      "keyPoints": [
+        "An operating business inside an Opportunity Zone a QOF can hold",
+        "At least 70% of tangible property must be in the zone",
+        "50%+ of gross income from active conduct in the zone",
+        "Working-capital safe harbor allows up to 31 months to deploy cash",
+        "Certain sin businesses are excluded"
+      ],
+      "source": {
+        "label": "IRS - Opportunity Zones Frequently Asked Questions",
+        "url": "https://www.irs.gov/credits-deductions/opportunity-zones-frequently-asked-questions"
+      },
+      "related": [
+        "qualified-opportunity-fund",
+        "opportunity-zone",
+        "10-year-hold",
+        "capital-gains-tax"
+      ],
+      "oneLine": "An operating business in an Opportunity Zone a fund can invest in to meet its asset test."
+    },
+    {
+      "slug": "realized-gain-vs-recognized-gain",
+      "term": "Realized Gain vs. Recognized Gain",
+      "category": "Taxes",
+      "lead": "Realized gain is the total profit on a property sale; recognized gain is the portion actually taxed now, and a 1031 exchange defers recognition of that gain.",
+      "definition": "<p><strong>Realized gain vs. recognized gain</strong> is a distinction at the heart of 1031 exchanges. <strong>Realized gain</strong> is your economic profit, the amount by which the sale price exceeds your adjusted basis. <strong>Recognized gain</strong> is the part of that profit the IRS actually taxes in the current year.</p><p>In a normal sale the two are equal. But a 1031 exchange lets you realize a gain without recognizing it: the profit exists, but tax is deferred into the replacement property's basis. If you receive boot, you recognize gain up to the lesser of the boot or the realized gain, while the rest stays deferred.</p><p>For example, selling a property for a $300,000 realized gain and doing a full 1031 exchange means $0 recognized gain today. If you pocket $50,000 of cash, you would recognize $50,000 and defer $250,000. Grasping the difference clarifies exactly how much tax an exchange saves and where boot creates a current tax bill.</p>",
+      "keyPoints": [
+        "Realized gain is total profit, sale price minus adjusted basis",
+        "Recognized gain is the portion taxed in the current year",
+        "A full 1031 exchange realizes gain but recognizes none",
+        "Boot causes recognition up to the amount of boot received"
+      ],
+      "source": {
+        "label": "Cornell LII - 26 U.S. Code Section 1001",
+        "url": "https://www.law.cornell.edu/uscode/text/26/1001"
+      },
+      "related": [
+        "boot",
+        "1031-exchange",
+        "capital-gains-tax",
+        "adjusted-basis"
+      ],
+      "oneLine": "Realized gain is total profit; recognized gain is the part taxed now, and 1031 defers it."
+    },
+    {
+      "slug": "regulation-d",
+      "term": "Regulation D (Reg D)",
+      "category": "Investing",
+      "lead": "Regulation D is the SEC framework letting companies raise capital by selling securities privately to investors without full SEC registration, used for most DSTs.",
+      "definition": "<p><strong>Regulation D</strong> is a set of SEC rules that lets companies and sponsors raise money by selling securities in a private placement without going through the expensive, time-consuming process of a full public registration. Nearly all DSTs, Opportunity Zone funds, and private real estate offerings are sold under Reg D.</p><p>The most-used exemptions are Rules 506(b) and 506(c). Both allow raising an unlimited amount of capital, but they differ on advertising and who can invest: 506(b) prohibits general solicitation and permits up to 35 non-accredited investors, while 506(c) allows public advertising but limits sales to verified accredited investors. Issuers file a Form D notice with the SEC after the first sale.</p><p>Reg D offerings are exempt from registration, not from the anti-fraud rules; sponsors must still disclose material facts, typically through a private placement memorandum. For investors, Reg D is the legal basis on which they access these private, illiquid real estate investments.</p>",
+      "keyPoints": [
+        "SEC rules allowing private securities sales without registration",
+        "Rules 506(b) and 506(c) are the most-used exemptions",
+        "Issuers file a Form D notice with the SEC",
+        "Exempt from registration but not from anti-fraud rules"
+      ],
+      "source": {
+        "label": "Investor.gov - Rule 506 of Regulation D",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/rule-506-regulation-d"
+      },
+      "related": [
+        "regulation-d-rule-506b",
+        "regulation-d-rule-506c",
+        "accredited-investor",
+        "ppm"
+      ],
+      "oneLine": "The SEC framework for selling securities privately, without full registration, used by DSTs."
+    },
+    {
+      "slug": "regulation-d-rule-506b",
+      "term": "Regulation D Rule 506(b)",
+      "category": "Investing",
+      "lead": "Rule 506(b) is a Regulation D exemption allowing unlimited capital from accredited investors plus up to 35 non-accredited ones, but bars general solicitation.",
+      "definition": "<p><strong>Rule 506(b)</strong> is the most common Regulation D exemption for private real estate offerings. It lets a sponsor raise an unlimited amount of money from an unlimited number of accredited investors, plus up to <strong>35 non-accredited</strong> but financially sophisticated investors.</p><p>Its defining limitation is a ban on <strong>general solicitation</strong>: the sponsor cannot advertise the offering publicly and must have a pre-existing, substantive relationship with each investor. In exchange for that restriction, 506(b) lets sponsors accept accredited investors on a self-certification basis, without the formal income or net-worth verification that 506(c) requires.</p><p>Practically, most DSTs sold through advisors use 506(b): the advisor already has a relationship with the client, no public advertising is needed, and verification is lighter. If non-accredited investors participate, the sponsor must provide extensive additional disclosure, so many 506(b) deals still limit themselves to accredited investors in practice.</p>",
+      "keyPoints": [
+        "Allows unlimited accredited plus up to 35 non-accredited investors",
+        "Prohibits general solicitation or public advertising",
+        "Requires a pre-existing relationship with investors",
+        "Accredited status can be self-certified, not formally verified"
+      ],
+      "source": {
+        "label": "SEC - Private Placements Under Rule 506(b)",
+        "url": "https://www.sec.gov/resources-small-businesses/exempt-offerings/private-placements-rule-506b"
+      },
+      "related": [
+        "regulation-d",
+        "regulation-d-rule-506c",
+        "accredited-investor",
+        "ppm"
+      ],
+      "oneLine": "Reg D exemption: unlimited accredited plus up to 35 non-accredited investors, no advertising."
+    },
+    {
+      "slug": "regulation-d-rule-506c",
+      "term": "Regulation D Rule 506(c)",
+      "category": "Investing",
+      "lead": "Rule 506(c) is a Regulation D exemption allowing public advertising of a private offering, but all investors must be accredited and their status verified.",
+      "definition": "<p><strong>Rule 506(c)</strong> is the Regulation D exemption that permits <strong>general solicitation</strong>, meaning a sponsor can openly advertise a private offering through websites, email, seminars, and media. This was created by the 2012 JOBS Act to make raising private capital easier.</p><p>The trade-off is stricter investor rules. Every purchaser must be an <strong>accredited investor</strong>, with no allowance for non-accredited participants, and the sponsor must take <strong>reasonable steps to verify</strong> each investor's accredited status, reviewing tax returns, bank statements, or a written confirmation from a CPA or attorney, rather than accepting a simple self-certification.</p><p>For investors, a 506(c) deal means you will likely be asked to document your income or net worth before investing. Sponsors choose 506(c) when they want to market broadly to reach new investors; many DST and Opportunity Zone sponsors still prefer 506(b) to avoid the verification burden when they already have investor relationships.</p>",
+      "keyPoints": [
+        "Permits general solicitation and public advertising",
+        "All investors must be accredited, with no non-accredited allowed",
+        "Sponsor must take reasonable steps to verify accredited status",
+        "Created by the 2012 JOBS Act"
+      ],
+      "source": {
+        "label": "SEC - General Solicitation Under Rule 506(c)",
+        "url": "https://www.sec.gov/resources-small-businesses/exempt-offerings/general-solicitation-rule-506c"
+      },
+      "related": [
+        "regulation-d",
+        "regulation-d-rule-506b",
+        "accredited-investor",
+        "ppm"
+      ],
+      "oneLine": "Reg D exemption allowing advertising, but all investors must be verified as accredited."
+    },
+    {
+      "slug": "reit",
+      "term": "REIT",
+      "category": "721 / REITs",
+      "lead": "A REIT is a company that owns or finances income-producing real estate and must pay out at least 90% of taxable income to shareholders as dividends.",
+      "definition": "<p>A <strong>real estate investment trust (REIT)</strong> is a company that owns, operates, or finances income-producing real estate and lets investors buy into a diversified property portfolio much like buying stock. To qualify, a REIT must distribute at least <strong>90%</strong> of its taxable income to shareholders as dividends and meet asset and income tests focused on real estate.</p><p>In return, the REIT itself generally pays no corporate income tax, avoiding the double taxation most corporations face. REITs come in several forms: publicly traded (liquid, priced daily on an exchange), public non-traded, and private. They can own apartments, offices, retail, industrial, data centers, and more.</p><p>REITs matter to 1031 investors mainly through the 721 exchange, or UPREIT, path: an investor can contribute property, often via a DST first, to a REIT's operating partnership for OP units, gaining diversified, professionally managed exposure while deferring tax. The trade-off is giving up direct property ownership.</p>",
+      "keyPoints": [
+        "Owns or finances income-producing real estate",
+        "Must distribute at least 90% of taxable income as dividends",
+        "Generally pays no corporate-level income tax",
+        "Reached by 1031 investors through the 721/UPREIT path"
+      ],
+      "source": {
+        "label": "Investor.gov - Real Estate Investment Trust (REIT)",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/real-estate-investment-trust-reit"
+      },
+      "related": [
+        "upreit",
+        "721-exchange",
+        "op-units",
+        "ffo"
+      ],
+      "oneLine": "A company owning income real estate that pays 90%+ of taxable income as dividends."
+    },
+    {
+      "slug": "replacement-property",
+      "term": "Replacement Property",
+      "category": "1031 Exchange",
+      "lead": "Replacement property is the new like-kind real estate a 1031 investor acquires with exchange proceeds to complete the exchange and defer capital gains tax.",
+      "definition": "<p><strong>Replacement property</strong> is the real estate an investor buys to complete a 1031 exchange, using the proceeds from the property they sold (the relinquished property). To defer all tax, the replacement generally must be equal or greater in value, and the investor must reinvest all equity and replace any debt.</p><p>The replacement must be identified within 45 days and acquired within 180 days of the sale, and it must be like-kind; nearly any U.S. investment or business real estate qualifies. Investors can acquire one property or several, subject to the identification rules.</p><p>DSTs are widely used as replacement property because they let an investor deploy an exact dollar amount into institutional-grade, professionally managed real estate quickly, helpful when deadlines loom or leftover proceeds would otherwise become taxable boot. Whatever the form, the replacement carries over the deferred gain until it is eventually sold in a taxable transaction.</p>",
+      "keyPoints": [
+        "The new like-kind property acquired to complete a 1031 exchange",
+        "Must be equal or greater value to fully defer tax",
+        "Identified within 45 days, acquired within 180 days",
+        "DSTs are popular replacement property for precise, fast closings"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "1031-exchange",
+        "like-kind-property",
+        "45-day-identification-period",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "The new like-kind property a 1031 investor acquires with proceeds to complete the exchange."
+    },
+    {
+      "slug": "reverse-exchange",
+      "term": "Reverse Exchange",
+      "category": "1031 Exchange",
+      "lead": "A reverse exchange lets a 1031 investor buy the replacement property before selling the relinquished one, with an accommodation titleholder parking the new asset.",
+      "definition": "<p>A <strong>reverse exchange</strong> flips the usual order of a 1031 exchange: the investor acquires the replacement property before selling the relinquished property. Since IRS rules do not let you own both properties at once during an exchange, an exchange accommodation titleholder (EAT) takes and parks title to one of the properties.</p><p>Under the safe harbor of Revenue Procedure 2000-37, the EAT can hold the parked property for up to <strong>180 days</strong>, during which the investor must sell the old property and complete the swap. The same 45-day identification concept applies: the relinquished property must be identified within 45 days of parking.</p><p>Reverse exchanges are useful in competitive markets where an investor finds the perfect replacement and cannot risk losing it while waiting to sell. They are more complex and costly than forward exchanges, requiring bridge financing and EAT fees, but they preserve full tax deferral when timing will not cooperate.</p>",
+      "keyPoints": [
+        "Buy the replacement before selling the relinquished property",
+        "An exchange accommodation titleholder parks one property",
+        "Must be completed within 180 days under Rev. Proc. 2000-37",
+        "More complex and costly, often needing bridge financing"
+      ],
+      "source": {
+        "label": "IRS - Like-Kind Exchanges (Real Estate Tax Tips)",
+        "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips"
+      },
+      "related": [
+        "improvement-exchange",
+        "1031-exchange",
+        "180-day-exchange-period",
+        "replacement-property"
+      ],
+      "oneLine": "Buying the 1031 replacement property before selling the old one, via a parked title."
+    },
+    {
+      "slug": "securitized-real-estate",
+      "term": "Securitized Real Estate",
+      "category": "DSTs",
+      "lead": "Securitized real estate refers to property ownership packaged as securities, like DST interests or REIT shares, that investors buy instead of holding title.",
+      "definition": "<p><strong>Securitized real estate</strong> means real property ownership that has been packaged into securities, financial instruments like DST beneficial interests, REIT shares, or fund units, rather than held as direct title to a building. Investors buy a security that represents a fractional economic interest in the underlying real estate.</p><p>This structure brings several advantages: access to large, institutional-grade assets with a modest minimum, professional management, diversification, and passivity. It also brings regulation; these interests are securities, so they are sold under SEC rules, usually Regulation D, and require appropriate disclosure and, often, accredited-investor status.</p><p>For 1031 investors, the key example is the DST, which under Rev. Rul. 2004-86 is both a security and treated as direct real estate for exchange purposes, a rare combination. The trade-off versus direct ownership is illiquidity and loss of control, since a securitized interest cannot simply be sold on a whim or actively managed.</p>",
+      "keyPoints": [
+        "Real estate ownership packaged as tradable securities",
+        "Includes DST interests, REIT shares, and fund units",
+        "Sold under SEC rules, often to accredited investors",
+        "Offers access and passivity but less liquidity and control"
+      ],
+      "source": {
+        "label": "Investor.gov - Real Estate Investment Trusts (REITs)",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/real-estate-investment-trusts-reits"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "beneficial-interest",
+        "reit",
+        "regulation-d"
+      ],
+      "oneLine": "Property ownership packaged as securities, DST interests or REIT shares, instead of title."
+    },
+    {
+      "slug": "sponsor",
+      "term": "Sponsor",
+      "category": "DSTs",
+      "lead": "A sponsor is the company that structures, acquires, and manages a DST or real estate offering, sourcing the property and running it on investors' behalf.",
+      "definition": "<p>A <strong>sponsor</strong> is the firm that creates and operates a real estate investment offering such as a DST, TIC, or Opportunity Zone fund. The sponsor sources and acquires the property, arranges the financing, structures the entity, prepares the offering documents, and manages the asset through its life cycle to eventual sale.</p><p>Sponsors earn fees, acquisition fees, asset-management fees, disposition fees, and sometimes a share of profits, which are disclosed in the private placement memorandum. Because investors are entirely passive, the sponsor's competence and integrity are among the most important factors in a deal's outcome.</p><p>Due diligence centers heavily on the sponsor: their years in business, assets under management, and especially their <strong>full-cycle track record</strong>, how prior offerings actually performed when sold, not just projected returns. A sponsor with many completed offerings and transparent reporting generally warrants more confidence than a newcomer with only projections.</p>",
+      "keyPoints": [
+        "Structures, acquires, and manages the real estate offering",
+        "Earns fees disclosed in the private placement memorandum",
+        "Investors rely fully on the sponsor since they are passive",
+        "Full-cycle track record is a key due-diligence signal"
+      ],
+      "source": {
+        "label": "SEC - Private Placements Under Rule 506(b)",
+        "url": "https://www.sec.gov/resources-small-businesses/exempt-offerings/private-placements-rule-506b"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "ppm",
+        "full-cycle",
+        "master-lease"
+      ],
+      "oneLine": "The firm that structures, acquires, and manages a DST or real estate offering."
+    },
+    {
+      "slug": "springing-llc",
+      "term": "Springing LLC",
+      "category": "DSTs",
+      "lead": "A springing LLC is a standby structure that converts a DST into an LLC if the trust hits financial trouble, letting a new manager take active control.",
+      "definition": "<p>A <strong>springing LLC</strong> is a contingency mechanism built into many DSTs to work around the trust's strict operating limitations. Because IRS rules (the seven deadly sins of Rev. Rul. 2004-86) forbid a DST from renegotiating leases, refinancing, or raising new capital, a healthy DST cannot respond if the property runs into serious financial distress.</p><p>The solution: the trust documents provide that, upon a triggering event like a tenant default or looming loan default, the DST automatically converts, or springs, into a limited liability company. The LLC form allows a manager (the signatory trustee) to actively negotiate with the lender, restructure leases, or take other steps to protect the property that a DST legally could not.</p><p>The trade-off is that once a DST springs to an LLC, the interests generally no longer qualify as like-kind real estate, so investors typically cannot do a 1031 exchange out of a converted entity. It is a last-resort protection, not a routine feature.</p>",
+      "keyPoints": [
+        "Standby conversion of a DST into an LLC in financial distress",
+        "Works around the DST's seven deadly sins restrictions",
+        "Lets a manager actively restructure debt or leases",
+        "Converted LLC interests generally lose 1031 eligibility"
+      ],
+      "source": {
+        "label": "IRS - Revenue Ruling 2004-86",
+        "url": "https://www.irs.gov/pub/irs-drop/rr-04-86.pdf"
+      },
+      "related": [
+        "delaware-statutory-trust",
+        "master-lease",
+        "beneficial-interest",
+        "sponsor"
+      ],
+      "oneLine": "A backup structure converting a DST to an LLC so a manager can rescue a troubled property."
+    },
+    {
+      "slug": "step-up-in-basis",
+      "term": "Step-Up in Basis",
+      "category": "Taxes",
+      "lead": "Step-up in basis resets an inherited asset's cost basis to its fair market value at the owner's death, potentially erasing deferred capital gains for heirs.",
+      "definition": "<p><strong>Step-up in basis</strong> is a provision that adjusts the cost basis of an inherited asset to its <strong>fair market value on the date of the owner's death</strong>. For real estate investors, it is the capstone of a lifelong 1031 strategy often summarized as swap till you drop.</p><p>Because a 1031 exchange only defers tax, carrying a low basis forward through each exchange, an investor who keeps exchanging can build up a large embedded gain. At death, the step-up resets basis to current value, and that deferred capital gain and depreciation recapture generally disappear for the heirs. If a property with a $200,000 adjusted basis is worth $1 million at death, the heirs' basis becomes $1 million, and they could sell with little or no taxable gain.</p><p>This makes DSTs and 721/UPREIT structures attractive for estate planning, since fractional interests can be divided among heirs, each receiving a stepped-up basis.</p>",
+      "keyPoints": [
+        "Resets basis to fair market value at the owner's death",
+        "Can eliminate deferred capital gains and depreciation recapture",
+        "Completes the swap till you drop 1031 strategy",
+        "Passes assets to heirs with little embedded gain"
+      ],
+      "source": {
+        "label": "Cornell LII - 26 U.S. Code Section 1014",
+        "url": "https://www.law.cornell.edu/uscode/text/26/1014"
+      },
+      "related": [
+        "adjusted-basis",
+        "capital-gains-tax",
+        "depreciation-recapture",
+        "1031-exchange"
+      ],
+      "oneLine": "Resets an inherited asset's basis to date-of-death value, often erasing deferred gains."
+    },
+    {
+      "slug": "tenants-in-common-tic",
+      "term": "Tenants in Common (TIC)",
+      "category": "DSTs",
+      "lead": "Tenancy in common is a co-ownership structure where multiple investors hold direct deeded shares of a property, each able to use their share in a 1031 exchange.",
+      "definition": "<p><strong>Tenancy in common (TIC)</strong> is a form of co-ownership in which two or more investors each hold a direct, deeded, undivided fractional interest in the same property. Under IRS Revenue Procedure 2002-22, a properly structured TIC interest qualifies as like-kind property, so investors can use it in a 1031 exchange.</p><p>TICs differ from DSTs in important ways. A TIC is limited to <strong>35 co-owners</strong>, each holds actual title and typically has voting rights on major decisions (often requiring unanimity), and each usually must qualify for and sign the mortgage. This gives investors more control but also more responsibility and potential for gridlock.</p><p>Before DSTs became dominant, TICs were the primary way for smaller investors to co-own institutional real estate in a 1031 exchange. They remain in use where investors want a direct ownership interest and a voice in decisions, but the higher minimums, lender sign-off, and consensus requirements make them less common today.</p>",
+      "keyPoints": [
+        "Direct, deeded fractional co-ownership of a property",
+        "Limited to 35 co-owners under Rev. Proc. 2002-22",
+        "Owners hold title and usually vote on major decisions",
+        "Qualifies as 1031 like-kind replacement property"
+      ],
+      "source": {
+        "label": "IRS - Revenue Procedure 2002-22",
+        "url": "https://www.irs.gov/pub/irs-drop/rp-02-22.pdf"
+      },
+      "related": [
+        "dst-vs-tic",
+        "delaware-statutory-trust",
+        "beneficial-interest",
+        "drop-and-swap"
+      ],
+      "oneLine": "Direct deeded co-ownership by up to 35 investors, each usable in a 1031 exchange."
+    },
+    {
+      "slug": "triple-net-lease-nnn",
+      "term": "Triple-Net Lease (NNN)",
+      "category": "Investing",
+      "lead": "A triple-net lease is a lease where the tenant pays property taxes, insurance, and maintenance on top of rent, giving the owner predictable, low-touch income.",
+      "definition": "<p>A <strong>triple-net lease (NNN)</strong> is a commercial lease structure in which the tenant is responsible for the three main property expenses, property <strong>taxes</strong>, building <strong>insurance</strong>, and <strong>maintenance</strong>, in addition to base rent. The landlord receives rent that is largely free of operating costs, hence net, net, net.</p><p>NNN leases are common with single-tenant properties leased to creditworthy national tenants, think pharmacies, dollar stores, or fast-food chains, often on long terms of 10 to 25 years with scheduled rent increases. This produces predictable, largely passive income, which is why many DSTs hold NNN-leased assets.</p><p>For a 1031 or DST investor, a triple-net structure is appealing because it minimizes management and expense volatility. The main risks are tenant credit (if the tenant fails, income stops) and concentration in a single property or tenant, so lease term, tenant quality, and location remain central to evaluating an NNN investment.</p>",
+      "keyPoints": [
+        "Tenant pays taxes, insurance, and maintenance plus rent",
+        "Common with single-tenant, long-term commercial leases",
+        "Produces predictable, low-management income",
+        "Main risk is tenant credit and single-tenant concentration"
+      ],
+      "source": {
+        "label": "Investor.gov - Real Estate Investment Trusts (REITs)",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/investment-products/real-estate-investment-trusts-reits"
+      },
+      "related": [
+        "cap-rate",
+        "master-lease",
+        "passive-income",
+        "distribution-yield"
+      ],
+      "oneLine": "A commercial lease where the tenant pays taxes, insurance, and maintenance on top of rent."
+    },
+    {
+      "slug": "unrecaptured-section-1250-gain",
+      "term": "Unrecaptured Section 1250 Gain",
+      "category": "Taxes",
+      "lead": "Unrecaptured Section 1250 gain is the part of real estate gain from prior depreciation, taxed at a maximum federal rate of 25% rather than normal capital gains rates.",
+      "definition": "<p><strong>Unrecaptured Section 1250 gain</strong> is the specific slice of real estate profit attributable to the depreciation you deducted over the years, taxed at a maximum federal rate of <strong>25%</strong>. It is the form depreciation recapture takes for real property under tax code Section 1250.</p><p>When you sell a depreciated building, your gain is split. The portion equal to accumulated depreciation is unrecaptured Section 1250 gain, taxed up to 25%, higher than the 0/15/20% long-term rates that apply to the rest of the gain (the appreciation above your original cost). If you claimed $150,000 of depreciation, that $150,000 can face up to 25% tax, while gain beyond your purchase price is taxed at ordinary capital gains rates.</p><p>This is a significant reason investors use 1031 exchanges: the exchange defers unrecaptured Section 1250 gain along with the rest, and a step-up in basis at death can eliminate it for heirs entirely.</p>",
+      "keyPoints": [
+        "The depreciation portion of real estate gain",
+        "Taxed at a maximum federal rate of 25%",
+        "Higher than the 0/15/20% long-term capital gains rates",
+        "Deferred by a 1031 exchange, erased by step-up at death"
+      ],
+      "source": {
+        "label": "IRS - Topic No. 409, Capital Gains and Losses",
+        "url": "https://www.irs.gov/taxtopics/tc409"
+      },
+      "related": [
+        "depreciation-recapture",
+        "capital-gains-tax",
+        "adjusted-basis",
+        "1031-exchange"
+      ],
+      "oneLine": "The depreciation portion of real estate gain, taxed at a maximum federal rate of 25%."
+    },
+    {
+      "slug": "upreit",
+      "term": "UPREIT",
+      "category": "721 / REITs",
+      "lead": "An UPREIT, or umbrella partnership REIT, is a structure that lets property owners contribute real estate for OP units, deferring tax via a 721 exchange.",
+      "definition": "<p>An <strong>UPREIT</strong>, umbrella partnership real estate investment trust, is a REIT structure in which the REIT does not own properties directly but instead holds them through an operating partnership. This design enables the <strong>721 exchange</strong>: a property owner contributes real estate to the operating partnership in return for OP units, deferring capital gains tax that a cash sale would trigger.</p><p>For 1031 and DST investors, the UPREIT is often the final step in a sequence: exchange into a DST, then, when the sponsor's REIT acquires that DST, roll the interest into the operating partnership for OP units. The investor ends up with a diversified, professionally managed, passive interest in a large portfolio, still tax-deferred.</p><p>OP units generally pay REIT-equivalent distributions and can later convert to REIT shares (a taxable event). Held until death, they can receive a step-up in basis. The main trade-off is that the UPREIT path is typically a one-way door; you generally cannot 1031 exchange back out.</p>",
+      "keyPoints": [
+        "REIT that holds property through an operating partnership",
+        "Enables 721 exchanges of property for OP units",
+        "Often the final step after a 1031 exchange into a DST",
+        "Generally a one-way exit from 1031 eligibility"
+      ],
+      "source": {
+        "label": "Investor.gov - Real Estate Investment Trust (REIT)",
+        "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/real-estate-investment-trust-reit"
+      },
+      "related": [
+        "721-exchange",
+        "op-units",
+        "reit",
+        "delaware-statutory-trust"
+      ],
+      "oneLine": "A REIT structure enabling 721 exchanges of property for OP units, deferring tax."
+    }
+  ]
+}
