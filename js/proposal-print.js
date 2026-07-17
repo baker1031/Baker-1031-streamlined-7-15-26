@@ -17,6 +17,8 @@
   var LOGO = CLOUD + "/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
   var HEADSHOT = CLOUD + "/v1783927734/jerry-baker_ovhy2w.jpg";
   var HERO = CLOUD + "/f_jpg,q_auto:good,w_1632/v1783843881/Apartments_pllp0h.jpg";
+  var BACKHERO = CLOUD + "/f_jpg,q_auto:good,w_1632/v1783843880/Hotel_ojlaau.jpg";
+  var LOGO_WHITE = CLOUD + "/v1783843015/f8ed098a-c0f6-44f7-ab09-99a7ebc61298_ada1wu.png";
   var HEART = '<svg class="lh" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
   var ORIGIN = "https://baker1031.com";
 
@@ -149,13 +151,13 @@
     "h1{font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin-top:18px}" +
     ".pgnum{position:absolute;right:56px;bottom:12px;font-size:8px;letter-spacing:0.1em;color:#4a4a4a}" +
     ".page.cover{padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
-    ".cv-band{height:112px;padding:42px 56px 0 56px;display:flex;align-items:flex-start;justify-content:space-between}" +
-    ".cv-band img{height:30px}" +
-    ".cv-band .tag{font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:#4a4a4a;text-align:right;line-height:1.5}" +
-    ".cv-band .tag .code{font-size:11px;letter-spacing:0.08em;color:#2b3a5f;font-weight:700}" +
-    ".cv-hero{position:absolute;left:0;right:0;top:112px;bottom:0;background-size:cover;background-position:center;color:#fff}" +
+    ".cv-hero{position:absolute;left:0;right:0;top:0;bottom:0;background-size:cover;background-position:center;color:#fff}" +
+    ".cv-band{padding:46px 56px 0 56px;display:flex;align-items:flex-start;justify-content:space-between}" +
+    ".cv-band img{height:32px}" +
+    ".cv-band .tag{font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.6);text-align:right;line-height:1.5}" +
+    ".cv-band .tag .code{font-size:11px;letter-spacing:0.08em;color:#fff;font-weight:700}" +
     ".kicker{font-size:10.5px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.72)}" +
-    ".cv-inner{padding:150px 64px 0 64px}" +
+    ".cv-inner{padding:132px 64px 0 64px}" +
     ".cv-title{font-size:58px;font-weight:700;letter-spacing:-0.015em;line-height:1.07;margin-top:22px}" +
     ".cv-dot{color:rgba(255,255,255,0.55)}" +
     ".cv-rule{width:46px;height:2px;background:rgba(255,255,255,0.55);margin:30px 0}" +
@@ -194,8 +196,10 @@
     ".contactbar .reach{margin-left:auto;text-align:right;font-size:11px;line-height:1.5}.contactbar .reach a{font-weight:700}" +
     ".foot{position:absolute;left:56px;right:56px;bottom:26px;border-top:1px solid #e4e4e4;padding-top:8px;font-size:7.4px;line-height:1.42;color:#4a4a4a}" +
     ".page.back{background:#2b3a5f;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
+    ".bk-bg{position:absolute;left:0;right:0;top:0;bottom:0;background-size:cover;background-position:center;z-index:0}" +
+    ".bk-logo{height:42px;margin-top:22px}" +
     ".bk-track{position:absolute;top:46px;right:56px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5)}" +
-    ".bk-mid{margin-top:272px;text-align:center}" +
+    ".bk-mid{margin-top:272px;text-align:center;position:relative;z-index:1}" +
     ".bk-kicker{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.55)}" +
     ".bk-name{font-size:29px;font-weight:700;letter-spacing:-0.01em;margin-top:16px}" +
     ".bk-dot{color:rgba(255,255,255,0.55)}" +
@@ -216,9 +220,9 @@
     var inv = esc(cfg.investor || "[Investor Name]");
     var pgnum = function (i) { return '<div class="pgnum">' + i + " / " + totalPages + "</div>"; };
 
-    var cover = '<div class="cv-band"><img src="' + LOGO + '" alt="Baker 1031 Investments">' +
+    var cover = '<div class="cv-hero" style="background-image: linear-gradient(180deg, rgba(21,30,52,0.90), rgba(43,58,95,0.78) 46%, rgba(17,25,45,0.95)), url(' + HERO + ')">' +
+      '<div class="cv-band"><img src="' + LOGO_WHITE + '" alt="Baker 1031 Investments">' +
       '<div class="tag">Tracking Nº<br><span class="code">' + track + "</span></div></div>" +
-      '<div class="cv-hero" style="background-image: linear-gradient(180deg, rgba(21,30,52,0.93), rgba(43,58,95,0.80) 46%, rgba(17,25,45,0.95)), url(' + HERO + ')">' +
       '<div class="cv-inner"><div class="kicker">Private Investment Proposal</div>' +
       '<div class="cv-title">DST Portfolio<br>Proposal' + (pfs.length > 1 ? "s" : "") + '<span class="cv-dot">.</span></div>' +
       '<div class="cv-rule"></div>' +
@@ -245,9 +249,10 @@
       '<p class="about">Each proposal in this document was built from the same exchange: the equity, debt, and deadline figures shown on every sheet. The mixes differ in what they optimize for, and the sheets are meant to be compared side by side. Every offering listed links to its full detail page, and none of this is final: availability changes daily, and each mix is a starting point for a conversation.</p>' +
       '<div class="foot">This document is a hypothetical illustration for discussion purposes only; it is not a recommendation, an offer to sell, or a solicitation of an offer to buy any security. Offers are made only by a sponsor’s Private Placement Memorandum. DST interests are speculative, illiquid, available to accredited investors only, and involve risk of loss of principal. Securities offered through Aurora Securities, Inc., member FINRA/SIPC.</div>';
 
-    var back = '<div class="bk-track">Tracking Nº ' + track + "</div>" +
+    var back = '<div class="bk-bg" style="background-image: linear-gradient(180deg, rgba(37,49,79,0.88), rgba(24,33,56,0.95)), url(' + BACKHERO + ')"></div>' +
+      '<div class="bk-track">Tracking Nº ' + track + "</div>" +
       '<div class="bk-mid"><div class="bk-kicker">Thank you for the opportunity</div>' +
-      '<div class="bk-name">Baker 1031 Investments<span class="bk-dot">.</span></div>' +
+      '<img class="bk-logo" src="' + LOGO_WHITE + '" alt="Baker 1031 Investments">' +
       '<div class="bk-rule"></div>' +
       '<div class="bk-line">Jerry Baker · Founder &amp; Managing Principal</div>' +
       '<div class="bk-line">(415) 579-1660 · jerry@baker1031.com</div>' +
