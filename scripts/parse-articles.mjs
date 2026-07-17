@@ -53,6 +53,14 @@ const isHeading = (line, next) => {
 
 const isQuestion = (line) => /\?$/.test(line) && line.length < 170 && /^[A-Z0-9"“']/.test(line);
 
+// Editorial section pattern on strategy/detail pages: a short "eyebrow" label
+// (e.g. "Our Standard", "The Total Load") sits above a short "deck" headline
+// (e.g. "We underwrite the building before the offering.") which precedes the
+// body. Collapse those: drop the eyebrow, promote the deck to the section heading.
+const isLong = (l) => !!l && l.length > 90;
+const isLabelish = (l) => !!l && l.length <= 55 && l.split(/\s+/).length <= 6 && /^[A-Z0-9"“']/.test(l) && !/[.?!:;]$/.test(l) && !/@|https?:/.test(l);
+const isDeckish = (l) => !!l && l.length <= 95 && l.split(/\s+/).length <= 15 && /^[A-Z0-9"“']/.test(l);
+
 const isStop = (l) =>
   /^Glossary$/i.test(l) ||
   /^Sources?(\s*(&|and)\s*References)?$/i.test(l) ||
@@ -98,11 +106,43 @@ function parseOne(p, category) {
   const title = decodeEntities(p.title).replace(/\s*\|\s*Baker 1031.*$/i, "").trim();
 
   // Strip an "On This Page" table-of-contents block (strategy/detail pages).
+  // Prefer cutting through the "Back to …" line; if there is none, consume the
+  // run of short TOC entries (no terminal sentence punctuation) that follows.
   const tocIdx = lines.findIndex((l) => /^On This Page$/i.test(l));
   if (tocIdx >= 0) {
-    let end = lines.findIndex((l, i) => i > tocIdx && /^Back to /i.test(l));
-    if (end < 0) end = tocIdx + 1;
+    const backIdx = lines.findIndex((l, i) => i > tocIdx && /^Back to /i.test(l));
+    let end;
+    if (backIdx >= 0) {
+      end = backIdx;
+    } else {
+      end = tocIdx;
+      for (let j = tocIdx + 1; j < lines.length; j++) {
+        const lj = lines[j];
+        if (lj.length <= 60 && !/[.?!]$/.test(lj) && !lj.includes("❯")) end = j;
+        else break;
+      }
+    }
     lines = lines.slice(0, tocIdx).concat(lines.slice(end + 1));
+  }
+
+  // Strategy overview pages flatten each section onto a single line as
+  // "<Label> <body…>" (e.g. "Overview A Real Estate Investment Trust…").
+  // Split the known leading label off so it becomes a proper heading.
+  if (category === "strategy") {
+    const SLABELS = ["Considerations & risks", "What to weigh before investing", "By the numbers", "How it works", "Who it's for", "Considerations", "Comparison", "Overview", "Benefits", "Compare", "Risks", "What to weigh"];
+    const out = [];
+    for (const l of lines) {
+      let split = null;
+      for (const lab of SLABELS) {
+        if (l.length > lab.length + 1 && l.slice(0, lab.length).toLowerCase() === lab.toLowerCase() && l[lab.length] === " " && /[A-Z0-9]/.test(l[lab.length + 1])) {
+          split = [l.slice(0, lab.length), l.slice(lab.length + 1)];
+          break;
+        }
+      }
+      if (split) out.push(split[0], split[1]);
+      else out.push(l);
+    }
+    lines = out;
   }
 
   // byline
@@ -149,9 +189,10 @@ function parseOne(p, category) {
   let mode = "lead";
   let cur = null;
   let q = null;
+  let forceHeading = false; // set when the previous line was an eyebrow → this line is the deck/heading
 
   for (let i = startIdx; i < stopIdx; i++) {
-    const l = lines[i];
+    let l = lines[i];
     if (/^Back to /i.test(l) || l === title || /^On This Page$/i.test(l)) continue;
 
     if (/^Key Takeaways$/i.test(l)) { mode = "kt"; continue; }
@@ -163,7 +204,25 @@ function parseOne(p, category) {
       continue;
     }
 
-    const heading = isHeading(l, lines[i + 1]);
+    // eyebrow + deck + body: drop the eyebrow, treat the deck as a heading.
+    // The deck's body is either a long paragraph, or (when the deck ends in a
+    // sentence and a sub-heading follows) another short label line. The sentence
+    // check keeps stat-tile runs (short lines, no terminal period) intact.
+    if (
+      !forceHeading &&
+      (mode === "lead" || mode === "body") &&
+      isLabelish(l) &&
+      isDeckish(lines[i + 1]) &&
+      (isLong(lines[i + 2]) || (isLabelish(lines[i + 2]) && /[.!]$/.test(lines[i + 1])))
+    ) {
+      forceHeading = true;
+      continue;
+    }
+
+    let heading = isHeading(l, lines[i + 1]);
+    if (forceHeading) { heading = true; l = l.replace(/[.]$/, ""); forceHeading = false; }
+    // flattened comparison-table header rows ("Feature … | Rule …") aren't real headings
+    if (heading && /^(Feature|Rule)\s/.test(l)) heading = false;
 
     if (mode === "kt") {
       if (heading) { mode = "body"; cur = { heading: cleanHeading(l), paras: [] }; sections.push(cur); }

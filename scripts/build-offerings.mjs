@@ -1150,13 +1150,18 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   if (existsSync(join(ROOT, "learn.html"))) {
     let hub = readFileSync(join(ROOT, "learn.html"), "utf8");
     if (hub.includes("<!-- LEARN:PILLARS -->")) {
-      const cards = PILLARS.filter(([k]) => (byPillar[k] || []).length)
+      const pillarCards = PILLARS.filter(([k]) => (byPillar[k] || []).length)
         .map(([k, label, desc]) => {
           const list = byPillar[k];
           const n = list.length;
           return `      <a class="pillar" href="/learn/${list[0].slug}/">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">Browse ${n} article${n === 1 ? "" : "s"} &rarr;</span>\n      </a>`;
-        })
-        .join("\n");
+        });
+      // Glossary + Calculators round out the grid (fills the last row → even 3-wide matrix).
+      const extraCards = [
+        ["/glossary.html", "Glossary", "Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.", "Browse the glossary"],
+        ["/calculators.html", "Calculators", "Estimate the tax you could defer, your replacement-property targets, deadlines, yield, and more.", "Open the calculators"],
+      ].map(([href, label, desc, cta]) => `      <a class="pillar" href="${href}">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">${cta} &rarr;</span>\n      </a>`);
+      const cards = pillarCards.concat(extraCards).join("\n");
       hub = put(hub, "<!-- LEARN:PILLARS -->", "<!-- /LEARN:PILLARS -->", cards, "learn.html");
       writeFileSync(join(ROOT, "learn.html"), hub);
     }
