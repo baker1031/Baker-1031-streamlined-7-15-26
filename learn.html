@@ -157,7 +157,7 @@
   .learn-hero { padding: 0 0 1.4rem; }
   .learn-hero h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; }
   .learn-hero p { color: var(--muted); font-size: 0.96rem; margin-top: 0.5rem; max-width: 46rem; line-height: 1.6; }
-  .learn-search { margin: 1.4rem 0 2rem; max-width: 34rem; }
+  .learn-search { margin: 1.4rem 0 2rem; max-width: 34rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .learn-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.8rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; padding-bottom: 3rem; }
   @media (max-width: 1000px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
@@ -203,7 +203,7 @@
   <main class="container" id="main-content">
     <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><span class="current">Learn</span></nav>
     <div class="learn-hero"><h1>Learn</h1><p>Guides, explainers, and answers on 1031 exchanges, DSTs, and passive real estate investing &mdash; organized by topic.</p></div>
-    <div class="learn-search"><input type="search" placeholder="Search articles&hellip; (coming soon)" aria-label="Search articles" disabled></div>
+    <div class="learn-search"><input type="search" placeholder="Search&hellip;" aria-label="Search the site" disabled></div>
     <div class="pillar-grid">
       <!-- LEARN:PILLARS -->
       <a class="pillar" href="/learn/1031-exchange-across-state-lines/">

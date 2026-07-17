@@ -184,7 +184,7 @@
   .mk-head { margin-bottom: 1rem; }
   .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
   .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
-  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search { margin: 1rem 0 1.4rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
   .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
@@ -196,7 +196,7 @@
   .mk-head { margin-bottom: 1rem; }
   .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
   .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
-  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search { margin: 1rem 0 1.4rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
   .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
@@ -326,7 +326,7 @@
           <h1>1031 Exchange &amp; DST Investing by State</h1>
           <p>How a 1031 exchange works in your state &mdash; state tax treatment, market conditions, and the replacement-property options accredited investors are using across all 50 states and the top U.S. metros.</p>
         </div>
-        <div class="mk-search"><input type="search" id="mk-search" placeholder="Search states &amp; metros&hellip;" aria-label="Search markets"></div>
+        <div class="mk-search"><input type="search" id="mk-search" placeholder="Search&hellip;" aria-label="Search the site" disabled></div>
         <div id="mk-list">
         <!-- MK:LIST -->
 
@@ -472,20 +472,9 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <script>
-    (function () {
-      var s = document.getElementById("mk-search");
-      var links = Array.prototype.slice.call(document.querySelectorAll(".mk-state"));
-      s.addEventListener("input", function () {
-        var q = s.value.toLowerCase().trim();
-        links.forEach(function (a) { a.style.display = (!q || a.textContent.toLowerCase().indexOf(q) !== -1) ? "" : "none"; });
-        document.querySelectorAll(".region-group").forEach(function (g) {
-          var any = Array.prototype.some.call(g.querySelectorAll(".mk-state"), function (a) { return a.style.display !== "none"; });
-          g.style.display = any ? "" : "none";
-        });
-      });
-    })();
-  </script>
+  <!-- The old local state filter was replaced by the investor-only Algolia
+       site search (js/search.js): signed-in visitors get a full-site search
+       from this box; signed-out visitors see no search at all. -->
   <script type="module" src="/js/auth.js"></script>
 </body>
 </html>

@@ -181,7 +181,7 @@
   .gl-hub-head { margin-bottom: 1rem; }
   .gl-hub-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
   .gl-hub-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
-  .gl-search { margin: 1rem 0 1.4rem; }
+  .gl-search { margin: 1rem 0 1.4rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .gl-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .letter-group { margin-bottom: 1.8rem; scroll-margin-top: 120px; }
   .letter-group h2 { font-size: 1.15rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.3rem; }
@@ -300,7 +300,7 @@
           <h1>Glossary of 1031, DST &amp; Real Estate Terms</h1>
           <p>Plain-English definitions of the 1031 exchange, DST, 721 UPREIT, Opportunity Zone, REIT, and tax terms accredited real estate investors encounter &mdash; each with source authority and related terms.</p>
         </div>
-        <div class="gl-search"><input type="search" id="gl-search" placeholder="Search terms&hellip;" aria-label="Search glossary terms"></div>
+        <div class="gl-search"><input type="search" id="gl-search" placeholder="Search&hellip;" aria-label="Search the site" disabled></div>
         <div id="gl-terms">
         <!-- GL:TERMS -->
 
@@ -454,23 +454,9 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <script>
-    (function () {
-      var s = document.getElementById("gl-search");
-      var rows = Array.prototype.slice.call(document.querySelectorAll(".term-row"));
-      s.addEventListener("input", function () {
-        var q = s.value.toLowerCase().trim();
-        rows.forEach(function (r) {
-          var n = r.querySelector(".tn").textContent.toLowerCase();
-          r.style.display = (!q || n.indexOf(q) !== -1) ? "" : "none";
-        });
-        document.querySelectorAll(".letter-group").forEach(function (g) {
-          var any = Array.prototype.some.call(g.querySelectorAll(".term-row"), function (r) { return r.style.display !== "none"; });
-          g.style.display = any ? "" : "none";
-        });
-      });
-    })();
-  </script>
+  <!-- The old local term filter was replaced by the investor-only Algolia
+       site search (js/search.js): signed-in visitors get a full-site search
+       from this box; signed-out visitors see no search at all. -->
   <script type="module" src="/js/auth.js"></script>
 </body>
 </html>

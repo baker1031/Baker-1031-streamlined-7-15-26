@@ -184,7 +184,7 @@
   .mk-head { margin-bottom: 1rem; }
   .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
   .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
-  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search { margin: 1rem 0 1.4rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
   .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
@@ -196,7 +196,7 @@
   .mk-head { margin-bottom: 1rem; }
   .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
   .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
-  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search { margin: 1rem 0 1.4rem; display: none; } /* investor-only search — revealed by js/search.js when signed in */
   .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
   .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
   .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
@@ -269,7 +269,7 @@
           <p>Profiles of the sponsors behind the DST, 721, and Opportunity Zone offerings Baker 1031 tracks &mdash; their assets under management, full-cycle track record, and current offerings. &ldquo;Preferred&rdquo; is Baker&rsquo;s internal designation, not a rating or endorsement.</p>
         </div>
 
-        <div class="mk-search"><input type="search" id="sp-search" placeholder="Search sponsors&hellip;" aria-label="Search sponsors"></div>
+        <div class="mk-search"><input type="search" id="sp-search" placeholder="Search&hellip;" aria-label="Search the site" disabled></div>
 
         <div class="sp-cards" id="sp-list">
           <a class="sp-card" href="/sponsors/sponsor-template.html"><div class="top"><img src="[Logo URL]" alt="[Sponsor] logo" onerror="this.style.display='none'"><span class="chip">Preferred</span></div><h3>[Sponsor Name]</h3><p>[One-line description — asset focus and AUM.]</p><span class="go">View profile &rarr;</span></a>
