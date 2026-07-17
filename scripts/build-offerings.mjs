@@ -1978,6 +1978,15 @@ ${rows}
     ["/properties", "/current-offerings"],
     ["/strategies/", "/learn"],
     ["/strategies", "/learn"],
+    // old property-type names that differ from the new slugs (Netlify matches case-insensitively)
+    ["/property-types/medical", "/property-types/healthcare/"],
+    ["/property-types/medical/", "/property-types/healthcare/"],
+    ["/property-types/retail", "/property-types/net-lease/"],
+    ["/property-types/retail/", "/property-types/net-lease/"],
+    ["/property-types/government", "/property-types/government-leased/"],
+    ["/property-types/government/", "/property-types/government-leased/"],
+    ["/property-types/oil-gas", "/property-types/oil-gas-royalties/"],
+    ["/property-types/oil-gas/", "/property-types/oil-gas-royalties/"],
   ];
   for (const [f, t] of LEGACY_DIR) add(f, t);
   // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
