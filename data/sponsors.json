@@ -1,0 +1,520 @@
+{
+  "sponsors": [
+    {
+      "slug": "1031-crowdfunding",
+      "name": "1031 Crowdfunding",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "aei-capital-corporation",
+      "name": "AEI Capital Corporation",
+      "preferred": false,
+      "deals": 55
+    },
+    {
+      "slug": "american-capital-group",
+      "name": "American Capital Group",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "apollo-global-management",
+      "name": "Apollo Global Management",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "arctrust",
+      "name": "ARCTRUST",
+      "preferred": false,
+      "deals": 4
+    },
+    {
+      "slug": "ares-management",
+      "name": "Ares Management",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "arrimus-capital-advisors",
+      "name": "Arrimus Capital Advisors",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "baker-tilly",
+      "name": "Baker Tilly",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "beacon-real-estate-group",
+      "name": "Beacon Real Estate Group",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "blackstone",
+      "name": "Blackstone",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "blue-owl",
+      "name": "Blue Owl",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "bluerock",
+      "name": "Bluerock",
+      "preferred": true,
+      "deals": 131
+    },
+    {
+      "slug": "bonaventure",
+      "name": "Bonaventure",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "bridgeview",
+      "name": "Bridgeview",
+      "preferred": true,
+      "deals": 2
+    },
+    {
+      "slug": "brookfield",
+      "name": "Brookfield",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "cai-investments",
+      "name": "CAI Investments",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "cantor-fitzgerald",
+      "name": "Cantor Fitzgerald",
+      "preferred": false,
+      "deals": 9
+    },
+    {
+      "slug": "cantor-silverstein",
+      "name": "Cantor Silverstein",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "capital-square",
+      "name": "Capital Square",
+      "preferred": true,
+      "deals": 19
+    },
+    {
+      "slug": "carter-exchange",
+      "name": "Carter Exchange",
+      "preferred": true,
+      "deals": 3
+    },
+    {
+      "slug": "cliffwater",
+      "name": "Cliffwater",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "core",
+      "name": "Core",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "core-pacific",
+      "name": "Core Pacific",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "cove-capital",
+      "name": "Cove Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "croatan-investments",
+      "name": "Croatan Investments",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "cunat",
+      "name": "Cunat",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "denholtz",
+      "name": "Denholtz",
+      "preferred": true,
+      "deals": 16
+    },
+    {
+      "slug": "erp",
+      "name": "ERP",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "exchangeright",
+      "name": "ExchangeRight",
+      "preferred": true,
+      "deals": 28
+    },
+    {
+      "slug": "fortress-investment-group",
+      "name": "Fortress Investment Group",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "four-springs-capital",
+      "name": "Four Springs Capital",
+      "preferred": false,
+      "deals": 24
+    },
+    {
+      "slug": "fs-investments",
+      "name": "FS Investments",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "gk-real-estate",
+      "name": "GK Real Estate",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "go-store-it-partners",
+      "name": "Go Store It Partners",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "goldman-sachs",
+      "name": "Goldman Sachs",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "greystar",
+      "name": "Greystar",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "griffin-capital",
+      "name": "Griffin Capital",
+      "preferred": true,
+      "deals": 2
+    },
+    {
+      "slug": "hamilton-point-investments",
+      "name": "Hamilton Point Investments",
+      "preferred": true,
+      "deals": 15
+    },
+    {
+      "slug": "hines",
+      "name": "Hines",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "hpa-exchange",
+      "name": "HPA Exchange",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "inland",
+      "name": "Inland",
+      "preferred": false,
+      "deals": 77
+    },
+    {
+      "slug": "invesco",
+      "name": "Invesco",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "j-p-morgan",
+      "name": "J.P. Morgan",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "jll",
+      "name": "JLL",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "kay-properties",
+      "name": "Kay Properties",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "keystone-national-properties",
+      "name": "Keystone National Properties",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "kingsbarn-realty-capital",
+      "name": "Kingsbarn Realty Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "kkr",
+      "name": "KKR",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "lasalle-investment-management",
+      "name": "LaSalle Investment Management",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "livingston-street-capital",
+      "name": "Livingston Street Capital",
+      "preferred": false,
+      "deals": 4
+    },
+    {
+      "slug": "madison-capital",
+      "name": "Madison Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "madison-realty-companies",
+      "name": "Madison Realty Companies",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "mirae-asset-management",
+      "name": "Mirae Asset Management",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "moody-national",
+      "name": "Moody National",
+      "preferred": false,
+      "deals": 2
+    },
+    {
+      "slug": "nas-investment-solutions",
+      "name": "NAS Investment Solutions",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "nelson-brothers",
+      "name": "Nelson Brothers",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "nelson-partners",
+      "name": "Nelson Partners",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "net-lease-capital-advisors",
+      "name": "Net Lease Capital Advisors",
+      "preferred": false,
+      "deals": 3
+    },
+    {
+      "slug": "nexpoint",
+      "name": "NexPoint",
+      "preferred": true,
+      "deals": 3
+    },
+    {
+      "slug": "nuveen",
+      "name": "Nuveen",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "olympus-property",
+      "name": "Olympus Property",
+      "preferred": true,
+      "deals": 54
+    },
+    {
+      "slug": "origin-investments",
+      "name": "Origin Investments",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "pacific-oak-capital",
+      "name": "Pacific Oak Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "passco",
+      "name": "Passco",
+      "preferred": false,
+      "deals": 46
+    },
+    {
+      "slug": "peachtree-group",
+      "name": "Peachtree Group",
+      "preferred": true,
+      "deals": 29
+    },
+    {
+      "slug": "pgim",
+      "name": "PGIM",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "platform-ventures",
+      "name": "Platform Ventures",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "resource-royalty",
+      "name": "Resource Royalty",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "rk-properties",
+      "name": "RK Properties",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "sealy-and-company",
+      "name": "Sealy & Company",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "silverstein-properties",
+      "name": "Silverstein Properties",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "smartstop",
+      "name": "SmartStop",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "spartan",
+      "name": "Spartan",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "starboard-realty-advisors",
+      "name": "Starboard Realty Advisors",
+      "preferred": false,
+      "deals": 4
+    },
+    {
+      "slug": "starwood-capital",
+      "name": "Starwood Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "syndicated-equities",
+      "name": "Syndicated Equities",
+      "preferred": false,
+      "deals": 79
+    },
+    {
+      "slug": "time-equities",
+      "name": "Time Equities",
+      "preferred": false,
+      "deals": 20
+    },
+    {
+      "slug": "trilogy-real-estate-group",
+      "name": "Trilogy Real Estate Group",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "urban-catalyst",
+      "name": "Urban Catalyst",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "virtua-capital",
+      "name": "Virtua Capital",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "walton-global-holdings",
+      "name": "Walton Global Holdings",
+      "preferred": false,
+      "deals": 76
+    },
+    {
+      "slug": "ww-olympus-investment-company",
+      "name": "WW Olympus Investment Company",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "newstar-exchange",
+      "name": "NewStar Exchange",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "the-wyoming-reserve",
+      "name": "The Wyoming Reserve",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "ideal-capital-group",
+      "name": "IDEAL Capital Group",
+      "preferred": false,
+      "deals": 0
+    },
+    {
+      "slug": "secure-properties",
+      "name": "Secure Properties",
+      "preferred": false,
+      "deals": 0
+    }
+  ]
+}

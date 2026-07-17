@@ -752,6 +752,232 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   console.log(`Wrote performance.html (${sponsorRows.length} sponsors, ${deals.length} programs, closed cards included).`);
 }
 
+/* ---------------- 4b) Sponsor directory: profile pages + hub + deal-by-deal track records ---------------- */
+{
+  const SC_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
+  const TR_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
+  const [resSC, resTR] = await Promise.all([fetch(SC_URL, { redirect: "follow" }), fetch(TR_URL, { redirect: "follow" })]);
+  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
+  if (!resTR.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resTR.status}`);
+  const scRows = parseCSV(await resSC.text());
+  const sch = scRows[0].map((h) => h.trim());
+  const sci = (n) => sch.indexOf(n);
+  for (const need of ["Investment Firm", "Description / Overview", "Full-Cycle Deals"]) {
+    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
+  }
+  const trRows = parseCSV(await resTR.text());
+  const trh = trRows[0].map((h) => h.trim());
+  const ti = (n) => trh.indexOf(n);
+
+  const noData = (v) => {
+    const t = (v || "").trim();
+    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t) || /^n\/a$/i.test(t)) return "";
+    if (/^\d*\.?x$/i.test(t) || t === ".x") return "";
+    return t;
+  };
+  const cleanMult = (m) => /^\d*\.?\d+x$/i.test((m || "").trim()) ? (m || "").trim() : "";
+  const pct = (v) => { const m = String(v || "").trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
+  const multVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
+  const numVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)/); return m ? parseFloat(m[1]) : null; };
+  const mean = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
+
+  // Deal-by-deal track record, grouped by normalized sponsor name
+  const dealsBy = new Map();
+  for (const r of trRows.slice(1)) {
+    const s = (r[ti("Sponsor")] || "").trim();
+    const inv = (r[ti("Investment")] || "").trim();
+    if (!s || !inv) continue;
+    const k = normName(s);
+    if (!dealsBy.has(k)) dealsBy.set(k, []);
+    dealsBy.get(k).push({
+      investment: inv,
+      location: (r[ti("Location")] || "").trim(),
+      assetClass: (r[ti("Asset Class")] || "").trim(),
+      hold: (r[ti("Hold Period")] || "").trim(),
+      multiple: (r[ti("Equity Multiple")] || "").trim(),
+      annual: (r[ti("Annual Return")] || "").trim(),
+    });
+  }
+
+  // Sponsor records (any row with a firm name)
+  const sponsors = scRows.slice(1)
+    .filter((r) => (r[sci("Investment Firm")] || "").trim())
+    .map((r) => {
+      const name = r[sci("Investment Firm")].trim();
+      const slug = slugify(name);
+      const website = noData(r[sci("Website")]);
+      const domain = website.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
+      return {
+        name, slug,
+        preferred: /^yes$/i.test((r[sci("Preferred?")] || "").trim()),
+        founded: noData(r[sci("Year Founded")]),
+        aum: noData(r[sci("AUM")]),
+        description: noData(r[sci("Description / Overview")]),
+        advantages: [1, 2, 3, 4, 5].map((i) => noData(r[sci(`Key Strategy / Advantage ${i}`)])).filter(Boolean),
+        website, domain,
+        hq: noData(r[sci("Headquarters (City, State)")]),
+        logo: noData(r[sci("Logo")]),
+        fullCycle: noData(r[sci("Full-Cycle Deals")]),
+        avgAnnual: noData(r[sci("Average Annual Return")]),
+        avgMultiple: noData(r[sci("Average Equity Multiple")]),
+        avgHold: noData(r[sci("Average Hold Period")]),
+        success: noData(r[sci("Success Rate")]),
+        deals: dealsBy.get(normName(name)) || [],
+      };
+    });
+  if (sponsors.length < 20) throw new Error(`Only ${sponsors.length} sponsors — refusing to build.`);
+  // de-dupe slugs (keep first)
+  { const seen = new Set(); for (const s of sponsors) { let sl = s.slug, n = 2; while (seen.has(sl)) sl = `${s.slug}-${n++}`; s.slug = sl; seen.add(sl); } }
+
+  const withTrack = sponsors.filter((s) => s.deals.length);
+  const alpha = [...sponsors].sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
+  const prefList = alpha.filter((s) => s.preferred);
+
+  // Shared left-nav: Preferred group + All (A–Z), marking the active sponsor
+  const navFor = (activeSlug) => {
+    const li = (s) => `          <li><a${s.slug === activeSlug ? ' class="active"' : ""} href="/sponsors/${s.slug}/">${esc(s.name)}</a></li>`;
+    const pref = prefList.length
+      ? `        <details open><summary>Preferred sponsors</summary><ul>\n${prefList.map(li).join("\n")}\n        </ul></details>`
+      : "";
+    const azOpen = prefList.some((s) => s.slug === activeSlug) ? "" : " open";
+    const az = `        <details${azOpen}><summary>All sponsors (A&ndash;Z)</summary><ul>\n${alpha.map(li).join("\n")}\n        </ul></details>`;
+    return [pref, az].filter(Boolean).join("\n");
+  };
+
+  const tpl = readFileSync(join(ROOT, "sponsors", "sponsor-template.html"), "utf8");
+  let count = 0;
+  for (const s of sponsors) {
+    const canonical = `${SITE}/sponsors/${s.slug}/`;
+    const metaDesc = `${s.name} — DST sponsor profile: ${s.aum ? s.aum + " AUM, " : ""}${s.fullCycle ? s.fullCycle + " full-cycle deals, " : ""}strategy, and full-cycle track record tracked by Baker 1031 Investments.`.slice(0, 300);
+
+    // meta line
+    const metaBits = [];
+    if (s.hq) metaBits.push(esc(s.hq));
+    if (s.founded) metaBits.push(`Founded ${esc(s.founded)}`);
+    if (s.domain) metaBits.push(`<a href="${esc(s.website.match(/^https?:/i) ? s.website : "https://" + s.website)}" target="_blank" rel="noopener">${esc(s.domain)}</a>`);
+    metaBits.push("Reviewed July 2026");
+    const metaLine = metaBits.join(" &middot; ");
+
+    // facts grid (only tiles with data)
+    const facts = [
+      ["Assets Under Mgmt", s.aum], ["Full-Cycle Deals", s.fullCycle],
+      ["Avg Annual Return", s.avgAnnual], ["Avg Equity Multiple", s.avgMultiple],
+      ["Avg Hold", s.avgHold], ["Full-Cycle Success", s.success],
+      ["Year Founded", s.founded], ["Headquarters", s.hq],
+    ].filter(([, v]) => v)
+      .map(([l, v]) => `          <div class="sp-fact"><div class="l">${l}</div><div class="v">${esc(v)}</div></div>`).join("\n");
+
+    // overview + lead
+    const desc = s.description || `${s.name} is a real-estate sponsor tracked by Baker 1031 Investments.`;
+    const lead = truncate(desc, 220);
+    const overview = `        <p>${esc(desc)}</p>`;
+
+    // advantages
+    const advHtml = (s.advantages.length ? s.advantages : ["Details on this sponsor's strategy are being compiled from the Baker 1031 dataset."])
+      .map((a) => `          <li>${esc(a)}</li>`).join("\n");
+
+    // track record: summary + deal-by-deal table (for sponsors with matched deals)
+    let trackHtml;
+    if (s.deals.length) {
+      const dd = [...s.deals].sort((a, b) => a.investment.localeCompare(b.investment));
+      const aAnn = mean(dd.map((d) => pct(d.annual)).filter((x) => x !== null));
+      const aMul = mean(dd.map((d) => multVal(d.multiple)).filter((x) => x !== null));
+      const aHold = mean(dd.map((d) => numVal(d.hold)).filter((x) => x !== null));
+      const bits = [`${dd.length} full-cycle program${dd.length === 1 ? "" : "s"} in the Baker 1031 dataset`];
+      if (aAnn !== null) bits.push(`averaging ${aAnn.toFixed(2)}% annual return`);
+      if (aMul !== null) bits.push(`a ${aMul.toFixed(2)}x average equity multiple`);
+      if (aHold !== null) bits.push(`a ${aHold.toFixed(1)}-year average hold`);
+      const summary = `${s.name} has ${bits[0]}${bits.length > 1 ? ", " + bits.slice(1).join(", ").replace(/, ([^,]*)$/, ", and $1") : ""}.`;
+      const rows = dd.map((d) => `            <tr>
+              <td class="inv">${esc(d.investment)}</td>
+              <td>${esc(d.location || "—")}</td>
+              <td>${esc(d.assetClass || "—")}</td>
+              <td class="num">${esc(d.hold || "—")}</td>
+              <td class="num">${esc(cleanMult(d.multiple) || "—")}</td>
+              <td class="num">${esc(d.annual || "—")}</td>
+            </tr>`).join("\n");
+      trackHtml = `        <p>${esc(summary)}</p>
+        <div class="sp-deals-wrap">
+          <table class="sp-deals">
+            <caption>Deal-by-deal full-cycle track record</caption>
+            <thead><tr><th scope="col">Investment</th><th scope="col">Location</th><th scope="col">Asset Class</th><th scope="col" class="num">Hold</th><th scope="col" class="num">Equity Multiple</th><th scope="col" class="num">Annual Return</th></tr></thead>
+            <tbody>
+${rows}
+            </tbody>
+          </table>
+        </div>
+        <p class="sp-deals-note">Figures are sponsor-reported and not independently verified; they may reflect selection and survivorship bias, and past performance does not guarantee future results. &ldquo;Preferred&rdquo; is Baker&rsquo;s internal designation, not a rating or endorsement.</p>`;
+    } else {
+      trackHtml = `        <p>Baker 1031 does not yet have full-cycle, deal-by-deal results for ${esc(s.name)} in its dataset. Aggregate figures above, where shown, are sponsor-reported and not independently verified. Past performance does not guarantee future results.</p>`;
+    }
+
+    const chipHtml = s.preferred ? `<span class="sp-chip">Preferred</span>` : "";
+    const logoHtml = s.logo
+      ? `<img class="sp-logo" src="${esc(s.logo)}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">`
+      : "";
+
+    const jsonld = graphLd([
+      {
+        "@type": "Organization", name: s.name,
+        ...(s.website ? { url: (s.website.match(/^https?:/i) ? s.website : "https://" + s.website) } : {}),
+        ...(s.logo ? { logo: s.logo } : {}),
+        description: truncate(desc, 300),
+      },
+      {
+        "@type": ["ProfilePage", "WebPage"], url: canonical,
+        name: `${s.name} — DST Sponsor Profile`, description: metaDesc,
+        isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US",
+        isAccessibleForFree: false,
+        hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" },
+      },
+      breadcrumbLd([["Home", `${SITE}/`], ["Sponsors", `${SITE}/sponsors.html`], [s.name, null]]),
+    ]);
+
+    let html = tpl;
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile &mdash; Baker 1031 Investments</title>`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaDesc)}">`);
+    html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // gated but crawlable (paywall markup)
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    html = put(html, "<!-- SP:CRUMB -->", "<!-- /SP:CRUMB -->", esc(s.name), s.slug);
+    html = put(html, "<!-- SP:NAV -->", "<!-- /SP:NAV -->", navFor(s.slug), s.slug);
+    html = put(html, "<!-- SP:LOGO -->", "<!-- /SP:LOGO -->", logoHtml, s.slug);
+    html = put(html, "<!-- SP:CHIP -->", "<!-- /SP:CHIP -->", chipHtml, s.slug);
+    html = put(html, "<!-- SP:NAME -->", "<!-- /SP:NAME -->", esc(s.name), s.slug);
+    html = put(html, "<!-- SP:META -->", "<!-- /SP:META -->", metaLine, s.slug);
+    html = put(html, "<!-- SP:LEAD -->", "<!-- /SP:LEAD -->", esc(lead), s.slug);
+    html = put(html, "<!-- SP:FACTS -->", "<!-- /SP:FACTS -->", facts, s.slug);
+    html = put(html, "<!-- SP:OVERVIEW -->", "<!-- /SP:OVERVIEW -->", overview, s.slug);
+    html = put(html, "<!-- SP:ADV -->", "<!-- /SP:ADV -->", advHtml, s.slug);
+    html = put(html, "<!-- SP:TRACK -->", "<!-- /SP:TRACK -->", trackHtml, s.slug);
+
+    const dir = join(ROOT, "sponsors", s.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+
+  // ----- hub: nav + cards (Preferred first, then A–Z) -----
+  const cardOrder = [...prefList, ...alpha.filter((s) => !s.preferred)];
+  const cards = cardOrder.map((s) => {
+    const logo = s.logo ? `<img src="${esc(s.logo)}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">` : `<span></span>`;
+    const chip = s.preferred ? `<span class="chip">Preferred</span>` : `<span class="chip" style="visibility:hidden">.</span>`;
+    const oneLine = s.aum
+      ? `${esc(s.aum)} AUM${s.fullCycle ? ` &middot; ${esc(s.fullCycle)} full-cycle deals` : ""}${s.deals.length ? ` &middot; deal-by-deal track record` : ""}`
+      : esc(truncate(s.description || `${s.name} — sponsor profile.`, 110));
+    return `          <a class="sp-card" href="/sponsors/${s.slug}/"><div class="top">${logo}${chip}</div><h3>${esc(s.name)}</h3><p>${oneLine}</p><span class="go">View profile &rarr;</span></a>`;
+  }).join("\n");
+  let hub = readFileSync(join(ROOT, "sponsors.html"), "utf8");
+  hub = put(hub, "<!-- SP:NAV -->", "<!-- /SP:NAV -->", navFor(null), "sponsors.html");
+  hub = put(hub, "<!-- SP:CARDS -->", "<!-- /SP:CARDS -->", cards, "sponsors.html");
+  writeFileSync(join(ROOT, "sponsors.html"), hub);
+
+  // data file for sitemap + llms.txt
+  writeFileSync(join(ROOT, "data", "sponsors.json"),
+    JSON.stringify({ sponsors: sponsors.map((s) => ({ slug: s.slug, name: s.name, preferred: s.preferred, deals: s.deals.length })) }, null, 2));
+  console.log(`Sponsors: ${count} profile pages (${withTrack.length} with deal-by-deal track records) + hub.`);
+}
+
 /* ---------------- 5) sitemap.xml ---------------- */
 {
   const urls = [
@@ -768,6 +994,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors.map((s) => ({ loc: `${SITE}/sponsors/${s.slug}/`, priority: s.deals ? "0.6" : "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
@@ -810,6 +1037,13 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   for (const [pillar, list] of Object.entries(byPillarName)) {
     t += `## ${pillar.replace(/&amp;/g, "&")}\n\n`;
     t += list.slice(0, 40).map((a) => line(a.title, `/learn/${a.slug}/`)).join("\n") + "\n\n";
+  }
+  const spons = JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors || [];
+  if (spons.length) {
+    const withDeals = spons.filter((s) => s.deals);
+    t += `## DST sponsors\n\n`;
+    t += withDeals.map((s) => line(s.name, `/sponsors/${s.slug}/`, "full-cycle deal-by-deal track record")).join("\n");
+    t += (withDeals.length ? "\n" : "") + spons.filter((s) => !s.deals).map((s) => line(s.name, `/sponsors/${s.slug}/`)).join("\n") + "\n\n";
   }
   t += `## Calculators\n\n` + cals.map((c) => line(c.name, `/calculators/${c.slug}/`)).join("\n") + "\n\n";
   t += `## Glossary terms\n\n` + gloss.map((g) => line(g.term, `/glossary/${g.slug}/`)).join("\n") + "\n";
@@ -1399,7 +1633,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   }
   // Templates are authoring scaffolds — never publish them, even under a whitelisted dir.
   let stripped = 0;
-  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html", "audiences/audience-template.html", "calculators/calculator-template.html"]) {
+  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html"]) {
     const p = join(dist, rel);
     if (existsSync(p)) { rmSync(p); stripped++; }
   }
