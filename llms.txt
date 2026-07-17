@@ -9,7 +9,7 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 ## Key pages
 
 - [Home](https://baker1031.com/): firm overview and strategies
-- [Learn (research library)](https://baker1031.com/learn): 541 in-depth articles and guides
+- [Learn (research library)](https://baker1031.com/learn): 525 in-depth articles and guides
 - [Glossary](https://baker1031.com/glossary): 50 plain-English 1031/DST/REIT/OZ terms
 - [Calculators](https://baker1031.com/calculators): 10 free interactive tax/yield tools
 - [Markets by state](https://baker1031.com/markets): 63 state and metro 1031/DST tax guides
@@ -17,6 +17,9 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [Current offerings](https://baker1031.com/current-offerings): DST and 1031-eligible offerings (accredited investors)
 - [Performance](https://baker1031.com/performance): aggregated full-cycle sponsor track record
 - [Sponsors](https://baker1031.com/sponsors): DST sponsor directory
+- [Property types](https://baker1031.com/property-types): 16 sector guides for 1031/DST investors
+- [How we work](https://baker1031.com/process.html): the Baker 1031 process step by step
+- [Disclosures](https://baker1031.com/disclosures.html)
 
 ## DST Essentials
 
@@ -259,25 +262,6 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [Opportunity Zone Investment Minimums & Accreditation](https://baker1031.com/learn/opportunity-zone-investment-minimums-and-accreditation/)
 - [Opportunity Zone Map Changes & New Designations](https://baker1031.com/learn/opportunity-zone-map-changes-and-new-designations/)
 - [Opportunity Zone Map: How to Find Qualified Zones](https://baker1031.com/learn/opportunity-zone-map-how-to-find-qualified-zones/)
-
-## Property Types
-
-- [Data Center Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-data-centers/)
-- [GSA & Government-Leased Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-government-leased/)
-- [Healthcare & Medical Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-healthcare/)
-- [Hospitality & Hotel Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-hospitality/)
-- [Industrial Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-industrial/)
-- [Land & Land-Banking Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-land/)
-- [Life Science Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-life-sciences/)
-- [Marina Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-marina/)
-- [Multifamily Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-multifamily/)
-- [Net Lease (NNN) Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-net-lease/)
-- [Office Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-office/)
-- [Oil & Gas Mineral and Royalty Interests for 1031 Exchange Investors](https://baker1031.com/learn/property-type-oil-gas-royalties/)
-- [Self-Storage Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-self-storage/)
-- [Senior Living Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-senior-living/)
-- [Small-Bay Industrial Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-small-bay-industrial/)
-- [Student Housing Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-student-housing/)
 
 ## DST sponsors
 

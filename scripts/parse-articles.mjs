@@ -8,7 +8,6 @@ const idx = JSON.parse(fs.readFileSync(path.join(ROOT, "legacy-content/index.jso
 const manifest = idx.manifest;
 
 const PILLARS = {
-  "property-types": "Property Types",
   "1031-basics": "1031 Basics",
   "dst-essentials": "DST Essentials",
   "721-reits": "721 & REITs",
@@ -136,7 +135,7 @@ function parseOne(p, category) {
   let lines = body.split("\n").map((s) => s.trim()).filter(Boolean);
   const crumb = lines.find((l) => l.includes("❯")) || "";
 
-  if (category === "article" && !/Insights|Property Types/i.test(crumb)) return { skip: "non-insights" };
+  if (category === "article" && !/Insights/i.test(crumb)) return { skip: "non-insights" };
   if (category === "detail" && DETAIL_SKIP.has(p.slug)) return { skip: "index/functional" };
 
   const title = decodeEntities(p.title).replace(/\s*\|\s*Baker 1031.*$/i, "").trim();
@@ -199,8 +198,7 @@ function parseOne(p, category) {
   let kicker, pillar;
   if (category === "article") {
     kicker = decodeEntities(tag || "1031 Exchange");
-    pillar = /Property Types/i.test(crumb) ? "property-types" : textToPillar(tag || title);
-    if (pillar === "property-types") kicker = "Property Types";
+    pillar = textToPillar(tag || title);
   } else if (category === "strategy") {
     kicker = "Strategy";
     pillar = textToPillar(p.slug + " " + title);
