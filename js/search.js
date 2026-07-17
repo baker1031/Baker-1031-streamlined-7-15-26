@@ -58,13 +58,16 @@ function addNavButton() {
   btn.href = "#";
   btn.className = "portal-link nav-search-btn";
   btn.setAttribute("aria-label", "Search the site");
+  btn.setAttribute("title", "Search");
   btn.innerHTML =
     '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg><span>Search</span>';
   btn.addEventListener("click", (e) => { e.preventDefault(); openOverlay(""); });
-  const sep = document.createElement("span");
-  sep.className = "nav-sep";
-  box.insertBefore(sep, box.firstChild);
-  box.insertBefore(btn, sep);
+  // Icon after the Learn link (… Performance · Learn · [icon] | Welcome).
+  // The label <span> is CSS-hidden on desktop and shown in the mobile
+  // hamburger dropdown. Fallback: front of the box if a page has no Learn link.
+  const learn = box.querySelector(".learn-link");
+  if (learn) learn.after(btn);
+  else box.insertBefore(btn, box.firstChild);
 }
 function showButton() {
   const btn = document.querySelector(".account-box .nav-search-btn");
@@ -201,7 +204,12 @@ function esc(s) {
 function injectStyles() {
   const css = `
   .nav-search-btn { display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.9rem; font-weight: 600; color: inherit; }
-  .nav-search-btn svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .nav-search-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  /* Desktop: icon only. The word "Search" appears in the mobile hamburger
+     dropdown (homepage collapses at 950px, portal pages at 720px). */
+  .nav-search-btn span { display: none; }
+  @media (max-width: 950px) { #home-account .nav-search-btn span { display: inline; } }
+  @media (max-width: 720px) { .nav-search-btn span { display: inline; } }
   #b1031-search { position: fixed; inset: 0; z-index: 400; display: none; background: rgba(9, 14, 26, 0.45); padding: 9vh 1rem 1rem; }
   #b1031-search.open { display: block; }
   #b1031-search .bs-panel { max-width: 40rem; margin: 0 auto; background: #fff; border-radius: 12px; overflow: hidden;
@@ -231,7 +239,6 @@ function injectStyles() {
   @media (max-width: 720px) {
     #b1031-search { padding: 0; }
     #b1031-search .bs-panel { max-height: 100vh; height: 100%; border-radius: 0; }
-    .nav-search-btn span { display: none; }
   }`;
   const style = document.createElement("style");
   style.textContent = css;
