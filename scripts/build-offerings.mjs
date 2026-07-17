@@ -1596,10 +1596,13 @@ ${rows}
           const n = list.length;
           return `      <a class="pillar" href="/learn/${list[0].slug}/">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">Browse ${n} article${n === 1 ? "" : "s"} &rarr;</span>\n      </a>`;
         });
-      // Glossary + Calculators round out the grid (fills the last row → even 3-wide matrix).
+      // Resource hubs round out the grid (7 pillars + these 5 → even 3-wide 3×4 matrix).
       const extraCards = [
         ["/glossary.html", "Glossary", "Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.", "Browse the glossary"],
         ["/calculators.html", "Calculators", "Estimate the tax you could defer, your replacement-property targets, deadlines, yield, and more.", "Open the calculators"],
+        ["/sponsors.html", "Sponsors", "Profiles of the DST, 721, and Opportunity Zone sponsors we track — assets under management, full-cycle track records, and current offerings.", "Browse the sponsor directory"],
+        ["/markets.html", "Markets by State", "1031 and DST considerations state by state — capital-gains rates, state conformity, clawback rules, and nonresident withholding.", "Explore your state"],
+        ["/audiences.html", "Who We Help", "Guidance tailored to your situation — from tired landlords and trustees to advisors, CPAs, and first-time exchangers.", "Find your path"],
       ].map(([href, label, desc, cta]) => `      <a class="pillar" href="${href}">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">${cta} &rarr;</span>\n      </a>`);
       const cards = pillarCards.concat(extraCards).join("\n");
       hub = put(hub, "<!-- LEARN:PILLARS -->", "<!-- /LEARN:PILLARS -->", cards, "learn.html");
