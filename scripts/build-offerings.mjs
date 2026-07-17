@@ -1988,6 +1988,23 @@ ${rows}
     ["/property-types/oil-gas", "/property-types/oil-gas-royalties/"],
     ["/property-types/oil-gas/", "/property-types/oil-gas-royalties/"],
   ];
+  // Netlify redirect matching is case-SENSITIVE; the old site used TitleCase
+  // section names (/property-types/Medical). Emit capitalized variants too.
+  const PT_LEGACY = {
+    medical: "healthcare", retail: "net-lease", government: "government-leased", "oil-gas": "oil-gas-royalties",
+    "data-centers": "data-centers", "government-leased": "government-leased", healthcare: "healthcare",
+    hospitality: "hospitality", industrial: "industrial", land: "land", "life-sciences": "life-sciences",
+    marina: "marina", multifamily: "multifamily", "net-lease": "net-lease", office: "office",
+    "oil-gas-royalties": "oil-gas-royalties", "self-storage": "self-storage", "senior-living": "senior-living",
+    "small-bay-industrial": "small-bay-industrial", "student-housing": "student-housing",
+  };
+  const caps = (x) => x.split("-").map((w) => w[0].toUpperCase() + w.slice(1)).join("-");
+  for (const [oldSlug, newSlug] of Object.entries(PT_LEGACY)) {
+    for (const v of [caps(oldSlug), oldSlug.toUpperCase()]) {
+      LEGACY_DIR.push([`/property-types/${v}`, `/property-types/${newSlug}/`]);
+      LEGACY_DIR.push([`/property-types/${v}/`, `/property-types/${newSlug}/`]);
+    }
+  }
   for (const [f, t] of LEGACY_DIR) add(f, t);
   // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
   // lands on the new 404 — no worse than today, and hits carry their equity.
