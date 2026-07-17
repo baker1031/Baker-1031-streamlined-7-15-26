@@ -1068,7 +1068,21 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       })
       .join("\n");
 
-  const paraHtml = (p) => `        <p>${esc(p)}</p>`;
+  const listHtml = (node) => {
+    const tag = node.t === "ol" ? "ol" : "ul";
+    const lis = node.items
+      .map((it) => {
+        // bold a lead-in term when the item is "Term — description" or "Term. Description"
+        let m = /^(.{2,45}?)\s+[—–]\s+(.+)$/.exec(it);
+        if (m) return `          <li><strong>${esc(m[1])}</strong> &mdash; ${esc(m[2])}</li>`;
+        m = /^([A-Z][\w'’&/ -]{1,38}?)\.\s+(.+)$/.exec(it);
+        if (m && m[1].split(/\s+/).length <= 4) return `          <li><strong>${esc(m[1])}</strong>. ${esc(m[2])}</li>`;
+        return `          <li>${esc(it)}</li>`;
+      })
+      .join("\n");
+    return `        <${tag}>\n${lis}\n        </${tag}>`;
+  };
+  const blockHtml = (p) => (typeof p === "string" ? `        <p>${esc(p)}</p>` : listHtml(p));
 
   let count = 0;
   for (let i = 0; i < articles.length; i++) {
@@ -1080,18 +1094,19 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     parts.push(`        <div class="kicker">${esc(a.kicker)}</div>`);
     parts.push(`        <h1>${esc(a.title)}</h1>`);
     parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${esc(a.updated)} &middot; ${a.readMin} min read</div>`);
-    for (const p of a.lead) parts.push(paraHtml(p));
+    for (const p of a.lead) parts.push(blockHtml(p));
     if (a.takeaways && a.takeaways.length) {
       parts.push(`        <div class="takeaways"><strong>Key takeaways</strong><ul>${a.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`);
     }
     for (const s of a.sections) {
-      if (s.heading && s.paras.length) {
+      const hasBlocks = s.paras.length > 0;
+      if (s.heading && hasBlocks) {
         parts.push(`        <h2>${esc(s.heading)}</h2>`);
-        for (const p of s.paras) parts.push(paraHtml(p));
+        for (const p of s.paras) parts.push(blockHtml(p));
       } else if (s.heading) {
-        parts.push(paraHtml(s.heading)); // flattened table fragment — demote to paragraph
+        parts.push(`        <p>${esc(s.heading)}</p>`); // heading with no body — demote to paragraph
       } else {
-        for (const p of s.paras) parts.push(paraHtml(p));
+        for (const p of s.paras) parts.push(blockHtml(p));
       }
     }
     const faq = (a.faq || []).filter((f) => f.a && f.a.length);

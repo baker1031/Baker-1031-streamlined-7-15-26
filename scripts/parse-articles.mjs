@@ -27,15 +27,38 @@ function textToPillar(t) {
   return "1031-basics";
 }
 
+const ENTITIES = {
+  "&ldquo;": "“", "&rdquo;": "”", "&lsquo;": "‘", "&rsquo;": "’",
+  "&mdash;": "—", "&ndash;": "–", "&hellip;": "…", "&nbsp;": " ",
+  "&lt;": "<", "&gt;": ">", "&quot;": '"', "&apos;": "'", "&#39;": "'",
+  "&times;": "×", "&deg;": "°", "&frac12;": "½", "&frac14;": "¼", "&frac34;": "¾",
+  "&reg;": "®", "&trade;": "™", "&copy;": "©", "&sect;": "§", "&bull;": "•",
+  "&rsaquo;": "›", "&lsaquo;": "‹", "&rarr;": "→", "&larr;": "←", "&asymp;": "≈",
+  "&le;": "≤", "&ge;": "≥", "&plusmn;": "±", "&minus;": "−",
+};
 function decodeEntities(s) {
-  return (s || "")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&rsquo;/g, "’")
-    .replace(/&nbsp;/g, " ");
+  s = s || "";
+  // Some source text is double-encoded ("&amp;ldquo;"), so iterate until stable.
+  for (let k = 0; k < 4; k++) {
+    const before = s;
+    s = s
+      .replace(/&(?:ldquo|rdquo|lsquo|rsquo|mdash|ndash|hellip|nbsp|lt|gt|quot|apos|#39|times|deg|frac12|frac14|frac34|reg|trade|copy|sect|bull|rsaquo|lsaquo|rarr|larr|asymp|le|ge|plusmn|minus);/g, (m) => ENTITIES[m] || m)
+      .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(+d))
+      .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+      .replace(/&amp;/g, "&");
+    if (s === before) break;
+  }
+  return s;
+}
+// Tidy flattened-link remnants: a space left before punctuation where an inline
+// link's trailing whitespace was ("the DST guide ." → "the DST guide."), and a
+// space after an opening paren.
+function tidy(s) {
+  return decodeEntities(s || "")
+    .replace(/[ \t]+([.,;:!?)\]])/g, "$1")
+    .replace(/([(\[])[ \t]+/g, "$1")
+    .replace(/[ \t]{2,}/g, " ")
+    .trim();
 }
 
 const cleanHeading = (l) => decodeEntities(l).replace(/^\d+\s*[·.:]\s*/, ""); // strip "01 · " numbering
@@ -45,6 +68,7 @@ const isHeading = (line, next) => {
   const words = line.split(/\s+/).length;
   if (line.length > 92 || words > 13) return false;
   if (/[.,:;]$/.test(line)) return false;
+  if (/[—–-]$/.test(line)) return false; // widget result row ("Gain deferred —"), not a heading
   if (!/^[A-Z0-9"“']/.test(line)) return false;
   if (/@|https?:|\d{3}[.\-]\d{3,4}/.test(line)) return false; // contact-info line, not a heading
   if (!next || next.length < 90) return false;
@@ -61,7 +85,10 @@ const isLong = (l) => !!l && l.length > 90;
 const isLabelish = (l) => !!l && l.length <= 55 && l.split(/\s+/).length <= 6 && /^[A-Z0-9"“']/.test(l) && !/[.?!:;]$/.test(l) && !/@|https?:/.test(l);
 const isDeckish = (l) => !!l && l.length <= 95 && l.split(/\s+/).length <= 15 && /^[A-Z0-9"“']/.test(l);
 
-const isStop = (l) =>
+const stripNum = (l) => l.replace(/^\d{1,2}\s*[·.:]\s*/, ""); // "12 · Glossary" → "Glossary"
+const isStop = (raw) => {
+  const l = stripNum(raw);
+  return (
   /^Glossary$/i.test(l) ||
   /^Sources?(\s*(&|and)\s*References)?$/i.test(l) ||
   /^References$/i.test(l) ||
@@ -71,7 +98,9 @@ const isStop = (l) =>
   /^Executive summary audio$/i.test(l) ||
   /^Your browser does not support/i.test(l) ||
   /^Explore the Baker 1031 research library$/i.test(l) ||
-  /^Related(\s|$)/i.test(l);
+  /^Related(\s|$)/i.test(l)
+  );
+};
 
 // A byline line: has "min read", OR is a short line carrying "Updated <Month> <Year>".
 const isByline = (l) => /min read/i.test(l) || (l.length < 150 && /Updated\s+[A-Za-z]+\.?\s+\d{4}/.test(l));
@@ -195,11 +224,31 @@ function parseOne(p, category) {
     let l = lines[i];
     if (/^Back to /i.test(l) || l === title || /^On This Page$/i.test(l)) continue;
 
-    if (/^Key Takeaways$/i.test(l)) { mode = "kt"; continue; }
-    if (/^Frequently Asked Questions$/i.test(l)) { mode = "faq"; q = null; continue; }
+    // Flattened interactive widget (calculator/quiz): a short "Interactive <title>"
+    // line followed by input labels, values, options and "—" result rows. Skip the
+    // whole block up to the next real section (numbered/normal heading, KT, or FAQ).
+    if (/^Interactive\b/i.test(l) && l.length < 70) {
+      let j = i + 1;
+      while (j < stopIdx) {
+        const lj = lines[j];
+        if (/^\d{1,2}\s*[·.:]\s/.test(lj)) break;
+        if (/^(Key Takeaways|Frequently Asked Questions)$/i.test(lj)) break;
+        if (/^Back to /i.test(lj)) break;
+        if (isHeading(lj, lines[j + 1])) break;
+        j++;
+      }
+      i = j - 1;
+      continue;
+    }
+
+    if (/^Key Takeaways$/i.test(stripNum(l))) { mode = "kt"; continue; }
+    if (/^Frequently Asked Questions$/i.test(stripNum(l))) { mode = "faq"; q = null; continue; }
 
     if (mode === "faq") {
-      if (isQuestion(l)) { q = { q: decodeEntities(l), a: [] }; faq.push(q); }
+      // guides flatten FAQ as "Question? Answer." on one line; split it
+      const inline = category === "guide" && l.match(/^(.{5,160}?\?)\s+(\S.*)$/);
+      if (inline) { faq.push({ q: decodeEntities(inline[1].trim()), a: [inline[2].trim()] }); q = null; }
+      else if (isQuestion(l)) { q = { q: decodeEntities(l), a: [] }; faq.push(q); }
       else if (q) q.a.push(l);
       continue;
     }
@@ -223,6 +272,8 @@ function parseOne(p, category) {
     if (forceHeading) { heading = true; l = l.replace(/[.]$/, ""); forceHeading = false; }
     // flattened comparison-table header rows ("Feature … | Rule …") aren't real headings
     if (heading && /^(Feature|Rule)\s/.test(l)) heading = false;
+    // a numbered section label that didn't resolve to a heading shouldn't show its raw "NN · " prefix
+    if (!heading) l = stripNum(l);
 
     if (mode === "kt") {
       if (heading) { mode = "body"; cur = { heading: cleanHeading(l), paras: [] }; sections.push(cur); }
@@ -241,7 +292,18 @@ function parseOne(p, category) {
     }
   }
 
-  const metaDesc = (lead[0] || sections[0]?.paras[0] || title).replace(/\s+/g, " ").slice(0, 155).trim();
+  // Group runs of bullet ("❯ …") / numbered ("01 …") lines into real lists,
+  // and tidy entity + link-spacing remnants across all text.
+  const cleanParas = (arr) => groupLists(arr.map(tidy), category).map((x) => (typeof x === "string" ? x : { t: x.t, items: x.items.map(tidy) }));
+  const leadClean = cleanParas(lead);
+  const takeClean = takeaways.map(tidy);
+  const sectionsClean = sections
+    .filter((s) => s.heading || s.paras.length)
+    .map((s) => ({ heading: tidy(s.heading), paras: cleanParas(s.paras) }));
+  const faqClean = faq.map((f) => ({ q: tidy(f.q), a: f.a.map(tidy) }));
+
+  const firstText = leadClean.find((x) => typeof x === "string") || sectionsClean[0]?.paras.find((x) => typeof x === "string") || title;
+  const metaDesc = firstText.replace(/\s+/g, " ").slice(0, 155).trim();
 
   return {
     doc: {
@@ -254,13 +316,55 @@ function parseOne(p, category) {
       updated,
       readMin,
       words: p.words,
-      lead,
-      takeaways,
-      sections: sections.filter((s) => s.heading || s.paras.length),
-      faq,
+      lead: leadClean,
+      takeaways: takeClean,
+      sections: sectionsClean,
+      faq: faqClean,
       metaDesc,
     },
   };
+}
+
+// Group consecutive bullet/numbered lines into list objects {t:'ul'|'ol', items:[…]}.
+// Only a run of 2+ becomes a list; a lone match falls back to a paragraph (bullets
+// lose the "❯" marker, numbered lines keep their number in case it's real data).
+function groupLists(paras, category) {
+  // On the firm/detail pages, unmarked definition lists ("Selling Commissions
+  // Paid by…", "Sources. Performance is…") should also become bullets.
+  const isDefItem = (l) =>
+    category === "detail" &&
+    l.length <= 300 &&
+    (/^[A-Z][\w'’&/-]*(?:\s+[\w'’&/-]+){0,3}\.\s+[A-Z]/.test(l) || // "Sources. Performance…"
+      /^(?:[A-Z][A-Za-z'’/-]+|&)(?:\s+(?:[A-Z][A-Za-z'’/-]+|&)){1,5}\s+\S/.test(l)); // "Sponsor Spreading…", "Selling Commissions Paid…"
+
+  const out = [];
+  let run = null;
+  const flush = () => {
+    if (!run) return;
+    if (run.items.length >= 2) out.push({ t: run.t, items: run.items.map((i) => i.text) });
+    else out.push(...run.items.map((i) => (run.t === "ul" ? i.text : i.orig)));
+    run = null;
+  };
+  for (const p of paras) {
+    if (typeof p !== "string") { flush(); out.push(p); continue; }
+    const bullet = /^[❯•‣▸›]\s+(.+)$/.exec(p);
+    const numbered = /^0?\d{1,2}\s+([A-Z].+)$/.exec(p);
+    if (bullet) {
+      if (!run || run.t !== "ul") { flush(); run = { t: "ul", items: [] }; }
+      run.items.push({ text: bullet[1].trim(), orig: p });
+    } else if (numbered) {
+      if (!run || run.t !== "ol") { flush(); run = { t: "ol", items: [] }; }
+      run.items.push({ text: numbered[1].trim(), orig: p });
+    } else if (isDefItem(p)) {
+      if (!run || run.t !== "dl") { flush(); run = { t: "dl", items: [] }; }
+      run.items.push({ text: p.trim(), orig: p });
+    } else {
+      flush();
+      out.push(p);
+    }
+  }
+  flush();
+  return out;
 }
 
 const results = [];
