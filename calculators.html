@@ -3,8 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}</style>
-<title>Learn &mdash; Baker 1031 Investments</title>
+<style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
+</style>
+<title>1031 Exchange &amp; DST Calculators &mdash; Baker 1031 Investments</title>
+<meta name="description" content="Free calculators for 1031 exchange and DST investors: capital-gains tax deferral, boot, depreciation recapture, replacement debt, deadlines, cap rate, and yield.">
+<link rel="canonical" href="https://baker1031.com/calculators.html">
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -154,21 +157,63 @@
   }
 
 
-  .learn-hero { padding: 0 0 1.4rem; }
-  .learn-hero h1 { font-size: clamp(1.7rem, 3vw, 2.3rem); font-weight: 800; letter-spacing: -0.01em; }
-  .learn-hero p { color: var(--muted); font-size: 0.96rem; margin-top: 0.5rem; max-width: 46rem; line-height: 1.6; }
-  .learn-search { margin: 1.4rem 0 2rem; max-width: 34rem; }
-  .learn-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.8rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
-  .pillar-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; padding-bottom: 3rem; }
-  @media (max-width: 1000px) { .pillar-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px)  { .pillar-grid { grid-template-columns: 1fr; } }
-  .pillar { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 1.5rem; transition: box-shadow 0.2s, transform 0.2s; }
-  .pillar:hover { box-shadow: 0 10px 28px rgba(9,14,26,0.08); transform: translateY(-2px); }
-  .pillar h3 { font-size: 1.02rem; font-weight: 700; color: var(--ink); margin-bottom: 0.45rem; }
-  .pillar p { font-size: 0.86rem; line-height: 1.55; color: var(--muted); flex: 1; }
-  .pillar-cta { font-size: 0.82rem; font-weight: 600; color: var(--navy); margin-top: 1rem; }
+  .learn-layout { display: grid; grid-template-columns: 17rem 1fr; gap: 2.5rem; align-items: start; padding: 1.5rem 0 3rem; }
+  @media (max-width: 900px) { .learn-layout { grid-template-columns: 1fr; } }
+  .learn-nav { position: sticky; top: 96px; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 0.8rem; max-height: calc(100vh - 130px); overflow-y: auto; }
+  .learn-nav details { border-bottom: 1px solid var(--hairline); }
+  .learn-nav details:last-child { border-bottom: none; }
+  .learn-nav summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.86rem; font-weight: 700; color: var(--ink); padding: 0.7rem 0.6rem; }
+  .learn-nav summary::-webkit-details-marker { display: none; }
+  .learn-nav summary::after { content: "\203A"; color: #9aa0ab; transition: transform 0.15s; font-size: 1rem; }
+  .learn-nav details[open] summary::after { transform: rotate(90deg); }
+  .learn-nav ul { list-style: none; padding: 0 0.6rem 0.7rem 0.9rem; }
+  .learn-nav li { margin-bottom: 0.15rem; }
+  .learn-nav li a { display: block; font-size: 0.83rem; color: var(--ink-soft); padding: 0.32rem 0.5rem; border-radius: 6px; }
+  .learn-nav li a:hover { background: #f3f5f8; color: var(--navy); }
+  .learn-nav li a.active { background: #edf1f7; color: var(--navy); font-weight: 600; }
+  .learn-article { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 2.4rem 2.8rem 2.8rem; max-width: 50rem; }
+  .learn-article .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
+  .learn-article h1 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.01em; margin: 0.4rem 0 0.6rem; }
+  .learn-article .meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .learn-article h2 { font-size: 1.15rem; font-weight: 700; margin: 1.8rem 0 0.6rem; }
+  .learn-article p, .learn-article li { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .learn-article ul, .learn-article ol { padding-left: 1.3rem; margin-bottom: 0.9rem; }
+  .learn-article .callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .article-footer-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--hairline); font-size: 0.86rem; font-weight: 600; }
+
+  .mk-head { margin-bottom: 1rem; }
+  .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+  .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
+  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
+  .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
+  .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
+  .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem 1rem; }
+  @media (max-width: 640px) { .state-grid { grid-template-columns: repeat(2, 1fr); } }
+  .state-grid a { font-size: 0.9rem; color: var(--ink-soft); padding: 0.4rem 0.5rem; border-radius: 6px; }
+  .state-grid a:hover { background: #f3f5f8; color: var(--navy); }
+
+  .mk-head { margin-bottom: 1rem; }
+  .mk-head h1 { font-size: clamp(1.6rem, 2.8vw, 2.1rem); font-weight: 800; letter-spacing: -0.01em; margin-bottom: 0.4rem; }
+  .mk-head p { font-size: 0.92rem; color: var(--muted); line-height: 1.6; max-width: 42rem; }
+  .mk-search { margin: 1rem 0 1.4rem; }
+  .mk-search input { width: 100%; font: inherit; font-size: 0.95rem; padding: 0.7rem 1rem; border: 1px solid #cfd4dd; border-radius: 8px; }
+  .region-group { margin-bottom: 1.6rem; scroll-margin-top: 120px; }
+  .region-group h2 { font-size: 1.1rem; font-weight: 800; color: var(--navy); padding-bottom: 0.35rem; border-bottom: 2px solid var(--hairline); margin-bottom: 0.6rem; }
+  .state-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem 1rem; }
+  @media (max-width: 640px) { .state-grid { grid-template-columns: repeat(2, 1fr); } }
+  .state-grid a { font-size: 0.9rem; color: var(--ink-soft); padding: 0.4rem 0.5rem; border-radius: 6px; }
+  .state-grid a:hover { background: #f3f5f8; color: var(--navy); }
+
+  .calc-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.4rem; }
+  @media (max-width: 720px) { .calc-cards { grid-template-columns: 1fr; } }
+  .calc-cards a { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 1.25rem; transition: box-shadow 0.2s, transform 0.2s; }
+  .calc-cards a:hover { box-shadow: 0 10px 28px rgba(9,14,26,0.08); transform: translateY(-2px); }
+  .calc-cards .tag { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.4rem; }
+  .calc-cards h3 { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 0.35rem; }
+  .calc-cards p { font-size: 0.86rem; line-height: 1.55; color: var(--muted); flex: 1; }
+  .calc-cards .go { font-size: 0.8rem; font-weight: 600; color: var(--navy); margin-top: 0.9rem; }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -199,45 +244,46 @@
     </div>
   </header>
 
-  <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><span class="current">Learn</span></nav>
-    <div class="learn-hero"><h1>Learn</h1><p>Guides, explainers, and answers on 1031 exchanges, DSTs, and passive real estate investing &mdash; organized by topic.</p></div>
-    <div class="learn-search"><input type="search" placeholder="Search articles&hellip; (coming soon)" aria-label="Search articles" disabled></div>
-    <div class="pillar-grid">
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>1031 Exchange Basics</h3><p>Rules, deadlines, boot, and the mechanics of a successful exchange.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>DST Essentials</h3><p>How Delaware Statutory Trusts work, what to look for, and how to compare offerings.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>721 Exchanges &amp; REITs</h3><p>UPREIT transactions, operating partnership units, and when a 721 exit makes sense.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Opportunity Zones</h3><p>QOF timelines, basis step-ups, and how OZ investing compares to a 1031.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Mineral Royalties</h3><p>Direct-title mineral and royalty interests as 1031-eligible real property.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-      <a class="pillar" href="/learn/article-template.html">
-        <h3>Taxes &amp; Planning</h3><p>Depreciation, estate planning, state considerations, and working with your CPA.</p><span class="pillar-cta">Browse articles &rarr;</span>
-      </a>
-    </div>
+    <main class="container" id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><span class="current">Calculators</span></nav>
 
-    <div style="margin-top:0.5rem;padding:1.4rem 1.6rem;background:#f4f7fb;border:1px solid var(--hairline);border-radius:10px;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">
-      <div>
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.2rem">Glossary</h3>
-        <p style="font-size:0.86rem;color:var(--muted);margin:0">Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.</p>
-      </div>
-      <a href="/glossary.html" style="font-size:0.85rem;font-weight:700;color:#fff;background:var(--navy);padding:0.6rem 1.1rem;border-radius:6px;white-space:nowrap">Browse the glossary &rarr;</a>
-    </div>
+    <div class="learn-layout">
+      <nav class="learn-nav" aria-label="Calculators">
+        <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/calculator-template.html">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/calculator-template.html">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/calculator-template.html">Depreciation Recapture</a></li>
+          <li><a href="/calculators/calculator-template.html">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/calculator-template.html">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/calculator-template.html">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/calculator-template.html">Cap Rate</a></li>
+          <li><a href="/calculators/calculator-template.html">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/calculator-template.html">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/calculator-template.html">Tax-Adjusted Yield</a></li>
+        </ul></details>
+      </nav>
 
-    <div style="margin-top:1rem;padding:1.4rem 1.6rem;background:#f4f7fb;border:1px solid var(--hairline);border-radius:10px;display:flex;flex-wrap:wrap;gap:1rem;align-items:center;justify-content:space-between">
-      <div>
-        <h3 style="font-size:1rem;font-weight:700;margin-bottom:0.2rem">Calculators</h3>
-        <p style="font-size:0.86rem;color:var(--muted);margin:0">Estimate the tax you could defer, your replacement-property targets, deadlines, yield, and more.</p>
+      <div class="learn-article">
+        <div class="mk-head">
+          <div class="kicker">Calculators</div>
+          <h1>1031 Exchange &amp; DST Calculators</h1>
+          <p>Free, plain-English tools to estimate the numbers behind a 1031 exchange &mdash; from the tax you could defer to your replacement-property targets and deadlines. Educational estimates only; confirm figures with your CPA.</p>
+        </div>
+
+        <div class="calc-cards">
+          <a href="/calculators/calculator-template.html"><span class="tag">1031</span><h3>Capital Gains Tax Deferral</h3><p>Estimate the federal, state, depreciation-recapture, and NIIT tax a 1031 exchange could defer on your sale.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">1031</span><h3>1031 Boot Calculator</h3><p>See how much cash or debt relief (&ldquo;boot&rdquo;) would be taxable in your exchange.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">Taxes</span><h3>Depreciation Recapture</h3><p>Estimate the unrecaptured Section 1250 tax on the depreciation you&rsquo;ve claimed.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">1031</span><h3>Replacement Debt (Equal or Up)</h3><p>Find the minimum price and debt your replacement property needs to fully defer the tax.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">1031</span><h3>45 / 180-Day Deadline</h3><p>Enter your sale date to see your identification and closing deadlines.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">DSTs</span><h3>DST Cash Flow &amp; Yield</h3><p>Estimate monthly distributions and annual yield on a DST investment.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">Investing</span><h3>Cap Rate</h3><p>Calculate capitalization rate from net operating income and property value.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">Investing</span><h3>Cash-on-Cash Return</h3><p>Measure annual pre-tax cash flow against the cash you invested.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">Taxes</span><h3>After-Tax Sale Proceeds</h3><p>Compare what you&rsquo;d net from a taxable sale versus a 1031 exchange.</p><span class="go">Open calculator &rarr;</span></a>
+          <a href="/calculators/calculator-template.html"><span class="tag">Investing</span><h3>Tax-Adjusted Yield</h3><p>Compare investments on an after-tax, apples-to-apples basis.</p><span class="go">Open calculator &rarr;</span></a>
+        </div>
       </div>
-      <a href="/calculators.html" style="font-size:0.85rem;font-weight:700;color:#fff;background:var(--navy);padding:0.6rem 1.1rem;border-radius:6px;white-space:nowrap">Open the calculators &rarr;</a>
     </div>
   </main>
   <!-- PARTIAL:footer -->
