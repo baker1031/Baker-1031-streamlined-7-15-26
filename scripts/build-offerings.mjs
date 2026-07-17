@@ -1420,6 +1420,20 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     }
     return out;
   };
+  // The investor-only search module (js/search.js) is loaded via dynamic
+  // import from auth.js, so the HTML-level busting below can't reach it and
+  // /js/* is cached immutable. Stamp search.js's content hash into auth.js's
+  // import URL (SEARCHJS_V marker) BEFORE hashing js/, so a changed search.js
+  // gets a fresh URL and auth.js's own ?v= reflects the stamped content.
+  {
+    const authPath = join(dist, "js", "auth.js");
+    const searchPath = join(dist, "js", "search.js");
+    if (existsSync(authPath) && existsSync(searchPath)) {
+      const h = createHash("sha1").update(readFileSync(searchPath)).digest("hex").slice(0, 8);
+      const s = readFileSync(authPath, "utf8");
+      if (s.includes("SEARCHJS_V")) writeFileSync(authPath, s.split("SEARCHJS_V").join(h));
+    }
+  }
   const assets = [
     { attr: "src", dir: "js", hashes: hashDir("js", ".js") },
     { attr: "href", dir: "css", hashes: hashDir("css", ".css") }
