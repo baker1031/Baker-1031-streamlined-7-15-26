@@ -917,7 +917,9 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   for (const hf of htmlFiles) {
     let s = readFileSync(hf, "utf8"), changed = false;
     for (const [f, h] of Object.entries(jsHash)) {
-      const re = new RegExp(`(src=")(/js/${f.replace(/\./g, "\\.")})(")`, "g");
+      // Match both absolute ("/js/auth.js") and relative ("js/auth.js",
+      // "./js/auth.js") references — the homepage uses a root-relative path.
+      const re = new RegExp(`(src=")([^"]*js/${f.replace(/\./g, "\\.")})(")`, "g");
       const ns = s.replace(re, (_, a, b, c) => `${a}${b}?v=${h}${c}`);
       if (ns !== s) { s = ns; changed = true; }
     }
