@@ -174,8 +174,11 @@ ready.then(function (s) {
   // Account box (Welcome + Log Out)
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
+    // The homepage's account-box (#home-account) is a PUBLIC nav, not a gated
+    // portal page — it must never trigger the hard-gate redirect below.
+    const isHomeNav = accountBox.id === "home-account";
     if (!authed) {
-      if (!gateEl) {
+      if (!gateEl && !isHomeNav) {
         // Portal directory: hard gate — send to Kinde, then back here.
         // Loop breaker: if we already bounced through Kinde seconds ago and
         // still look logged out, stop redirecting instead of flickering.
