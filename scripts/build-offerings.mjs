@@ -1288,4 +1288,67 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   console.log(`Cache-busted /js + /css refs in ${busted} HTML files.`);
 }
 
+/* ---------------- Legacy URL redirects (dist/_redirects) ----------------
+   The old site served flat /<slug>.html URLs; the new structure nests them
+   under /learn/, /markets/, /glossary/, /offerings/. Emit a 301 for every old
+   URL whose new destination actually exists, so inbound links and search-engine
+   equity carry over. Unmapped slugs fall back to the nearest section hub. */
+{
+  const dist = join(ROOT, "dist");
+  const exists = (p) => existsSync(join(dist, p.replace(/^\//, ""), "index.html")) || existsSync(join(dist, p.replace(/^\//, "")));
+  const manifest = JSON.parse(readFileSync(join(ROOT, "legacy-content", "index.json"), "utf8")).manifest;
+  const learn = new Set(JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => a.slug));
+  const lines = [];
+  const seen = new Set();
+  let mapped = 0, fallback = 0;
+  const add = (from, to) => { if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); } };
+
+  const OVERRIDE = {
+    "/investments.html": "/current-offerings.html",
+    "/ppm-review-checklist.html": "/calculators.html",
+    "/who-we-serve.html": "/audiences.html",
+    "/data-center.html": "/performance.html",
+    "/contact.html": "/#request-access",
+    "/request-access.html": "/#request-access",
+  };
+  // Legal/functional pages that have no good destination — leave unmapped rather
+  // than misdirect them to Learn (they should get real pages of their own).
+  const NO_REDIRECT = /^\/(privacy-policy|terms|reg-bi|dst-suitability[\w-]*|ccpa|disclosures|accessibility|commitment-to-privacy|sitemap|ask-llm|index)\.html$/i;
+
+  for (const p of manifest) {
+    let raw;
+    try { raw = readFileSync(join(ROOT, "legacy-content", p.file), "utf8"); } catch { continue; }
+    const m = raw.match(/^url:\s*(\S+)/m);
+    if (!m) continue;
+    const from = m[1].replace(/^https?:\/\/baker1031\.com/i, "");
+    if (!/\.html$/.test(from) || from === "/index.html") continue;
+    if (existsSync(join(dist, from.replace(/^\//, "")))) continue; // old URL is a real page now (e.g. /sponsors.html) — never redirect it
+    if (OVERRIDE[from]) { add(from, OVERRIDE[from]); mapped++; continue; }
+    if (NO_REDIRECT.test(from)) continue;
+
+    const candidates = [];
+    if (learn.has(p.slug)) candidates.push(`/learn/${p.slug}/`);
+    if (p.category === "state") candidates.push(`/markets/${p.slug.replace(/^1031-exchange-/, "")}/`);
+    if (p.category === "glossary" && p.slug !== "glossary") candidates.push(`/glossary/${p.slug.replace(/^glossary-/, "")}/`);
+    if (p.category === "offering") candidates.push(`/offerings/${p.slug}/`);
+
+    const dest = candidates.find((c) => exists(c));
+    if (dest && dest !== from) { add(from, dest); mapped++; }
+    else if (!dest) {
+      // fallback to the nearest hub so the old URL never 404s
+      const hub =
+        p.category === "state" ? "/markets.html" :
+        p.category === "glossary" ? "/glossary.html" :
+        p.category === "offering" ? "/current-offerings.html" :
+        ["article", "guide", "strategy", "detail"].includes(p.category) ? "/learn.html" : null;
+      if (hub && from !== hub) { add(from, hub); fallback++; }
+    }
+  }
+  // A few known section-index redirects
+  for (const [from, to] of [["/insights.html", "/learn.html"], ["/guides.html", "/learn.html"], ["/investments.html", "/current-offerings.html"]]) add(from, to);
+
+  writeFileSync(join(dist, "_redirects"), lines.join("\n") + "\n");
+  console.log(`Wrote dist/_redirects (${lines.length} redirects: ${mapped} direct, ${fallback} hub-fallback).`);
+}
+
 console.log("Build complete.");
