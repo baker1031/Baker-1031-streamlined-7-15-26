@@ -698,6 +698,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     { loc: `${SITE}/markets.html`, priority: "0.6" },
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
     { loc: `${SITE}/calculators.html`, priority: "0.6" },
+    { loc: `${SITE}/sponsors.html`, priority: "0.6" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
@@ -1047,6 +1048,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     "learn.html", "learn", "glossary.html", "glossary", "markets.html", "markets",
     "audiences.html", "audiences",
     "calculators.html", "calculators",
+    "sponsors.html", "sponsors",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt"
   ];
