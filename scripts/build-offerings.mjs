@@ -36,6 +36,13 @@ const SITE = "https://baker1031.com";
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
 const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
 const OG_IMAGE = `${SITE}/assets/og-card.png`;
+// Social-card coverage (audit): every generated page gets OG/Twitter tags.
+function ensureOg(html, title, desc, url) {
+  if (html.includes('property="og:image"')) return html;
+  const block = `<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(truncate(desc || "", 200))}"><meta property="og:type" content="website"><meta property="og:url" content="${url}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">
+</head>`;
+  return html.replace("</head>", block);
+}
 // Canonical entity nodes reused by @id across the whole graph (dedupes for LLMs/Google).
 const ORG_REF = { "@id": `${SITE}/#org` };
 const WEBSITE_REF = { "@id": `${SITE}/#website` };
@@ -101,7 +108,7 @@ function buildLinkDict() {
 /* ---------------- Partial injection (footer etc.) ----------------
    partials/*.html are the single source of truth; every page keeps its
    last-baked copy between PARTIAL markers so it still previews locally. */
-for (const shell of ["index.html", "current-offerings.html", "templates/offering.html", "templates/performance.html"]) {
+for (const shell of ["index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html"]) {
   const p = join(ROOT, shell);
   writeFileSync(p, injectPartials(readFileSync(p, "utf8"), ROOT, shell));
 }
@@ -295,9 +302,9 @@ function buildPage(o) {
             <a role="menuitem" href="/#about">About</a>
           </div>
         </div>
-        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
-        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
-        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <a class="listings-link portal-link" href="/current-offerings" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
         <span class="nav-sep" style="display:none"></span>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
@@ -306,8 +313,8 @@ function buildPage(o) {
   );
 
   /* ----- breadcrumb / back links ----- */
-  html = html.replace(/<a href="#">Current Offerings<\/a>/, `<a href="/current-offerings.html">Current Offerings</a>`);
-  html = html.replace(/(<a class="back-link" href=")#(")/, `$1/current-offerings.html$2`);
+  html = html.replace(/<a href="#">Current Offerings<\/a>/, `<a href="/current-offerings">Current Offerings</a>`);
+  html = html.replace(/(<a class="back-link" href=")#(")/, `$1/current-offerings$2`);
 
   /* ----- head: title / meta / canonical / OG / JSON-LD ----- */
   const headBits = [
@@ -336,7 +343,7 @@ function buildPage(o) {
           "@type": "BreadcrumbList",
           "itemListElement": [
             { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/" },
-            { "@type": "ListItem", "position": 2, "name": "Current Offerings", "item": SITE + "/current-offerings.html" },
+            { "@type": "ListItem", "position": 2, "name": "Current Offerings", "item": SITE + "/current-offerings" },
             { "@type": "ListItem", "position": 3, "name": name, "item": canonical }
           ]
         }
@@ -428,8 +435,9 @@ function buildPage(o) {
     html = html.replace(/Founded <span data-field="Year Founded"><\/span>/, "");
   }
 
-  /* ----- sponsor logo ----- */
-  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", o["Sponsor Image"], o["Sponsor"]);
+  /* ----- sponsor logo (proxied through Cloudinary so pages never call
+     logo.dev directly with the public token — audit item) ----- */
+  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(o["Sponsor Image"], 240), o["Sponsor"]);
   else html = html.replace(/<img([^>]*data-field="Sponsor Image"[^>]*)>/, `<img$1 style="display:none">`);
 
   /* ----- advantages list: no sheet columns — remove the block ----- */
@@ -947,7 +955,7 @@ ${rows}
 
     const chipHtml = s.preferred ? `<span class="sp-chip">Preferred</span>` : "";
     const logoHtml = s.logo
-      ? `<img class="sp-logo" src="${esc(s.logo)}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">`
+      ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">`
       : "";
 
     const jsonld = graphLd([
@@ -964,11 +972,12 @@ ${rows}
         isAccessibleForFree: false,
         hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" },
       },
-      breadcrumbLd([["Home", `${SITE}/`], ["Sponsors", `${SITE}/sponsors.html`], [s.name, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Sponsors", `${SITE}/sponsors`], [s.name, null]]),
     ]);
 
     let html = tpl;
     html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile &mdash; Baker 1031 Investments</title>`);
+    html = ensureOg(html, `${s.name} — DST Sponsor Profile`, metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // gated but crawlable (paywall markup)
@@ -1014,17 +1023,18 @@ ${rows}
 
 /* ---------------- 5) sitemap.xml ---------------- */
 {
+  const ADATES = JSON.parse(readFileSync(join(ROOT, "data", "article-dates.json"), "utf8"));
   const urls = [
     { loc: `${SITE}/`, priority: "1.0" },
-    { loc: `${SITE}/learn.html`, priority: "0.6" },
-    { loc: `${SITE}/performance.html`, priority: "0.6" },
-    { loc: `${SITE}/current-offerings.html`, priority: "0.6" },
-    { loc: `${SITE}/glossary.html`, priority: "0.6" },
-    { loc: `${SITE}/markets.html`, priority: "0.6" },
-    { loc: `${SITE}/audiences.html`, priority: "0.6" },
-    { loc: `${SITE}/calculators.html`, priority: "0.6" },
-    { loc: `${SITE}/sponsors.html`, priority: "0.6" },
-    { loc: `${SITE}/property-types.html`, priority: "0.6" },
+    { loc: `${SITE}/learn`, priority: "0.6" },
+    { loc: `${SITE}/performance`, priority: "0.6" },
+    { loc: `${SITE}/current-offerings`, priority: "0.6" },
+    { loc: `${SITE}/glossary`, priority: "0.6" },
+    { loc: `${SITE}/markets`, priority: "0.6" },
+    { loc: `${SITE}/audiences`, priority: "0.6" },
+    { loc: `${SITE}/calculators`, priority: "0.6" },
+    { loc: `${SITE}/sponsors`, priority: "0.6" },
+    { loc: `${SITE}/property-types`, priority: "0.6" },
     ...["data-centers","government-leased","healthcare","hospitality","industrial","land","life-sciences","marina","multifamily","net-lease","office","oil-gas-royalties","self-storage","senior-living","small-bay-industrial","student-housing"].map((s) => ({ loc: `${SITE}/property-types/${s}/`, priority: "0.5" })),
     { loc: `${SITE}/process.html`, priority: "0.5" },
     { loc: `${SITE}/terms.html`, priority: "0.3" },
@@ -1038,13 +1048,13 @@ ${rows}
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors.map((s) => ({ loc: `${SITE}/sponsors/${s.slug}/`, priority: s.deals ? "0.6" : "0.5" })),
-    ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6", lastmod: (ADATES[a.slug] || {}).modified })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
     }))
   ];
-  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><priority>${u.priority}</priority></url>`).join("\n")}\n</urlset>\n`;
+  const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc>${u.lastmod ? `<lastmod>${u.lastmod}</lastmod>` : ""}<priority>${u.priority}</priority></url>`).join("\n")}\n</urlset>\n`;
   writeFileSync(join(ROOT, "sitemap.xml"), sitemap);
   console.log(`Wrote sitemap.xml (${urls.length} URLs)`);
 }
@@ -1064,18 +1074,22 @@ ${rows}
 
   let t = `# Baker 1031 Investments\n\n`;
   t += `> Founder-led real-estate securities firm helping accredited investors defer capital-gains tax through 1031 exchanges into institutional Delaware Statutory Trust (DST) properties, 721 UPREIT exchanges, Opportunity Zone funds, and mineral royalties. All educational content below is written by Gerald F. "Jerry" Baker, III and reviewed for compliance.\n\n`;
-  t += `Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC). This is educational information, not an offer, recommendation, or tax/legal advice; consult your own CPA and attorney.\n\n`;
+  t += `Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC — BrokerCheck CRD #46147). This is educational information, not an offer, recommendation, or tax/legal advice; consult your own CPA and attorney.\n\n`;
+  t += `Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 · +1 (415) 579-1660 · invest@baker1031.com\n\n`;
   t += `## Key pages\n\n`;
   t += [
     line("Home", "/", "firm overview and strategies"),
-    line("Learn (research library)", "/learn.html", `${arts.length} in-depth articles and guides`),
-    line("Glossary", "/glossary.html", `${gloss.length} plain-English 1031/DST/REIT/OZ terms`),
-    line("Calculators", "/calculators.html", `${cals.length} free interactive tax/yield tools`),
-    line("Markets by state", "/markets.html", `${mkts.length} state and metro 1031/DST tax guides`),
-    line("Who we help", "/audiences.html", "guidance by investor situation"),
-    line("Current offerings", "/current-offerings.html", "DST and 1031-eligible offerings (accredited investors)"),
-    line("Performance", "/performance.html", "aggregated full-cycle sponsor track record"),
-    line("Sponsors", "/sponsors.html", "DST sponsor directory"),
+    line("Learn (research library)", "/learn", `${arts.length} in-depth articles and guides`),
+    line("Glossary", "/glossary", `${gloss.length} plain-English 1031/DST/REIT/OZ terms`),
+    line("Calculators", "/calculators", `${cals.length} free interactive tax/yield tools`),
+    line("Markets by state", "/markets", `${mkts.length} state and metro 1031/DST tax guides`),
+    line("Who we help", "/audiences", "guidance by investor situation"),
+    line("Current offerings", "/current-offerings", "DST and 1031-eligible offerings (accredited investors)"),
+    line("Performance", "/performance", "aggregated full-cycle sponsor track record"),
+    line("Sponsors", "/sponsors", "DST sponsor directory"),
+    line("Property types", "/property-types", "16 sector guides for 1031/DST investors"),
+    line("How we work", "/process.html", "the Baker 1031 process step by step"),
+    line("Disclosures", "/disclosures.html"),
   ].join("\n") + "\n\n";
   for (const [pillar, list] of Object.entries(byPillarName)) {
     t += `## ${pillar.replace(/&amp;/g, "&")}\n\n`;
@@ -1092,6 +1106,20 @@ ${rows}
   t += `## Glossary terms\n\n` + gloss.map((g) => line(g.term, `/glossary/${g.slug}/`)).join("\n") + "\n";
   writeFileSync(join(ROOT, "llms.txt"), t);
   console.log(`Wrote llms.txt (${t.split("\n").length} lines).`);
+
+  /* llms-full.txt — same map with one-line summaries per page, for AI agents
+     that want more context than the bare link list. */
+  let tf = t.split("## ")[0]; // reuse the header/preamble
+  tf += `## Learn library (with summaries)\n\n`;
+  for (const [pillar, list] of Object.entries(byPillarName)) {
+    tf += `### ${pillar.replace(/&amp;/g, "&")}\n\n`;
+    tf += list.map((a) => line(a.title, `/learn/${a.slug}/`, a.metaDesc)).join("\n") + "\n\n";
+  }
+  tf += `## Glossary (with definitions)\n\n` + gloss.map((g) => line(g.term, `/glossary/${g.slug}/`, g.lead)).join("\n") + "\n\n";
+  tf += `## Markets by state\n\n` + mkts.map((j) => line(j.name, `/markets/${j.slug}/`, j.metaDesc)).join("\n") + "\n\n";
+  tf += `## Calculators\n\n` + cals.map((c) => line(c.name, `/calculators/${c.slug}/`, c.metaDesc)).join("\n") + "\n";
+  writeFileSync(join(ROOT, "llms-full.txt"), tf);
+  console.log(`Wrote llms-full.txt (${tf.split("\n").length} lines).`);
 }
 
 
@@ -1130,11 +1158,11 @@ ${rows}
     const jsonld = graphLd([
       {
         "@type": "DefinedTerm", name: t.term, description: t.lead,
-        inDefinedTermSet: { "@type": "DefinedTermSet", "@id": `${SITE}/glossary.html#set`, name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary.html` },
+        inDefinedTermSet: { "@type": "DefinedTermSet", "@id": `${SITE}/glossary#set`, name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary` },
         url: canonical, ...(t.source && t.source.url ? { sameAs: t.source.url } : {}),
       },
       { "@type": "WebPage", url: canonical, name: `${t.term} — Glossary`, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US" },
-      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Glossary", `${SITE}/glossary.html`], [t.term, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Glossary", `${SITE}/glossary`], [t.term, null]]),
     ]);
 
     const srcAnchor = `<a href="${esc(t.source.url)}" target="_blank" rel="noopener">${esc(t.source.label)}</a>`;
@@ -1142,7 +1170,7 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(t.term)} — Glossary — Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(t.term)} — Glossary | Baker 1031</title>`);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(t.lead)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // glossary term pages are public/indexable
@@ -1160,6 +1188,7 @@ ${rows}
     html = put(html, "<!-- T:SRC -->", "<!-- /T:SRC -->", srcAnchor, t.slug);
     html = put(html, "<!-- T:REL -->", "<!-- /T:REL -->", relChips, t.slug);
     html = put(html, "<!-- T:NEXT -->", "<!-- /T:NEXT -->", nextLink, t.slug);
+    html = ensureOg(html, `${t.term} — Glossary`, t.lead, canonical);
 
     const dir = join(ROOT, "glossary", t.slug);
     mkdirSync(dir, { recursive: true });
@@ -1222,12 +1251,13 @@ ${rows}
     const jsonld = graphLd([
       { "@type": "WebPage", url: canonical, name: `1031 Exchange & DST Investing in ${placeName}`, description: j.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, about: place, dateModified: "2026-07-01", inLanguage: "en-US" },
       (j.faq || []).length ? { "@type": "FAQPage", mainEntity: j.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
-      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Markets", `${SITE}/markets.html`], [placeName, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Markets", `${SITE}/markets`], [placeName, null]]),
     ]);
 
     let html = tpl;
     // head — function replacers so `$`/`%` in data is never read as a backreference
     html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} — Baker 1031 Investments</title>`);
+    html = ensureOg(html, `1031 Exchange & DST Investing in ${j.name}`, j.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // market pages are public/indexable
@@ -1293,12 +1323,13 @@ ${rows}
     const jsonld = graphLd([
       { "@type": "WebPage", url: canonical, name: a.title || a.name, description: a.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, audience: { "@type": "Audience", audienceType: a.name }, dateModified: "2026-07-01", inLanguage: "en-US" },
       (a.faq || []).length ? { "@type": "FAQPage", mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
-      breadcrumbLd([["Home", `${SITE}/`], ["Who We Help", `${SITE}/audiences.html`], [a.name, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Who We Help", `${SITE}/audiences`], [a.name, null]]),
     ]);
 
     let html = tpl;
     // head — function replacers so any `$` in copy is never read as a backreference
     html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} — Baker 1031 Investments</title>`);
+    html = ensureOg(html, a.title, a.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // audience pages are public/indexable
@@ -1369,7 +1400,7 @@ ${rows}
     const jsonld = graphLd([
       { "@type": "WebApplication", name: c.name, description: c.metaDesc || c.lead, url: canonical, applicationCategory: "FinanceApplication", operatingSystem: "Any", isPartOf: WEBSITE_REF, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: PUBLISHER },
       (c.faq || []).length ? { "@type": "FAQPage", mainEntity: c.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
-      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Calculators", `${SITE}/calculators.html`], [c.name, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], ["Calculators", `${SITE}/calculators`], [c.name, null]]),
     ]);
     const script =
 `  <script>
@@ -1396,6 +1427,7 @@ ${rows}
 
     let html = tpl;
     html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} — Baker 1031 Investments</title>`);
+    html = ensureOg(html, c.title, c.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // calculator pages are public/indexable
@@ -1448,10 +1480,19 @@ ${rows}
   for (const a of articles) (byPillar[a.pillar] || (byPillar[a.pillar] = [])).push(a);
   // articles.json is already sorted by title; each pillar list stays alphabetical.
 
+  /* Sidebar (audit): only the CURRENT pillar renders its full article list.
+     Other pillars collapse to a "start here" + hub link — this removes ~50KB
+     of repeated nav per page and stops template links flattening internal
+     PageRank across all 525 articles. Full discovery lives on /learn. */
   const foldersFor = (activePillar, activeSlug) =>
     PILLARS.filter(([k]) => (byPillar[k] || []).length)
       .map(([k, label]) => {
         const open = k === activePillar ? " open" : "";
+        if (k !== activePillar) {
+          const first = byPillar[k][0];
+          const n = byPillar[k].length;
+          return `        <details><summary>${label}</summary><ul>\n          <li><a href="/learn/${first.slug}/">Start here: ${esc(first.title)}</a></li>\n          <li><a href="/learn">Browse all ${n} articles &rarr;</a></li>\n        </ul></details>`;
+        }
         const lis = byPillar[k]
           .map((a) => `          <li><a${a.slug === activeSlug ? ' class="active"' : ""} href="/learn/${a.slug}/">${esc(a.title)}</a></li>`)
           .join("\n");
@@ -1460,6 +1501,26 @@ ${rows}
       .join("\n");
 
   const LINK = buildLinkDict();
+  // Honest per-article dates: ledger maintained by scripts/update-article-dates.mjs (never auto-bumped).
+  const DATES = JSON.parse(readFileSync(join(ROOT, "data", "article-dates.json"), "utf8"));
+  const SOURCES = existsSync(join(ROOT, "data", "article-sources.json"))
+    ? JSON.parse(readFileSync(join(ROOT, "data", "article-sources.json"), "utf8")) : {};
+  // Consolidation (audit): overlapping clusters point readers + crawlers at one canonical pillar.
+  const CANONICAL_PILLAR = {
+    "delaware-statutory-trusts": "dst-guide",
+    "delaware-statutory-trust-faq": "dst-guide",
+    "dst-pros-and-cons": "dst-guide",
+    "45-day-identification-period": "1031-exchange-timeline",
+    "the-45-day-trap": "1031-exchange-timeline",
+    "how-to-identify-dsts-within-the-45-day-window": "1031-exchange-timeline",
+    "1031-exchange-debt-replacement-mortgage-boot": "1031-exchange-boot",
+    "boot-debt-replacement-full-deferral": "1031-exchange-boot",
+    "dst-risk-factors-in-the-ppm-explained": "dst-risks-what-every-1031-investor-should-know",
+  };
+  const SERIES = {};
+  for (const [child, pillar] of Object.entries(CANONICAL_PILLAR)) (SERIES[pillar] || (SERIES[pillar] = [])).push(child);
+  const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const fmtDate = (iso) => { const [y, m, d] = String(iso).split("-").map(Number); return d === 1 ? `${MONTH_NAMES[m-1]} ${y}` : `${MONTH_NAMES[m-1]} ${d}, ${y}`; };
   const mkLinkify = (currentUrl) => {
     if (!LINK.re) return (s) => esc(s);
     const used = new Set(); let count = 0; const CAP = 12;
@@ -1539,7 +1600,12 @@ ${rows}
     const parts = [];
     parts.push(`        <div class="kicker">${esc(a.kicker)}</div>`);
     parts.push(`        <h1>${esc(a.title)}</h1>`);
-    parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${esc(a.updated)} &middot; ${a.readMin} min read</div>`);
+    const ad = DATES[a.slug] || { published: isoDate(a.updated), modified: isoDate(a.updated) };
+    parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${fmtDate(ad.modified)} &middot; ${a.readMin} min read</div>`);
+    if (CANONICAL_PILLAR[a.slug]) {
+      const pil = articles.find((x) => x.slug === CANONICAL_PILLAR[a.slug]);
+      if (pil) parts.push(`        <p class="pillar-callout">This article is part of a series &mdash; start with the definitive guide: <a href="/learn/${pil.slug}/"><strong>${esc(pil.title)}</strong></a>.</p>`);
+    }
     for (const p of a.lead) parts.push(blockHtml(p, lk));
     if (a.takeaways && a.takeaways.length) {
       parts.push(`        <div class="takeaways"><strong>Key takeaways</strong><ul>${a.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`);
@@ -1561,6 +1627,15 @@ ${rows}
       for (const f of faq) {
         parts.push(`        <details class="faq"><summary>${esc(f.q)}</summary>${f.a.map((p) => `<p>${lk(p)}</p>`).join("")}</details>`);
       }
+    }
+    const srcs = SOURCES[a.slug];
+    if (Array.isArray(srcs) && srcs.length) {
+      parts.push(`        <h2>Sources &amp; further reading</h2>`);
+      parts.push(`        <ul class="learn-sources">${srcs.map((s0) => `<li><a href="${s0.url}" target="_blank" rel="noopener">${esc(s0.title)}</a>${s0.note ? ` &mdash; ${esc(s0.note)}` : ""}</li>`).join("")}</ul>`);
+    }
+    if (SERIES[a.slug]) {
+      const kids = SERIES[a.slug].map((k) => articles.find((x) => x.slug === k)).filter(Boolean);
+      if (kids.length) parts.push(`        <div class="learn-related"><h2>Deep dives in this series</h2><ul>${kids.map((s2) => `<li><a href="/learn/${s2.slug}/">${esc(s2.title)}</a></li>`).join("")}</ul></div>`);
     }
     // ----- related in-pillar block -----
     const sibs = byPillar[a.pillar] || [];
@@ -1590,8 +1665,8 @@ ${rows}
         "@type": ["Article", "BlogPosting"],
         headline: a.title,
         description: a.metaDesc,
-        datePublished: dateM,
-        dateModified: dateM,
+        datePublished: ad.published,
+        dateModified: ad.modified,
         author: AUTHOR,
         publisher: PUBLISHER,
         image: OG_IMAGE,
@@ -1610,7 +1685,7 @@ ${rows}
       faq.length
         ? { "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })) }
         : null,
-      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], [a.title, null]]),
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], [a.title, null]]),
     ];
     const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
@@ -1641,17 +1716,61 @@ ${rows}
         });
       // Resource hubs round out the grid (7 pillars + these 5 → even 3-wide 3×4 matrix).
       const extraCards = [
-        ["/glossary.html", "Glossary", "Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.", "Browse the glossary"],
-        ["/calculators.html", "Calculators", "Estimate the tax you could defer, your replacement-property targets, deadlines, yield, and more.", "Open the calculators"],
-        ["/sponsors.html", "Sponsors", "Profiles of the DST, 721, and Opportunity Zone sponsors we track — assets under management, full-cycle track records, and current offerings.", "Browse the sponsor directory"],
-        ["/markets.html", "Markets by State", "1031 and DST considerations state by state — capital-gains rates, state conformity, clawback rules, and nonresident withholding.", "Explore your state"],
-        ["/audiences.html", "Who We Help", "Guidance tailored to your situation — from tired landlords and trustees to advisors, CPAs, and first-time exchangers.", "Find your path"],
+        ["/glossary", "Glossary", "Plain-English definitions of every 1031, DST, 721, Opportunity Zone, REIT, and tax term.", "Browse the glossary"],
+        ["/calculators", "Calculators", "Estimate the tax you could defer, your replacement-property targets, deadlines, yield, and more.", "Open the calculators"],
+        ["/sponsors", "Sponsors", "Profiles of the DST, 721, and Opportunity Zone sponsors we track — assets under management, full-cycle track records, and current offerings.", "Browse the sponsor directory"],
+        ["/markets", "Markets by State", "1031 and DST considerations state by state — capital-gains rates, state conformity, clawback rules, and nonresident withholding.", "Explore your state"],
+        ["/audiences", "Who We Help", "Guidance tailored to your situation — from tired landlords and trustees to advisors, CPAs, and first-time exchangers.", "Find your path"],
       ].map(([href, label, desc, cta]) => `      <a class="pillar" href="${href}">\n        <h3>${label}</h3><p>${desc}</p><span class="pillar-cta">${cta} &rarr;</span>\n      </a>`);
       const cards = pillarCards.concat(extraCards).join("\n");
       hub = put(hub, "<!-- LEARN:PILLARS -->", "<!-- /LEARN:PILLARS -->", cards, "learn.html");
       writeFileSync(join(ROOT, "learn.html"), hub);
     }
   }
+}
+
+/* ---------------- Hub structured data (audit): CollectionPage + ItemList ----------------
+   Fills the <!-- HUB:LD --> markers in the section hubs. Idempotent via put(). */
+{
+  const arts = JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8"));
+  const gloss = JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms || [];
+  const mkts = JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions || [];
+  const auds = JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences || [];
+  const cals = JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators || [];
+  const spons = JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors || [];
+  const itemList = (items, max = 12) => ({
+    "@type": "ItemList",
+    numberOfItems: items.length,
+    itemListElement: items.slice(0, max).map((it, i) => ({ "@type": "ListItem", position: i + 1, name: it.name, url: it.url })),
+  });
+  const collection = (url, name, about, items) => graphLd([
+    { "@type": "CollectionPage", "@id": url, url, name, isPartOf: WEBSITE_REF, publisher: PUBLISHER, about, mainEntity: itemList(items) },
+    breadcrumbLd([["Home", `${SITE}/`], [name, null]]),
+  ]);
+  const fill = (file, ld) => {
+    const p = join(ROOT, file);
+    if (!existsSync(p)) return;
+    let h = readFileSync(p, "utf8");
+    if (!h.includes("<!-- HUB:LD -->")) return;
+    h = put(h, "<!-- HUB:LD -->", "<!-- /HUB:LD -->", ld, file);
+    writeFileSync(p, h);
+  };
+  fill("learn.html", collection(`${SITE}/learn`, "Learn — 1031 Exchange & DST Research Library", ["1031 Exchange", "Delaware Statutory Trust"],
+    arts.map((a) => ({ name: a.title, url: `${SITE}/learn/${a.slug}/` }))));
+  fill("markets.html", collection(`${SITE}/markets`, "1031 Exchange & DST Investing by State", ["1031 Exchange", "State Capital Gains Tax"],
+    mkts.map((j) => ({ name: j.name, url: `${SITE}/markets/${j.slug}/` }))));
+  fill("audiences.html", collection(`${SITE}/audiences`, "Who We Help — 1031 & DST Guidance by Investor Situation", ["1031 Exchange"],
+    auds.map((a) => ({ name: a.title, url: `${SITE}/audiences/${a.slug}/` }))));
+  fill("calculators.html", collection(`${SITE}/calculators`, "1031 Exchange & DST Calculators", ["1031 Exchange", "Capital Gains Tax"],
+    cals.map((c) => ({ name: c.name, url: `${SITE}/calculators/${c.slug}/` }))));
+  fill("sponsors.html", collection(`${SITE}/sponsors`, "DST Sponsor Directory", ["Delaware Statutory Trust"],
+    spons.map((sp) => ({ name: sp.name, url: `${SITE}/sponsors/${sp.slug}/` }))));
+  fill("glossary.html", graphLd([
+    { "@type": "DefinedTermSet", "@id": `${SITE}/glossary#set`, name: "1031 Exchange, DST & Real Estate Securities Glossary", url: `${SITE}/glossary`, publisher: PUBLISHER,
+      hasDefinedTerm: gloss.map((g) => ({ "@type": "DefinedTerm", name: g.term, url: `${SITE}/glossary/${g.slug}/` })) },
+    breadcrumbLd([["Home", `${SITE}/`], ["Glossary", null]]),
+  ]));
+  console.log("Hub structured data injected.");
 }
 
 /* ---------------- Publish directory (dist/) ----------------
@@ -1671,7 +1790,7 @@ ${rows}
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
     "offerings", "data", "css", "js", "assets", "documents",
-    "sitemap.xml", "robots.txt", "llms.txt"
+    "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
   let copied = 0;
   for (const item of COPY) {
@@ -1761,10 +1880,10 @@ ${rows}
   const add = (from, to) => { if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); } };
 
   const OVERRIDE = {
-    "/investments.html": "/current-offerings.html",
-    "/ppm-review-checklist.html": "/calculators.html",
-    "/who-we-serve.html": "/audiences.html",
-    "/data-center.html": "/performance.html",
+    "/investments.html": "/current-offerings",
+    "/ppm-review-checklist.html": "/calculators",
+    "/who-we-serve.html": "/audiences",
+    "/data-center.html": "/performance",
     "/contact.html": "/#request-access",
     "/request-access.html": "/#request-access",
     "/sitemap.html": "/",
@@ -1802,7 +1921,7 @@ ${rows}
     if (!m) continue;
     const from = m[1].replace(/^https?:\/\/baker1031\.com/i, "");
     if (!/\.html$/.test(from) || from === "/index.html") continue;
-    if (existsSync(join(dist, from.replace(/^\//, "")))) continue; // old URL is a real page now (e.g. /sponsors.html) — never redirect it
+    if (existsSync(join(dist, from.replace(/^\//, "")))) continue; // old URL is a real page now (e.g. /sponsors) — never redirect it
     if (OVERRIDE[from]) { add(from, OVERRIDE[from]); mapped++; continue; }
 
     const candidates = [];
@@ -1813,24 +1932,69 @@ ${rows}
     if (p.category === "calculator" && CALC_MAP[p.slug]) candidates.push(`/calculators/${CALC_MAP[p.slug]}/`);
     if (p.category === "sponsor") candidates.push(`/sponsors/${p.slug.replace(/^sponsor-/, "")}/`); // upgrades to direct once profiles are built
     if (/^property-type-/.test(p.slug)) candidates.push(`/property-types/${p.slug.replace(/^property-type-/, "")}/`);
-    if (p.slug === "property-types") candidates.push("/property-types.html");
 
     const dest = candidates.find((c) => exists(c));
     if (dest && dest !== from) { add(from, dest); mapped++; }
     else if (!dest) {
       // fallback to the nearest hub so the old URL never 404s
       const hub =
-        p.category === "state" ? "/markets.html" :
-        p.category === "glossary" ? "/glossary.html" :
-        p.category === "offering" ? "/current-offerings.html" :
-        p.category === "calculator" ? "/calculators.html" :
-        p.category === "sponsor" ? "/sponsors.html" :
-        ["article", "guide", "strategy", "detail"].includes(p.category) ? "/learn.html" : null;
+        p.category === "state" ? "/markets" :
+        p.category === "glossary" ? "/glossary" :
+        p.category === "offering" ? "/current-offerings" :
+        p.category === "calculator" ? "/calculators" :
+        p.category === "sponsor" ? "/sponsors" :
+        ["article", "guide", "strategy", "detail"].includes(p.category) ? "/learn" : null;
       if (hub && from !== hub) { add(from, hub); fallback++; }
     }
   }
   // A few known section-index redirects
-  for (const [from, to] of [["/insights.html", "/learn.html"], ["/guides.html", "/learn.html"], ["/investments.html", "/current-offerings.html"]]) add(from, to);
+  for (const [from, to] of [["/insights.html", "/learn"], ["/guides.html", "/learn"], ["/investments.html", "/current-offerings"]]) add(from, to);
+
+  /* ---- Directory-era URLs from the pre-July-2026 site (SEO audit 2026-07-17).
+     Google still has these indexed (site: sampling) — several were ranking.
+     Exact rules first; slug-preserving splats as fallback (first match wins). ---- */
+  const LEGACY_DIR = [
+    ["/about/jerry-baker/", "/learn/jerry-baker-bio/"],
+    ["/about/jerry-baker", "/learn/jerry-baker-bio/"],
+    ["/about/", "/learn/about/"],
+    ["/about", "/learn/about/"],
+    ["/contact/", "/#request-access"],
+    ["/contact", "/#request-access"],
+    ["/disclosures/", "/disclosures.html"],
+    ["/disclosures", "/disclosures.html"],
+    ["/investor-portal", "/current-offerings"],
+    ["/investor-portal/", "/current-offerings"],
+    ["/request-dst-listings", "/current-offerings"],
+    ["/request-dst-listings/", "/current-offerings"],
+    ["/1031-exchanges", "/learn/1031-exchange-guide/"],
+    ["/1031-exchanges/", "/learn/1031-exchange-guide/"],
+    ["/sitemap/", "/learn"],
+    ["/sitemap", "/learn"],
+    ["/home", "/"],
+    ["/insights/", "/learn"],
+    ["/insights", "/learn"],
+    ["/properties/", "/current-offerings"],
+    ["/properties", "/current-offerings"],
+    ["/strategies/", "/learn"],
+    ["/strategies", "/learn"],
+  ];
+  for (const [f, t] of LEGACY_DIR) add(f, t);
+  // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
+  // lands on the new 404 — no worse than today, and hits carry their equity.
+  lines.push("/insights/*  /learn/:splat  301");
+  lines.push("/properties/*  /offerings/:splat  301");
+  lines.push("/strategies/*  /learn  301");
+  lines.push("/property-types/*  /property-types  301");
+
+  /* ---- URL standardization (audit): extensionless is the canonical form the
+     nav already uses; force the .html duplicates to it so the 9 exact-duplicate
+     pairs collapse. Netlify still serves /learn from learn.html on lookup. ---- */
+  for (const hub of ["learn", "glossary", "markets", "calculators", "audiences", "sponsors", "current-offerings", "performance", "property-types"]) {
+    lines.push(`/${hub}.html  /${hub}  301!`);
+  }
+  lines.push("/index.html  /  301!");
+  // Browsers request /favicon.ico unconditionally; the PNG icons live in /assets.
+  lines.push("/favicon.ico  /assets/favicon-48.png  301");
 
   writeFileSync(join(dist, "_redirects"), lines.join("\n") + "\n");
   console.log(`Wrote dist/_redirects (${lines.length} redirects: ${mapped} direct, ${fallback} hub-fallback).`);

@@ -1,0 +1,58 @@
+{
+  "_comment": "Primary-source citations rendered as a 'Sources & further reading' section on the matching /learn/ article. Maintained by hand; hashed into data/article-dates.json so adding sources bumps the article's dateModified honestly. Rendered by build-offerings.mjs.",
+  "1031-exchange-guide": [
+    { "title": "26 U.S. Code § 1031 — Exchange of real property held for productive use or investment", "url": "https://www.law.cornell.edu/uscode/text/26/1031", "note": "The statute itself (Cornell Legal Information Institute)" },
+    { "title": "Treas. Reg. § 1.1031(k)-1 — Treatment of deferred exchanges", "url": "https://www.law.cornell.edu/cfr/text/26/1.1031(k)-1", "note": "Source of the 45-day identification and 180-day completion rules" },
+    { "title": "IRS — Like-Kind Exchanges: Real Estate Tax Tips", "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips", "note": "The IRS's own plain-language overview" },
+    { "title": "IRS — About Form 8824, Like-Kind Exchanges", "url": "https://www.irs.gov/forms-pubs/about-form-8824", "note": "How an exchange is reported on your return" }
+  ],
+  "1031-exchange-timeline": [
+    { "title": "Treas. Reg. § 1.1031(k)-1 — Treatment of deferred exchanges", "url": "https://www.law.cornell.edu/cfr/text/26/1.1031(k)-1", "note": "The regulation establishing the 45-day and 180-day deadlines and identification rules" },
+    { "title": "IRS — Like-Kind Exchanges: Real Estate Tax Tips", "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips" },
+    { "title": "IRS — About Form 8824, Like-Kind Exchanges", "url": "https://www.irs.gov/forms-pubs/about-form-8824" }
+  ],
+  "1031-exchange-boot": [
+    { "title": "26 U.S. Code § 1031(b) — Gain from exchanges not solely in kind", "url": "https://www.law.cornell.edu/uscode/text/26/1031", "note": "The statutory basis for taxing 'boot'" },
+    { "title": "IRS Publication 544 — Sales and Other Dispositions of Assets", "url": "https://www.irs.gov/publications/p544", "note": "Covers partially nontaxable exchanges and liabilities treated as boot" },
+    { "title": "IRS — About Form 8824, Like-Kind Exchanges", "url": "https://www.irs.gov/forms-pubs/about-form-8824" }
+  ],
+  "dst-guide": [
+    { "title": "Rev. Rul. 2004-86 (IRS Internal Revenue Bulletin 2004-33)", "url": "https://www.irs.gov/irb/2004-33_IRB", "note": "The ruling that allows a Delaware Statutory Trust interest to qualify as like-kind replacement property" },
+    { "title": "26 U.S. Code § 1031 — Exchange of real property", "url": "https://www.law.cornell.edu/uscode/text/26/1031" },
+    { "title": "SEC / Investor.gov — Accredited Investor definition", "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/accredited-investor", "note": "DST offerings are private placements limited to accredited investors" }
+  ],
+  "dst-risks-what-every-1031-investor-should-know": [
+    { "title": "Rev. Rul. 2004-86 (IRS IRB 2004-33)", "url": "https://www.irs.gov/irb/2004-33_IRB", "note": "Also the source of the 'seven deadly sins' restrictions on DST trustees" },
+    { "title": "FINRA — Regulation Best Interest (Reg BI)", "url": "https://www.finra.org/rules-guidance/key-topics/regulation-best-interest", "note": "The conduct standard governing broker-dealer recommendations of DSTs" },
+    { "title": "SEC / Investor.gov — Accredited Investor definition", "url": "https://www.investor.gov/introduction-investing/investing-basics/glossary/accredited-investor" }
+  ],
+  "fees": [
+    { "title": "FINRA — Regulation Best Interest (Reg BI)", "url": "https://www.finra.org/rules-guidance/key-topics/regulation-best-interest", "note": "Requires disclosure of fees, costs, and conflicts on recommended securities" },
+    { "title": "Aurora Securities, Inc. on FINRA BrokerCheck (CRD #46147)", "url": "https://brokercheck.finra.org/firm/summary/46147", "note": "The broker-dealer through which securities are offered" },
+    { "title": "Baker 1031 — Form CRS (Client Relationship Summary)", "url": "https://baker1031.com/documents/form-crs.pdf" }
+  ],
+  "1031-vs-721-exchange-key-differences": [
+    { "title": "26 U.S. Code § 721 — Nonrecognition of gain or loss on contribution to a partnership", "url": "https://www.law.cornell.edu/uscode/text/26/721", "note": "The statute behind the UPREIT contribution" },
+    { "title": "26 U.S. Code § 1031 — Exchange of real property", "url": "https://www.law.cornell.edu/uscode/text/26/1031" },
+    { "title": "IRS Publication 544 — Sales and Other Dispositions of Assets", "url": "https://www.irs.gov/publications/p544" }
+  ],
+  "opportunity-zones-2-0": [
+    { "title": "26 U.S. Code § 1400Z-2 — Special rules for capital gains invested in opportunity zones", "url": "https://www.law.cornell.edu/uscode/text/26/1400Z-2" },
+    { "title": "IRS — Opportunity Zones: Frequently Asked Questions", "url": "https://www.irs.gov/credits-deductions/opportunity-zones-frequently-asked-questions" },
+    { "title": "IRS — Invest in a Qualified Opportunity Fund", "url": "https://www.irs.gov/credits-deductions/businesses/invest-in-a-qualified-opportunity-fund", "note": "Deferral mechanics, 180-day investment window, and basis rules" }
+  ],
+  "mineral-rights-1031-guide": [
+    { "title": "26 U.S. Code § 1031 — Exchange of real property", "url": "https://www.law.cornell.edu/uscode/text/26/1031", "note": "Mineral and royalty interests qualify when they are real property under state law" },
+    { "title": "IRS Publication 544 — Sales and Other Dispositions of Assets", "url": "https://www.irs.gov/publications/p544" },
+    { "title": "IRS — Like-Kind Exchanges: Real Estate Tax Tips", "url": "https://www.irs.gov/businesses/small-businesses-self-employed/like-kind-exchanges-real-estate-tax-tips" }
+  ],
+  "how-to-choose-a-dst-sponsor-company": [
+    { "title": "FINRA — Regulation Best Interest (Reg BI)", "url": "https://www.finra.org/rules-guidance/key-topics/regulation-best-interest", "note": "How broker-dealer due-diligence obligations protect DST investors" },
+    { "title": "FINRA BrokerCheck", "url": "https://brokercheck.finra.org/", "note": "Verify any firm or representative before investing" },
+    { "title": "Rev. Rul. 2004-86 (IRS IRB 2004-33)", "url": "https://www.irs.gov/irb/2004-33_IRB", "note": "The structural rules every DST sponsor must design around" }
+  ],
+  "jerry-baker-bio": [
+    { "title": "Aurora Securities, Inc. on FINRA BrokerCheck (CRD #46147)", "url": "https://brokercheck.finra.org/firm/summary/46147", "note": "Securities are offered through Aurora Securities, Inc., member FINRA/SIPC" },
+    { "title": "FINRA BrokerCheck", "url": "https://brokercheck.finra.org/", "note": "Look up any registered representative's licensing and history" }
+  ]
+}

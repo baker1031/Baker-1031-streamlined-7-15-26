@@ -22,14 +22,27 @@
 (function loadGA() {
   var id = "G-P29LR49RL8";
   if (window.gtag) return;
-  var s = document.createElement("script");
-  s.async = true;
-  s.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
-  document.head.appendChild(s);
+  // The gtag stub is live immediately (events queue in dataLayer); the 70KB
+  // library itself loads after the page is idle so it never competes with LCP.
   window.dataLayer = window.dataLayer || [];
   window.gtag = function () { window.dataLayer.push(arguments); };
   window.gtag("js", new Date());
   window.gtag("config", id);
+  function inject() {
+    if (document.getElementById("ga4-lib")) return;
+    var s = document.createElement("script");
+    s.async = true;
+    s.id = "ga4-lib";
+    s.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
+    document.head.appendChild(s);
+  }
+  if (document.readyState === "complete") {
+    ("requestIdleCallback" in window) ? requestIdleCallback(inject, { timeout: 4000 }) : setTimeout(inject, 1500);
+  } else {
+    window.addEventListener("load", function () {
+      ("requestIdleCallback" in window) ? requestIdleCallback(inject, { timeout: 4000 }) : setTimeout(inject, 1500);
+    });
+  }
 })();
 
 /* ---------- Light content-protection deterrents ----------
@@ -79,7 +92,7 @@ const ready = (async function () {
       if (appState && appState.returnTo) {
         window.location.replace(appState.returnTo);
       } else if (user) {
-        window.location.replace("/current-offerings.html");
+        window.location.replace("/current-offerings");
       }
     }
   });
@@ -99,7 +112,7 @@ const ready = (async function () {
   // One-click portal entry after provisioning (email prefilled on the login screen)
   window.baker1031Login = function (email) {
     kinde.login({
-      app_state: { returnTo: "/current-offerings.html" },
+      app_state: { returnTo: "/current-offerings" },
       login_hint: email,
       authUrlParams: { login_hint: email }
     });
@@ -127,6 +140,7 @@ function applyAuthedNav(name) {
   if (box.id === "home-account") {
     box.classList.add("authed");
     document.body.classList.add("portal-nav"); // shrinks the homepage logo/header to match portal pages
+    document.body.classList.add("authed"); // hides the footer gate-lock icons
     const pnav = document.querySelector(".primary-nav");
     if (pnav) pnav.style.display = "none";
     const ubar = document.querySelector(".utility-bar");
@@ -143,6 +157,7 @@ function applyLoggedOutNav() {
   if (box.id === "home-account") {
     box.classList.remove("authed", "open");
     document.body.classList.remove("portal-nav");
+    document.body.classList.remove("authed");
     const pnav = document.querySelector(".primary-nav");
     if (pnav) pnav.style.display = "";
     const ubar = document.querySelector(".utility-bar");
@@ -161,9 +176,9 @@ if (loginLink) {
     const s = await ready;
     if (!s) return;
     if (s.authed) {
-      window.location.href = "/current-offerings.html";
+      window.location.href = "/current-offerings";
     } else {
-      s.kinde.login({ app_state: { returnTo: "/current-offerings.html" } });
+      s.kinde.login({ app_state: { returnTo: "/current-offerings" } });
     }
   });
 }
@@ -234,7 +249,7 @@ ready.then(function (s) {
   // Public-page login link: flip to a portal link when signed in
   if (loginLink && authed) {
     loginLink.textContent = "Investor Portal";
-    loginLink.href = "/current-offerings.html";
+    loginLink.href = "/current-offerings";
   }
 
   // Soft gate (offering pages): show overlay only to signed-out visitors

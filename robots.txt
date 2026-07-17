@@ -4,6 +4,7 @@
 User-agent: *
 Allow: /
 Disallow: /employee.html
+Disallow: /employee
 Disallow: /partials/
 Disallow: /templates/
 Disallow: /docs/
@@ -16,6 +17,10 @@ Allow: /
 User-agent: ChatGPT-User
 Allow: /
 User-agent: ClaudeBot
+Allow: /
+User-agent: Claude-User
+Allow: /
+User-agent: Claude-SearchBot
 Allow: /
 User-agent: Claude-Web
 Allow: /
@@ -38,3 +43,4 @@ Allow: /
 
 Sitemap: https://baker1031.com/sitemap.xml
 # Curated LLM index: https://baker1031.com/llms.txt
+# Full LLM index with summaries: https://baker1031.com/llms-full.txt

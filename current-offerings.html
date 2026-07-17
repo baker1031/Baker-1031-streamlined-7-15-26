@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Current Offerings &mdash; Baker 1031 Investments</title>
+<meta name="description" content="Current DST and 1031-eligible offerings tracked by Baker 1031 Investments — sector, sponsor, yield, and debt profile for accredited investors. Registration required.">
+<link rel="canonical" href="https://baker1031.com/current-offerings">
+<meta property="og:title" content="Current Offerings &mdash; Baker 1031 Investments"><meta property="og:description" content="Current DST and 1031-eligible offerings tracked by Baker 1031 Investments — sector, sponsor, yield, and debt profile for accredited investors. Registration required."><meta property="og:type" content="website"><meta property="og:url" content="https://baker1031.com/current-offerings"><meta property="og:image" content="https://baker1031.com/assets/og-card.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/tokens.css">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -148,7 +151,7 @@
     position: absolute;
     top: 0.8rem;
     left: 0.8rem;
-    font-size: 0.64rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -165,7 +168,7 @@
     position: absolute;
     top: 0.8rem;
     right: 0.8rem;
-    font-size: 0.64rem;
+    font-size: 0.75rem;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -189,7 +192,7 @@
   .card-stats .cs { min-width: 0; }
   .card-stats .label {
     display: block;
-    font-size: 0.58rem;
+    font-size: 0.75rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -289,7 +292,7 @@
     pointer-events: none;
   }
 </style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","url":"https://baker1031.com/current-offerings.html","name":"Current Offerings — Baker 1031 Investments","description":"Current Delaware Statutory Trust and 1031-eligible offerings for accredited investors.","isPartOf":{"@id":"https://baker1031.com/#website"},"isAccessibleForFree":false,"hasPart":{"@type":"WebPageElement","isAccessibleForFree":false,"cssSelector":"main"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://baker1031.com/"},{"@type":"ListItem","position":2,"name":"Current Offerings"}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"WebPage","url":"https://baker1031.com/current-offerings","name":"Current Offerings — Baker 1031 Investments","description":"Current Delaware Statutory Trust and 1031-eligible offerings for accredited investors.","isPartOf":{"@id":"https://baker1031.com/#website"},"isAccessibleForFree":false,"hasPart":{"@type":"WebPageElement","isAccessibleForFree":false,"cssSelector":"main"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://baker1031.com/"},{"@type":"ListItem","position":2,"name":"Current Offerings"}]}]}</script>
 </head>
 <body data-gate="soft">
 
@@ -310,9 +313,9 @@
             <a role="menuitem" href="/#about">About</a>
           </div>
         </div>
-        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
-        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
-        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <a class="listings-link portal-link" href="/current-offerings" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
         <span class="nav-sep" style="display:none"></span>
         <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
         <a class="logout" style="display:none" href="#">Log Out</a>
@@ -2191,6 +2194,17 @@
 
   <!-- Footer (same as offering page / homepage) -->
   <!-- PARTIAL:footer -->
+<style>
+  .site-footer .footer-cols { grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr; gap: 2.2rem; }
+  @media (max-width: 1100px) { .site-footer .footer-cols { grid-template-columns: 1fr 1fr; gap: 2rem; } }
+  @media (max-width: 880px) { .site-footer .footer-cols { grid-template-columns: 1fr; } }
+  .site-footer .footer-h { font-size: 0.76rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa0ab; margin-bottom: 0.9rem; }
+  /* AA contrast (audit): footer-bottom text was #8a8f99 on white (3.24:1) */
+  .site-footer .footer-bottom, .site-footer .footer-bottom span, .site-footer .footer-bottom a { color: #656c78; }
+  .site-footer .footer-disclosure a { text-decoration: underline; text-underline-offset: 2px; }
+  .site-footer .gate-lock { display: inline-block; vertical-align: -1px; margin-left: 0.3em; opacity: 0.65; }
+  body.authed .site-footer .gate-lock { display: none; }
+</style>
 <footer class="site-footer" id="contact">
     <div class="footer-inner">
       <div class="footer-cols">
@@ -2199,7 +2213,7 @@
           <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
         </div>
         <div>
-          <h5>Contact</h5>
+          <div class="footer-h">Contact</div>
           <ul class="footer-contact">
             <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
             <li><a href="tel:+14155791660">(415) 579-1660</a></li>
@@ -2207,13 +2221,32 @@
           </ul>
         </div>
         <div>
-          <h5>Explore</h5>
+          <div class="footer-h">Explore</div>
           <ul class="footer-links">
             <li><a href="/#strategies">Strategies</a></li>
             <li><a href="/#why">Difference</a></li>
             <li><a href="/#full-cycle">Performance</a></li>
             <li><a href="/#about">About</a></li>
             <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-h">Research</div>
+          <ul class="footer-links">
+            <li><a href="/learn">Learn Library <svg class="gate-lock" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></li>
+            <li><a href="/glossary">Glossary</a></li>
+            <li><a href="/markets">Markets by State</a></li>
+            <li><a href="/calculators">Calculators</a></li>
+            <li><a href="/audiences">Who We Help</a></li>
+          </ul>
+        </div>
+        <div>
+          <div class="footer-h">Investors</div>
+          <ul class="footer-links">
+            <li><a href="/current-offerings">Current Offerings <svg class="gate-lock" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></li>
+            <li><a href="/performance">Sponsor Performance <svg class="gate-lock" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></li>
+            <li><a href="/sponsors">Sponsor Directory <svg class="gate-lock" viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></a></li>
+            <li><a href="/#request-access">Request Access</a></li>
           </ul>
         </div>
       </div>

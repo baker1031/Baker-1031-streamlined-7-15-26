@@ -2,19 +2,21 @@
 
 > Founder-led real-estate securities firm helping accredited investors defer capital-gains tax through 1031 exchanges into institutional Delaware Statutory Trust (DST) properties, 721 UPREIT exchanges, Opportunity Zone funds, and mineral royalties. All educational content below is written by Gerald F. "Jerry" Baker, III and reviewed for compliance.
 
-Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC). This is educational information, not an offer, recommendation, or tax/legal advice; consult your own CPA and attorney.
+Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC — BrokerCheck CRD #46147). This is educational information, not an offer, recommendation, or tax/legal advice; consult your own CPA and attorney.
+
+Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 · +1 (415) 579-1660 · invest@baker1031.com
 
 ## Key pages
 
 - [Home](https://baker1031.com/): firm overview and strategies
-- [Learn (research library)](https://baker1031.com/learn.html): 525 in-depth articles and guides
-- [Glossary](https://baker1031.com/glossary.html): 50 plain-English 1031/DST/REIT/OZ terms
-- [Calculators](https://baker1031.com/calculators.html): 10 free interactive tax/yield tools
-- [Markets by state](https://baker1031.com/markets.html): 63 state and metro 1031/DST tax guides
-- [Who we help](https://baker1031.com/audiences.html): guidance by investor situation
-- [Current offerings](https://baker1031.com/current-offerings.html): DST and 1031-eligible offerings (accredited investors)
-- [Performance](https://baker1031.com/performance.html): aggregated full-cycle sponsor track record
-- [Sponsors](https://baker1031.com/sponsors.html): DST sponsor directory
+- [Learn (research library)](https://baker1031.com/learn): 541 in-depth articles and guides
+- [Glossary](https://baker1031.com/glossary): 50 plain-English 1031/DST/REIT/OZ terms
+- [Calculators](https://baker1031.com/calculators): 10 free interactive tax/yield tools
+- [Markets by state](https://baker1031.com/markets): 63 state and metro 1031/DST tax guides
+- [Who we help](https://baker1031.com/audiences): guidance by investor situation
+- [Current offerings](https://baker1031.com/current-offerings): DST and 1031-eligible offerings (accredited investors)
+- [Performance](https://baker1031.com/performance): aggregated full-cycle sponsor track record
+- [Sponsors](https://baker1031.com/sponsors): DST sponsor directory
 
 ## DST Essentials
 
@@ -257,6 +259,25 @@ Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC). This
 - [Opportunity Zone Investment Minimums & Accreditation](https://baker1031.com/learn/opportunity-zone-investment-minimums-and-accreditation/)
 - [Opportunity Zone Map Changes & New Designations](https://baker1031.com/learn/opportunity-zone-map-changes-and-new-designations/)
 - [Opportunity Zone Map: How to Find Qualified Zones](https://baker1031.com/learn/opportunity-zone-map-how-to-find-qualified-zones/)
+
+## Property Types
+
+- [Data Center Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-data-centers/)
+- [GSA & Government-Leased Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-government-leased/)
+- [Healthcare & Medical Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-healthcare/)
+- [Hospitality & Hotel Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-hospitality/)
+- [Industrial Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-industrial/)
+- [Land & Land-Banking Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-land/)
+- [Life Science Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-life-sciences/)
+- [Marina Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-marina/)
+- [Multifamily Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-multifamily/)
+- [Net Lease (NNN) Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-net-lease/)
+- [Office Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-office/)
+- [Oil & Gas Mineral and Royalty Interests for 1031 Exchange Investors](https://baker1031.com/learn/property-type-oil-gas-royalties/)
+- [Self-Storage Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-self-storage/)
+- [Senior Living Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-senior-living/)
+- [Small-Bay Industrial Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-small-bay-industrial/)
+- [Student Housing Properties for 1031 Exchange & DST Investors](https://baker1031.com/learn/property-type-student-housing/)
 
 ## DST sponsors
 

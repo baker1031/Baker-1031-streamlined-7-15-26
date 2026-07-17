@@ -42,5 +42,8 @@
     X-Content-Type-Options = "nosniff"
     X-Frame-Options = "SAMEORIGIN"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Strict-Transport-Security = "max-age=31536000; includeSubDomains"
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # CSP in REPORT-ONLY mode first (audit): watch the console / reports for a week,
+    # then move to Content-Security-Policy once no legitimate source is blocked.
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://app.cal.com https://*.cal.com https://esm.sh; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://img.logo.dev https://assets.baker1031.com; media-src 'self' https://res.cloudinary.com; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://auth.baker1031.com https://*.kinde.com https://app.cal.com https://*.cal.com https://api.cal.com; frame-src https://app.cal.com https://*.cal.com https://auth.baker1031.com https://player.vimeo.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://auth.baker1031.com"
