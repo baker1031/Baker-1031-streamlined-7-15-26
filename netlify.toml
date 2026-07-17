@@ -1,6 +1,6 @@
 [build]
   publish = "dist"
-  command = "node scripts/build-aux-pages.mjs . && node scripts/build-offerings.mjs && node scripts/build-search-index.mjs"
+  command = "node scripts/build-aux-pages.mjs . && node scripts/build-property-types.mjs . && node scripts/build-offerings.mjs && node scripts/build-search-index.mjs"
 
 # ---------- Caching ----------
 [[headers]]

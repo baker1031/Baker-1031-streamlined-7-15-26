@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
+</style>
+<title>Net Lease (NNN) for 1031 Exchange &amp; DST Investors &mdash; Baker 1031</title>
+<meta name="description" content="Net Lease (NNN) for 1031 exchange &amp; DST investors — Single-tenant net-lease properties with long leases and predictable, hands-off income.">
+<link rel="canonical" href="https://baker1031.com/property-types/net-lease/">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Article","headline":"Net Lease (NNN) for 1031 Exchange & DST Investors","description":"Net Lease (NNN) for 1031 exchange & DST investors — Single-tenant net-lease properties with long leases and predictable, hands-off income.","author":{"@type":"Person","name":"Gerald F. \"Jerry\" Baker, III"},"publisher":{"@type":"Organization","name":"Baker 1031 Investments"},"url":"https://baker1031.com/property-types/net-lease/","inLanguage":"en-US","dateModified":"2026-07-01"},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://baker1031.com/"},{"@type":"ListItem","position":2,"name":"Property Types","item":"https://baker1031.com/property-types.html"},{"@type":"ListItem","position":3,"name":"Net Lease (NNN)"}]}]</script>
+
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+  @media (max-width: 720px) {
+    .main-header-inner { position: relative; }
+    .nav-toggle { display: inline-flex; }
+    .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+      border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+      flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+    .account-box.open { display: flex; }
+    .nav-sep { width: 100%; height: 1px; }
+  }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+  .site-footer { overflow: hidden; }
+  .footer-love .love-heart { height: 0.82em; width: auto; vertical-align: -0.06em; }
+  .footer-love {
+    font-size: 9.3vw;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.18em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+
+  .learn-layout { display: grid; grid-template-columns: 17rem 1fr; gap: 2.5rem; align-items: start; padding: 1.5rem 0 3rem; }
+  @media (max-width: 900px) { .learn-layout { grid-template-columns: 1fr; } }
+  .learn-nav { position: sticky; top: 96px; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 0.8rem; max-height: calc(100vh - 130px); overflow-y: auto; }
+  .learn-nav details { border-bottom: 1px solid var(--hairline); }
+  .learn-nav details:last-child { border-bottom: none; }
+  .learn-nav summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.86rem; font-weight: 700; color: var(--ink); padding: 0.7rem 0.6rem; }
+  .learn-nav summary::-webkit-details-marker { display: none; }
+  .learn-nav summary::after { content: "\203A"; color: #9aa0ab; transition: transform 0.15s; font-size: 1rem; }
+  .learn-nav details[open] summary::after { transform: rotate(90deg); }
+  .learn-nav ul { list-style: none; padding: 0 0.6rem 0.7rem 0.9rem; }
+  .learn-nav li { margin-bottom: 0.15rem; }
+  .learn-nav li a { display: block; font-size: 0.83rem; color: var(--ink-soft); padding: 0.32rem 0.5rem; border-radius: 6px; }
+  .learn-nav li a:hover { background: #f3f5f8; color: var(--navy); }
+  .learn-nav li a.active { background: #edf1f7; color: var(--navy); font-weight: 600; }
+  .learn-article { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 2.4rem 2.8rem 2.8rem; max-width: 50rem; }
+  .learn-article .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
+  .learn-article h1 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.01em; margin: 0.4rem 0 0.6rem; }
+  .learn-article .meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .learn-article h2 { font-size: 1.15rem; font-weight: 700; margin: 1.8rem 0 0.6rem; }
+  .learn-article p, .learn-article li { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .learn-article ul, .learn-article ol { padding-left: 1.3rem; margin-bottom: 0.9rem; }
+  .learn-article .callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .article-footer-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--hairline); font-size: 0.86rem; font-weight: 600; }
+
+  .aud-btn { display: inline-block; background: var(--navy); color: #fff; font-weight: 700; font-size: 0.9rem; padding: 0.7rem 1.3rem; border-radius: 7px; margin: 0.4rem 0 0.6rem; }
+  .aud-btn:hover { background: var(--navy-dark); }
+
+  .mk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1.2rem 0 1.6rem; }
+  @media (max-width: 640px) { .mk-stats { grid-template-columns: 1fr 1fr; } }
+  .mk-stat { background: #f6f8fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.8rem 1rem; }
+  .mk-stat .l { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #7a8089; }
+  .mk-stat .v { font-size: 1.05rem; font-weight: 700; margin-top: 0.15rem; }
+  .mk-callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .mk-faq { border-top: 1px solid var(--hairline); margin-top: 1.6rem; padding-top: 1rem; }
+  .mk-faq details { border-bottom: 1px solid var(--hairline); padding: 0.6rem 0; }
+  .mk-faq summary { font-size: 0.92rem; font-weight: 700; cursor: pointer; }
+  .mk-faq p { margin-top: 0.5rem; }
+  .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
+
+  .mk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1.2rem 0 1.6rem; }
+  @media (max-width: 640px) { .mk-stats { grid-template-columns: 1fr 1fr; } }
+  .mk-stat { background: #f6f8fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.8rem 1rem; }
+  .mk-stat .l { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #7a8089; }
+  .mk-stat .v { font-size: 1.05rem; font-weight: 700; margin-top: 0.15rem; }
+  .mk-callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .mk-faq { border-top: 1px solid var(--hairline); margin-top: 1.6rem; padding-top: 1rem; }
+  .mk-faq details { border-bottom: 1px solid var(--hairline); padding: 0.6rem 0; }
+  .mk-faq summary { font-size: 0.92rem; font-weight: 700; cursor: pointer; }
+  .mk-faq p { margin-top: 0.5rem; }
+  .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
+</style>
+</head>
+<body data-gate="public">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <div class="nav-home portal-link" style="display:none">
+          <a class="nav-home-link" href="/">Home</a>
+          <button class="nav-home-toggle" type="button" aria-label="Homepage sections" aria-expanded="false" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="nav-home-menu" role="menu">
+            <a role="menuitem" href="/#strategies">Strategies</a>
+            <a role="menuitem" href="/#why">Difference</a>
+            <a role="menuitem" href="/#full-cycle">Performance</a>
+            <a role="menuitem" href="/#about">About</a>
+          </div>
+        </div>
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <span class="nav-sep" style="display:none"></span>
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/property-types.html">Property Types</a><span class="sep">&rsaquo;</span><span class="current">Net Lease (NNN)</span></nav>
+
+    <div class="learn-layout">
+      <nav class="learn-nav" aria-label="Property types">
+        <a class="learn-back" href="/property-types.html"><span aria-hidden="true">&larr;</span> All property types</a>
+        <details open><summary>Property types</summary><ul>
+          <li><a href="/property-types/data-centers/">Data Centers</a></li>
+          <li><a href="/property-types/government-leased/">Government-Leased</a></li>
+          <li><a href="/property-types/healthcare/">Healthcare</a></li>
+          <li><a href="/property-types/hospitality/">Hospitality</a></li>
+          <li><a href="/property-types/industrial/">Industrial</a></li>
+          <li><a href="/property-types/land/">Land</a></li>
+          <li><a href="/property-types/life-sciences/">Life Sciences</a></li>
+          <li><a href="/property-types/marina/">Marina</a></li>
+          <li><a href="/property-types/multifamily/">Multifamily</a></li>
+          <li><a class="active" href="/property-types/net-lease/">Net Lease (NNN)</a></li>
+          <li><a href="/property-types/office/">Office</a></li>
+          <li><a href="/property-types/oil-gas-royalties/">Oil &amp; Gas Royalties</a></li>
+          <li><a href="/property-types/self-storage/">Self-Storage</a></li>
+          <li><a href="/property-types/senior-living/">Senior Living</a></li>
+          <li><a href="/property-types/small-bay-industrial/">Small-Bay Industrial</a></li>
+          <li><a href="/property-types/student-housing/">Student Housing</a></li>
+        </ul></details>
+      </nav>
+
+      <article class="learn-article">
+        <div class="kicker">Property Types</div>
+        <h1>Net Lease (NNN) for 1031 Exchange &amp; DST Investors</h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated June 2026</div>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)">Net-lease real estate pushes the operating costs onto the tenant and pays rent on a long, signed lease. That single feature is why it anchors so many 1031 exchanges and so much of the DST market.</p>
+        <p>A net lease is a commercial lease that puts the building's running costs on the tenant rather than the owner. In its fullest form, a triple-net (NNN) lease, the business occupying the space pays the property taxes, the insurance, and the upkeep on top of base rent, so what reaches the owner is close to a clean rent check. For someone selling an investment property and racing the clock on a 1031 exchange , or parking proceeds in a Delaware Statutory Trust , that profile is the whole appeal: you stay invested in real estate without the tenant calls at 2 a.m. This guide walks through what net lease is, how it is priced, what it pays, where it bites, and how most accredited investors buy it.</p>
+        <a class="aud-btn" href="/#request-access">Request Investment Access</a>
+        <h2>What a net lease is</h2>
+        <p>Start with the opposite. In a standard gross lease, the kind most apartment tenants sign, the landlord collects one rent number and pays the taxes, the insurance, the repairs, all of it, out of that number. The owner keeps whatever is left, and "whatever is left" swings with the boiler, the roof, and the county assessor. A net lease flips that arrangement. The tenant takes on some or all of those costs directly, and the rent the owner banks looks a lot more like net income.</p>
+        <p>How much the tenant absorbs is what separates one net lease from another, and we will get to the gradations in a moment. The structure shows up most often under single buildings leased to one business for a long time: a pharmacy on a corner, a dollar store off the highway exit, a quick-service restaurant with a drive-thru, an auto-parts shop, a dialysis clinic, a grocery store anchoring a strip center. Initial terms commonly run ten to twenty years, with scheduled rent increases and a string of renewal options after that.</p>
+        <p>Investors are drawn to that predictability. A fifteen-year lease to an established national operator behaves less like a building and more like a corporate bond wrapped in real estate, which is exactly the trade many exchangers are looking to make when they move out of a property that demands their weekends.</p>
+
+        <h2>The four flavors of net lease</h2>
+        <p>"Net lease" is a family, not a single document. The line between members comes down to how many of the three operating-cost buckets, property taxes, insurance, and maintenance, the tenant carries.</p>
+        <p>Structure Taxes Insurance Maintenance Owner's job</p>
+        <p>Single net (N) Tenant Owner Owner Hands-on</p>
+        <p>Double net (NN) Tenant Tenant Owner Some upkeep</p>
+        <p>Triple net (NNN) Tenant Tenant Tenant Light</p>
+        <p>Absolute net (bond) Tenant Tenant Tenant + roof and structure None</p>
+        <p>Under an absolute net or "bond" lease the tenant owns every obligation down to the roof and the foundation. It is the most hands-off arrangement a real estate owner can sign, and it is what most DST sponsors target.</p>
+
+        <h2>How net-lease buildings get priced</h2>
+        <p>Net lease trades on a cap rate, the annual rent divided by the price. A building throwing off $200,000 a year that sells for $4 million changes hands at a 5 percent cap. Lower cap, higher price; higher cap, cheaper building. Three things move that number more than anything else.</p>
+        <p>Tenant credit comes first. A lease backed by an investment-grade company, one rated BBB- or better, prices richer than the same building leased to a regional franchisee, because the rent is more likely to show up every month for the life of the deal. Lease term is second: a tenant with sixteen years left on the clock is worth more than one with four, since the buyer inherits that runway before facing a vacancy. Location and the building's reusability round it out. A box on a busy corner that a dozen other tenants would happily take re-leases easily if the original occupant leaves; a purpose-built building on a quiet road does not.</p>
+        <p>Because the price is a multiple of a fixed rent stream, net-lease values move with interest rates the way bond prices do. When the ten-year Treasury climbs, buyers demand higher caps and prices soften, even if the tenant and the lease have not changed at all. That sensitivity cuts both ways, and it is worth understanding before you assume a net-lease asset is a sleepy, no-drama holding.</p>
+
+        <h2>Why exchangers reach for net lease</h2>
+        <p>Net-lease real estate is still real property, so it satisfies the like-kind requirement of a 1031 exchange. An investor can sell a management-heavy asset, an apartment complex, a rental house, a small office building, and roll the gain into a net-leased property that asks far less of them, all while deferring the capital gains tax that a straight sale would trigger.</p>
+        <p>The pull is mostly about time and attention. When the tenant handles the taxes, the insurance, the parking lot, and the HVAC, the owner's job shrinks to depositing rent and reading an annual statement. For an investor in their seventies who is done turning units, or a family that inherited a building two thousand miles away, that shift is the entire point. The rent does not get larger because you worked harder; it gets larger because the lease said it would, on a date written years in advance.</p>
+        <p>We tell clients the building is almost beside the point. Underwrite the company and the lease well, and the bricks mostly take care of themselves.</p>
+
+        <h2>What changes when net lease sits inside a DST</h2>
+        <p>Most accredited investors do not buy a single net-leased building outright. They buy a fractional interest in a Delaware Statutory Trust that owns one or several of them. The trust holds title, a professional sponsor runs it, and each investor owns a beneficial interest sized to whatever dollar amount their exchange requires. That last detail solves a real problem: a 1031 exchange has to absorb a specific number, down to the dollar, and you cannot buy 63 percent of a freestanding pharmacy. You can buy 63 percent worth of a DST.</p>
+        <p>Pooling also spreads the single biggest weakness of net lease, which we come to below. A DST that holds eighteen pharmacies across eleven states does not live or die with one store closing. One vacancy dents the distribution; it does not erase it.</p>
+        <p>The trade-off is control, and the IRS draws that line on purpose. Under Revenue Procedure 2004-86, the rules that let a DST interest qualify for 1031 treatment, the trust operates inside tight guardrails sometimes called the "seven deadly sins." Once the offering closes, the sponsor cannot raise new money, cannot refinance the mortgage, cannot sign new leases or renegotiate the existing one except in narrow circumstances such as a tenant going bankrupt, and cannot do much beyond collect rent, maintain the property, and distribute the cash. Those constraints are why sponsors gravitate to long, stable, credit-backed leases in the first place: the structure leaves almost no room to actively fix a deal that drifts, so they start with the kind that should not need fixing.</p>
+
+        <h2>Yields, returns, and what the record shows</h2>
+        <p>Net lease is bought for the rent, not the home run. Most of the return arrives as current cash, with a slow upward drift from scheduled rent bumps and whatever the building is worth when it eventually sells. Across the net-lease offerings we track in the current market, going-in yields sit in the low-to-mid 5 percent range.</p>
+        <p>Realized results from net-lease programs that have already run their full course tell a consistent story. The figures below come from 55 full-cycle net-lease deals in our sponsor track-record database. They reflect sponsor track records across the marketplace we monitor, not Baker 1031's own returns, and past performance never guarantees what comes next.</p>
+        <p>Metric Net lease Basis</p>
+        <p>Avg. going-in yield 5.21% Current market benchmark</p>
+        <p>Avg. yield, high end 5.47% Current market benchmark</p>
+        <p>Avg. annual return, realized 6.8% 55 full-cycle deals</p>
+        <p>Avg. equity multiple, realized 1.58x 55 full-cycle deals</p>
+        <p>Avg. hold, realized 13.6 yrs 55 full-cycle deals</p>
+        <p>Benchmark yields from Baker 1031 sector data; realized figures from 55 full-cycle net-lease programs in the Baker 1031 sponsor track-record database. Illustrative, not a projection or guarantee.</p>
+        <p>Where a net-lease return tends to come from</p>
+        <p>~5.2%</p>
+        <p>~1.6%</p>
+        <p>Current rent Rent escalations</p>
+        <p>Source: Gerald F. &quot;Jerry&quot; Baker, III. Illustrative split of a typical net-lease return; actual results vary by deal.</p>
+        <p>Notice what is missing from that picture: a big appreciation bar. Net lease can appreciate, particularly if rents reset higher or cap rates fall during the hold, but if you are underwriting it as a growth play you are buying the wrong asset. The yield is the thesis.</p>
+
+        <h2>Who signs the lease</h2>
+        <p>The company whose name is on the lease is what you are underwriting. The tenants that command the most investor demand operate in necessity-based corners of retail and services that hold up when the economy wobbles and that the internet has not managed to hollow out.</p>
+        <p>In practice that means a recognizable roster. Pharmacies and healthcare uses such as dialysis and urgent-care clinics. Deep-discount and dollar retailers that actually do better when budgets tighten. Drive-thru quick-service restaurants on long corporate or strong-franchisee guarantees. Convenience and auto-service operators. Grocers anchoring neighborhood centers. The names you would expect, Walgreens, Dollar General, 7-Eleven, an O'Reilly or a Tractor Supply, a regional grocery chain, show up again and again precisely because their rent keeps coming.</p>
+        <p>Credit quality is not a yes-or-no question, though. A lease guaranteed by a public parent company is a different animal from one signed by a single-store franchisee with a personal guarantee, even if the sign over the door is identical. Reading which one you have is half the diligence, and it is where an investor going it alone most often gets surprised.</p>
+
+        <h2>Reading the lease before you read the building</h2>
+        <p>Two net-lease deals at the same cap rate can be worlds apart once you open the lease. A few clauses do most of the work.</p>
+        <p>The first is how the rent grows. Some leases stay flat for the entire term, which feels safe but quietly loses ground to inflation year after year. Others build in fixed bumps, say 10 percent every five years, or steady annual increases around 1.5 to 2 percent. A smaller set ties increases to the Consumer Price Index, which protects you in an inflationary stretch but can flatline when prices do. None is automatically better; the question is whether the escalations keep pace with what you expect from inflation over a hold that might last fifteen years.</p>
+        <p>Escalation type What it does The catch</p>
+        <p>Flat Same rent for the full term Real income erodes with inflation</p>
+        <p>Fixed bumps Set increases on a schedule May lag a hot inflation year</p>
+        <p>CPI-linked Rises with inflation Stalls when inflation does; often capped</p>
+        <p>How a net lease handles rent growth shapes your real return as much as the headline cap rate does.</p>
+        <p>After escalations, look at the renewal options, which set how long the tenant can stay and on what terms, and at who guarantees the rent. A corporate guarantee from an investment-grade parent is one thing; a franchisee guarantee backed by a handful of stores is another. The roof-and-structure question matters too. Even in a deal sold as "triple net," confirm in writing that the tenant, not you, owns the expensive long-term capital items.</p>
+
+        <h2>Where net lease can go wrong</h2>
+        <p>The calm profile hides a specific set of risks, and they are not the ones a multifamily owner worries about. The first is concentration. In a single-tenant building, occupancy is binary. The store is either leased or it is empty, and an empty special-purpose box can sit for a year while you cover the taxes, the insurance, and the carrying cost that the tenant used to pay. A diversified DST softens this, which is much of why the structure exists, but it does not erase it.</p>
+        <p>Credit risk rides alongside. A long lease is only worth as much as the company honoring it, and a tenant downgrade or bankruptcy can interrupt the rent and mark down the value at the same time. Then there is the inflation drag we covered: modest fixed escalations can quietly lose to rising prices over a long term. There is interest-rate sensitivity, since these assets are priced off a cap rate and reprice when rates move. And inside a DST, there is illiquidity and the deliberate lack of investor control, which is the price of the 1031 treatment. These are private placements sold only to accredited investors, and getting out early is rarely simple.</p>
+
+        <h2>Key Takeaways</h2>
+        <p>Underwrite the tenant's credit and the years left on the lease as carefully as the real estate; that is where the return lives.</p>
+        <p>Single-tenant assets carry all-or-nothing occupancy risk. Diversified DSTs spread it across tenants and markets, but concentration never fully disappears.</p>
+        <p>Match the lease's rent escalations against your own inflation view, and remember the value reprices when interest rates move.</p>
+
+        <h2>How these investments end</h2>
+        <p>Net-lease deals do not run forever, and how they wrap up matters as much as how they start. The plain version is a sale: the sponsor markets the property near the end of the hold, sells it, and returns capital and any gain to investors, who can pay the tax or roll into a fresh 1031 exchange and keep deferring.</p>
+        <p>Some programs offer a second path through a 721 UPREIT exchange, in which a real estate investment trust acquires the property and investors receive operating-partnership units instead of cash. That can convert an illiquid, single-asset position into a stake in a larger, diversified REIT, with its own tax and liquidity trade-offs worth reading closely before treating it as an upgrade. The constraint to keep in mind is the one from Revenue Procedure 2004-86: because a DST generally cannot refinance, the deal's debt usually has to be retired through that sale or rollover rather than rolled over in place, which is part of why hold periods cluster where they do.</p>
+
+        <h2>Who it suits, and who should look past it</h2>
+        <p>Net lease fits an investor who wants their real estate to behave like income and is willing to give up control and easy liquidity to get there. Retirees stepping back from active management, families consolidating scattered rentals, and exchangers who simply need a reliable place to land before a 45-day deadline tend to be the natural buyers.</p>
+        <p>It is a poor fit for someone chasing appreciation or wanting hands-on operational upside, or for anyone who might need their money back on short notice. If the goal is to force value through renovation and releasing, an operating asset like multifamily or self-storage will serve better. Net lease is the opposite trade: you accept a quieter return in exchange for a quieter life as an owner. Knowing which one you want is the first decision, and it is worth making before you start identifying replacement property.</p>
+        <p>Working with Baker 1031</p>
+        <p>Most investors reach diversified, institutional net-lease real estate through a Delaware Statutory Trust rather than hunting for a single building, because it lowers the entry point, spreads tenant risk, and fits an exact exchange amount. We provide sponsor-agnostic diligence on net-lease DST programs from sponsors with full-cycle net-lease track records, among them ExchangeRight, AEI, and Cantor Fitzgerald, and we are paid to be skeptical on your behalf rather than to push any one sponsor's deal.</p>
+        <p>The 45-day identification window moves fast, so the time to know your options is before you sell, not after. We keep a current shelf of vetted net-lease and other DST offerings open to accredited investors, and we are happy to walk through which leases and tenants back them.</p>
+        <p>View Available NNN Investments →</p>
+        <p>Frequently Asked Questions</p>
+        <p>What is the difference between a net lease and a triple-net (NNN) lease?</p>
+        <p>Net lease is the umbrella term for any lease where the tenant pays operating costs on top of base rent. Triple-net is the most complete version: the tenant covers all three major buckets, property taxes, insurance, and maintenance, leaving the owner with close to a clean rent check. Single-net and double-net leases pass along fewer of those costs, so the owner still carries more of the building.</p>
+        <p>Do net-lease properties qualify for a 1031 exchange?</p>
+        <p>Yes. Net-lease real estate is like-kind to other U.S. investment real property, so it works as a replacement in a 1031 exchange. Many investors move into net lease specifically to trade an actively managed property for passive, credit-backed rent while deferring capital gains tax.</p>
+        <p>What yield do net-lease properties pay?</p>
+        <p>Across the net-lease offerings we currently track, going-in cash yields generally land in the low-to-mid 5 percent range, with modest annual rent increases layered on. The actual number turns on tenant credit, how many years are left on the lease, location, and leverage. These figures are illustrative and not a projection or guarantee.</p>
+        <p>What are the main risks of net-lease investing?</p>
+        <p>Concentration is the big one: in a single-tenant building, one departure means full vacancy. Beyond that, watch tenant credit, the cost and downtime of re-leasing a special-purpose building, fixed rent bumps that can lag inflation over a long term, interest-rate sensitivity in the price, and the illiquidity and lack of control that come with a DST interest.</p>
+        <p>Can I buy a net-lease property inside a DST?</p>
+        <p>Yes, and most accredited investors do exactly that. A net-lease DST holds one or more net-leased buildings, and you buy a fractional beneficial interest that lowers the minimum, diversifies across tenants, and lets you hit your exact exchange number. A professional sponsor handles management. We offer diligence on net-lease DSTs from sponsors including ExchangeRight, AEI, and Cantor Fitzgerald.</p>
+        <p>How long are typical net-lease terms?</p>
+        <p>Single-tenant net leases commonly start at ten to twenty years, often with several renewal options stacked behind the initial term. A longer remaining term generally supports a higher price, since the buyer inherits more runway before facing a re-leasing decision.</p>
+        <p>Is a net lease the same as a ground lease?</p>
+        <p>No, though people sometimes conflate them. A ground lease leases the land while the tenant owns or builds the improvements on it. A net lease usually covers both the land and the building, with the tenant responsible for operating costs. Both can be passive for the owner, but the underlying ownership and what happens at lease end are different.</p>
+        <p>What happens when the lease expires?</p>
+        <p>Either the tenant renews, often on options written into the original lease, or the space goes dark and has to be re-leased or repositioned. That is exactly why remaining lease term and the building's reusability drive value. Inside a DST, the sponsor typically aims to sell or roll the asset before re-leasing risk becomes the investor's problem.</p>
+
+        <div class="callout" style="font-style:italic">The building matters, but the lease is the asset. We read the tenant's balance sheet and the years left on the term long before we look at the roof.<br><span style="font-style:normal;font-weight:700;font-size:0.82rem">— Gerald F. &ldquo;Jerry&rdquo; Baker, III</span></div>
+        <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
+          <p style="font-size:0.84rem;color:var(--muted)"><strong>Gerald F. &ldquo;Jerry&rdquo; Baker, III</strong> &mdash; Founder &amp; Managing Principal, Baker 1031 Investments &middot; FINRA Series 22 / 63 &middot; SIE. <a href="/#about">Read full bio &rarr;</a></p>
+        </div>
+        <p class="mk-disclosure">This page is educational and is not investment, tax, or legal advice or an offer to sell or a solicitation to buy any security. Property-type characteristics are general and vary by offering; sector figures are drawn from the DST marketplace we monitor, are not Baker 1031 returns, and past performance does not guarantee future results. Offerings are available only to accredited investors and made solely through a sponsor&rsquo;s private placement memorandum. Securities offered through Aurora Securities, member FINRA/SIPC. Real estate involves risk, including possible loss of principal.</p>
+        <div class="article-footer-nav"><a href="/property-types.html">&larr; All property types</a><a href="/current-offerings.html">View current offerings &rarr;</a></div>
+      </article>
+    </div>
+  </main>
+  <!-- PARTIAL:footer -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>Securities are offered through Aurora Securities, Inc., member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments, LLC is independent of Aurora Securities, Inc. and is not a registered broker-dealer or investment adviser. <a href="https://brokercheck.finra.org/firm/summary/46147" target="_blank" rel="noopener">Check Aurora Securities, Inc. on FINRA BrokerCheck</a>.</p>
+        <p>This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security. Offerings are made only by a sponsor&rsquo;s private placement memorandum, are available solely to accredited investors, and are subject to suitability requirements. Real estate investments involve substantial risk, including illiquidity, potential loss of principal, and market and interest-rate risk. DST interests are long-term investments and generally cannot be sold on demand. Past performance, including full-cycle results shown on this page, is not a guarantee of future results.</p>
+        <p>Baker 1031 Investments is not a tax or legal advisor. Prospective investors should consult their own CPA and attorney regarding their individual circumstances before investing.</p>
+        <p style="font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">Not FDIC Insured &nbsp;&middot;&nbsp; Not Bank Guaranteed &nbsp;&middot;&nbsp; Not a Deposit &nbsp;&middot;&nbsp; May Lose Value</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html">Employee Login</a></span>
+      </div>
+    </div>
+      <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
+</footer>
+  <!-- /PARTIAL:footer -->
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>

@@ -1024,6 +1024,8 @@ ${rows}
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
     { loc: `${SITE}/calculators.html`, priority: "0.6" },
     { loc: `${SITE}/sponsors.html`, priority: "0.6" },
+    { loc: `${SITE}/property-types.html`, priority: "0.6" },
+    ...["data-centers","government-leased","healthcare","hospitality","industrial","land","life-sciences","marina","multifamily","net-lease","office","oil-gas-royalties","self-storage","senior-living","small-bay-industrial","student-housing"].map((s) => ({ loc: `${SITE}/property-types/${s}/`, priority: "0.5" })),
     { loc: `${SITE}/process.html`, priority: "0.5" },
     { loc: `${SITE}/terms.html`, priority: "0.3" },
     { loc: `${SITE}/disclosures.html`, priority: "0.3" },
@@ -1665,6 +1667,7 @@ ${rows}
     "audiences.html", "audiences",
     "calculators.html", "calculators",
     "sponsors.html", "sponsors",
+    "property-types.html", "property-types",
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
     "offerings", "data", "css", "js", "assets", "documents",
@@ -1809,6 +1812,8 @@ ${rows}
     if (p.category === "offering") candidates.push(`/offerings/${p.slug}/`);
     if (p.category === "calculator" && CALC_MAP[p.slug]) candidates.push(`/calculators/${CALC_MAP[p.slug]}/`);
     if (p.category === "sponsor") candidates.push(`/sponsors/${p.slug.replace(/^sponsor-/, "")}/`); // upgrades to direct once profiles are built
+    if (/^property-type-/.test(p.slug)) candidates.push(`/property-types/${p.slug.replace(/^property-type-/, "")}/`);
+    if (p.slug === "property-types") candidates.push("/property-types.html");
 
     const dest = candidates.find((c) => exists(c));
     if (dest && dest !== from) { add(from, dest); mapped++; }
