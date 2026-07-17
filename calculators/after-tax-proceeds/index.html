@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>After-Tax Sale Proceeds Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Compare what you'd net from a taxable sale of investment real estate versus keeping the full amount working through a 1031 exchange.">
+<link rel="canonical" href="https://baker1031.com/calculators/after-tax-proceeds/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is 'adjusted cost basis'?","acceptedAnswer":{"@type":"Answer","text":"It is your original purchase price plus improvements, minus the depreciation you've claimed. Gain is the sale price minus this figure."}},{"@type":"Question","name":"Why show the full sale price for the 1031 column?","acceptedAnswer":{"@type":"Answer","text":"In a 1031 exchange you defer the tax, so the entire sale amount (subject to reinvesting proceeds and replacing debt) stays invested rather than being reduced by tax."}},{"@type":"Question","name":"Is this my exact net?","acceptedAnswer":{"@type":"Answer","text":"No — it's an estimate. It excludes selling costs and assumes the rates you enter. Your CPA can produce an exact figure."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,84 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+After-Tax Sale Proceeds
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a class="active" href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+Taxes
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+After-Tax Sale Proceeds
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+See how much of your sale you'd keep after tax if you sell outright — versus keeping the full amount working through a 1031 exchange.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-sale">Sale price ($)</label><input type="number" id="c-sale" inputmode="decimal" value="1000000"></div>
+            <div class="calc-field"><label for="c-basis">Adjusted cost basis ($)</label><input type="number" id="c-basis" inputmode="decimal" value="300000"></div>
+            <div class="calc-field"><label for="c-depr">Accumulated depreciation ($)</label><input type="number" id="c-depr" inputmode="decimal" value="150000"></div>
+            <div class="calc-field"><label for="c-fed">Federal capital-gains rate (%)</label><input type="number" id="c-fed" inputmode="decimal" step="0.1" value="20"></div>
+            <div class="calc-field"><label for="c-state">State tax rate (%)</label><input type="number" id="c-state" inputmode="decimal" step="0.1" value="0"></div>
+            <div class="calc-field check"><input type="checkbox" id="c-niit" checked><label for="c-niit">Include 3.8% NIIT</label></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>Total gain = sale price &minus; adjusted basis (your original cost after depreciation). The depreciation portion is taxed up to 25%; the rest at your capital-gains rate, plus state tax and the 3.8% NIIT. A taxable sale nets you the sale price minus that tax; a 1031 exchange keeps the entire amount invested and defers the tax.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+The difference between the two bottom lines is the capital that keeps compounding for you in a 1031 exchange instead of going to taxes today.
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Adjusted basis should already reflect depreciation taken.</li>
+          <li>Excludes selling costs and any state-specific surtaxes.</li>
+          <li>A 1031 exchange defers, not eliminates, the tax shown.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>What is 'adjusted cost basis'?</summary><p>It is your original purchase price plus improvements, minus the depreciation you've claimed. Gain is the sale price minus this figure.</p></details>
+          <details><summary>Why show the full sale price for the 1031 column?</summary><p>In a 1031 exchange you defer the tax, so the entire sale amount (subject to reinvesting proceeds and replacing debt) stays invested rather than being reduced by tax.</p></details>
+          <details><summary>Is this my exact net?</summary><p>No — it's an estimate. It excludes selling costs and assumes the rates you enter. Your CPA can produce an exact figure.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +393,40 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["sale","basis","depr","fed","state","niit"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var gain = Math.max(0, v.sale - v.basis);
+        var rec = Math.min(Math.max(0, v.depr), gain);
+        var cap = Math.max(0, gain - rec);
+        var tax = rec * 0.25 + cap * (v.fed / 100) + (v.niit ? gain * 0.038 : 0) + gain * (v.state / 100);
+        var afterTax = v.sale - tax;
+        return [
+          {label:"Total gain", display:money(gain)},
+          {label:"Estimated tax if you sell", display:money(tax)},
+          {label:"Net proceeds after a taxable sale", display:money(afterTax)},
+          {label:"Proceeds working in a 1031 exchange", display:money(v.sale), total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Estimate only. Enter your adjusted basis (original cost net of depreciation). Excludes selling costs. Confirm figures with your CPA."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

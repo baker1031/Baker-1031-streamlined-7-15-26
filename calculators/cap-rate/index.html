@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>Cap Rate Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Calculate a property's capitalization rate from its net operating income and value or purchase price.">
+<link rel="canonical" href="https://baker1031.com/calculators/cap-rate/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a good cap rate?","acceptedAnswer":{"@type":"Answer","text":"It depends on the market and asset. Lower cap rates reflect premium, lower-risk properties; higher cap rates reflect higher yield and higher risk. Compare like-for-like."}},{"@type":"Question","name":"Does cap rate include my mortgage?","acceptedAnswer":{"@type":"Answer","text":"No. Cap rate is unlevered — it uses net operating income before financing. Use cash-on-cash return to factor in your loan."}},{"@type":"Question","name":"How is NOI calculated?","acceptedAnswer":{"@type":"Answer","text":"NOI is gross rental income minus operating expenses (taxes, insurance, management, maintenance), before debt service, depreciation, and income tax."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,80 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+Cap Rate
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a class="active" href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+Investing
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+Cap Rate
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+Capitalization rate measures a property's unlevered yield — its net operating income as a percentage of its value. Enter both to calculate it.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-noi">Net operating income ($/yr)</label><input type="number" id="c-noi" inputmode="decimal" value="90000"></div>
+            <div class="calc-field"><label for="c-value">Property value / price ($)</label><input type="number" id="c-value" inputmode="decimal" value="1500000"></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>Cap rate = net operating income (NOI) ÷ property value, expressed as a percentage. NOI is annual rental income minus operating expenses, before mortgage payments and income tax. A higher cap rate generally signals higher yield and higher risk; a lower cap rate signals a more premium, stabilized asset.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+Cap rate ignores debt. Two investors paying the same price for the same building have the same cap rate but very different cash-on-cash returns depending on their financing.
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>NOI excludes mortgage payments, capital expenditures, and income tax.</li>
+          <li>Cap rate is a snapshot; it does not capture rent growth or lease rollover.</li>
+          <li>Market cap rates vary by property type, location, and interest rates.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>What is a good cap rate?</summary><p>It depends on the market and asset. Lower cap rates reflect premium, lower-risk properties; higher cap rates reflect higher yield and higher risk. Compare like-for-like.</p></details>
+          <details><summary>Does cap rate include my mortgage?</summary><p>No. Cap rate is unlevered — it uses net operating income before financing. Use cash-on-cash return to factor in your loan.</p></details>
+          <details><summary>How is NOI calculated?</summary><p>NOI is gross rental income minus operating expenses (taxes, insurance, management, maintenance), before debt service, depreciation, and income tax.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +389,35 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["noi","value"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var cap = v.value > 0 ? (v.noi / v.value) * 100 : 0;
+        return [
+          {label:"Net operating income", display:money(v.noi)},
+          {label:"Property value", display:money(v.value)},
+          {label:"Capitalization rate", display:cap.toFixed(2) + "%", total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Cap rate is an unlevered measure and ignores financing. Compare it against the risk and growth prospects of the specific property."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

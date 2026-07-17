@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>1031 Replacement Property &amp; Debt Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Find the minimum replacement-property value, equity to reinvest, and debt to replace so your 1031 exchange fully defers the tax.">
+<link rel="canonical" href="https://baker1031.com/calculators/replacement-debt/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does 'equal or up' mean?","acceptedAnswer":{"@type":"Answer","text":"Your replacement property must be equal or greater in value, you must reinvest all your equity, and you must carry equal or greater debt (or add cash to make up any difference)."}},{"@type":"Question","name":"Do I have to take on the same mortgage?","acceptedAnswer":{"@type":"Answer","text":"You must replace the debt you paid off, but you can do it by adding cash to the replacement property instead of taking on new debt."}},{"@type":"Question","name":"What if I buy a cheaper property?","acceptedAnswer":{"@type":"Answer","text":"Buying down in value or debt creates boot, which is taxable up to the amount of your gain. This tool shows the targets to avoid that."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,81 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+Replacement Debt (Equal or Up)
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a class="active" href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+1031 Exchange
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+Replacement Debt (Equal or Up)
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+To fully defer, a 1031 exchange must be “equal or up” in value and debt. Enter your sale details to see your replacement-property targets.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-sale">Relinquished sale price ($)</label><input type="number" id="c-sale" inputmode="decimal" value="1000000"></div>
+            <div class="calc-field"><label for="c-costs">Selling costs ($)</label><input type="number" id="c-costs" inputmode="decimal" value="60000"></div>
+            <div class="calc-field"><label for="c-oldDebt">Debt paid off on sale ($)</label><input type="number" id="c-oldDebt" inputmode="decimal" value="400000"></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>To defer 100% of the tax, your replacement property must be worth at least the net sale price of the property you sold, you must reinvest all of your equity, and you must take on debt at least equal to the debt you paid off (or add equivalent cash in its place). Buying “down” in value or reducing debt creates taxable boot.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+“Equal or up” is the rule: equal or greater value, all equity reinvested, and equal or greater debt (or cash in its place).
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Net sale price here is sale price minus selling costs.</li>
+          <li>You can substitute cash for replacement debt to hit the debt target.</li>
+          <li>Buying below these targets produces taxable boot on the shortfall.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>What does 'equal or up' mean?</summary><p>Your replacement property must be equal or greater in value, you must reinvest all your equity, and you must carry equal or greater debt (or add cash to make up any difference).</p></details>
+          <details><summary>Do I have to take on the same mortgage?</summary><p>You must replace the debt you paid off, but you can do it by adding cash to the replacement property instead of taking on new debt.</p></details>
+          <details><summary>What if I buy a cheaper property?</summary><p>Buying down in value or debt creates boot, which is taxable up to the amount of your gain. This tool shows the targets to avoid that.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +390,37 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["sale","costs","oldDebt"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var netSale = Math.max(0, v.sale - v.costs);
+        var equity = Math.max(0, netSale - v.oldDebt);
+        return [
+          {label:"Net sale price (value to replace)", display:money(netSale)},
+          {label:"Minimum replacement value", display:money(netSale)},
+          {label:"Equity to reinvest", display:money(equity)},
+          {label:"Minimum replacement debt", display:money(v.oldDebt), total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Estimate only. You may replace debt with additional cash instead. Confirm targets with your qualified intermediary."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>1031 Exchange 45 / 180-Day Deadline Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Enter your sale closing date to calculate your 1031 exchange 45-day identification deadline and 180-day closing deadline.">
+<link rel="canonical" href="https://baker1031.com/calculators/deadline/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"When do the deadlines start?","acceptedAnswer":{"@type":"Answer","text":"Both the 45-day and 180-day periods start the day your relinquished (sold) property closes, and they run concurrently."}},{"@type":"Question","name":"Can the deadlines be extended?","acceptedAnswer":{"@type":"Answer","text":"Generally no. The only common exception is a federally declared disaster; otherwise the dates are firm, so plan to identify well before day 45."}},{"@type":"Question","name":"What is the identification rule?","acceptedAnswer":{"@type":"Answer","text":"Within 45 days you must identify replacement property in writing — commonly up to three properties (the three-property rule), or more under the 200% or 95% rules."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,79 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+45 / 180-Day Deadline
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a class="active" href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+1031 Exchange
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+45 / 180-Day Deadline
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+A 1031 exchange has two hard deadlines that run from the day your sale closes. Enter that date to see both.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-date">Closing date of your sale</label><input type="date" id="c-date" value="2026-07-15"></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>From the date your relinquished property closes, you have 45 calendar days to formally identify replacement property in writing, and 180 calendar days to close on it. The two clocks run at the same time, include weekends and holidays, and have essentially no extensions — so identify early.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+The 180-day window can be shortened: if your tax return is due (including the sale year) before day 180, you must close by that earlier date unless you file an extension.
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Both periods count calendar days, including weekends and holidays.</li>
+          <li>The 45-day identification must be in writing and follow the IRS identification rules (e.g., the three-property rule).</li>
+          <li>File a tax extension if your return would otherwise be due before day 180.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>When do the deadlines start?</summary><p>Both the 45-day and 180-day periods start the day your relinquished (sold) property closes, and they run concurrently.</p></details>
+          <details><summary>Can the deadlines be extended?</summary><p>Generally no. The only common exception is a federally declared disaster; otherwise the dates are firm, so plan to identify well before day 45.</p></details>
+          <details><summary>What is the identification rule?</summary><p>Within 45 days you must identify replacement property in writing — commonly up to three properties (the three-property rule), or more under the 200% or 95% rules.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +388,39 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["date"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        if (!v.date) return [{label:"Enter your sale closing date", display:"—"}];
+        var d = new Date(v.date + "T00:00:00");
+        if (isNaN(d.getTime())) return [{label:"Invalid date", display:"—"}];
+        function fmtd(x){ return x.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"}); }
+        function add(days){ var x = new Date(d.getTime()); x.setDate(x.getDate() + days); return x; }
+        return [
+          {label:"Sale closes", display:fmtd(d)},
+          {label:"45-day identification deadline", display:fmtd(add(45))},
+          {label:"180-day closing deadline", display:fmtd(add(180)), total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Both deadlines include weekends and holidays and generally cannot be extended. The 180-day period can be cut short by your tax-filing due date."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

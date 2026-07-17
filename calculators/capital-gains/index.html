@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>1031 Capital Gains Tax Deferral Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Estimate the federal, state, depreciation-recapture, and 3.8% NIIT tax a 1031 exchange could defer when you sell investment real estate.">
+<link rel="canonical" href="https://baker1031.com/calculators/capital-gains/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What tax does a 1031 exchange defer?","acceptedAnswer":{"@type":"Answer","text":"It defers the federal capital-gains tax, depreciation recapture, the 3.8% net investment income tax where it applies, and state tax on the gain — provided you reinvest the proceeds and replace the debt."}},{"@type":"Question","name":"Is the tax eliminated or just delayed?","acceptedAnswer":{"@type":"Answer","text":"Delayed. The gain carries into your replacement property's basis. You can keep exchanging to keep deferring; at death heirs generally receive a stepped-up basis."}},{"@type":"Question","name":"What federal rate should I enter?","acceptedAnswer":{"@type":"Answer","text":"Long-term capital gains are federally taxed at 0%, 15%, or 20% depending on income; 20% is the top rate. Enter the rate that matches your bracket, or ask your CPA."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,85 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+Capital Gains Tax Deferral
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a class="active" href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+1031 Exchange
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+Capital Gains Tax Deferral
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+Estimate the total tax a 1031 exchange could defer when you sell investment real estate — federal capital gains, depreciation recapture, the 3.8% NIIT, and state tax.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-sale">Sale price ($)</label><input type="number" id="c-sale" inputmode="decimal" value="1000000"></div>
+            <div class="calc-field"><label for="c-basis">Original purchase price ($)</label><input type="number" id="c-basis" inputmode="decimal" value="400000"></div>
+            <div class="calc-field"><label for="c-improve">Capital improvements ($)</label><input type="number" id="c-improve" inputmode="decimal" value="50000"></div>
+            <div class="calc-field"><label for="c-depr">Accumulated depreciation ($)</label><input type="number" id="c-depr" inputmode="decimal" value="150000"></div>
+            <div class="calc-field"><label for="c-fed">Federal capital-gains rate (%)</label><input type="number" id="c-fed" inputmode="decimal" step="0.1" value="20"></div>
+            <div class="calc-field"><label for="c-state">State tax rate (%)</label><input type="number" id="c-state" inputmode="decimal" step="0.1" value="0"></div>
+            <div class="calc-field check"><input type="checkbox" id="c-niit" checked><label for="c-niit">Include 3.8% net investment income tax (NIIT)</label></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>Adjusted basis = original purchase price + capital improvements &minus; accumulated depreciation. Total gain = sale price &minus; adjusted basis. The portion attributable to depreciation is taxed as unrecaptured Section 1250 gain (up to 25%); the remainder is long-term capital gain taxed at your federal rate, plus any state tax and the 3.8% NIIT. A properly structured 1031 exchange defers all of it.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+The larger your deferred depreciation and gain, the more a 1031 exchange preserves for reinvestment &amp;mdash; but you must reinvest the proceeds and replace the debt to defer fully.
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Assumes property held long-term (more than one year).</li>
+          <li>Excludes selling costs, the qualified business income interplay, and any alternative minimum tax.</li>
+          <li>Depreciation recapture is capped at a 25% federal rate for real property (unrecaptured Section 1250 gain).</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>What tax does a 1031 exchange defer?</summary><p>It defers the federal capital-gains tax, depreciation recapture, the 3.8% net investment income tax where it applies, and state tax on the gain — provided you reinvest the proceeds and replace the debt.</p></details>
+          <details><summary>Is the tax eliminated or just delayed?</summary><p>Delayed. The gain carries into your replacement property's basis. You can keep exchanging to keep deferring; at death heirs generally receive a stepped-up basis.</p></details>
+          <details><summary>What federal rate should I enter?</summary><p>Long-term capital gains are federally taxed at 0%, 15%, or 20% depending on income; 20% is the top rate. Enter the rate that matches your bracket, or ask your CPA.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +394,46 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["sale","basis","improve","depr","fed","state","niit"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var adj = v.basis + v.improve - v.depr;
+        var gain = Math.max(0, v.sale - adj);
+        var rec = Math.min(Math.max(0, v.depr), gain);
+        var cap = Math.max(0, gain - rec);
+        var recTax = rec * 0.25;
+        var capTax = cap * (v.fed / 100);
+        var niit = v.niit ? gain * 0.038 : 0;
+        var st = gain * (v.state / 100);
+        var total = recTax + capTax + niit + st;
+        return [
+          {label:"Total gain", display:money(gain)},
+          {label:"Depreciation recapture (25%)", display:money(recTax)},
+          {label:"Federal capital-gains tax", display:money(capTax)},
+          {label:"Net investment income tax (3.8%)", display:money(niit)},
+          {label:"State tax", display:money(st)},
+          {label:"Tax a 1031 exchange could defer", display:money(total), total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Estimate only. Assumes a long-term holding period and excludes selling costs; your actual tax depends on your bracket and state. Confirm with your CPA."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

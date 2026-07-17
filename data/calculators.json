@@ -1,0 +1,565 @@
+{
+  "note": "Calculator content + formulas. Educational estimates — reviewed for FINRA 2210 before relying on it. Generated into /calculators/<slug>/ by scripts/build-offerings.mjs.",
+  "calculators": [
+    {
+      "slug": "capital-gains",
+      "name": "Capital Gains Tax Deferral",
+      "kicker": "1031 Exchange",
+      "title": "1031 Capital Gains Tax Deferral Calculator",
+      "metaDesc": "Estimate the federal, state, depreciation-recapture, and 3.8% NIIT tax a 1031 exchange could defer when you sell investment real estate.",
+      "card": "Estimate the federal, state, depreciation-recapture, and NIIT tax a 1031 exchange could defer on your sale.",
+      "lead": "Estimate the total tax a 1031 exchange could defer when you sell investment real estate — federal capital gains, depreciation recapture, the 3.8% NIIT, and state tax.",
+      "fields": [
+        {
+          "id": "sale",
+          "label": "Sale price ($)",
+          "type": "number",
+          "default": 1000000
+        },
+        {
+          "id": "basis",
+          "label": "Original purchase price ($)",
+          "type": "number",
+          "default": 400000
+        },
+        {
+          "id": "improve",
+          "label": "Capital improvements ($)",
+          "type": "number",
+          "default": 50000
+        },
+        {
+          "id": "depr",
+          "label": "Accumulated depreciation ($)",
+          "type": "number",
+          "default": 150000
+        },
+        {
+          "id": "fed",
+          "label": "Federal capital-gains rate (%)",
+          "type": "number",
+          "default": 20,
+          "step": "0.1"
+        },
+        {
+          "id": "state",
+          "label": "State tax rate (%)",
+          "type": "number",
+          "default": 0,
+          "step": "0.1"
+        },
+        {
+          "id": "niit",
+          "label": "Include 3.8% net investment income tax (NIIT)",
+          "type": "checkbox",
+          "default": true
+        }
+      ],
+      "compute": "\n        var adj = v.basis + v.improve - v.depr;\n        var gain = Math.max(0, v.sale - adj);\n        var rec = Math.min(Math.max(0, v.depr), gain);\n        var cap = Math.max(0, gain - rec);\n        var recTax = rec * 0.25;\n        var capTax = cap * (v.fed / 100);\n        var niit = v.niit ? gain * 0.038 : 0;\n        var st = gain * (v.state / 100);\n        var total = recTax + capTax + niit + st;\n        return [\n          {label:\"Total gain\", display:money(gain)},\n          {label:\"Depreciation recapture (25%)\", display:money(recTax)},\n          {label:\"Federal capital-gains tax\", display:money(capTax)},\n          {label:\"Net investment income tax (3.8%)\", display:money(niit)},\n          {label:\"State tax\", display:money(st)},\n          {label:\"Tax a 1031 exchange could defer\", display:money(total), total:true}\n        ];",
+      "note": "Estimate only. Assumes a long-term holding period and excludes selling costs; your actual tax depends on your bracket and state. Confirm with your CPA.",
+      "howto": "<p>Adjusted basis = original purchase price + capital improvements &minus; accumulated depreciation. Total gain = sale price &minus; adjusted basis. The portion attributable to depreciation is taxed as unrecaptured Section 1250 gain (up to 25%); the remainder is long-term capital gain taxed at your federal rate, plus any state tax and the 3.8% NIIT. A properly structured 1031 exchange defers all of it.</p>",
+      "callout": "The larger your deferred depreciation and gain, the more a 1031 exchange preserves for reinvestment &mdash; but you must reinvest the proceeds and replace the debt to defer fully.",
+      "notes": [
+        "Assumes property held long-term (more than one year).",
+        "Excludes selling costs, the qualified business income interplay, and any alternative minimum tax.",
+        "Depreciation recapture is capped at a 25% federal rate for real property (unrecaptured Section 1250 gain)."
+      ],
+      "faq": [
+        {
+          "q": "What tax does a 1031 exchange defer?",
+          "a": "It defers the federal capital-gains tax, depreciation recapture, the 3.8% net investment income tax where it applies, and state tax on the gain — provided you reinvest the proceeds and replace the debt."
+        },
+        {
+          "q": "Is the tax eliminated or just delayed?",
+          "a": "Delayed. The gain carries into your replacement property's basis. You can keep exchanging to keep deferring; at death heirs generally receive a stepped-up basis."
+        },
+        {
+          "q": "What federal rate should I enter?",
+          "a": "Long-term capital gains are federally taxed at 0%, 15%, or 20% depending on income; 20% is the top rate. Enter the rate that matches your bracket, or ask your CPA."
+        }
+      ]
+    },
+    {
+      "slug": "boot",
+      "name": "1031 Boot Calculator",
+      "kicker": "1031 Exchange",
+      "title": "1031 Exchange Boot Calculator",
+      "metaDesc": "Calculate cash boot and mortgage boot in a 1031 exchange and see how much would be taxable — so you can structure the deal to defer fully.",
+      "card": "See how much cash or debt relief (“boot”) would be taxable in your exchange.",
+      "lead": "“Boot” is value you receive in an exchange that isn't like-kind real estate — leftover cash or debt relief. This tool estimates your cash and mortgage boot and the tax on it.",
+      "fields": [
+        {
+          "id": "sale",
+          "label": "Relinquished sale price ($)",
+          "type": "number",
+          "default": 1000000
+        },
+        {
+          "id": "oldDebt",
+          "label": "Debt paid off on sale ($)",
+          "type": "number",
+          "default": 400000
+        },
+        {
+          "id": "repPrice",
+          "label": "Replacement purchase price ($)",
+          "type": "number",
+          "default": 850000
+        },
+        {
+          "id": "newDebt",
+          "label": "New debt on replacement ($)",
+          "type": "number",
+          "default": 300000
+        },
+        {
+          "id": "gain",
+          "label": "Realized gain on the sale ($)",
+          "type": "number",
+          "default": 500000
+        },
+        {
+          "id": "rate",
+          "label": "Tax rate on boot (%)",
+          "type": "number",
+          "default": 20,
+          "step": "0.1"
+        }
+      ],
+      "compute": "\n        var equityFromSale = Math.max(0, v.sale - v.oldDebt);\n        var equityIntoRep = Math.max(0, v.repPrice - v.newDebt);\n        var cashBoot = Math.max(0, equityFromSale - equityIntoRep);\n        var addlCash = Math.max(0, equityIntoRep - equityFromSale);\n        var mortgageBoot = Math.max(0, (v.oldDebt - v.newDebt) - addlCash);\n        var totalBoot = cashBoot + mortgageBoot;\n        var taxable = Math.min(totalBoot, Math.max(0, v.gain));\n        var tax = taxable * (v.rate / 100);\n        return [\n          {label:\"Cash boot (proceeds kept)\", display:money(cashBoot)},\n          {label:\"Mortgage boot (net debt relief)\", display:money(mortgageBoot)},\n          {label:\"Total boot\", display:money(totalBoot)},\n          {label:\"Taxable boot (up to your gain)\", display:money(taxable)},\n          {label:\"Estimated tax on boot\", display:money(tax), total:true}\n        ];",
+      "note": "Estimate only. Mortgage boot can be offset by adding cash to the replacement property. Confirm your structure with your qualified intermediary and CPA.",
+      "howto": "<p>Cash boot is the sale equity you don't reinvest (equity from the sale minus equity put into the replacement). Mortgage boot is the reduction in debt (old debt minus new debt), reduced by any extra cash you add. Total boot is taxable up to the amount of your realized gain, at your applicable rate. To defer fully, buy equal or up in value and replace all debt so boot is zero.</p>",
+      "callout": "To avoid boot entirely: your replacement property should cost at least as much as the net sale price, you should reinvest all equity, and you should replace all debt (or add equivalent cash).",
+      "notes": [
+        "Adding cash to the replacement property offsets mortgage boot but not cash boot.",
+        "Boot is taxable only to the extent of your realized gain.",
+        "This tool does not account for exchange expenses that may adjust boot; ask your qualified intermediary."
+      ],
+      "faq": [
+        {
+          "q": "What is boot in a 1031 exchange?",
+          "a": "Boot is any non-like-kind value you receive — typically cash you keep (cash boot) or a reduction in debt (mortgage boot). Boot is taxable up to the amount of your gain."
+        },
+        {
+          "q": "How do I avoid boot?",
+          "a": "Buy a replacement property worth at least the net sale price of what you sold, reinvest all of your equity, and replace the debt you paid off (or add equivalent cash)."
+        },
+        {
+          "q": "Is mortgage boot really taxable?",
+          "a": "Yes, unless offset. A reduction in your mortgage is treated as value received, but you can offset it by investing additional cash into the replacement property."
+        }
+      ]
+    },
+    {
+      "slug": "depreciation-recapture",
+      "name": "Depreciation Recapture",
+      "kicker": "Taxes",
+      "title": "Depreciation Recapture Calculator",
+      "metaDesc": "Estimate the unrecaptured Section 1250 tax (up to 25%) on the depreciation you've claimed on investment real estate before you sell.",
+      "card": "Estimate the unrecaptured Section 1250 tax on the depreciation you’ve claimed.",
+      "lead": "When you sell, the depreciation you deducted over the years is “recaptured” and taxed — up to 25% federally. Estimate that tax before you sell or exchange.",
+      "fields": [
+        {
+          "id": "depr",
+          "label": "Accumulated depreciation claimed ($)",
+          "type": "number",
+          "default": 200000
+        },
+        {
+          "id": "gain",
+          "label": "Total gain on sale ($)",
+          "type": "number",
+          "default": 500000
+        },
+        {
+          "id": "rate",
+          "label": "Recapture rate (%, max 25)",
+          "type": "number",
+          "default": 25,
+          "step": "0.1"
+        }
+      ],
+      "compute": "\n        var rec = Math.min(Math.max(0, v.depr), Math.max(0, v.gain));\n        var tax = rec * (v.rate / 100);\n        return [\n          {label:\"Depreciation subject to recapture\", display:money(rec)},\n          {label:\"Recapture rate\", display:v.rate.toFixed(2) + \"%\"},\n          {label:\"Estimated recapture tax\", display:money(tax), total:true}\n        ];",
+      "note": "Estimate only. Unrecaptured Section 1250 gain is taxed at a maximum federal rate of 25%. A 1031 exchange defers recapture along with the rest of the gain.",
+      "howto": "<p>Depreciation you claimed on real property is recaptured on sale as “unrecaptured Section 1250 gain,” taxed at your ordinary rate but capped at 25% federally. Recapture applies only to the portion of your gain attributable to depreciation — it cannot exceed your total gain. A 1031 exchange defers it entirely.</p>",
+      "callout": "Depreciation recapture is often the surprise line item in a sale. A 1031 exchange defers it along with your capital gain.",
+      "notes": [
+        "Recapture cannot exceed your total gain on the sale.",
+        "The 25% figure is a federal maximum; your effective rate may be lower.",
+        "State tax may also apply to the recaptured amount."
+      ],
+      "faq": [
+        {
+          "q": "What is depreciation recapture?",
+          "a": "It is the tax on the depreciation deductions you claimed while you owned the property. For real estate it is taxed as unrecaptured Section 1250 gain, up to 25% federally."
+        },
+        {
+          "q": "Can a 1031 exchange defer recapture?",
+          "a": "Yes. A properly structured 1031 exchange defers depreciation recapture along with the capital-gains tax and NIIT."
+        },
+        {
+          "q": "Why is it capped at 25%?",
+          "a": "For real property, the depreciation-related portion of gain is taxed at a maximum federal rate of 25%, rather than your full ordinary-income rate."
+        }
+      ]
+    },
+    {
+      "slug": "replacement-debt",
+      "name": "Replacement Debt (Equal or Up)",
+      "kicker": "1031 Exchange",
+      "title": "1031 Replacement Property & Debt Calculator",
+      "metaDesc": "Find the minimum replacement-property value, equity to reinvest, and debt to replace so your 1031 exchange fully defers the tax.",
+      "card": "Find the minimum price and debt your replacement property needs to fully defer the tax.",
+      "lead": "To fully defer, a 1031 exchange must be “equal or up” in value and debt. Enter your sale details to see your replacement-property targets.",
+      "fields": [
+        {
+          "id": "sale",
+          "label": "Relinquished sale price ($)",
+          "type": "number",
+          "default": 1000000
+        },
+        {
+          "id": "costs",
+          "label": "Selling costs ($)",
+          "type": "number",
+          "default": 60000
+        },
+        {
+          "id": "oldDebt",
+          "label": "Debt paid off on sale ($)",
+          "type": "number",
+          "default": 400000
+        }
+      ],
+      "compute": "\n        var netSale = Math.max(0, v.sale - v.costs);\n        var equity = Math.max(0, netSale - v.oldDebt);\n        return [\n          {label:\"Net sale price (value to replace)\", display:money(netSale)},\n          {label:\"Minimum replacement value\", display:money(netSale)},\n          {label:\"Equity to reinvest\", display:money(equity)},\n          {label:\"Minimum replacement debt\", display:money(v.oldDebt), total:true}\n        ];",
+      "note": "Estimate only. You may replace debt with additional cash instead. Confirm targets with your qualified intermediary.",
+      "howto": "<p>To defer 100% of the tax, your replacement property must be worth at least the net sale price of the property you sold, you must reinvest all of your equity, and you must take on debt at least equal to the debt you paid off (or add equivalent cash in its place). Buying “down” in value or reducing debt creates taxable boot.</p>",
+      "callout": "“Equal or up” is the rule: equal or greater value, all equity reinvested, and equal or greater debt (or cash in its place).",
+      "notes": [
+        "Net sale price here is sale price minus selling costs.",
+        "You can substitute cash for replacement debt to hit the debt target.",
+        "Buying below these targets produces taxable boot on the shortfall."
+      ],
+      "faq": [
+        {
+          "q": "What does 'equal or up' mean?",
+          "a": "Your replacement property must be equal or greater in value, you must reinvest all your equity, and you must carry equal or greater debt (or add cash to make up any difference)."
+        },
+        {
+          "q": "Do I have to take on the same mortgage?",
+          "a": "You must replace the debt you paid off, but you can do it by adding cash to the replacement property instead of taking on new debt."
+        },
+        {
+          "q": "What if I buy a cheaper property?",
+          "a": "Buying down in value or debt creates boot, which is taxable up to the amount of your gain. This tool shows the targets to avoid that."
+        }
+      ]
+    },
+    {
+      "slug": "deadline",
+      "name": "45 / 180-Day Deadline",
+      "kicker": "1031 Exchange",
+      "title": "1031 Exchange 45 / 180-Day Deadline Calculator",
+      "metaDesc": "Enter your sale closing date to calculate your 1031 exchange 45-day identification deadline and 180-day closing deadline.",
+      "card": "Enter your sale date to see your 45-day identification and 180-day closing deadlines.",
+      "lead": "A 1031 exchange has two hard deadlines that run from the day your sale closes. Enter that date to see both.",
+      "fields": [
+        {
+          "id": "date",
+          "label": "Closing date of your sale",
+          "type": "date",
+          "default": "2026-07-15"
+        }
+      ],
+      "compute": "\n        if (!v.date) return [{label:\"Enter your sale closing date\", display:\"—\"}];\n        var d = new Date(v.date + \"T00:00:00\");\n        if (isNaN(d.getTime())) return [{label:\"Invalid date\", display:\"—\"}];\n        function fmtd(x){ return x.toLocaleDateString(\"en-US\",{year:\"numeric\",month:\"long\",day:\"numeric\"}); }\n        function add(days){ var x = new Date(d.getTime()); x.setDate(x.getDate() + days); return x; }\n        return [\n          {label:\"Sale closes\", display:fmtd(d)},\n          {label:\"45-day identification deadline\", display:fmtd(add(45))},\n          {label:\"180-day closing deadline\", display:fmtd(add(180)), total:true}\n        ];",
+      "note": "Both deadlines include weekends and holidays and generally cannot be extended. The 180-day period can be cut short by your tax-filing due date.",
+      "howto": "<p>From the date your relinquished property closes, you have 45 calendar days to formally identify replacement property in writing, and 180 calendar days to close on it. The two clocks run at the same time, include weekends and holidays, and have essentially no extensions — so identify early.</p>",
+      "callout": "The 180-day window can be shortened: if your tax return is due (including the sale year) before day 180, you must close by that earlier date unless you file an extension.",
+      "notes": [
+        "Both periods count calendar days, including weekends and holidays.",
+        "The 45-day identification must be in writing and follow the IRS identification rules (e.g., the three-property rule).",
+        "File a tax extension if your return would otherwise be due before day 180."
+      ],
+      "faq": [
+        {
+          "q": "When do the deadlines start?",
+          "a": "Both the 45-day and 180-day periods start the day your relinquished (sold) property closes, and they run concurrently."
+        },
+        {
+          "q": "Can the deadlines be extended?",
+          "a": "Generally no. The only common exception is a federally declared disaster; otherwise the dates are firm, so plan to identify well before day 45."
+        },
+        {
+          "q": "What is the identification rule?",
+          "a": "Within 45 days you must identify replacement property in writing — commonly up to three properties (the three-property rule), or more under the 200% or 95% rules."
+        }
+      ]
+    },
+    {
+      "slug": "dst-yield",
+      "name": "DST Cash Flow & Yield",
+      "kicker": "DSTs",
+      "title": "DST Cash Flow & Yield Calculator",
+      "metaDesc": "Estimate the monthly and annual distributions and yield on a Delaware Statutory Trust (DST) investment for a given investment amount.",
+      "card": "Estimate monthly distributions and annual yield on a DST investment.",
+      "lead": "Estimate the income a Delaware Statutory Trust (DST) investment might generate at a given distribution rate. Distributions are not guaranteed.",
+      "fields": [
+        {
+          "id": "invest",
+          "label": "Investment amount ($)",
+          "type": "number",
+          "default": 100000
+        },
+        {
+          "id": "rate",
+          "label": "Annual distribution rate (%)",
+          "type": "number",
+          "default": 5.5,
+          "step": "0.01"
+        }
+      ],
+      "compute": "\n        var annual = v.invest * (v.rate / 100);\n        var monthly = annual / 12;\n        return [\n          {label:\"Annual distribution\", display:money(annual)},\n          {label:\"Monthly distribution\", display:money(monthly)},\n          {label:\"Annual yield\", display:v.rate.toFixed(2) + \"%\", total:true}\n        ];",
+      "note": "Illustrative only. DST distributions are not guaranteed and depend on the performance of the underlying properties. Yields vary by offering.",
+      "howto": "<p>Annual distribution = investment amount × the annual distribution rate. Monthly distribution divides that by twelve. The distribution rate is set by each offering and reflects projected rental income; it is not a guaranteed return and does not include potential appreciation or return of capital.</p>",
+      "callout": "A distribution rate is not a total return. It excludes any appreciation, and part of a distribution may be a return of capital. Distributions are not guaranteed.",
+      "notes": [
+        "Distribution rates are projections set by the sponsor, not guarantees.",
+        "Distributions may include a return of capital, which affects your basis.",
+        "This tool excludes appreciation, fees beyond the offering, and taxes."
+      ],
+      "faq": [
+        {
+          "q": "Is a DST distribution guaranteed?",
+          "a": "No. Distributions depend on the performance of the underlying real estate and can be reduced or suspended. The rate shown in an offering is a projection."
+        },
+        {
+          "q": "What is a typical DST distribution rate?",
+          "a": "Rates vary widely by property type and leverage. Compare each offering's projected rate against its risks; do not rely on a single number."
+        },
+        {
+          "q": "Are DST distributions taxable?",
+          "a": "Distributions are generally taxable income, though depreciation can shelter part of them. A return-of-capital portion reduces your basis. Consult your CPA."
+        }
+      ]
+    },
+    {
+      "slug": "cap-rate",
+      "name": "Cap Rate",
+      "kicker": "Investing",
+      "title": "Cap Rate Calculator",
+      "metaDesc": "Calculate a property's capitalization rate from its net operating income and value or purchase price.",
+      "card": "Calculate capitalization rate from net operating income and property value.",
+      "lead": "Capitalization rate measures a property's unlevered yield — its net operating income as a percentage of its value. Enter both to calculate it.",
+      "fields": [
+        {
+          "id": "noi",
+          "label": "Net operating income ($/yr)",
+          "type": "number",
+          "default": 90000
+        },
+        {
+          "id": "value",
+          "label": "Property value / price ($)",
+          "type": "number",
+          "default": 1500000
+        }
+      ],
+      "compute": "\n        var cap = v.value > 0 ? (v.noi / v.value) * 100 : 0;\n        return [\n          {label:\"Net operating income\", display:money(v.noi)},\n          {label:\"Property value\", display:money(v.value)},\n          {label:\"Capitalization rate\", display:cap.toFixed(2) + \"%\", total:true}\n        ];",
+      "note": "Cap rate is an unlevered measure and ignores financing. Compare it against the risk and growth prospects of the specific property.",
+      "howto": "<p>Cap rate = net operating income (NOI) ÷ property value, expressed as a percentage. NOI is annual rental income minus operating expenses, before mortgage payments and income tax. A higher cap rate generally signals higher yield and higher risk; a lower cap rate signals a more premium, stabilized asset.</p>",
+      "callout": "Cap rate ignores debt. Two investors paying the same price for the same building have the same cap rate but very different cash-on-cash returns depending on their financing.",
+      "notes": [
+        "NOI excludes mortgage payments, capital expenditures, and income tax.",
+        "Cap rate is a snapshot; it does not capture rent growth or lease rollover.",
+        "Market cap rates vary by property type, location, and interest rates."
+      ],
+      "faq": [
+        {
+          "q": "What is a good cap rate?",
+          "a": "It depends on the market and asset. Lower cap rates reflect premium, lower-risk properties; higher cap rates reflect higher yield and higher risk. Compare like-for-like."
+        },
+        {
+          "q": "Does cap rate include my mortgage?",
+          "a": "No. Cap rate is unlevered — it uses net operating income before financing. Use cash-on-cash return to factor in your loan."
+        },
+        {
+          "q": "How is NOI calculated?",
+          "a": "NOI is gross rental income minus operating expenses (taxes, insurance, management, maintenance), before debt service, depreciation, and income tax."
+        }
+      ]
+    },
+    {
+      "slug": "cash-on-cash",
+      "name": "Cash-on-Cash Return",
+      "kicker": "Investing",
+      "title": "Cash-on-Cash Return Calculator",
+      "metaDesc": "Calculate your cash-on-cash return — annual pre-tax cash flow divided by the total cash you invested in a property.",
+      "card": "Measure annual pre-tax cash flow against the cash you invested.",
+      "lead": "Cash-on-cash return measures the annual cash flow a property produces relative to the actual cash you put in. Enter both to calculate it.",
+      "fields": [
+        {
+          "id": "cashflow",
+          "label": "Annual pre-tax cash flow ($)",
+          "type": "number",
+          "default": 18000
+        },
+        {
+          "id": "invested",
+          "label": "Total cash invested ($)",
+          "type": "number",
+          "default": 300000
+        }
+      ],
+      "compute": "\n        var coc = v.invested > 0 ? (v.cashflow / v.invested) * 100 : 0;\n        return [\n          {label:\"Annual pre-tax cash flow\", display:money(v.cashflow)},\n          {label:\"Total cash invested\", display:money(v.invested)},\n          {label:\"Cash-on-cash return\", display:coc.toFixed(2) + \"%\", total:true}\n        ];",
+      "note": "Cash-on-cash return is a pre-tax, single-year measure. It does not include appreciation, loan paydown, or tax benefits.",
+      "howto": "<p>Cash-on-cash return = annual pre-tax cash flow ÷ total cash invested, as a percentage. Cash flow is what's left after operating expenses and mortgage payments; cash invested is your down payment plus closing costs and any upfront capital. Unlike cap rate, it reflects your financing.</p>",
+      "callout": "Cash-on-cash captures your cash yield but not your total return — appreciation, principal paydown, and tax benefits are on top of it.",
+      "notes": [
+        "This is a pre-tax figure for a single year.",
+        "It excludes appreciation, loan principal paydown, and depreciation tax benefits.",
+        "Cash invested should include the down payment plus closing and upfront costs."
+      ],
+      "faq": [
+        {
+          "q": "How is cash-on-cash different from cap rate?",
+          "a": "Cap rate is unlevered (ignores your mortgage); cash-on-cash divides your actual after-financing cash flow by the cash you invested, so leverage changes it."
+        },
+        {
+          "q": "Does it include appreciation?",
+          "a": "No. Cash-on-cash is a current-income measure. Total return also includes appreciation, loan paydown, and tax benefits."
+        },
+        {
+          "q": "What counts as cash invested?",
+          "a": "Your down payment plus closing costs, upfront reserves, and any initial capital improvements — the total out-of-pocket cash."
+        }
+      ]
+    },
+    {
+      "slug": "after-tax-proceeds",
+      "name": "After-Tax Sale Proceeds",
+      "kicker": "Taxes",
+      "title": "After-Tax Sale Proceeds Calculator",
+      "metaDesc": "Compare what you'd net from a taxable sale of investment real estate versus keeping the full amount working through a 1031 exchange.",
+      "card": "Compare what you’d net from a taxable sale versus a 1031 exchange.",
+      "lead": "See how much of your sale you'd keep after tax if you sell outright — versus keeping the full amount working through a 1031 exchange.",
+      "fields": [
+        {
+          "id": "sale",
+          "label": "Sale price ($)",
+          "type": "number",
+          "default": 1000000
+        },
+        {
+          "id": "basis",
+          "label": "Adjusted cost basis ($)",
+          "type": "number",
+          "default": 300000
+        },
+        {
+          "id": "depr",
+          "label": "Accumulated depreciation ($)",
+          "type": "number",
+          "default": 150000
+        },
+        {
+          "id": "fed",
+          "label": "Federal capital-gains rate (%)",
+          "type": "number",
+          "default": 20,
+          "step": "0.1"
+        },
+        {
+          "id": "state",
+          "label": "State tax rate (%)",
+          "type": "number",
+          "default": 0,
+          "step": "0.1"
+        },
+        {
+          "id": "niit",
+          "label": "Include 3.8% NIIT",
+          "type": "checkbox",
+          "default": true
+        }
+      ],
+      "compute": "\n        var gain = Math.max(0, v.sale - v.basis);\n        var rec = Math.min(Math.max(0, v.depr), gain);\n        var cap = Math.max(0, gain - rec);\n        var tax = rec * 0.25 + cap * (v.fed / 100) + (v.niit ? gain * 0.038 : 0) + gain * (v.state / 100);\n        var afterTax = v.sale - tax;\n        return [\n          {label:\"Total gain\", display:money(gain)},\n          {label:\"Estimated tax if you sell\", display:money(tax)},\n          {label:\"Net proceeds after a taxable sale\", display:money(afterTax)},\n          {label:\"Proceeds working in a 1031 exchange\", display:money(v.sale), total:true}\n        ];",
+      "note": "Estimate only. Enter your adjusted basis (original cost net of depreciation). Excludes selling costs. Confirm figures with your CPA.",
+      "howto": "<p>Total gain = sale price &minus; adjusted basis (your original cost after depreciation). The depreciation portion is taxed up to 25%; the rest at your capital-gains rate, plus state tax and the 3.8% NIIT. A taxable sale nets you the sale price minus that tax; a 1031 exchange keeps the entire amount invested and defers the tax.</p>",
+      "callout": "The difference between the two bottom lines is the capital that keeps compounding for you in a 1031 exchange instead of going to taxes today.",
+      "notes": [
+        "Adjusted basis should already reflect depreciation taken.",
+        "Excludes selling costs and any state-specific surtaxes.",
+        "A 1031 exchange defers, not eliminates, the tax shown."
+      ],
+      "faq": [
+        {
+          "q": "What is 'adjusted cost basis'?",
+          "a": "It is your original purchase price plus improvements, minus the depreciation you've claimed. Gain is the sale price minus this figure."
+        },
+        {
+          "q": "Why show the full sale price for the 1031 column?",
+          "a": "In a 1031 exchange you defer the tax, so the entire sale amount (subject to reinvesting proceeds and replacing debt) stays invested rather than being reduced by tax."
+        },
+        {
+          "q": "Is this my exact net?",
+          "a": "No — it's an estimate. It excludes selling costs and assumes the rates you enter. Your CPA can produce an exact figure."
+        }
+      ]
+    },
+    {
+      "slug": "tax-adjusted-yield",
+      "name": "Tax-Adjusted Yield",
+      "kicker": "Investing",
+      "title": "Tax-Adjusted Yield Calculator",
+      "metaDesc": "Compare investments on an after-tax basis: enter a distribution yield, the portion sheltered by depreciation, and your tax rate.",
+      "card": "Compare investments on an after-tax, apples-to-apples basis.",
+      "lead": "Real estate distributions are often partly sheltered from tax by depreciation. This tool estimates your after-tax yield and a taxable-equivalent yield for comparison.",
+      "fields": [
+        {
+          "id": "yield",
+          "label": "Distribution yield (%)",
+          "type": "number",
+          "default": 5.5,
+          "step": "0.01"
+        },
+        {
+          "id": "sheltered",
+          "label": "Portion sheltered by depreciation (%)",
+          "type": "number",
+          "default": 60,
+          "step": "1"
+        },
+        {
+          "id": "rate",
+          "label": "Your marginal tax rate (%)",
+          "type": "number",
+          "default": 35,
+          "step": "0.1"
+        }
+      ],
+      "compute": "\n        var taxablePortion = v.yield * (1 - v.sheltered / 100);\n        var afterTax = v.yield - taxablePortion * (v.rate / 100);\n        var teq = v.rate < 100 ? afterTax / (1 - v.rate / 100) : afterTax;\n        return [\n          {label:\"Stated distribution yield\", display:v.yield.toFixed(2) + \"%\"},\n          {label:\"After-tax yield\", display:afterTax.toFixed(2) + \"%\"},\n          {label:\"Taxable-equivalent yield\", display:teq.toFixed(2) + \"%\", total:true}\n        ];",
+      "note": "Illustrative only. The depreciation-sheltered portion varies by offering and year. Confirm your situation with your CPA.",
+      "howto": "<p>Depreciation can shelter part of a real estate distribution from current tax. The taxable portion equals the yield times the unsheltered share; your after-tax yield subtracts tax on that portion. The taxable-equivalent yield grosses the after-tax yield back up to what a fully taxable investment would need to pay to match it — useful for comparing a DST to a bond or CD.</p>",
+      "callout": "Two investments with the same headline yield can differ sharply after tax. Depreciation-sheltered real estate income often has a higher taxable-equivalent yield.",
+      "notes": [
+        "The sheltered percentage is an estimate that varies by offering and over time.",
+        "Sheltered income generally reduces your basis (it is often return of capital).",
+        "This compares current yield only, not total return or risk."
+      ],
+      "faq": [
+        {
+          "q": "Why is real estate income partly tax-sheltered?",
+          "a": "Depreciation is a paper expense that offsets rental income, so a portion of cash distributions may not be currently taxable — though it typically reduces your basis."
+        },
+        {
+          "q": "What is taxable-equivalent yield?",
+          "a": "It's the pre-tax yield a fully taxable investment would need to pay to match this investment's after-tax yield — a way to compare across tax treatments."
+        },
+        {
+          "q": "How do I know my sheltered percentage?",
+          "a": "It varies by offering and year and is estimated in a sponsor's materials. Your CPA can confirm the taxable versus return-of-capital split."
+        }
+      ]
+    }
+  ]
+}

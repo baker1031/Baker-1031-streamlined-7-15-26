@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>DST Cash Flow &amp; Yield Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Estimate the monthly and annual distributions and yield on a Delaware Statutory Trust (DST) investment for a given investment amount.">
+<link rel="canonical" href="https://baker1031.com/calculators/dst-yield/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Is a DST distribution guaranteed?","acceptedAnswer":{"@type":"Answer","text":"No. Distributions depend on the performance of the underlying real estate and can be reduced or suspended. The rate shown in an offering is a projection."}},{"@type":"Question","name":"What is a typical DST distribution rate?","acceptedAnswer":{"@type":"Answer","text":"Rates vary widely by property type and leverage. Compare each offering's projected rate against its risks; do not rely on a single number."}},{"@type":"Question","name":"Are DST distributions taxable?","acceptedAnswer":{"@type":"Answer","text":"Distributions are generally taxable income, though depreciation can shelter part of them. A return-of-capital portion reduces your basis. Consult your CPA."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,80 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+DST Cash Flow &amp; Yield
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a class="active" href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+DSTs
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+DST Cash Flow &amp; Yield
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+Estimate the income a Delaware Statutory Trust (DST) investment might generate at a given distribution rate. Distributions are not guaranteed.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-invest">Investment amount ($)</label><input type="number" id="c-invest" inputmode="decimal" value="100000"></div>
+            <div class="calc-field"><label for="c-rate">Annual distribution rate (%)</label><input type="number" id="c-rate" inputmode="decimal" step="0.01" value="5.5"></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>Annual distribution = investment amount × the annual distribution rate. Monthly distribution divides that by twelve. The distribution rate is set by each offering and reflects projected rental income; it is not a guaranteed return and does not include potential appreciation or return of capital.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+A distribution rate is not a total return. It excludes any appreciation, and part of a distribution may be a return of capital. Distributions are not guaranteed.
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Distribution rates are projections set by the sponsor, not guarantees.</li>
+          <li>Distributions may include a return of capital, which affects your basis.</li>
+          <li>This tool excludes appreciation, fees beyond the offering, and taxes.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>Is a DST distribution guaranteed?</summary><p>No. Distributions depend on the performance of the underlying real estate and can be reduced or suspended. The rate shown in an offering is a projection.</p></details>
+          <details><summary>What is a typical DST distribution rate?</summary><p>Rates vary widely by property type and leverage. Compare each offering's projected rate against its risks; do not rely on a single number.</p></details>
+          <details><summary>Are DST distributions taxable?</summary><p>Distributions are generally taxable income, though depreciation can shelter part of them. A return-of-capital portion reduces your basis. Consult your CPA.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +389,36 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["invest","rate"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var annual = v.invest * (v.rate / 100);
+        var monthly = annual / 12;
+        return [
+          {label:"Annual distribution", display:money(annual)},
+          {label:"Monthly distribution", display:money(monthly)},
+          {label:"Annual yield", display:v.rate.toFixed(2) + "%", total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Illustrative only. DST distributions are not guaranteed and depend on the performance of the underlying properties. Yields vary by offering."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

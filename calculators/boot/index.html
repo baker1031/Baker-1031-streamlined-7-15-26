@@ -5,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
 </style>
-<title>[Calculator name] &mdash; Baker 1031 Investments</title>
-<meta name="description" content="[Meta: what this calculator estimates and who it's for — ~155 characters.]">
-<link rel="canonical" href="https://baker1031.com/calculators/calculator-template.html">
-<meta name="robots" content="noindex">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"[Common question about this calculator?]","acceptedAnswer":{"@type":"Answer","text":"[Answer placeholder.]"}}]}
-</script>
+<title>1031 Exchange Boot Calculator — Baker 1031 Investments</title>
+<meta name="description" content="Calculate cash boot and mortgage boot in a 1031 exchange and see how much would be taxable — so you can structure the deal to defer fully.">
+<link rel="canonical" href="https://baker1031.com/calculators/boot/">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is boot in a 1031 exchange?","acceptedAnswer":{"@type":"Answer","text":"Boot is any non-like-kind value you receive — typically cash you keep (cash boot) or a reduction in debt (mortgage boot). Boot is taxable up to the amount of your gain."}},{"@type":"Question","name":"How do I avoid boot?","acceptedAnswer":{"@type":"Answer","text":"Buy a replacement property worth at least the net sale price of what you sold, reinvest all of your equity, and replace the debt you paid off (or add equivalent cash)."}},{"@type":"Question","name":"Is mortgage boot really taxable?","acceptedAnswer":{"@type":"Answer","text":"Yes, unless offset. A reduction in your mortgage is treated as value received, but you can offset it by investing additional cash into the replacement property."}}]}</script>
 
 <link rel="stylesheet" href="/css/tokens.css">
 <style>
@@ -228,7 +225,6 @@
   .mk-faq p { margin-top: 0.5rem; }
   .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
 </style>
-<meta name="robots" content="noindex">
 </head>
 <body>
   <a class="skip-link" href="#main-content">Skip to content</a>
@@ -260,42 +256,84 @@
   </header>
 
   <main class="container" id="main-content">
-    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB --><!-- /C:CRUMB --></span></nav>
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><a href="/learn.html">Learn</a><span class="sep">&rsaquo;</span><a href="/calculators.html">Calculators</a><span class="sep">&rsaquo;</span><span class="current"><!-- C:CRUMB -->
+1031 Boot Calculator
+<!-- /C:CRUMB --></span></nav>
 
     <div class="learn-layout">
       <nav class="learn-nav" aria-label="Calculators">
         <a class="learn-back" href="/learn.html"><span aria-hidden="true">&larr;</span> Back to Learn</a>
-        <!-- C:FOLDERS --><!-- /C:FOLDERS -->
+        <!-- C:FOLDERS -->
+        <details open><summary>Calculators</summary><ul>
+          <li><a href="/calculators/capital-gains/">Capital Gains Tax Deferral</a></li>
+          <li><a class="active" href="/calculators/boot/">1031 Boot Calculator</a></li>
+          <li><a href="/calculators/depreciation-recapture/">Depreciation Recapture</a></li>
+          <li><a href="/calculators/replacement-debt/">Replacement Debt (Equal or Up)</a></li>
+          <li><a href="/calculators/deadline/">45 / 180-Day Deadline</a></li>
+          <li><a href="/calculators/dst-yield/">DST Cash Flow &amp; Yield</a></li>
+          <li><a href="/calculators/cap-rate/">Cap Rate</a></li>
+          <li><a href="/calculators/cash-on-cash/">Cash-on-Cash Return</a></li>
+          <li><a href="/calculators/after-tax-proceeds/">After-Tax Sale Proceeds</a></li>
+          <li><a href="/calculators/tax-adjusted-yield/">Tax-Adjusted Yield</a></li>
+        </ul></details>
+<!-- /C:FOLDERS -->
       </nav>
 
       <article class="learn-article">
-        <div class="kicker"><!-- C:KICKER --><!-- /C:KICKER --></div>
-        <h1><!-- C:H1 --><!-- /C:H1 --></h1>
-        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META --><!-- /C:META --></div>
+        <div class="kicker"><!-- C:KICKER -->
+1031 Exchange
+<!-- /C:KICKER --></div>
+        <h1><!-- C:H1 -->
+1031 Boot Calculator
+<!-- /C:H1 --></h1>
+        <div class="meta">By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated <!-- C:META -->
+July 2026
+<!-- /C:META --></div>
 
-        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD --><!-- /C:LEAD --></p>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)"><!-- C:LEAD -->
+“Boot” is value you receive in an exchange that isn't like-kind real estate — leftover cash or debt relief. This tool estimates your cash and mortgage boot and the tax on it.
+<!-- /C:LEAD --></p>
 
         <div class="calc" id="calc">
           <div class="calc-form">
-          <!-- C:FIELDS --><!-- /C:FIELDS -->
+          <!-- C:FIELDS -->
+            <div class="calc-field"><label for="c-sale">Relinquished sale price ($)</label><input type="number" id="c-sale" inputmode="decimal" value="1000000"></div>
+            <div class="calc-field"><label for="c-oldDebt">Debt paid off on sale ($)</label><input type="number" id="c-oldDebt" inputmode="decimal" value="400000"></div>
+            <div class="calc-field"><label for="c-repPrice">Replacement purchase price ($)</label><input type="number" id="c-repPrice" inputmode="decimal" value="850000"></div>
+            <div class="calc-field"><label for="c-newDebt">New debt on replacement ($)</label><input type="number" id="c-newDebt" inputmode="decimal" value="300000"></div>
+            <div class="calc-field"><label for="c-gain">Realized gain on the sale ($)</label><input type="number" id="c-gain" inputmode="decimal" value="500000"></div>
+            <div class="calc-field"><label for="c-rate">Tax rate on boot (%)</label><input type="number" id="c-rate" inputmode="decimal" step="0.1" value="20"></div>
+<!-- /C:FIELDS -->
           </div>
           <div class="calc-actions"><button class="calc-btn" id="c-go" type="button">Calculate</button></div>
           <div class="calc-result" id="c-result" aria-live="polite"></div>
         </div>
 
         <h2>How this is calculated</h2>
-        <!-- C:HOWTO --><!-- /C:HOWTO -->
+        <!-- C:HOWTO -->
+<p>Cash boot is the sale equity you don't reinvest (equity from the sale minus equity put into the replacement). Mortgage boot is the reduction in debt (old debt minus new debt), reduced by any extra cash you add. Total boot is taxable up to the amount of your realized gain, at your applicable rate. To defer fully, buy equal or up in value and replace all debt so boot is zero.</p>
+<!-- /C:HOWTO -->
 
-        <div class="mk-callout"><!-- C:CALLOUT --><!-- /C:CALLOUT --></div>
+        <div class="mk-callout"><!-- C:CALLOUT -->
+To avoid boot entirely: your replacement property should cost at least as much as the net sale price, you should reinvest all equity, and you should replace all debt (or add equivalent cash).
+<!-- /C:CALLOUT --></div>
 
         <h2>Notes &amp; assumptions</h2>
         <ul>
-        <!-- C:NOTES --><!-- /C:NOTES -->
+        <!-- C:NOTES -->
+          <li>Adding cash to the replacement property offsets mortgage boot but not cash boot.</li>
+          <li>Boot is taxable only to the extent of your realized gain.</li>
+          <li>This tool does not account for exchange expenses that may adjust boot; ask your qualified intermediary.</li>
+<!-- /C:NOTES -->
         </ul>
 
         <div class="mk-faq">
           <h2>Frequently asked questions</h2>
-          <!-- C:FAQ --><!-- /C:FAQ -->
+          <!-- C:FAQ -->
+          <details><summary>What is boot in a 1031 exchange?</summary><p>Boot is any non-like-kind value you receive — typically cash you keep (cash boot) or a reduction in debt (mortgage boot). Boot is taxable up to the amount of your gain.</p></details>
+          <details><summary>How do I avoid boot?</summary><p>Buy a replacement property worth at least the net sale price of what you sold, reinvest all of your equity, and replace the debt you paid off (or add equivalent cash).</p></details>
+          <details><summary>Is mortgage boot really taxable?</summary><p>Yes, unless offset. A reduction in your mortgage is treated as value received, but you can offset it by investing additional cash into the replacement property.</p></details>
+<!-- /C:FAQ -->
         </div>
 
         <div class="eeat" id="author" style="border-top:1px solid var(--hairline);margin-top:2rem;padding-top:1.4rem">
@@ -355,7 +393,44 @@
 </footer>
   <!-- /PARTIAL:footer -->
 
-  <!-- C:SCRIPT --><!-- /C:SCRIPT -->
+  <!-- C:SCRIPT -->
+  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ["sale","oldDebt","repPrice","newDebt","gain","rate"];
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {
+        var equityFromSale = Math.max(0, v.sale - v.oldDebt);
+        var equityIntoRep = Math.max(0, v.repPrice - v.newDebt);
+        var cashBoot = Math.max(0, equityFromSale - equityIntoRep);
+        var addlCash = Math.max(0, equityIntoRep - equityFromSale);
+        var mortgageBoot = Math.max(0, (v.oldDebt - v.newDebt) - addlCash);
+        var totalBoot = cashBoot + mortgageBoot;
+        var taxable = Math.min(totalBoot, Math.max(0, v.gain));
+        var tax = taxable * (v.rate / 100);
+        return [
+          {label:"Cash boot (proceeds kept)", display:money(cashBoot)},
+          {label:"Mortgage boot (net debt relief)", display:money(mortgageBoot)},
+          {label:"Total boot", display:money(totalBoot)},
+          {label:"Taxable boot (up to your gain)", display:money(taxable)},
+          {label:"Estimated tax on boot", display:money(tax), total:true}
+        ];
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = "Estimate only. Mortgage boot can be offset by adding cash to the replacement property. Confirm your structure with your qualified intermediary and CPA."; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>
+<!-- /C:SCRIPT -->
 
   <script type="module" src="/js/auth.js"></script>
 </body>

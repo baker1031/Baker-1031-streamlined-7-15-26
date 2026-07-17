@@ -701,6 +701,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -938,6 +939,102 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   console.log(`Audiences: ${count} landing pages + hub (${items.length} audiences).`);
 }
 
+/* ---------------- Calculators: generate calculator pages + hub from data/calculators.json ---------------- */
+{
+  const cd = JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8"));
+  const items = cd.calculators || [];
+  if (items.length < 3) throw new Error(`Only ${items.length} calculators — refusing to build.`);
+  const tpl = readFileSync(join(ROOT, "calculators", "calculator-template.html"), "utf8");
+
+  const foldersFor = (activeSlug) => {
+    const lis = items.map((c) => `          <li><a${c.slug === activeSlug ? ' class="active"' : ""} href="/calculators/${c.slug}/">${esc(c.name)}</a></li>`).join("\n");
+    return `        <details open><summary>Calculators</summary><ul>\n${lis}\n        </ul></details>`;
+  };
+
+  const fieldHtml = (f) => {
+    const id = `c-${f.id}`;
+    if (f.type === "checkbox") {
+      return `            <div class="calc-field check"><input type="checkbox" id="${id}"${f.default ? " checked" : ""}><label for="${id}">${esc(f.label)}</label></div>`;
+    }
+    if (f.type === "date") {
+      return `            <div class="calc-field"><label for="${id}">${esc(f.label)}</label><input type="date" id="${id}" value="${esc(String(f.default || ""))}"></div>`;
+    }
+    if (f.type === "select") {
+      const opts = (f.options || []).map((o) => `<option value="${esc(String(o.value))}"${String(o.value) === String(f.default) ? " selected" : ""}>${esc(o.label)}</option>`).join("");
+      return `            <div class="calc-field"><label for="${id}">${esc(f.label)}</label><select id="${id}">${opts}</select></div>`;
+    }
+    return `            <div class="calc-field"><label for="${id}">${esc(f.label)}</label><input type="number" id="${id}" inputmode="decimal"${f.step ? ` step="${f.step}"` : ""} value="${f.default}"></div>`;
+  };
+
+  // ----- calculator pages -----
+  let count = 0;
+  for (const c of items) {
+    const canonical = `${SITE}/calculators/${c.slug}/`;
+    const fields = (c.fields || []).map(fieldHtml).join("\n");
+    const ids = JSON.stringify((c.fields || []).map((f) => f.id));
+    const notesLis = (c.notes || []).map((n) => `          <li>${n}</li>`).join("\n");
+    const faqHtml = (c.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
+    const jsonld = JSON.stringify({
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: (c.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
+    });
+    const script =
+`  <script>
+    (function () {
+      var $ = function (id) { return document.getElementById(id); };
+      var go = $("c-go");
+      if (!go) return;
+      function money(n) { return "$" + Math.round(n).toLocaleString("en-US"); }
+      var FIELDS = ${ids};
+      function readVal(k) { var el = $("c-" + k); if (!el) return null; if (el.type === "checkbox") return el.checked; if (el.type === "number") return +el.value || 0; return el.value; }
+      function compute(v) {${c.compute}
+      }
+      function render() {
+        var v = {}; FIELDS.forEach(function (k) { v[k] = readVal(k); });
+        var rows = compute(v) || [];
+        var html = rows.map(function (r) { var cc = r.total ? " total" : ""; return '<div class="row' + cc + '"><span>' + r.label + '</span><span class="v">' + r.display + '</span></div>'; }).join("");
+        var note = ${JSON.stringify(c.note || "")}; if (note) html += '<p class="calc-note">' + note + '</p>';
+        var res = $("c-result"); res.innerHTML = html; res.classList.add("show");
+      }
+      go.addEventListener("click", render);
+      render();
+    })();
+  </script>`;
+
+    let html = tpl;
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
+    html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // calculator pages are public/indexable
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    html = put(html, "<!-- C:CRUMB -->", "<!-- /C:CRUMB -->", esc(c.name), c.slug);
+    html = put(html, "<!-- C:FOLDERS -->", "<!-- /C:FOLDERS -->", foldersFor(c.slug), c.slug);
+    html = put(html, "<!-- C:KICKER -->", "<!-- /C:KICKER -->", esc(c.kicker), c.slug);
+    html = put(html, "<!-- C:H1 -->", "<!-- /C:H1 -->", esc(c.name), c.slug);
+    html = put(html, "<!-- C:META -->", "<!-- /C:META -->", "July 2026", c.slug);
+    html = put(html, "<!-- C:LEAD -->", "<!-- /C:LEAD -->", esc(c.lead), c.slug);
+    html = put(html, "<!-- C:FIELDS -->", "<!-- /C:FIELDS -->", fields, c.slug);
+    html = put(html, "<!-- C:HOWTO -->", "<!-- /C:HOWTO -->", c.howto, c.slug);
+    html = put(html, "<!-- C:CALLOUT -->", "<!-- /C:CALLOUT -->", esc(c.callout || ""), c.slug);
+    html = put(html, "<!-- C:NOTES -->", "<!-- /C:NOTES -->", notesLis, c.slug);
+    html = put(html, "<!-- C:FAQ -->", "<!-- /C:FAQ -->", faqHtml, c.slug);
+    html = put(html, "<!-- C:SCRIPT -->", "<!-- /C:SCRIPT -->", script, c.slug);
+
+    const dir = join(ROOT, "calculators", c.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+
+  // ----- hub -----
+  let hub = readFileSync(join(ROOT, "calculators.html"), "utf8");
+  const cards = items.map((c) => `          <a href="/calculators/${c.slug}/"><span class="tag">${esc(c.kicker)}</span><h3>${esc(c.name)}</h3><p>${esc(c.card || c.lead)}</p><span class="go">Open calculator &rarr;</span></a>`).join("\n");
+  hub = put(hub, "<!-- CALC:FOLDERS -->", "<!-- /CALC:FOLDERS -->", foldersFor(null), "calculators.html");
+  hub = put(hub, "<!-- CALC:LIST -->", "<!-- /CALC:LIST -->", cards, "calculators.html");
+  writeFileSync(join(ROOT, "calculators.html"), hub);
+  console.log(`Calculators: ${count} calculator pages + hub (${items.length} calculators).`);
+}
+
 /* ---------------- Publish directory (dist/) ----------------
    Only the public whitelist is served; templates, partials, docs, kindeSrc,
    scripts and functions never reach the CDN. */
@@ -962,7 +1059,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   }
   // Templates are authoring scaffolds — never publish them, even under a whitelisted dir.
   let stripped = 0;
-  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html", "audiences/audience-template.html"]) {
+  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html", "audiences/audience-template.html", "calculators/calculator-template.html"]) {
     const p = join(dist, rel);
     if (existsSync(p)) { rmSync(p); stripped++; }
   }
