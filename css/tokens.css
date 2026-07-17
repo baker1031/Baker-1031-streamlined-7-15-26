@@ -89,3 +89,18 @@
   padding: 0.3rem 0.6rem 0.7rem;
 }
 .learn-back:hover { text-decoration: underline; }
+
+/* Insights/Learn sidebar on mobile: the sidebar is position:sticky on desktop,
+   which on narrow (single-column) screens pinned it below the header and let it
+   overlap the article as the page scrolled. Below the 900px layout breakpoint,
+   make it a normal static block that flows above the content. tokens.css loads
+   before each page's inline <style>, so !important is needed to win. */
+@media (max-width: 900px) {
+  .learn-nav {
+    position: static !important;
+    top: auto !important;
+    max-height: 62vh !important;
+    overflow-y: auto;
+    margin-bottom: 1.5rem;
+  }
+}
