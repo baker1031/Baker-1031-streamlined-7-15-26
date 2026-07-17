@@ -43,3 +43,23 @@ export async function findOpenDeal(token, personId) {
 export function esc(s) {
   return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
+
+/* Attach a Note (HTML content) to a person and/or deal. */
+export async function addNote(token, { content, personId, dealId }) {
+  const body = { content };
+  if (personId) body.person_id = personId;
+  if (dealId) body.deal_id = dealId;
+  return pd(`/notes`, token, { method: "POST", body });
+}
+
+/* Minimal, injection-safe Markdown → Pipedrive-note HTML: escape first,
+   then re-introduce a small, known-safe subset (headings, bold, bullets,
+   links, line breaks). Granola summaries arrive as Markdown. */
+export function mdToNoteHtml(md) {
+  let h = esc(String(md || "").trim());
+  h = h.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2">$1</a>');
+  h = h.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  h = h.replace(/^#{1,6}\s*(.+)$/gm, "<b>$1</b>");
+  h = h.replace(/^\s*[-*]\s+(.+)$/gm, "&bull; $1");
+  return h.replace(/\n/g, "<br>");
+}
