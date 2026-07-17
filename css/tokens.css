@@ -138,3 +138,17 @@
     padding: 2rem; text-align: center; font-family: -apple-system, sans-serif; font-size: 14pt; color: #2b3a5f;
   }
 }
+
+/* ---------- Accessibility: respect reduced-motion (a11y quick win) ----------
+   Users who set "reduce motion" get near-instant transitions, no marquee
+   scroll, and no autoplaying hero-video motion. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .logo-marquee, .logo-track, [class*="marquee"] { animation: none !important; }
+  video[autoplay] { /* motion-sensitive users: video still loads but is paused by JS below where supported */ }
+}
