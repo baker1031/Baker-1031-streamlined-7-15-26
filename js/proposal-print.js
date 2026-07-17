@@ -16,11 +16,8 @@
   var CLOUD = "https://res.cloudinary.com/opoazlei/image/upload";
   var LOGO = CLOUD + "/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
   var HEADSHOT = CLOUD + "/v1783927734/jerry-baker_ovhy2w.jpg";
-  var COVER_PHOTOS = [
-    CLOUD + "/f_auto,q_auto,w_600/v1783843881/Apartments_pllp0h.jpg",
-    CLOUD + "/f_auto,q_auto,w_600/v1783843878/Amazon_q2ru5v.png",
-    CLOUD + "/f_auto,q_auto,w_600/v1783843880/Hotel_ojlaau.jpg"
-  ];
+  var HERO = CLOUD + "/f_jpg,q_auto:good,w_1632/v1783843881/Apartments_pllp0h.jpg";
+  var HEART = '<svg class="lh" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
   var ORIGIN = "https://baker1031.com";
 
   var BOILER = "Baker 1031 Investments is a San Francisco–based, founder-led real estate securities firm that helps accredited investors complete 1031 exchanges using institutional Delaware Statutory Trust (DST) properties — building custom portfolios from leading sponsors, and also working in 721 UPREIT exchanges, Opportunity Zone funds, mineral &amp; royalty interests, and REITs so clients defer capital gains and own income real estate without the work of managing it.";
@@ -151,12 +148,23 @@
     ".hdr .tag .code{font-size:11px;letter-spacing:0.08em;color:#2b3a5f;font-weight:700}" +
     "h1{font-weight:700;letter-spacing:-0.01em;line-height:1.15;margin-top:18px}" +
     ".pgnum{position:absolute;right:56px;bottom:12px;font-size:8px;letter-spacing:0.1em;color:#4a4a4a}" +
-    ".kicker{font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#4a4a4a}" +
-    ".cv-mid{margin-top:170px}.cv-title{font-size:54px;font-weight:700;letter-spacing:-0.015em;line-height:1.08;color:#2b3a5f;margin-top:16px}" +
-    ".cv-for{font-size:17px;margin-top:26px}.cv-date{font-size:11.5px;color:#4a4a4a;margin-top:8px}" +
-    ".cv-photos{position:absolute;left:56px;right:56px;bottom:120px;display:flex;gap:10px;height:210px}" +
-    ".cv-photos .ph{flex:1;background-size:cover;background-position:center;border-radius:10px}" +
-    ".cv-foot{position:absolute;left:56px;right:56px;bottom:40px;border-top:1px solid #e4e4e4;padding-top:12px;font-size:9.5px;letter-spacing:0.08em;text-transform:uppercase;color:#4a4a4a;text-align:center}" +
+    ".page.cover{padding:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
+    ".cv-band{height:112px;padding:42px 56px 0 56px;display:flex;align-items:flex-start;justify-content:space-between}" +
+    ".cv-band img{height:30px}" +
+    ".cv-band .tag{font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:#4a4a4a;text-align:right;line-height:1.5}" +
+    ".cv-band .tag .code{font-size:11px;letter-spacing:0.08em;color:#2b3a5f;font-weight:700}" +
+    ".cv-hero{position:absolute;left:0;right:0;top:112px;bottom:0;background-size:cover;background-position:center;color:#fff}" +
+    ".kicker{font-size:10.5px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.72)}" +
+    ".cv-inner{padding:150px 64px 0 64px}" +
+    ".cv-title{font-size:58px;font-weight:700;letter-spacing:-0.015em;line-height:1.07;margin-top:22px}" +
+    ".cv-dot{color:rgba(255,255,255,0.55)}" +
+    ".cv-rule{width:46px;height:2px;background:rgba(255,255,255,0.55);margin:30px 0}" +
+    ".cv-for{font-size:17px;color:rgba(255,255,255,0.85)}.cv-for strong{color:#fff}" +
+    ".cv-date{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:12px}" +
+    ".cv-dates{position:absolute;left:64px;right:64px;bottom:108px;display:flex;justify-content:space-between;border-top:1px solid rgba(255,255,255,0.28);padding-top:14px}" +
+    ".cv-dates .v{font-size:13px;font-weight:700;color:#fff}" +
+    ".cv-dates .k{font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.6);margin-top:4px}" +
+    ".cv-firmline{position:absolute;left:0;right:0;bottom:44px;text-align:center;font-size:9px;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.55)}" +
     ".toc{margin-top:22px;border-top:1px solid #2b3a5f}" +
     ".toc-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e4e4e4;padding:16px 2px}" +
     ".toc-name{font-size:15px;font-weight:700;color:#2b3a5f}.toc-sub{font-size:10.5px;color:#4a4a4a;margin-top:3px}" +
@@ -186,12 +194,17 @@
     ".contactbar .reach{margin-left:auto;text-align:right;font-size:11px;line-height:1.5}.contactbar .reach a{font-weight:700}" +
     ".foot{position:absolute;left:56px;right:56px;bottom:26px;border-top:1px solid #e4e4e4;padding-top:8px;font-size:7.4px;line-height:1.42;color:#4a4a4a}" +
     ".page.back{background:#2b3a5f;color:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}" +
-    ".bk-mid{margin-top:330px;text-align:center}.bk-name{font-size:30px;font-weight:700}.bk-name .h1dot{color:#fff}" +
-    ".bk-rule{width:56px;height:2px;background:rgba(255,255,255,0.5);margin:22px auto}" +
-    ".bk-line{font-size:12.5px;line-height:1.7;color:rgba(255,255,255,0.92)}" +
-    ".bk-heart{position:absolute;left:0;right:0;bottom:110px;text-align:center;font-size:44px;font-weight:700;color:rgba(255,255,255,0.10);white-space:nowrap}" +
-    ".bk-heart .ht{color:rgba(255,255,255,0.16)}" +
-    ".bk-disc{position:absolute;left:56px;right:56px;bottom:34px;border-top:1px solid rgba(255,255,255,0.25);padding-top:10px;font-size:7.6px;line-height:1.5;color:rgba(255,255,255,0.65);text-align:center}";
+    ".bk-track{position:absolute;top:46px;right:56px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:rgba(255,255,255,0.5)}" +
+    ".bk-mid{margin-top:272px;text-align:center}" +
+    ".bk-kicker{font-size:10px;letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.55)}" +
+    ".bk-name{font-size:29px;font-weight:700;letter-spacing:-0.01em;margin-top:16px}" +
+    ".bk-dot{color:rgba(255,255,255,0.55)}" +
+    ".bk-rule{width:46px;height:2px;background:rgba(255,255,255,0.5);margin:26px auto}" +
+    ".bk-line{font-size:12.5px;line-height:1.95;color:rgba(255,255,255,0.88)}" +
+    ".bk-site{font-size:13px;font-weight:700;letter-spacing:0.06em;margin-top:18px}" +
+    ".bk-disc{position:absolute;left:64px;right:64px;bottom:128px;border-top:1px solid rgba(255,255,255,0.22);padding-top:12px;font-size:7.6px;line-height:1.55;color:rgba(255,255,255,0.62);text-align:center}" +
+    ".bk-love{position:absolute;left:0;right:0;bottom:-0.18em;font-size:67px;font-weight:800;letter-spacing:-0.02em;line-height:1;text-align:center;white-space:nowrap;color:#fff;opacity:0.07}" +
+    ".bk-love .lh{height:0.82em;width:auto;vertical-align:-0.06em}";
 
   function buildDocument(cfg) {
     cfg = cfg || {};
@@ -203,14 +216,20 @@
     var inv = esc(cfg.investor || "[Investor Name]");
     var pgnum = function (i) { return '<div class="pgnum">' + i + " / " + totalPages + "</div>"; };
 
-    var cover = '<div class="hdr"><img src="' + LOGO + '" alt="Baker 1031 Investments">' +
+    var cover = '<div class="cv-band"><img src="' + LOGO + '" alt="Baker 1031 Investments">' +
       '<div class="tag">Tracking Nº<br><span class="code">' + track + "</span></div></div>" +
-      '<div class="cv-mid"><div class="kicker">Private Investment Proposal</div>' +
-      '<div class="cv-title">DST Portfolio<br>Proposal' + (pfs.length > 1 ? "s" : "") + '<span class="h1dot">.</span></div>' +
+      '<div class="cv-hero" style="background-image: linear-gradient(180deg, rgba(21,30,52,0.93), rgba(43,58,95,0.80) 46%, rgba(17,25,45,0.95)), url(' + HERO + ')">' +
+      '<div class="cv-inner"><div class="kicker">Private Investment Proposal</div>' +
+      '<div class="cv-title">DST Portfolio<br>Proposal' + (pfs.length > 1 ? "s" : "") + '<span class="cv-dot">.</span></div>' +
+      '<div class="cv-rule"></div>' +
       '<div class="cv-for">Prepared for <strong>' + inv + "</strong></div>" +
       '<div class="cv-date">' + esc(cfg.dateLabel) + " · " + pfs.length + " portfolio" + (pfs.length !== 1 ? "s" : "") + " · For discussion only</div></div>" +
-      '<div class="cv-photos">' + COVER_PHOTOS.map(function (u) { return '<div class="ph" style="background-image:url(' + u + ')"></div>'; }).join("") + "</div>" +
-      '<div class="cv-foot">Baker 1031 Investments · 650 California Street, San Francisco, CA 94108 · baker1031.com</div>';
+      '<div class="cv-dates">' +
+      '<div class="cell"><div class="v">' + esc(cfg.saleClose || "[Sale Closing Date]") + '</div><div class="k">Sale Closing</div></div>' +
+      '<div class="cell"><div class="v">' + esc(cfg.day45 || "[ID Deadline]") + '</div><div class="k">Day 45 · ID Deadline</div></div>' +
+      '<div class="cell"><div class="v">' + esc(cfg.day180 || "[Completion Date]") + '</div><div class="k">Day 180 · Exchange Complete</div></div>' +
+      "</div>" +
+      '<div class="cv-firmline">Baker 1031 Investments · 650 California Street, San Francisco · baker1031.com</div></div>';
 
     var tocRows = pfs.map(function (pf, i) {
       var summary = pf.positions.length + " position" + (pf.positions.length !== 1 ? "s" : "") + " · " + money(pf.equity) + " equity · " +
@@ -226,14 +245,16 @@
       '<p class="about">Each proposal in this document was built from the same exchange: the equity, debt, and deadline figures shown on every sheet. The mixes differ in what they optimize for, and the sheets are meant to be compared side by side. Every offering listed links to its full detail page, and none of this is final: availability changes daily, and each mix is a starting point for a conversation.</p>' +
       '<div class="foot">This document is a hypothetical illustration for discussion purposes only; it is not a recommendation, an offer to sell, or a solicitation of an offer to buy any security. Offers are made only by a sponsor’s Private Placement Memorandum. DST interests are speculative, illiquid, available to accredited investors only, and involve risk of loss of principal. Securities offered through Aurora Securities, Inc., member FINRA/SIPC.</div>';
 
-    var back = '<div class="bk-mid"><div class="bk-name">Baker 1031 Investments<span class="h1dot">.</span></div>' +
+    var back = '<div class="bk-track">Tracking Nº ' + track + "</div>" +
+      '<div class="bk-mid"><div class="bk-kicker">Thank you for the opportunity</div>' +
+      '<div class="bk-name">Baker 1031 Investments<span class="bk-dot">.</span></div>' +
       '<div class="bk-rule"></div>' +
       '<div class="bk-line">Jerry Baker · Founder &amp; Managing Principal</div>' +
       '<div class="bk-line">(415) 579-1660 · jerry@baker1031.com</div>' +
       '<div class="bk-line">650 California Street, San Francisco, CA 94108</div>' +
-      '<div class="bk-line" style="margin-top:14px">baker1031.com</div></div>' +
-      '<div class="bk-heart">We <span class="ht">♥</span> 1031 Exchanges</div>' +
-      '<div class="bk-disc">Securities offered through Aurora Securities, Inc., member FINRA/SIPC. Check the background of this firm at FINRA BrokerCheck (firm CRD 46147). DST interests are speculative, illiquid, available to accredited investors only, and involve risk of loss of principal. Offers are made only by a sponsor’s Private Placement Memorandum. Tracking Nº ' + track + "</div>";
+      '<div class="bk-site">baker1031.com</div></div>' +
+      '<div class="bk-disc">Securities offered through Aurora Securities, Inc., member FINRA/SIPC. Check the background of this firm at FINRA BrokerCheck (firm CRD 46147). DST interests are speculative, illiquid, available to accredited investors only, and involve risk of loss of principal. Offers are made only by a sponsor’s Private Placement Memorandum.</div>' +
+      '<div class="bk-love">We ' + HEART + " 1031 Exchanges</div>";
 
     var pages = ['<div class="page cover">' + cover + "</div>", '<div class="page">' + toc + pgnum(2) + "</div>"];
     pfs.forEach(function (pf, i) { pages.push('<div class="page">' + sheetBody(pf, cfg) + pgnum(i + 3) + "</div>"); });
