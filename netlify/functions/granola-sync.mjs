@@ -19,7 +19,7 @@
 
 import { getStore } from "@netlify/blobs";
 import { ok, json } from "./lib/http.mjs";
-import { extractActionItems, parseAttendees, syncMeetingToPipedrive } from "./lib/granola.mjs";
+import { extractActionItems, parseAttendees, extractPhone, syncMeetingToPipedrive } from "./lib/granola.mjs";
 
 const lower = (s) => String(s || "").trim().toLowerCase();
 
@@ -56,7 +56,9 @@ export default async (req) => {
   const dateStr = when && !isNaN(when) ? when.toISOString().slice(0, 10) : null;
 
   const attendees = parseAttendees(p.attendees || p.attendee_emails || p.participants || p.emails || pick(p, ["attendees_list"]));
-  if (!attendees.length) return ok("no attendee emails in payload");
+  const matchByPhone = process.env.GRANOLA_MATCH_BY_PHONE !== "0";
+  const phone = matchByPhone ? (String(pick(p, ["phone", "phone_number", "caller"])) || extractPhone(title)) : "";
+  if (!attendees.length && !phone) return ok("no attendee email or phone in payload");
 
   const dueDays = Number(process.env.GRANOLA_TASK_DUE_DAYS || 3) || 3;
   const results = await syncMeetingToPipedrive(token, {
@@ -67,6 +69,8 @@ export default async (req) => {
     dueDate: new Date(Date.now() + dueDays * 86400000).toISOString().slice(0, 10),
     includeTranscript: process.env.GRANOLA_INCLUDE_TRANSCRIPT === "1",
     createPersons: process.env.GRANOLA_SKIP_UNKNOWN !== "1",
+    phone,
+    createFromPhone: process.env.GRANOLA_CREATE_FROM_PHONE === "1",
     store: getStore("granola-sync")
   });
 

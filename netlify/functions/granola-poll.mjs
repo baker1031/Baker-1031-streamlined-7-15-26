@@ -26,7 +26,7 @@
    ============================================================ */
 
 import { getStore } from "@netlify/blobs";
-import { extractActionItems, parseAttendees, syncMeetingToPipedrive } from "./lib/granola.mjs";
+import { extractActionItems, parseAttendees, extractPhone, syncMeetingToPipedrive } from "./lib/granola.mjs";
 
 const API = "https://public-api.granola.ai/v1";
 
@@ -66,6 +66,8 @@ export default async () => {
   const ownerEmail = process.env.GRANOLA_OWNER_EMAIL;
   const createPersons = process.env.GRANOLA_SKIP_UNKNOWN !== "1";
   const includeTranscript = process.env.GRANOLA_INCLUDE_TRANSCRIPT === "1";
+  const matchByPhone = process.env.GRANOLA_MATCH_BY_PHONE !== "0"; // on by default
+  const createFromPhone = process.env.GRANOLA_CREATE_FROM_PHONE === "1"; // off by default (avoid bare-number junk)
   const dueDays = Number(process.env.GRANOLA_TASK_DUE_DAYS || 3) || 3;
   const dueDate = new Date(Date.now() + dueDays * 86400000).toISOString().slice(0, 10);
 
@@ -92,9 +94,11 @@ export default async () => {
       dueDate,
       includeTranscript,
       createPersons,
+      phone: matchByPhone ? extractPhone(detail.title) : "",
+      createFromPhone,
       store
     });
-    synced += results.filter((r) => /created/.test(r.action)).length;
+    synced += results.filter((r) => /logged/.test(r.action)).length;
     processed++;
     if (detail.created_at && new Date(detail.created_at) > new Date(newest)) newest = detail.created_at;
   }

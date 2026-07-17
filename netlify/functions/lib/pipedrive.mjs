@@ -32,6 +32,27 @@ export async function findPersonByEmail(token, email) {
   return item ? item.item : null;
 }
 
+/* Find a person by phone number. Searches Pipedrive's phone field on the
+   national (last-10-digit) number so stored formats like "(575) 556-8500",
+   "+1 575 556 8500", or "5755568500" all match, then verifies the last 10
+   digits actually line up before returning (avoids false positives). */
+export async function findPersonByPhone(token, phone) {
+  const digits = String(phone || "").replace(/\D/g, "");
+  const nat = digits.length > 10 ? digits.slice(-10) : digits; // drop country code
+  if (nat.length < 10) return null;
+  const res = await pd(`/persons/search?term=${encodeURIComponent(nat)}&fields=phone`, token, { v: 2 });
+  const items = (res && res.data && res.data.items) || [];
+  const verified = items.find((it) => {
+    const p = (it && it.item) || {};
+    const phones = [].concat(p.phones || [], p.phone || []).map((x) => String(x).replace(/\D/g, ""));
+    return phones.some((d) => d.endsWith(nat));
+  });
+  if (verified) return verified.item;
+  // No phones in the result payload to verify against, but Pipedrive matched
+  // on the phone field — accept the single top hit only (ambiguous if several).
+  return items.length === 1 ? items[0].item : null;
+}
+
 export async function findOpenDeal(token, personId) {
   const res = await pd(
     `/deals?person_id=${personId}&status=open&sort_by=add_time&sort_direction=desc&limit=1`,

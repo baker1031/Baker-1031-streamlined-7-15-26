@@ -2,9 +2,19 @@
    (granola-poll.mjs, pulls from the Granola API) and the webhook receiver
    (granola-sync.mjs, receives a Granola Zap). */
 
-import { pd, findPersonByEmail, findOpenDeal, addNote, mdToNoteHtml, esc } from "./pipedrive.mjs";
+import { pd, findPersonByEmail, findPersonByPhone, findOpenDeal, addNote, mdToNoteHtml, esc } from "./pipedrive.mjs";
 
 const lower = (s) => String(s || "").trim().toLowerCase();
+
+/* Pull a phone number out of a Granola note (e.g. title "Phone call with
+   +15755568500"). Returns the digits-with-optional-plus, or "". */
+export function extractPhone(...texts) {
+  for (const t of texts) {
+    const m = String(t || "").match(/\+?\d[\d\s().-]{8,}\d/);
+    if (m && String(m[0]).replace(/\D/g, "").length >= 10) return m[0].trim();
+  }
+  return "";
+}
 
 /* Pull action items / next steps out of a Granola summary (or an explicit
    list), returned de-duped and capped. */
@@ -55,7 +65,7 @@ export async function syncMeetingToPipedrive(token, opts) {
     meetingId, title = "Meeting", summaryMd = "", transcript = "", shareUrl = "",
     dateStr = null, attendees = [], ownerEmail = "", creatorEmail = "",
     actionItems = [], dueDate, includeTranscript = false,
-    createPersons = true, store
+    createPersons = true, phone = "", createFromPhone = true, store
   } = opts;
 
   let noteHtml = `<b>${esc(title)}</b>${dateStr ? ` &mdash; ${esc(dateStr)}` : ""} (Granola meeting notes)<br><br>`;
@@ -64,28 +74,14 @@ export async function syncMeetingToPipedrive(token, opts) {
   if (includeTranscript && transcript) noteHtml += `<br><br><b>Transcript</b><br>${mdToNoteHtml(String(transcript).slice(0, 60000))}`;
 
   const results = [];
-  for (const a of attendees) {
-    if (!a.email || a.email === lower(ownerEmail) || a.email === lower(creatorEmail)) continue;
 
-    let person = await findPersonByEmail(token, a.email);
-    let createdPerson = false;
-    if (!person) {
-      if (!createPersons) { results.push({ email: a.email, action: "skipped (not in Pipedrive)" }); continue; }
-      const created = await pd(`/persons`, token, {
-        method: "POST", v: 2,
-        body: { name: a.name || a.email, emails: [{ value: a.email, primary: true }] }
-      });
-      person = created && created.data;
-      if (!person) { results.push({ email: a.email, action: "person create failed" }); continue; }
-      createdPerson = true;
-    }
-
+  /* Attach the note + meeting + tasks to one resolved person (deduped). */
+  async function syncToPerson(person, createdPerson, matchedBy) {
     const dedupeKey = `note:${meetingId}:${person.id}`;
     if (store) {
       const already = await store.get(dedupeKey).catch(() => null);
-      if (already) { results.push({ email: a.email, personId: person.id, action: "already synced" }); continue; }
+      if (already) { results.push({ personId: person.id, matchedBy, action: "already synced" }); return true; }
     }
-
     const deal = await findOpenDeal(token, person.id);
     const note = await addNote(token, { content: noteHtml, personId: person.id, dealId: deal ? deal.id : undefined });
     const noteId = note && note.data && note.data.id;
@@ -116,10 +112,49 @@ export async function syncMeetingToPipedrive(token, opts) {
 
     if (store && noteId) await store.set(dedupeKey, String(noteId)).catch(() => {});
     results.push({
-      email: a.email, personId: person.id, dealId: deal ? deal.id : null,
-      noteId: noteId || null, personCreated: createdPerson, tasksCreated,
+      personId: person.id, dealId: deal ? deal.id : null, noteId: noteId || null,
+      personCreated: createdPerson, matchedBy, tasksCreated,
       action: "note + meeting logged" + (tasksCreated ? ` + ${tasksCreated} task(s)` : "")
     });
+    return true;
   }
+
+  // 1) External attendees, matched by email.
+  let emailSynced = 0;
+  for (const a of attendees) {
+    if (!a.email || a.email === lower(ownerEmail) || a.email === lower(creatorEmail)) continue;
+    let person = await findPersonByEmail(token, a.email);
+    let createdPerson = false;
+    if (!person) {
+      if (!createPersons) { results.push({ email: a.email, action: "skipped (not in Pipedrive)" }); continue; }
+      const created = await pd(`/persons`, token, {
+        method: "POST", v: 2,
+        body: { name: a.name || a.email, emails: [{ value: a.email, primary: true }] }
+      });
+      person = created && created.data;
+      if (!person) { results.push({ email: a.email, action: "person create failed" }); continue; }
+      createdPerson = true;
+    }
+    await syncToPerson(person, createdPerson, "email");
+    emailSynced++;
+  }
+
+  // 2) Phone fallback — only when no external email attendee resolved (e.g. a
+  //    "Phone call with +1…" note whose sole attendee is the meeting owner).
+  if (!emailSynced && phone) {
+    let person = await findPersonByPhone(token, phone);
+    let createdPerson = false;
+    if (!person && createFromPhone && createPersons) {
+      const created = await pd(`/persons`, token, {
+        method: "POST", v: 2,
+        body: { name: `Caller ${phone}`, phones: [{ value: phone, primary: true }] }
+      });
+      person = created && created.data;
+      createdPerson = !!person;
+    }
+    if (person) await syncToPerson(person, createdPerson, "phone");
+    else results.push({ phone, action: "skipped (no phone match)" });
+  }
+
   return results;
 }
