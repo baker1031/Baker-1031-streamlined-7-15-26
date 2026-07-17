@@ -1024,6 +1024,13 @@ ${rows}
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
     { loc: `${SITE}/calculators.html`, priority: "0.6" },
     { loc: `${SITE}/sponsors.html`, priority: "0.6" },
+    { loc: `${SITE}/process.html`, priority: "0.5" },
+    { loc: `${SITE}/terms.html`, priority: "0.3" },
+    { loc: `${SITE}/disclosures.html`, priority: "0.3" },
+    { loc: `${SITE}/reg-bi.html`, priority: "0.3" },
+    { loc: `${SITE}/ccpa.html`, priority: "0.3" },
+    { loc: `${SITE}/accessibility.html`, priority: "0.3" },
+    { loc: `${SITE}/commitment-to-privacy.html`, priority: "0.3" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
@@ -1658,6 +1665,8 @@ ${rows}
     "audiences.html", "audiences",
     "calculators.html", "calculators",
     "sponsors.html", "sponsors",
+    "process.html", "404.html",
+    "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt", "llms.txt"
   ];
@@ -1757,17 +1766,12 @@ ${rows}
     "/request-access.html": "/#request-access",
     "/sitemap.html": "/",
     "/ask-llm.html": "/",
-    // Legal pages: point to the PDFs that exist; the rest fall back to the homepage
-    // footer (which carries the disclosures + PDF links) until real pages are built.
+    // Privacy Policy + Form CRS live as PDFs; the other legal pages are now real
+    // HTML pages (built by build-aux-pages.mjs) so they serve directly — only the
+    // renamed suitability URL needs a redirect to its new slug.
     "/privacy-policy.html": "/documents/privacy-policy.pdf",
     "/form-crs.html": "/documents/form-crs.pdf",
-    "/terms.html": "/",
-    "/reg-bi.html": "/",
-    "/dst-suitability-and-finra-reg-bi.html": "/",
-    "/ccpa.html": "/",
-    "/disclosures.html": "/",
-    "/accessibility.html": "/",
-    "/commitment-to-privacy.html": "/",
+    "/dst-suitability-and-finra-reg-bi.html": "/reg-bi.html",
   };
   // Map the old calculator URLs to the 10 new calculators (or the hub).
   const CALC_MAP = {

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>.skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{left:0;z-index:500;background:#2b3a5f;color:#fff;padding:.6rem 1rem;border-radius:0 0 6px 0;font-weight:600;font-size:.85rem}
+</style>
+<title>Regulation Best Interest &amp; DST Suitability &mdash; Baker 1031 Investments</title>
+<meta name="description" content="Regulation Best Interest &amp; DST Suitability — Baker 1031 Investments.">
+<link rel="canonical" href="https://baker1031.com/reg-bi.html">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Regulation Best Interest & DST Suitability","url":"https://baker1031.com/reg-bi.html","isPartOf":{"@id":"https://baker1031.com/#website"},"inLanguage":"en-US"}</script>
+
+<link rel="stylesheet" href="/css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { text-decoration: none; color: var(--navy); }
+
+  .container { max-width: 78rem; margin: 0 auto; padding: 0 2rem; }
+
+  /* ---------- Header (logged-in, sticky — same as offering page) ---------- */
+  .main-header {
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    position: sticky;
+    top: 0;
+    z-index: 60;
+  }
+  .main-header-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 72px;
+    gap: 2rem;
+  }
+  .logo img { height: 36px; width: auto; display: block; }
+  .account-box { display: flex; align-items: center; gap: 1.25rem; }
+  .welcome { font-size: 0.9rem; font-weight: 600; }
+  .logout {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    border: 1px solid #cfd4dd;
+    border-radius: 6px;
+    padding: 0.45rem 0.9rem;
+  }
+  .logout:hover { color: var(--navy); border-color: var(--navy); }
+
+  .nav-sep { width: 1px; height: 1.1rem; background: var(--hairline); }
+  .nav-toggle { display: none; background: none; border: none; cursor: pointer; color: var(--ink); padding: 0.4rem; }
+  @media (max-width: 720px) {
+    .main-header-inner { position: relative; }
+    .nav-toggle { display: inline-flex; }
+    .account-box { display: none; position: absolute; top: 100%; right: 1rem; background: #fff;
+      border: 1px solid var(--hairline); border-radius: 8px; padding: 1rem 1.25rem;
+      flex-direction: column; align-items: flex-start; gap: 0.9rem;
+      box-shadow: 0 12px 32px rgba(9, 14, 26, 0.12); z-index: 90; }
+    .account-box.open { display: flex; }
+    .nav-sep { width: 100%; height: 1px; }
+  }
+
+  /* ---------- Breadcrumbs + title ---------- */
+  .breadcrumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin: 1.5rem 0 1rem;
+  }
+  .breadcrumbs a { color: var(--muted); }
+  .breadcrumbs a:hover { color: var(--navy); text-decoration: underline; }
+  .breadcrumbs .sep { color: #c3c7cd; }
+  .breadcrumbs .current { color: var(--ink); font-weight: 600; }
+
+  .page-head { margin-bottom: 1.75rem; }
+  .page-head h1 {
+    font-size: clamp(1.6rem, 3vw, 2.3rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+  }
+  .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
+
+  /* ---------- Footer (same as offering page / homepage) ---------- */
+  .site-footer {
+    background: #fff;
+    border-top: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    margin-top: 4.5rem;
+  }
+  .footer-inner { max-width: 78rem; margin: 0 auto; padding: 3.5rem 2rem 2rem; }
+  .footer-cols {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 3rem;
+    padding-bottom: 2.5rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+  @media (max-width: 880px) { .footer-cols { grid-template-columns: 1fr; gap: 2rem; } }
+  .footer-brand img { height: 34px; width: auto; display: block; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); max-width: 26rem; }
+  .site-footer h5 {
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #9aa0ab;
+    margin-bottom: 0.9rem;
+  }
+  .footer-contact li, .footer-links li {
+    list-style: none;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.55rem;
+    color: var(--ink-soft);
+  }
+  .site-footer a { color: var(--ink); }
+  .site-footer a:hover { color: var(--navy); text-decoration: underline; }
+  .footer-disclosure { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--hairline); }
+  .footer-disclosure p { font-size: 0.74rem; line-height: 1.6; color: #8a8f99; margin-bottom: 0.75rem; }
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    padding-top: 1.25rem;
+    font-size: 0.78rem;
+    color: #8a8f99;
+  }
+  .footer-bottom a { color: #8a8f99; }
+  .site-footer { overflow: hidden; }
+  .footer-love .love-heart { height: 0.82em; width: auto; vertical-align: -0.06em; }
+  .footer-love {
+    font-size: 9.3vw;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    color: var(--navy);
+    opacity: 0.06;
+    margin-top: 2.5rem;
+    margin-bottom: -0.18em;
+    user-select: none;
+    pointer-events: none;
+  }
+
+
+  .learn-layout { display: grid; grid-template-columns: 17rem 1fr; gap: 2.5rem; align-items: start; padding: 1.5rem 0 3rem; }
+  @media (max-width: 900px) { .learn-layout { grid-template-columns: 1fr; } }
+  .learn-nav { position: sticky; top: 96px; background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 0.8rem; max-height: calc(100vh - 130px); overflow-y: auto; }
+  .learn-nav details { border-bottom: 1px solid var(--hairline); }
+  .learn-nav details:last-child { border-bottom: none; }
+  .learn-nav summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; font-size: 0.86rem; font-weight: 700; color: var(--ink); padding: 0.7rem 0.6rem; }
+  .learn-nav summary::-webkit-details-marker { display: none; }
+  .learn-nav summary::after { content: "\203A"; color: #9aa0ab; transition: transform 0.15s; font-size: 1rem; }
+  .learn-nav details[open] summary::after { transform: rotate(90deg); }
+  .learn-nav ul { list-style: none; padding: 0 0.6rem 0.7rem 0.9rem; }
+  .learn-nav li { margin-bottom: 0.15rem; }
+  .learn-nav li a { display: block; font-size: 0.83rem; color: var(--ink-soft); padding: 0.32rem 0.5rem; border-radius: 6px; }
+  .learn-nav li a:hover { background: #f3f5f8; color: var(--navy); }
+  .learn-nav li a.active { background: #edf1f7; color: var(--navy); font-weight: 600; }
+  .learn-article { background: #fff; border: 1px solid var(--hairline); border-radius: 10px; padding: 2.4rem 2.8rem 2.8rem; max-width: 50rem; }
+  .learn-article .kicker { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); }
+  .learn-article h1 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; letter-spacing: -0.01em; margin: 0.4rem 0 0.6rem; }
+  .learn-article .meta { font-size: 0.78rem; color: var(--muted); margin-bottom: 1.6rem; }
+  .learn-article h2 { font-size: 1.15rem; font-weight: 700; margin: 1.8rem 0 0.6rem; }
+  .learn-article p, .learn-article li { font-size: 0.95rem; line-height: 1.75; color: var(--ink-soft); margin-bottom: 0.9rem; }
+  .learn-article ul, .learn-article ol { padding-left: 1.3rem; margin-bottom: 0.9rem; }
+  .learn-article .callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .article-footer-nav { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.4rem; padding-top: 1.4rem; border-top: 1px solid var(--hairline); font-size: 0.86rem; font-weight: 600; }
+
+  .aud-btn { display: inline-block; background: var(--navy); color: #fff; font-weight: 700; font-size: 0.9rem; padding: 0.7rem 1.3rem; border-radius: 7px; margin: 0.4rem 0 0.6rem; }
+  .aud-btn:hover { background: var(--navy-dark); }
+
+  .mk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1.2rem 0 1.6rem; }
+  @media (max-width: 640px) { .mk-stats { grid-template-columns: 1fr 1fr; } }
+  .mk-stat { background: #f6f8fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.8rem 1rem; }
+  .mk-stat .l { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #7a8089; }
+  .mk-stat .v { font-size: 1.05rem; font-weight: 700; margin-top: 0.15rem; }
+  .mk-callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .mk-faq { border-top: 1px solid var(--hairline); margin-top: 1.6rem; padding-top: 1rem; }
+  .mk-faq details { border-bottom: 1px solid var(--hairline); padding: 0.6rem 0; }
+  .mk-faq summary { font-size: 0.92rem; font-weight: 700; cursor: pointer; }
+  .mk-faq p { margin-top: 0.5rem; }
+  .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
+
+  .mk-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem; margin: 1.2rem 0 1.6rem; }
+  @media (max-width: 640px) { .mk-stats { grid-template-columns: 1fr 1fr; } }
+  .mk-stat { background: #f6f8fb; border: 1px solid var(--hairline); border-radius: 8px; padding: 0.8rem 1rem; }
+  .mk-stat .l { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #7a8089; }
+  .mk-stat .v { font-size: 1.05rem; font-weight: 700; margin-top: 0.15rem; }
+  .mk-callout { background: #f4f7fb; border-left: 3px solid var(--navy); border-radius: 6px; padding: 0.9rem 1.1rem; font-size: 0.88rem; margin: 1.2rem 0; }
+  .mk-faq { border-top: 1px solid var(--hairline); margin-top: 1.6rem; padding-top: 1rem; }
+  .mk-faq details { border-bottom: 1px solid var(--hairline); padding: 0.6rem 0; }
+  .mk-faq summary { font-size: 0.92rem; font-weight: 700; cursor: pointer; }
+  .mk-faq p { margin-top: 0.5rem; }
+  .mk-disclosure { font-size: 0.72rem; line-height: 1.55; color: var(--muted); margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--hairline); }
+</style>
+</head>
+<body data-gate="public">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="main-header">
+    <div class="main-header-inner">
+      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
+        <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <div class="account-box">
+        <div class="nav-home portal-link" style="display:none">
+          <a class="nav-home-link" href="/">Home</a>
+          <button class="nav-home-toggle" type="button" aria-label="Homepage sections" aria-expanded="false" aria-haspopup="true"><svg viewBox="0 0 24 24" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button>
+          <div class="nav-home-menu" role="menu">
+            <a role="menuitem" href="/#strategies">Strategies</a>
+            <a role="menuitem" href="/#why">Difference</a>
+            <a role="menuitem" href="/#full-cycle">Performance</a>
+            <a role="menuitem" href="/#about">About</a>
+          </div>
+        </div>
+        <a class="listings-link portal-link" href="/current-offerings.html" style="display:none;font-weight:600;font-size:0.9rem">Listings</a>
+        <a class="performance-link portal-link" href="/performance.html" style="display:none;font-weight:600;font-size:0.9rem">Performance</a>
+        <a class="learn-link portal-link" href="/learn.html" style="display:none;font-weight:600;font-size:0.9rem">Learn</a>
+        <span class="nav-sep" style="display:none"></span>
+        <span class="welcome" style="display:none">Welcome, <span data-field="First Name">[First Name]</span></span>
+        <a class="logout" style="display:none" href="#">Log Out</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" id="main-content">
+    <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="sep">&rsaquo;</span><span class="current">Reg BI &amp; DST Suitability</span></nav>
+
+    <div class="learn-layout" style="grid-template-columns:1fr;max-width:56rem;margin:0 auto">
+      <article class="learn-article" style="max-width:none">
+        <div class="kicker">Legal</div>
+        <h1>Regulation Best Interest &amp; DST Suitability</h1>
+        <p style="font-size:1.05rem;font-weight:500;color:var(--ink)">DST Suitability &amp; Regulation Best Interest (Reg BI)</p>
+        
+        <p>Delaware Statutory Trusts Gerald F. "Jerry" Baker, III · Updated June 2026 · 16 min read</p>
+        <p>How do suitability and FINRA's Regulation Best Interest protect you when a DST is recommended? This guide explains what suitability means, how Reg BI raises the standard for broker-dealers, how accreditation and risk tolerance are assessed, the advisor's obligations, and how investors protect themselves.</p>
+        <p>A Delaware Statutory Trust (DST) interest is a security, sold through broker-dealers to accredited investors, so a web of investor-protection rules applies before anyone recommends one to you. The two that matter most are suitability and Regulation Best Interest (Reg BI). Suitability means that any investment recommended to you must fit your needs, objectives, and risk tolerance. Reg BI raises the bar further: it requires broker-dealers to act in the retail customer's best interest when recommending securities, a higher standard than old suitability alone, built around obligations of care, disclosure, conflict-of-interest management, and compliance. Before a DST can be recommended to you, your accreditation and risk tolerance are assessed, and the advisor has concrete obligations to understand the product, disclose material facts, fees, and conflicts, and have a reasonable basis that the recommendation is in your best interest. This guide explains what suitability means, how Reg BI works, how accreditation and risk tolerance are assessed, the advisor's obligations, and how you protect yourself as an investor. Note that Baker 1031 does not provide tax or legal advice — verify the current rules and your specific situation with your advisors; this is educational information, not investment advice.</p>
+        <p>Suitability is one safeguard within the broader framework covered in our in-depth DST pillar guide .</p>
+        <p>What Suitability Means</p>
+        <p>Suitability is the foundational investor-protection principle behind any DST recommendation: an investment that's recommended to you must fit your needs, objectives, and risk tolerance. In other words, a financial professional can't simply offer you any product that exists — what's recommended has to be appropriate for your particular financial situation, goals, time horizon, and capacity to bear risk. For a DST, which is illiquid, accredited-only, and held for years, suitability is a meaningful gate, because the investment isn't appropriate for everyone.</p>
+        <p>Suitability is assessed by gathering and considering information about you — your financial situation, investment objectives, liquidity needs, time horizon, tax situation, risk tolerance, and other holdings. A DST might be suitable for an investor who has appreciated real estate to exchange, wants passive income over a multi-year hold, doesn't need liquidity, and can bear the risks; it might be unsuitable for an investor who needs ready access to capital or can't tolerate illiquidity and concentration. So suitability tailors the recommendation to the person, ensuring the product matches the investor rather than the other way around.</p>
+        <p>Regulation Best Interest (Reg BI)</p>
+        <p>Regulation Best Interest (Reg BI) raises the standard above old suitability alone. Adopted by the SEC and enforced alongside FINRA's rules, Reg BI requires a broker-dealer to act in the retail customer's best interest when recommending a securities transaction or investment strategy — and not to place its own interests ahead of the customer's. So where traditional suitability asked whether a recommendation was appropriate, Reg BI asks the more demanding question of whether it is in your best interest, which is a higher bar.</p>
+        <p>Reg BI is built around four component obligations. The Care Obligation requires the firm and advisor to understand the product and have a reasonable basis to believe the recommendation is in your best interest, considering costs. The Disclosure Obligation requires disclosing material facts about the recommendation and the relationship, including fees and conflicts. The Conflict-of-Interest Obligation requires identifying and addressing conflicts. And the Compliance Obligation requires firms to have policies and procedures to comply. Together, these obligations make the best-interest standard concrete and enforceable for a DST recommendation. For our own part, we disclose a material conflict directly: DST interests are offered through our broker-dealer, Aurora Securities, Inc. (member FINRA/SIPC), and Baker 1031 Investments and its registered representatives are compensated through commissions and selling concessions paid by DST sponsors on the transactions we recommend. Those arrangements are described in our Form CRS and Reg BI disclosure documents, which we provide before you invest.</p>
+        <p>Suitability asks whether a DST is appropriate for you; Reg BI asks the harder question of whether it's actually in your best interest — and backs that up with concrete obligations of care, disclosure, and conflict management.</p>
+        <p>Accreditation &amp; Risk Tolerance</p>
+        <p>Before a DST can be recommended, two threshold matters are assessed: your accreditation and your risk tolerance. DST interests are offered under the securities rules as private placements available to accredited investor s, so the first gate is confirming you qualify as accredited — generally by meeting income or net-worth thresholds. This accreditation requirement exists because DSTs are private, illiquid securities deemed appropriate for investors with the financial sophistication and capacity to bear their risks.</p>
+        <p>Accreditation, however, is necessary but not sufficient — risk tolerance must also fit. Being accredited means you meet financial thresholds, but it doesn't automatically mean a particular DST is right for you. The advisor must also assess your risk tolerance and broader profile: your capacity and willingness to bear illiquidity, concentration, sponsor risk , and the multi-year hold of a DST. An accredited investor who needs liquidity or can't tolerate the risks may still be unsuitable for a DST. So both your accreditation status and your risk tolerance are evaluated before any DST recommendation, ensuring the investment fits on both dimensions.</p>
+        <p>The Advisor's Obligations</p>
+        <p>Under suitability and Reg BI, the advisor recommending a DST has concrete obligations. First, the advisor must understand the product — knowing how the DST works, its risks, costs, structure, and the underlying real estate well enough to evaluate whether it's appropriate and in your best interest. An advisor can't responsibly recommend a complex, illiquid security they don't themselves understand. This reasonable-basis duty is central to the Care Obligation.</p>
+        <p>Second, the advisor must disclose material facts, including fees and conflicts. You're entitled to understand what the DST will cost (upfront and ongoing), how the advisor and firm are compensated , and any conflicts of interest that might influence the recommendation — disclosed clearly so you can weigh them. Third, the advisor must have a reasonable basis to believe the specific recommendation is in your best interest given your profile, considering costs and reasonably available alternatives. Together these obligations ensure the recommendation is informed, transparent, and genuinely oriented toward your interest rather than the firm's.</p>
+        <p>Key Takeaways</p>
+        <p>Suitability means a recommended DST must fit your needs, objectives, and risk tolerance — appropriate for you specifically, not just available.</p>
+        <p>Reg BI raises the bar: broker-dealers must act in your best interest, through obligations of care, disclosure, conflict management, and compliance.</p>
+        <p>Before a DST recommendation, both your accreditation (income or net-worth thresholds) and your risk tolerance are assessed — eligibility and fit are separate.</p>
+        <p>The advisor must understand the product, disclose material facts including fees and conflicts, and have a reasonable basis the recommendation is in your best interest.</p>
+        <p>Protecting Yourself as an Investor</p>
+        <p>Beyond the protections the rules provide, you can take concrete steps to protect yourself when considering a DST. The first is to ask questions — about how the DST works, the underlying real estate, the sponsor, the risks, the hold period, the fees, and how the advisor is compensated. A good advisor welcomes questions and answers them clearly; persistent vagueness or pressure is a warning sign. Asking questions is the simplest, most powerful form of self-protection.</p>
+        <p>Second, read the offering documents — particularly the private placement memorandum (PPM) and related disclosures, which lay out the investment, its risks, fees, conflicts, and structure in detail. Understand the fees and conflicts specifically: what you'll pay upfront and ongoing, and how the advisor's and sponsor's compensation might shape the recommendation. Third, make sure the DST genuinely fits your situation — your liquidity needs, time horizon, tax goals, and risk tolerance — rather than relying solely on the recommendation. The rules require the advisor to act in your best interest, but your own diligence is the final safeguard.</p>
+        <p>The rules require your advisor to act in your best interest — but the most reliable protection is an informed investor who asks questions, reads the PPM, understands the fees and conflicts, and confirms the fit.</p>
+        <p>How the Recommendation Process Works</p>
+        <p>Bringing it together, here's how a compliant DST recommendation typically unfolds. It begins with gathering information about you — your financial situation, goals, liquidity needs, time horizon, tax circumstances, and risk tolerance — and confirming your accreditation. With that profile in hand, the advisor and firm, who must already understand the DST product, consider whether a particular DST is appropriate and in your best interest, weighing its costs, risks, and reasonably available alternatives.</p>
+        <p>If a DST is recommended, you receive disclosure of the material facts, fees, and conflicts, and access to the offering documents, including the PPM, so you can evaluate the investment yourself. You ask questions, review the disclosures, and decide. The firm maintains the policies and records required to demonstrate compliance with Reg BI and suitability. This process is designed so that, by the time you commit capital, the recommendation has been made in your best interest, you understand what you're buying, and the investment fits your profile — with documentation showing the standards were met.</p>
+        <p>How Baker 1031 Helps You Invest Suitably</p>
+        <p>Baker 1031 Investments helps investors understand the protections around a DST recommendation — what suitability means, how Regulation Best Interest raises the standard, how accreditation and risk tolerance are assessed, the advisor's obligations, and how to protect yourself — so you can invest in a DST with confidence that the recommendation fits your needs and is in your best interest.</p>
+        <p>DST interests are securities offered through the broker-dealer, Aurora Securities, Inc. (member FINRA/SIPC), to accredited investors after a suitability review, and recommendations are subject to Regulation Best Interest. We gather your financial profile, confirm your accreditation, assess your risk tolerance, and recommend a DST only when it's appropriate and in your best interest — understanding the product, disclosing material facts, fees, and conflicts, and providing the offering documents, including the PPM, so you can review and decide. We encourage you to ask questions, read the disclosures, and confirm the fit. Baker 1031 does not provide tax or legal advice; your CPA and attorney confirm your 1031 eligibility and the tax and legal details, which are technical. We're candid that DSTs are illiquid, accredited-only securities carrying real risks — concentration, sponsor risk, and a multi-year hold — and not appropriate for everyone. Neither yields nor returns are promised, and past performance does not guarantee future results. Our role is to help you understand the protections and invest only when a DST is suitable and in your best interest.</p>
+        <p>Frequently Asked Questions</p>
+        <p>What does suitability mean for a DST?</p>
+        <p>Suitability means that any DST recommended to you must fit your needs, objectives, and risk tolerance — it has to be appropriate for your particular financial situation, goals, time horizon, and capacity to bear risk. A financial professional can't simply offer you any product that exists; what's recommended must be right for you specifically. For a DST, which is illiquid, accredited-only, and held for years, suitability is a meaningful gate, because the investment isn't appropriate for everyone. Suitability is assessed by gathering information about you — your financial situation, investment objectives, liquidity needs, time horizon, tax situation, risk tolerance, and other holdings. A DST might be suitable for an investor with appreciated real estate to exchange who wants passive income over a multi-year hold and doesn't need liquidity, and unsuitable for someone who needs ready access to capital or can't tolerate illiquidity and concentration. So suitability tailors the recommendation to the person, ensuring the product matches the investor rather than the other way around. It's the foundational investor protection in any DST recommendation.</p>
+        <p>What is Regulation Best Interest (Reg BI)?</p>
+        <p>Regulation Best Interest (Reg BI) is an SEC rule that requires a broker-dealer to act in the retail customer's best interest when recommending a securities transaction or investment strategy, and not to place its own interests ahead of the customer's. It raises the standard above old suitability alone: where traditional suitability asked whether a recommendation was appropriate, Reg BI asks the more demanding question of whether it's in your best interest. Reg BI is built around four component obligations. The Care Obligation requires understanding the product and having a reasonable basis to believe the recommendation is in your best interest, considering costs. The Disclosure Obligation requires disclosing material facts about the recommendation and relationship, including fees and conflicts. The Conflict-of-Interest Obligation requires identifying and addressing conflicts. And the Compliance Obligation requires firms to maintain policies and procedures to comply. Together, these make the best-interest standard concrete and enforceable for a DST recommendation. So Reg BI is a higher, more protective standard than suitability alone, backed by specific, enforceable obligations on the firm and advisor.</p>
+        <p>How is Reg BI different from suitability?</p>
+        <p>Reg BI raises the standard above old suitability alone. Traditional suitability asked whether a recommendation was appropriate for you given your profile — a meaningful but lower bar. Reg BI asks the harder question of whether the recommendation is in your best interest, and requires the broker-dealer not to place its own interests ahead of yours. It also makes the standard concrete through four obligations: the Care Obligation (understand the product and have a reasonable basis the recommendation is in your best interest, considering costs), the Disclosure Obligation (disclose material facts, fees, and conflicts), the Conflict-of-Interest Obligation (identify and address conflicts), and the Compliance Obligation (maintain policies to comply). So the practical difference is both the standard (best interest versus mere appropriateness) and the structure (specific, enforceable obligations including cost consideration and conflict management). For a DST recommendation, this means the advisor must do more than confirm the product is appropriate — they must have a reasonable basis it's in your best interest, disclose fees and conflicts, and manage those conflicts. Reg BI is the more protective, more demanding standard.</p>
+        <p>Do I have to be accredited to invest in a DST?</p>
+        <p>Yes — DST interests are offered under the securities rules as private placements available to accredited investors, so qualifying as accredited is generally a threshold requirement. Accreditation is typically met by satisfying income or net-worth thresholds. The accreditation requirement exists because DSTs are private, illiquid securities deemed appropriate for investors with the financial capacity and sophistication to bear their risks. However, accreditation is necessary but not sufficient — being accredited means you meet the financial thresholds, but it doesn't automatically mean a particular DST is right for you. The advisor must also assess your risk tolerance and broader profile: your capacity and willingness to bear illiquidity, concentration, sponsor risk, and the multi-year hold. An accredited investor who needs liquidity or can't tolerate the risks may still be unsuitable for a DST. So both your accreditation status and your risk tolerance are evaluated before any DST recommendation. Accreditation is the gate that lets you into the offering; the suitability and best-interest assessment confirms the DST actually fits you. Confirm your accreditation status with your advisor.</p>
+        <p>How is my risk tolerance assessed for a DST?</p>
+        <p>Your risk tolerance is assessed as part of building a full picture of your financial profile before a DST recommendation. The advisor gathers and considers information about your financial situation, investment objectives, liquidity needs, time horizon, tax circumstances, other holdings, and both your willingness and your capacity to bear risk. For a DST specifically, the relevant risks include illiquidity (you're committed for a multi-year hold with little secondary market), concentration (a DST often holds one or a few specific properties), sponsor risk, and the general risks of real estate. The assessment considers whether you can financially withstand these risks and whether you're comfortable with them. An accredited investor who needs ready access to capital, has a short time horizon, or can't tolerate illiquidity and concentration may have a risk tolerance that makes a DST unsuitable, even though they meet the financial thresholds. So the risk-tolerance assessment ensures the DST fits not just your eligibility but your actual circumstances and comfort. Be candid with your advisor about your needs and comfort level, because an honest profile produces a recommendation that genuinely fits you.</p>
+        <p>What are the advisor's obligations when recommending a DST?</p>
+        <p>Under suitability and Reg BI, the advisor recommending a DST has concrete obligations. First, the advisor must understand the product — knowing how the DST works, its risks, costs, structure, and underlying real estate well enough to evaluate whether it's appropriate and in your best interest. An advisor shouldn't recommend a complex, illiquid security they don't themselves understand; this reasonable-basis duty is central to the Care Obligation. Second, the advisor must disclose material facts, including fees and conflicts — you're entitled to understand what the DST will cost (upfront and ongoing), how the advisor and firm are compensated, and any conflicts that might influence the recommendation, disclosed clearly. Third, the advisor must have a reasonable basis to believe the specific recommendation is in your best interest given your profile, considering costs and reasonably available alternatives. Together these obligations ensure the recommendation is informed, transparent, and genuinely oriented toward your interest rather than the firm's. So you can expect your advisor to understand the product, be transparent about fees and conflicts, and recommend a DST only when it's in your best interest.</p>
+        <p>What fees and conflicts should be disclosed for a DST?</p>
+        <p>Under the Disclosure Obligation, the advisor must disclose the material facts of a DST recommendation, including its fees and any conflicts of interest. On fees, you should understand both the upfront costs (such as selling commissions, dealer-manager fees, and organizational and offering costs that reduce the capital initially deployed into real estate) and ongoing costs (such as asset-management and other fees), so you know what the investment will cost over its life. On conflicts, you should understand how the advisor and firm are compensated for recommending the DST and whether that compensation, or any relationship with the sponsor, could influence the recommendation. Disclosing these lets you weigh them as you decide. A good advisor explains fees and conflicts plainly rather than burying them. You can and should ask directly how everyone is paid and what conflicts exist. So expect clear disclosure of the DST's full fee load and any conflicts, and use that information — alongside the PPM — to evaluate whether the recommendation is genuinely in your best interest. If disclosures are vague or evasive, treat that as a warning sign and press for clarity before investing.</p>
+        <p>How can I protect myself when considering a DST?</p>
+        <p>Beyond the protections the rules provide, you can take concrete steps to protect yourself. First, ask questions — about how the DST works, the underlying real estate, the sponsor, the risks, the hold period, the fees, and how the advisor is compensated. A good advisor welcomes questions and answers them clearly; persistent vagueness or pressure is a warning sign. Second, read the offering documents — particularly the private placement memorandum (PPM) and related disclosures, which lay out the investment, its risks, fees, conflicts, and structure in detail. Understand the fees and conflicts specifically: what you'll pay upfront and ongoing, and how compensation might shape the recommendation. Third, make sure the DST genuinely fits your situation — your liquidity needs, time horizon, tax goals, and risk tolerance — rather than relying solely on the recommendation. The rules require the advisor to act in your best interest, but your own diligence is the final safeguard. So you protect yourself by asking questions, reading the PPM and disclosures, understanding fees and conflicts, and confirming the fit — combining the protections the rules provide with your own informed judgment.</p>
+        <p>What is a PPM and why should I read it?</p>
+        <p>A PPM — private placement memorandum — is the primary disclosure document for a DST offering. It lays out the investment in detail: the underlying real estate, the sponsor, the structure of the trust, the financing, the projected economics, the fees (upfront and ongoing), the conflicts of interest, and, importantly, an extensive discussion of the risks. Because a DST is a private, illiquid, accredited-only security, the PPM is where the full picture is documented — far more thoroughly than any summary or conversation. You should read it because it's your best source for understanding what you're actually buying, what it will cost, what could go wrong, and how the deal is structured. Pay particular attention to the risk factors, the fee disclosures, the conflicts, the hold period and exit expectations, and the financing terms. If anything is unclear, ask your advisor to explain it, and consider having your attorney review it. The advisor's disclosures and your conversations matter, but the PPM is the authoritative document. So reading the PPM carefully is one of the most important things you can do to protect yourself before committing capital to a DST.</p>
+        <p>Does Reg BI mean a DST is guaranteed to be good for me?</p>
+        <p>No — Reg BI raises the standard and provides real protection, but it doesn't guarantee that a DST will perform well or be free of risk. Reg BI requires the broker-dealer to act in your best interest when recommending the DST: to understand the product, have a reasonable basis the recommendation is in your best interest considering costs and alternatives, disclose material facts including fees and conflicts, and manage conflicts. That means a properly made recommendation should fit your needs and be oriented toward your interest. But it doesn't mean the investment can't lose value, that distributions are guaranteed, or that the real estate will perform as projected. A DST recommended in your best interest is still a real investment with real risks — illiquidity, concentration, sponsor risk, and the general risks of real estate. So Reg BI ensures the recommendation process meets a high standard; it doesn't transfer the investment risk away from you. That's why your own diligence — asking questions, reading the PPM, confirming the fit — remains essential. Reg BI protects the quality of the advice, not the outcome of the investment.</p>
+        <p>Who decides if a DST is suitable for me?</p>
+        <p>The broker-dealer and the advisor making the recommendation are responsible for determining whether a DST is suitable and in your best interest, based on the financial profile you provide. They gather information about your financial situation, objectives, liquidity needs, time horizon, tax circumstances, and risk tolerance, confirm your accreditation, and assess whether the particular DST is appropriate and in your best interest considering its costs, risks, and reasonably available alternatives. So the formal suitability and best-interest determination rests with the firm and advisor under suitability and Reg BI. But you play an essential role: you provide the information that the assessment depends on, so being candid and complete about your situation directly shapes the quality of the determination. And the final decision to invest is yours — after the recommendation, you review the disclosures and the PPM, ask questions, and decide whether to proceed. So suitability is determined by the firm and advisor against your profile, informed by the honest information you provide, and the ultimate decision to invest remains with you. The protections work best when you engage actively in the process.</p>
+        <p>Are DSTs only for wealthy investors?</p>
+        <p>DSTs are limited to accredited investors, who meet income or net-worth thresholds, so they aren't available to everyone — but 'accredited' isn't the same as 'wealthy' in any extreme sense, and the requirement is about financial capacity and sophistication rather than exclusivity for its own sake. The accreditation requirement exists because DSTs are private, illiquid securities whose risks — illiquidity, concentration, sponsor risk, a multi-year hold — are deemed appropriate for investors with the financial capacity to bear them. Many DST investors are people who have sold appreciated investment real estate and want a passive, 1031-eligible replacement, rather than ultra-high-net-worth individuals. Still, beyond the accreditation gate, suitability and risk tolerance matter: even an accredited investor for whom a DST doesn't fit — because they need liquidity or can't tolerate the risks — shouldn't invest in one. So DSTs are for accredited investors for whom the investment is suitable, which is a specific but not tiny group. If you're unsure whether you qualify or whether a DST fits, your advisor can assess your accreditation and suitability. The gate is about appropriateness, not prestige.</p>
+        <p>What happens during the DST recommendation process?</p>
+        <p>A compliant DST recommendation typically unfolds in stages. It begins with gathering information about you — your financial situation, goals, liquidity needs, time horizon, tax circumstances, and risk tolerance — and confirming your accreditation. With that profile, the advisor and firm, who must already understand the DST product, consider whether a particular DST is appropriate and in your best interest, weighing its costs, risks, and reasonably available alternatives. If a DST is recommended, you receive disclosure of the material facts, fees, and conflicts, and access to the offering documents, including the PPM, so you can evaluate the investment yourself. You ask questions, review the disclosures, and decide. The firm maintains the policies and records required to demonstrate compliance with Reg BI and suitability. This process is designed so that, by the time you commit capital, the recommendation has been made in your best interest, you understand what you're buying, and the investment fits your profile — with documentation showing the standards were met. So the process moves from profiling and accreditation, through a best-interest assessment and disclosure, to your own informed decision.</p>
+        <p>Can I refuse a DST recommendation?</p>
+        <p>Yes — absolutely. A recommendation is exactly that: a recommendation, not an obligation. Even after an advisor has assessed your profile, confirmed your accreditation, and recommended a particular DST as appropriate and in your best interest, the decision to invest is entirely yours. You can decline, ask for alternatives, request more information, take time to review the PPM and disclosures, consult your CPA or attorney, or simply choose not to proceed. A good advisor respects that the decision is yours and doesn't pressure you; pressure to commit quickly is a warning sign worth heeding. You can also decide that a DST doesn't fit your needs even if it technically meets the suitability and best-interest standards — for instance, if you'd prefer to keep your capital liquid. So never feel obligated to accept a recommendation. Use the recommendation as informed input, do your own diligence, and invest only when you're genuinely comfortable that the DST fits your situation and goals. The protections in the rules exist to serve your decision, not to substitute for it. Take the time you need to decide.</p>
+        <p>How does Baker 1031 help me invest suitably in a DST?</p>
+        <p>We help investors understand the protections around a DST recommendation — what suitability means, how Regulation Best Interest raises the standard, how accreditation and risk tolerance are assessed, the advisor's obligations, and how to protect yourself — so you can invest in a DST with confidence that the recommendation fits your needs and is in your best interest. DST interests are securities offered through the broker-dealer, Aurora Securities, Inc. (member FINRA/SIPC), to accredited investors after a suitability review, and recommendations are subject to Regulation Best Interest. We gather your financial profile, confirm your accreditation, assess your risk tolerance, and recommend a DST only when it's appropriate and in your best interest — understanding the product, disclosing material facts, fees, and conflicts, and providing the PPM so you can review and decide. We encourage you to ask questions and confirm the fit. Baker 1031 does not provide tax or legal advice; your CPA and attorney confirm your 1031 eligibility and the details. We're candid that DSTs are illiquid, accredited-only securities carrying real risks and not appropriate for everyone. Neither yields nor returns are promised, and past performance does not guarantee future results.</p>
+        <p>Glossary</p>
+        <p>Suitability The principle that a recommendation must fit the investor's needs and risk tolerance.</p>
+        <p>Regulation Best Interest (Reg BI) The SEC rule requiring broker-dealers to act in the customer's best interest.</p>
+        <p>Best-Interest Standard Reg BI's higher bar than mere appropriateness.</p>
+        <p>Care Obligation The duty to understand the product and have a reasonable basis for the recommendation.</p>
+        <p>Disclosure Obligation The duty to disclose material facts, fees, and conflicts.</p>
+        <p>Conflict-of-Interest Obligation The duty to identify and address conflicts of interest.</p>
+        <p>Compliance Obligation The duty to maintain policies and procedures to comply with Reg BI.</p>
+        <p>Accredited Investor An investor meeting income or net-worth thresholds for private offerings.</p>
+        <p>Risk Tolerance An investor's capacity and willingness to bear investment risk.</p>
+        <p>Broker-Dealer The firm through which DST securities are offered.</p>
+        <p>Private Placement Memorandum (PPM) The primary disclosure document for a DST offering.</p>
+        <p>Material Facts Information important to an investor's decision, which must be disclosed.</p>
+        <p>Reasonable Basis Adequate understanding and grounds supporting a recommendation.</p>
+        <p>Private Placement A securities offering sold without a public registration, to accredited investors.</p>
+        <p>FINRA The self-regulatory organization overseeing broker-dealers.</p>
+        <p>Suitability Review The assessment confirming a DST fits the investor before recommendation.</p>
+        <p>Sources &amp; References</p>
+        <p>FINRA. Regulation Best Interest U.S. Securities and Exchange Commission. Regulation Best Interest FINRA. Real Estate Investments IRS. Revenue Ruling 2004-86</p>
+        <p>Disclosures</p>
+        <p>This article is published by Baker 1031 Investments, LLC for general educational purposes for accredited investors and is not an offer to sell or a solicitation of an offer to buy any security, nor is it tax, legal, accounting, or investment advice or a recommendation. Any securities offering is made solely through a sponsor’s private placement memorandum (PPM) following a suitability determination. Securities offered through Aurora Securities, Inc. (ASI), member FINRA / SIPC; Baker 1031 Investments is independent of ASI. Oil &amp; gas mineral and royalty interests and DST programs are speculative, illiquid securities sold only to verified accredited investors and involve substantial risk, including possible loss of principal, commodity-price and production-decline risk, lack of control, and the risk that an intended 1031 exchange fails to qualify for tax deferral. Whether a particular interest qualifies as like-kind real property is a fact-specific legal determination that varies by state and by the terms of the instrument. Tax results depend on your individual circumstances. Consult your own CPA and attorney before acting. Past performance does not guarantee future results.</p>
+        <p>Filed under Delaware Statutory Trusts DSTs 1031 Exchange</p>
+        <p>About the author Jerry Baker Founder &amp; Managing Principal, Baker 1031 Investments · FINRA Series 22 / 63 · SIE Jerry founded Baker 1031 to bring institutional underwriting discipline to the 1031 exchange. He spent more than a decade on Wall Street working on $10B+ of real estate before building diversified DST portfolios for individual investors. Read full bio → Reviewed by Lori Kamen — Chief Compliance Officer, Aurora Securities, Inc. (FINRA CRD #2805591). Last reviewed July 12, 2026. Securities offered through Aurora Securities, member FINRA/SIPC.</p>
+        <p>Explore current offerings See the Delaware Statutory Trusts we currently have available and how they fit a strategy like this one. View Delaware Statutory Trusts → Educational only — not an offer of any security. Offerings are available to verified, accredited investors and change over time.</p>
+        
+        <div class="article-footer-nav"><a href="/">&larr; Home</a><a href="/disclosures.html">Important disclosures &rarr;</a></div>
+      </article>
+    </div>
+  </main>
+  <!-- PARTIAL:footer -->
+  <footer class="site-footer" id="contact">
+    <div class="footer-inner">
+      <div class="footer-cols">
+        <div class="footer-brand">
+          <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul class="footer-contact">
+            <li><a href="mailto:invest@baker1031.com">invest@baker1031.com</a></li>
+            <li><a href="tel:+14155791660">(415) 579-1660</a></li>
+            <li>650 California Street<br>San Francisco, CA 94108</li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul class="footer-links">
+            <li><a href="/#strategies">Strategies</a></li>
+            <li><a href="/#why">Difference</a></li>
+            <li><a href="/#full-cycle">Performance</a></li>
+            <li><a href="/#about">About</a></li>
+            <li><a href="/#request-access">Request Investment Access</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-disclosure">
+        <p>Securities are offered through Aurora Securities, Inc., member <a href="https://www.finra.org/" target="_blank" rel="noopener">FINRA</a>/<a href="https://www.sipc.org/" target="_blank" rel="noopener">SIPC</a>. Baker 1031 Investments, LLC is independent of Aurora Securities, Inc. and is not a registered broker-dealer or investment adviser. <a href="https://brokercheck.finra.org/firm/summary/46147" target="_blank" rel="noopener">Check Aurora Securities, Inc. on FINRA BrokerCheck</a>.</p>
+        <p>This website is for informational purposes only and does not constitute an offer to sell or a solicitation of an offer to buy any security. Offerings are made only by a sponsor&rsquo;s private placement memorandum, are available solely to accredited investors, and are subject to suitability requirements. Real estate investments involve substantial risk, including illiquidity, potential loss of principal, and market and interest-rate risk. DST interests are long-term investments and generally cannot be sold on demand. Past performance, including full-cycle results shown on this page, is not a guarantee of future results.</p>
+        <p>Baker 1031 Investments is not a tax or legal advisor. Prospective investors should consult their own CPA and attorney regarding their individual circumstances before investing.</p>
+        <p style="font-weight:600; letter-spacing:0.05em; text-transform:uppercase;">Not FDIC Insured &nbsp;&middot;&nbsp; Not Bank Guaranteed &nbsp;&middot;&nbsp; Not a Deposit &nbsp;&middot;&nbsp; May Lose Value</p>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
+        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html">Employee Login</a></span>
+      </div>
+    </div>
+      <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
+</footer>
+  <!-- /PARTIAL:footer -->
+
+  <script type="module" src="/js/auth.js"></script>
+</body>
+</html>
