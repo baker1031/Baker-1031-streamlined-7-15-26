@@ -16,9 +16,10 @@
      node scripts/build-offerings.mjs
    ============================================================ */
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createHash } from "node:crypto";
 import { parseCSV } from "./lib/csv.mjs";
 import { esc, truncate, slugify, put } from "./lib/html.mjs";
 import { optimizedPhoto, directDownload } from "./lib/images.mjs";
@@ -891,6 +892,38 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     if (existsSync(p)) { rmSync(p); stripped++; }
   }
   console.log(`dist/ assembled (${copied} top-level items, ${stripped} templates stripped).`);
+
+  /* Cache-bust local /js refs. JS is served with a 1-hour cache (netlify.toml),
+     but HTML revalidates on every load — so appending a content hash to the
+     script URL in the HTML forces browsers to fetch a changed script on the
+     next navigation instead of waiting up to an hour for the JS cache to
+     expire. Critical for auth.js fixes. Hash only changes when the file does. */
+  const jsDir = join(dist, "js");
+  const jsHash = {};
+  if (existsSync(jsDir)) {
+    for (const f of readdirSync(jsDir)) {
+      if (f.endsWith(".js")) jsHash[f] = createHash("sha1").update(readFileSync(join(jsDir, f))).digest("hex").slice(0, 8);
+    }
+  }
+  const htmlFiles = [];
+  (function walk(d) {
+    for (const e of readdirSync(d, { withFileTypes: true })) {
+      const p = join(d, e.name);
+      if (e.isDirectory()) walk(p);
+      else if (e.name.endsWith(".html")) htmlFiles.push(p);
+    }
+  })(dist);
+  let busted = 0;
+  for (const hf of htmlFiles) {
+    let s = readFileSync(hf, "utf8"), changed = false;
+    for (const [f, h] of Object.entries(jsHash)) {
+      const re = new RegExp(`(src=")(/js/${f.replace(/\./g, "\\.")})(")`, "g");
+      const ns = s.replace(re, (_, a, b, c) => `${a}${b}?v=${h}${c}`);
+      if (ns !== s) { s = ns; changed = true; }
+    }
+    if (changed) { writeFileSync(hf, s); busted++; }
+  }
+  console.log(`Cache-busted /js refs in ${busted} HTML files.`);
 }
 
 console.log("Build complete.");
