@@ -1,0 +1,221 @@
+{
+  "note": "Audience landing-page content. Educational marketing copy — reviewed for FINRA 2210 before relying on it. Generated into /audiences/<slug>/ by scripts/build-offerings.mjs.",
+  "audiences": [
+    {
+      "slug": "selling-investment-property",
+      "name": "Selling an investment property",
+      "kicker": "Property Sellers",
+      "title": "Selling an Investment Property",
+      "headline": "Selling an investment property? Defer the tax and stay invested.",
+      "metaDesc": "Selling an investment property? Defer capital-gains tax and depreciation recapture with a 1031 exchange into passive DST, 721, or Opportunity Zone real estate.",
+      "lead": "When you sell appreciated investment real estate, federal capital-gains tax and depreciation recapture can take a large share of your proceeds. A properly structured 1031 exchange lets you defer that tax and reinvest the full amount into passive, institutional-quality real estate.",
+      "pains": [
+        "You're facing a capital-gains and depreciation-recapture bill that could consume a quarter to a third of your gain.",
+        "You want to stay invested in real estate, but not start over with another hands-on property.",
+        "You're on the clock &mdash; a 1031 exchange requires identifying replacement property within 45 days and closing within 180."
+      ],
+      "helpIntro": "<p>We help you exchange out of the property you sold and into fractional interests in professionally managed real estate, so your equity keeps working without a taxable event. You review vetted options; we coordinate the timeline with your qualified intermediary, CPA, and attorney.</p>",
+      "helpPoints": [
+        "1031 exchange into Delaware Statutory Trusts (DSTs) for hands-off, diversified ownership across sectors and regions.",
+        "721 UPREIT exchanges for a path into an operating partnership and eventual REIT flexibility.",
+        "Opportunity Zone funds as an alternative deferral route when a 1031 isn't the right fit."
+      ],
+      "callout": "The clock starts at your sale: 45 calendar days to identify replacement property and 180 days to close. Line up a qualified intermediary before you sell &mdash; you cannot touch the proceeds and still defer.",
+      "faq": [
+        {
+          "q": "How much tax can a 1031 exchange defer?",
+          "a": "A 1031 exchange can defer the federal capital-gains tax, the 3.8% net investment income tax where it applies, depreciation recapture (taxed up to 25%), and state tax on the gain &mdash; provided you reinvest the proceeds and replace the debt."
+        },
+        {
+          "q": "Do I have to reinvest all of the proceeds?",
+          "a": "To fully defer the tax, you generally must reinvest all net proceeds and replace the debt on the property you sold. Cash taken out (&ldquo;boot&rdquo;) is taxable up to the amount of your gain."
+        },
+        {
+          "q": "What can I exchange into?",
+          "a": "Any like-kind real property held for investment, including fractional DST interests that hold institutional assets anywhere in the country. These offerings are available only to accredited investors."
+        }
+      ],
+      "card": "Defer the capital-gains and depreciation-recapture tax on your sale with a 1031 exchange into professionally managed real estate."
+    },
+    {
+      "slug": "tired-landlords",
+      "name": "Tired landlords",
+      "kicker": "Tired Landlords",
+      "title": "For Tired Landlords",
+      "headline": "Done with tenants, toilets, and turnover?",
+      "metaDesc": "Tired of being a landlord? 1031-exchange your rental into passive, professionally managed real estate — defer the tax and step off the management treadmill.",
+      "lead": "You've built equity as a landlord, but the late-night calls, vacancies, and repairs have worn thin. A 1031 exchange lets you trade active management for passive, professionally managed real estate without triggering the tax you've deferred for years.",
+      "pains": [
+        "You're tired of managing tenants, maintenance, and vacancies, but don't want a big tax bill for selling.",
+        "Your property has appreciated and carries years of depreciation you'd rather not recapture.",
+        "You want dependable income without the day-to-day work of being a landlord."
+      ],
+      "helpIntro": "<p>Instead of selling and paying the tax, you can 1031-exchange your rental into fractional interests in institutionally managed properties. A professional sponsor handles the tenants, financing, and operations; you keep your gain deferred and receive potential distributions.</p>",
+      "helpPoints": [
+        "Exchange a single management-intensive rental into diversified DST interests across multifamily, industrial, or net-lease assets.",
+        "Step off the management treadmill while your equity stays invested and tax-deferred.",
+        "Simplify your estate &mdash; heirs can receive a stepped-up basis instead of a management headache."
+      ],
+      "callout": "A 1031 exchange defers the tax; simply selling does not. If you sell first without an exchange in place, that deferral opportunity is gone.",
+      "faq": [
+        {
+          "q": "Can I really stop managing property and still defer the tax?",
+          "a": "Yes. Fractional interests in a DST are treated as like-kind real property for 1031 purposes, so you can exchange an actively managed rental into passive, professionally managed real estate and keep your gain deferred."
+        },
+        {
+          "q": "Will I still receive income?",
+          "a": "DSTs are structured to make regular distributions from rental income, though distributions are not guaranteed and depend on the performance of the underlying properties."
+        },
+        {
+          "q": "What happens to the deferred tax eventually?",
+          "a": "You can keep exchanging and deferring for life; at death, heirs generally receive a stepped-up basis, which can eliminate the deferred gain. Confirm your situation with your CPA and attorney."
+        }
+      ],
+      "card": "Trade hands-on management for passive ownership without triggering the tax you've deferred for years."
+    },
+    {
+      "slug": "farmers-ranchers",
+      "name": "Farmers & ranchers",
+      "kicker": "Farmers & Ranchers",
+      "title": "For Farmers & Ranchers",
+      "headline": "Selling land or acreage? Keep more of it working.",
+      "metaDesc": "Farmers and ranchers selling land: defer the capital-gains tax with a 1031 exchange into diversified, income-producing real estate held through DSTs.",
+      "lead": "Farmland and ranch land that has appreciated over decades can carry an enormous embedded gain. A 1031 exchange lets you sell and reinvest into income-producing real estate, deferring the tax and turning a hard-to-manage asset into passive income.",
+      "pains": [
+        "Your land has appreciated dramatically and a sale would trigger a substantial capital-gains bill.",
+        "You're ready to step back from farming or ranching but want your equity to keep producing income.",
+        "You'd like to diversify out of a single parcel and simplify what you pass to the next generation."
+      ],
+      "helpIntro": "<p>Farmland and ranch land are real property eligible for a 1031 exchange. We help you exchange appreciated acreage into fractional interests in diversified, professionally managed real estate, so the proceeds keep working without an immediate tax hit.</p>",
+      "helpPoints": [
+        "Exchange raw or leased land into income-producing DST interests across multiple sectors and states.",
+        "Diversify a single large parcel into a portfolio, reducing concentration risk.",
+        "Coordinate with your CPA on any separate state farm capital-gain exclusions before you sell."
+      ],
+      "callout": "Selling land often creates one of the largest gains a family will ever realize. A properly structured 1031 exchange can defer the federal tax and depreciation recapture in full.",
+      "faq": [
+        {
+          "q": "Is farmland eligible for a 1031 exchange?",
+          "a": "Yes. Farmland, ranch land, and other real property held for investment or business use qualify as like-kind property and can be exchanged into other real estate, including DST interests."
+        },
+        {
+          "q": "Can I exchange land into income-producing property?",
+          "a": "Yes. Like-kind for real estate is broad &mdash; raw land can be exchanged into apartments, industrial, net-lease, or other income real estate held through a DST."
+        },
+        {
+          "q": "What about the state tax on my land sale?",
+          "a": "A 1031 exchange defers state tax in the states that conform, which is nearly all of them. Some states also offer separate capital-gain exclusions for farm assets; weigh both with your CPA."
+        }
+      ],
+      "card": "Exchange appreciated farmland into diversified, income-producing real estate and keep more of the proceeds working."
+    },
+    {
+      "slug": "business-owners",
+      "name": "Business owners",
+      "kicker": "Business Owners",
+      "title": "For Business Owners",
+      "headline": "Selling business real estate? Defer the real estate gain.",
+      "metaDesc": "Selling your business or its building? Defer the real estate gain with a 1031 exchange of the real property into passive, professionally managed DST real estate.",
+      "lead": "When you sell a business or the building it operates in, the real-property portion of the sale can qualify for a 1031 exchange, letting you defer a substantial tax bill and redeploy that equity into passive, income-producing real estate.",
+      "pains": [
+        "You're selling your company or its real estate and facing a large gain on the building.",
+        "You want to keep the real estate equity invested without taking on another active property.",
+        "You need the exchange coordinated alongside a complex business-sale timeline."
+      ],
+      "helpIntro": "<p>Real estate held for business use is like-kind property for 1031 purposes, even when the operating business is sold separately. We help you exchange the real property into fractional interests in professionally managed real estate and coordinate with your deal team and qualified intermediary.</p>",
+      "helpPoints": [
+        "Separate the real estate from the business sale and 1031-exchange the property into passive DST interests.",
+        "Redeploy equity into diversified, income-producing real estate without active management.",
+        "Coordinate timing with your M&amp;A advisor, CPA, and attorney to preserve the exchange."
+      ],
+      "callout": "Only the real property qualifies for 1031 treatment &mdash; the operating business, goodwill, and equipment do not. Structure the sale so the real estate can be exchanged separately.",
+      "faq": [
+        {
+          "q": "Can I 1031-exchange the building my business operates in?",
+          "a": "Yes, if the real property was held for business or investment use. The building can be exchanged into like-kind real estate even when the operating business is sold in the same transaction, provided the deal is structured correctly."
+        },
+        {
+          "q": "Does the whole sale qualify?",
+          "a": "No. A 1031 exchange applies only to the real property. Goodwill, equipment, inventory, and the business itself are treated separately and are generally taxable."
+        },
+        {
+          "q": "How early should I plan the exchange?",
+          "a": "As early as possible. Engaging the qualified intermediary and identifying replacement property before closing is essential, especially within a complex business sale."
+        }
+      ],
+      "card": "Roll the real estate portion of a business sale into a 1031 exchange and defer a substantial tax bill."
+    },
+    {
+      "slug": "retirees",
+      "name": "Retirees",
+      "kicker": "Retirees",
+      "title": "For Retirees",
+      "headline": "Turn real estate equity into passive retirement income.",
+      "metaDesc": "Retirees: convert appreciated real estate into passive, income-producing property with a 1031 exchange — defer the tax and simplify your estate.",
+      "lead": "As you move into retirement, active real estate can feel like a burden. A 1031 exchange lets you convert appreciated property into passive, income-producing real estate, deferring the tax, simplifying your holdings, and easing the transition to your heirs.",
+      "pains": [
+        "You want dependable income in retirement without managing property.",
+        "Selling outright would trigger a large capital-gains and depreciation-recapture bill.",
+        "You want to simplify your estate and make things easier for your heirs."
+      ],
+      "helpIntro": "<p>We help retirees exchange management-intensive real estate into fractional interests in professionally managed properties designed for income. Your equity stays invested and tax-deferred, and your holdings become simpler to manage and to pass on.</p>",
+      "helpPoints": [
+        "Exchange active rentals into DST interests structured for regular distributions.",
+        "Diversify across property types and regions to spread risk in retirement.",
+        "Simplify estate planning &mdash; heirs may receive a stepped-up basis on inherited interests."
+      ],
+      "callout": "Distributions from DSTs are not guaranteed and depend on the performance of the underlying properties. These are illiquid, long-term investments suited to a portion of a retirement portfolio.",
+      "faq": [
+        {
+          "q": "Is passive real estate income reliable in retirement?",
+          "a": "DSTs are structured to distribute rental income, but distributions are not guaranteed and can vary with property performance. They are long-term, illiquid investments and should be sized appropriately within your overall plan."
+        },
+        {
+          "q": "How does this help my heirs?",
+          "a": "If you continue to defer through exchanges, heirs generally receive a stepped-up basis at death, which can eliminate the deferred gain. Fractional interests are also simpler to divide among heirs than a single building."
+        },
+        {
+          "q": "Are these investments right for everyone?",
+          "a": "No. DST and similar offerings are available only to accredited investors and involve real risk, including loss of principal. They suit a portion of a diversified plan &mdash; review suitability with your advisors."
+        }
+      ],
+      "card": "Convert active real estate into passive monthly income and simplify your estate for the next generation."
+    },
+    {
+      "slug": "advisors-cpas",
+      "name": "Advisors & CPAs",
+      "kicker": "Advisors & CPAs",
+      "title": "For Advisors & CPAs",
+      "headline": "Partner with us on your clients' 1031 exchanges.",
+      "metaDesc": "Advisors and CPAs: partner with an independent firm on client 1031 exchanges — vetted DST, 721, and Opportunity Zone options while you keep the relationship.",
+      "lead": "When your clients sell appreciated real estate, they need vetted, well-structured replacement options, and you need to stay at the center of the relationship. Baker 1031 works alongside financial advisors, CPAs, and attorneys to give clients access to institutional DST, 721, and Opportunity Zone offerings.",
+      "pains": [
+        "Your client is selling real estate and needs a 1031 solution you can stand behind.",
+        "You want institutional-quality replacement options, not a single product pushed by a captive salesperson.",
+        "You need a partner who coordinates cleanly with you, the qualified intermediary, and the client."
+      ],
+      "helpIntro": "<p>We're an independent firm. We help you and your client compare vetted offerings across sponsors, coordinate the exchange timeline, and keep you informed at every step. You stay the trusted advisor; we handle the securities execution.</p>",
+      "helpPoints": [
+        "Access to vetted DST, 721 UPREIT, mineral royalty, and Opportunity Zone offerings from multiple sponsors.",
+        "Coordination with your client's qualified intermediary, CPA, and attorney through the 45- and 180-day windows.",
+        "Educational support and clear documentation so you can advise with confidence."
+      ],
+      "callout": "Securities are offered through Aurora Securities, member FINRA/SIPC. We work alongside your existing advisory relationship, not around it.",
+      "faq": [
+        {
+          "q": "How do you work with a client's existing advisor?",
+          "a": "Collaboratively. We coordinate with the advisor, CPA, attorney, and qualified intermediary, keep everyone informed, and focus on the securities execution while the advisor keeps the overall relationship."
+        },
+        {
+          "q": "What kinds of offerings can my clients access?",
+          "a": "Vetted DST, 721 UPREIT, mineral royalty, and Opportunity Zone offerings from multiple sponsors, available to accredited investors and made only through each sponsor's private placement memorandum."
+        },
+        {
+          "q": "Are these suitable for all clients?",
+          "a": "No. These are illiquid, accredited-investor offerings that involve risk, including loss of principal. Suitability depends on the client's objectives, and we document the process carefully."
+        }
+      ],
+      "card": "Give your clients access to vetted DST, 721, and Opportunity Zone options while you stay at the center of the relationship."
+    }
+  ]
+}

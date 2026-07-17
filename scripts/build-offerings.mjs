@@ -699,6 +699,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
+    ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
     ...offerings.map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
@@ -876,6 +877,66 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   console.log(`Markets: ${count} state/metro pages + hub (${items.length} jurisdictions).`);
 }
 
+/* ---------------- Audiences: generate landing pages + hub from data/audiences.json ---------------- */
+{
+  const ad = JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8"));
+  const items = ad.audiences || [];
+  if (items.length < 3) throw new Error(`Only ${items.length} audiences — refusing to build.`);
+  const tpl = readFileSync(join(ROOT, "audiences", "audience-template.html"), "utf8");
+
+  // Left-nav folder (shared by hub + pages); marks the active audience.
+  const foldersFor = (activeSlug) => {
+    const lis = items.map((a) => `          <li><a${a.slug === activeSlug ? ' class="active"' : ""} href="/audiences/${a.slug}/">${esc(a.name)}</a></li>`).join("\n");
+    return `        <details open><summary>Who We Help</summary><ul>\n${lis}\n        </ul></details>`;
+  };
+
+  // ----- landing pages -----
+  let count = 0;
+  for (const a of items) {
+    const canonical = `${SITE}/audiences/${a.slug}/`;
+    const painsLis = (a.pains || []).map((p) => `          <li>${p}</li>`).join("\n");
+    const helpLis = (a.helpPoints || []).map((p) => `          <li>${p}</li>`).join("\n");
+    const faqHtml = (a.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
+    const jsonld = JSON.stringify({
+      "@context": "https://schema.org", "@type": "FAQPage",
+      mainEntity: (a.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
+    });
+
+    let html = tpl;
+    // head — function replacers so any `$` in copy is never read as a backreference
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
+    html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
+    html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // audience pages are public/indexable
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    // content — marker-based put()
+    html = put(html, "<!-- A:CRUMB -->", "<!-- /A:CRUMB -->", esc(a.name), a.slug);
+    html = put(html, "<!-- A:FOLDERS -->", "<!-- /A:FOLDERS -->", foldersFor(a.slug), a.slug);
+    html = put(html, "<!-- A:KICKER -->", "<!-- /A:KICKER -->", esc(a.kicker), a.slug);
+    html = put(html, "<!-- A:H1 -->", "<!-- /A:H1 -->", esc(a.headline), a.slug);
+    html = put(html, "<!-- A:META -->", "<!-- /A:META -->", "July 2026", a.slug);
+    html = put(html, "<!-- A:LEAD -->", "<!-- /A:LEAD -->", esc(a.lead), a.slug);
+    html = put(html, "<!-- A:PAINS -->", "<!-- /A:PAINS -->", painsLis, a.slug);
+    html = put(html, "<!-- A:HELPINTRO -->", "<!-- /A:HELPINTRO -->", a.helpIntro, a.slug);
+    html = put(html, "<!-- A:HELPPOINTS -->", "<!-- /A:HELPPOINTS -->", helpLis, a.slug);
+    html = put(html, "<!-- A:CALLOUT -->", "<!-- /A:CALLOUT -->", esc(a.callout), a.slug);
+    html = put(html, "<!-- A:FAQ -->", "<!-- /A:FAQ -->", faqHtml, a.slug);
+
+    const dir = join(ROOT, "audiences", a.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(join(dir, "index.html"), html);
+    count++;
+  }
+
+  // ----- hub (fills the sidebar folder + card grid in audiences.html) -----
+  let hub = readFileSync(join(ROOT, "audiences.html"), "utf8");
+  const cards = items.map((a) => `          <a href="/audiences/${a.slug}/"><span class="tag">${esc(a.kicker)}</span><h3>${esc(a.name)}</h3><p>${esc(a.card || a.lead)}</p><span class="go">Learn more &rarr;</span></a>`).join("\n");
+  hub = put(hub, "<!-- AUD:FOLDERS -->", "<!-- /AUD:FOLDERS -->", foldersFor(null), "audiences.html");
+  hub = put(hub, "<!-- AUD:LIST -->", "<!-- /AUD:LIST -->", cards, "audiences.html");
+  writeFileSync(join(ROOT, "audiences.html"), hub);
+  console.log(`Audiences: ${count} landing pages + hub (${items.length} audiences).`);
+}
+
 /* ---------------- Publish directory (dist/) ----------------
    Only the public whitelist is served; templates, partials, docs, kindeSrc,
    scripts and functions never reach the CDN. */
@@ -899,10 +960,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   }
   // Templates are authoring scaffolds — never publish them, even under a whitelisted dir.
   let stripped = 0;
-  // NOTE: audiences/audience-template.html is intentionally NOT stripped yet — the
-  // audiences hub links to it as a live preview until real audience pages are
-  // generated. It is noindex and absent from the sitemap, so it stays out of search.
-  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html"]) {
+  for (const rel of ["glossary/term-template.html", "markets/state-template.html", "learn/article-template.html", "audiences/audience-template.html"]) {
     const p = join(dist, rel);
     if (existsSync(p)) { rmSync(p); stripped++; }
   }
