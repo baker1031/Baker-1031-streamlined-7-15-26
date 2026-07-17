@@ -23,7 +23,8 @@
 <meta name="twitter:image" content="https://baker1031.com/assets/og-card.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
- {"@type":"FinancialService","@id":"https://baker1031.com/#org","name":"Baker 1031 Investments","url":"https://baker1031.com/","logo":"https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png","image":"https://baker1031.com/assets/og-card.png","description":"Founder-led real estate securities firm helping accredited investors complete 1031 exchanges using institutional Delaware Statutory Trust (DST) properties, 721 UPREIT exchanges, Opportunity Zone funds, and mineral royalties.","telephone":"+1-415-579-1660","email":"invest@baker1031.com","address":{"@type":"PostalAddress","streetAddress":"650 California Street","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94108","addressCountry":"US"},"areaServed":"US"},
+ {"@type":"FinancialService","@id":"https://baker1031.com/#org","name":"Baker 1031 Investments","url":"https://baker1031.com/","logo":"https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png","image":"https://baker1031.com/assets/og-card.png","description":"Founder-led real estate securities firm helping accredited investors complete 1031 exchanges using institutional Delaware Statutory Trust (DST) properties, 721 UPREIT exchanges, Opportunity Zone funds, and mineral royalties.","telephone":"+1-415-579-1660","email":"invest@baker1031.com","address":{"@type":"PostalAddress","streetAddress":"650 California Street","addressLocality":"San Francisco","addressRegion":"CA","postalCode":"94108","addressCountry":"US"},"areaServed":"US","founder":{"@id":"https://baker1031.com/#jerry"},"knowsAbout":["1031 Exchange","Delaware Statutory Trust","721 UPREIT Exchange","Opportunity Zone Fund","Mineral Royalties","REIT","Capital Gains Tax Deferral"]},
+ {"@type":"Person","@id":"https://baker1031.com/#jerry","name":"Gerald F. \"Jerry\" Baker, III","jobTitle":"Founder & Principal","worksFor":{"@id":"https://baker1031.com/#org"},"knowsAbout":["1031 Exchange","Delaware Statutory Trust","721 UPREIT Exchange","Opportunity Zone Fund","Real Estate Securities"]},
  {"@type":"WebSite","@id":"https://baker1031.com/#website","url":"https://baker1031.com/","name":"Baker 1031 Investments","publisher":{"@id":"https://baker1031.com/#org"}}
 ]}
 </script>
@@ -2278,6 +2279,7 @@
         Cal.ns[ns]("on", {
           action: "bookingSuccessful",
           callback: function () {
+            if (window.gtag) gtag('event', 'schedule', { method: 'cal_com', event_type: ns, currency: 'USD', value: 1 });
             var email = form.elements["email"].value;
             // Account provisioning happens server-side via the Cal.com
             // booking webhook — nothing to call from the browser.
@@ -2399,6 +2401,7 @@
         form.style.display = 'none';
         progress.style.display = 'none';
         thanks.classList.add('show');
+        if (window.gtag) gtag('event', 'generate_lead', { method: 'access_request_form', currency: 'USD', value: 1 });
         if (!route) return; // design-mode skip preview: plain thank-you, no calendar
         document.querySelector('.modal').classList.add('modal-wide');
         var isConsult = route === 'consultation';

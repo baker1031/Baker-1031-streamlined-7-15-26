@@ -33,7 +33,70 @@ const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=
 const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(DOCS_TAB)}`;
 const SITE = "https://baker1031.com";
 
+/* ---------------- Shared SEO / structured-data helpers ---------------- */
+const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
+const OG_IMAGE = `${SITE}/assets/og-card.png`;
+// Canonical entity nodes reused by @id across the whole graph (dedupes for LLMs/Google).
+const ORG_REF = { "@id": `${SITE}/#org` };
+const WEBSITE_REF = { "@id": `${SITE}/#website` };
+const PERSON_REF = { "@id": `${SITE}/#jerry` };
+const PUBLISHER = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments", logo: { "@type": "ImageObject", url: LOGO_URL } };
+const AUTHOR = { "@type": "Person", "@id": `${SITE}/#jerry`, name: 'Gerald F. "Jerry" Baker, III', jobTitle: "Founder & Principal", worksFor: ORG_REF };
 
+const MONTHS = { january: "01", february: "02", march: "03", april: "04", may: "05", june: "06", july: "07", august: "08", september: "09", october: "10", november: "11", december: "12" };
+// "June 2026" -> "2026-06-01"; falls back to a sane default.
+function isoDate(updated) {
+  const m = String(updated || "").match(/([A-Za-z]+)\s+(\d{4})/);
+  if (m && MONTHS[m[1].toLowerCase()]) return `${m[2]}-${MONTHS[m[1].toLowerCase()]}-01`;
+  return "2026-06-01";
+}
+// BreadcrumbList JSON-LD from an ordered [name, url] trail (url null = current page).
+function breadcrumbLd(trail) {
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map(([name, url], i) => ({ "@type": "ListItem", position: i + 1, name, ...(url ? { item: url } : {}) })),
+  };
+}
+function graphLd(nodes) {
+  return `<script type="application/ld+json">${JSON.stringify({ "@context": "https://schema.org", "@graph": nodes.filter(Boolean) })}</script>`;
+}
+
+/* ---------------- Internal-linking dictionary (glossary/markets/calculators) ----------------
+   Auto-links the first mention of a glossary term / state / calculator in article
+   body prose. Longest-surface-first so "Delaware Statutory Trust" beats "Delaware". */
+function buildLinkDict() {
+  const entries = [];
+  const push = (surface, url, key, priority) => { if (surface && surface.length >= 3) entries.push({ surface, url, key, priority }); };
+  try {
+    const gloss = JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms || [];
+    for (const t of gloss) {
+      const url = `${SITE}/glossary/${t.slug}/`;
+      const base = t.term.replace(/\s*\([^)]*\)\s*/g, " ").trim();
+      if (/ vs\.? /i.test(base)) continue; // "DST vs. TIC" never appears verbatim
+      push(base, url, `g:${t.slug}`, 1);
+      const paren = (t.term.match(/\(([^)]+)\)/) || [])[1];
+      if (paren && /^[A-Za-z][A-Za-z0-9 &/-]*$/.test(paren) && !/ vs\.? /i.test(paren)) push(paren.trim(), url, `g:${t.slug}`, 1);
+    }
+    const ALIAS = { DST: "delaware-statutory-trust", QI: "qualified-intermediary", QOF: "qualified-opportunity-fund", TIC: "tenants-in-common-tic", NNN: "triple-net-lease-nnn", "OP units": "op-units", "1031 exchange": "1031-exchange" };
+    const gslugs = new Set(gloss.map((t) => t.slug));
+    for (const [surface, slug] of Object.entries(ALIAS)) if (gslugs.has(slug)) push(surface, `${SITE}/glossary/${slug}/`, `g:${slug}`, 1);
+  } catch {}
+  try {
+    const cals = JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators || [];
+    for (const c of cals) push(`${c.name}`, `${SITE}/calculators/${c.slug}/`, `c:${c.slug}`, 2);
+  } catch {}
+  try {
+    const mk = JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions || [];
+    for (const j of mk) push(j.name, `${SITE}/markets/${j.slug}/`, `m:${j.slug}`, 3);
+  } catch {}
+  // longest surface first; tie-break by priority (glossary < calc < market)
+  entries.sort((a, b) => b.surface.length - a.surface.length || a.priority - b.priority);
+  const bySurface = new Map();
+  for (const e of entries) { const k = e.surface.toLowerCase(); if (!bySurface.has(k)) bySurface.set(k, e); }
+  const alts = entries.map((e) => e.surface.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+  const re = alts ? new RegExp(`(?<![\\w-])(${alts})(?:'s|’s|es|s)?(?![\\w-])`, "gi") : null;
+  return { re, bySurface };
+}
 
 /* ---------------- Partial injection (footer etc.) ----------------
    partials/*.html are the single source of truth; every page keeps its
@@ -694,6 +757,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   const urls = [
     { loc: `${SITE}/`, priority: "1.0" },
     { loc: `${SITE}/learn.html`, priority: "0.6" },
+    { loc: `${SITE}/performance.html`, priority: "0.6" },
     { loc: `${SITE}/glossary.html`, priority: "0.6" },
     { loc: `${SITE}/markets.html`, priority: "0.6" },
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
@@ -712,6 +776,44 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map((u) => `  <url><loc>${esc(u.loc)}</loc><priority>${u.priority}</priority></url>`).join("\n")}\n</urlset>\n`;
   writeFileSync(join(ROOT, "sitemap.xml"), sitemap);
   console.log(`Wrote sitemap.xml (${urls.length} URLs)`);
+}
+
+/* ---------------- llms.txt (curated index for AI / LLM crawlers) ----------------
+   The llmstxt.org convention: a markdown map of the site's most useful pages so
+   LLMs can find authoritative content quickly. Generated from the live data. */
+{
+  const arts = JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8"));
+  const gloss = JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms || [];
+  const cals = JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators || [];
+  const mkts = JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions || [];
+  const auds = JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences || [];
+  const byPillarName = {};
+  for (const a of arts) (byPillarName[a.pillarName] || (byPillarName[a.pillarName] = [])).push(a);
+  const line = (title, url, note) => `- [${title}](${SITE}${url})${note ? `: ${note}` : ""}`;
+
+  let t = `# Baker 1031 Investments\n\n`;
+  t += `> Founder-led real-estate securities firm helping accredited investors defer capital-gains tax through 1031 exchanges into institutional Delaware Statutory Trust (DST) properties, 721 UPREIT exchanges, Opportunity Zone funds, and mineral royalties. All educational content below is written by Gerald F. "Jerry" Baker, III and reviewed for compliance.\n\n`;
+  t += `Securities are offered through Aurora Securities, Inc. (member FINRA/SIPC). This is educational information, not an offer, recommendation, or tax/legal advice; consult your own CPA and attorney.\n\n`;
+  t += `## Key pages\n\n`;
+  t += [
+    line("Home", "/", "firm overview and strategies"),
+    line("Learn (research library)", "/learn.html", `${arts.length} in-depth articles and guides`),
+    line("Glossary", "/glossary.html", `${gloss.length} plain-English 1031/DST/REIT/OZ terms`),
+    line("Calculators", "/calculators.html", `${cals.length} free interactive tax/yield tools`),
+    line("Markets by state", "/markets.html", `${mkts.length} state and metro 1031/DST tax guides`),
+    line("Who we help", "/audiences.html", "guidance by investor situation"),
+    line("Current offerings", "/current-offerings.html", "DST and 1031-eligible offerings (accredited investors)"),
+    line("Performance", "/performance.html", "aggregated full-cycle sponsor track record"),
+    line("Sponsors", "/sponsors.html", "DST sponsor directory"),
+  ].join("\n") + "\n\n";
+  for (const [pillar, list] of Object.entries(byPillarName)) {
+    t += `## ${pillar.replace(/&amp;/g, "&")}\n\n`;
+    t += list.slice(0, 40).map((a) => line(a.title, `/learn/${a.slug}/`)).join("\n") + "\n\n";
+  }
+  t += `## Calculators\n\n` + cals.map((c) => line(c.name, `/calculators/${c.slug}/`)).join("\n") + "\n\n";
+  t += `## Glossary terms\n\n` + gloss.map((g) => line(g.term, `/glossary/${g.slug}/`)).join("\n") + "\n";
+  writeFileSync(join(ROOT, "llms.txt"), t);
+  console.log(`Wrote llms.txt (${t.split("\n").length} lines).`);
 }
 
 
@@ -747,11 +849,15 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       const r = bySlug.get(s); return r ? `<a href="/glossary/${r.slug}/">${esc(r.term)}</a>` : "";
     }).filter(Boolean).join("\n          ");
     const keyPts = (t.keyPoints || []).map((k) => `          <li>${esc(k)}</li>`).join("\n");
-    const jsonld = JSON.stringify({
-      "@context": "https://schema.org", "@type": "DefinedTerm", name: t.term, description: t.lead,
-      inDefinedTermSet: { "@type": "DefinedTermSet", name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary.html` },
-      url: canonical
-    });
+    const jsonld = graphLd([
+      {
+        "@type": "DefinedTerm", name: t.term, description: t.lead,
+        inDefinedTermSet: { "@type": "DefinedTermSet", "@id": `${SITE}/glossary.html#set`, name: "Baker 1031 Investments Glossary", url: `${SITE}/glossary.html` },
+        url: canonical, ...(t.source && t.source.url ? { sameAs: t.source.url } : {}),
+      },
+      { "@type": "WebPage", url: canonical, name: `${t.term} — Glossary`, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US" },
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Glossary", `${SITE}/glossary.html`], [t.term, null]]),
+    ]);
 
     const srcAnchor = `<a href="${esc(t.source.url)}" target="_blank" rel="noopener">${esc(t.source.label)}</a>`;
     const metaLine = `By <a href="#author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated July 2026 &middot; Reviewed by Aurora Securities Compliance`;
@@ -762,7 +868,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(t.lead)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // glossary term pages are public/indexable
-    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
     // nested one level deeper (/glossary/<slug>/) → asset paths already absolute (/css, /js) — good
     // content — marker-based put() is fully immune to `$` in the data
     html = put(html, "<!-- T:CRUMB -->", "<!-- /T:CRUMB -->", esc(t.term), t.slug);
@@ -831,10 +937,15 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const kicker = j.type === "metro" ? `Markets &middot; ${esc(j.name)}` : `1031 Exchange &middot; ${esc(j.name)}`;
     const whyLis = (j.why || []).map((w) => `          <li>${esc(w)}</li>`).join("\n");
     const faqHtml = (j.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
-    const jsonld = JSON.stringify({
-      "@context": "https://schema.org", "@type": "FAQPage",
-      mainEntity: (j.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
-    });
+    const placeName = j.name.replace(/&amp;/g, "&");
+    const place = j.type === "metro"
+      ? { "@type": "City", name: placeName, ...(j.stateOf ? { containedInPlace: { "@type": "AdministrativeArea", name: j.stateOf } } : {}) }
+      : { "@type": "AdministrativeArea", name: placeName, containedInPlace: { "@type": "Country", name: "United States" } };
+    const jsonld = graphLd([
+      { "@type": "WebPage", url: canonical, name: `1031 Exchange & DST Investing in ${placeName}`, description: j.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, about: place, dateModified: "2026-07-01", inLanguage: "en-US" },
+      (j.faq || []).length ? { "@type": "FAQPage", mainEntity: j.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Markets", `${SITE}/markets.html`], [placeName, null]]),
+    ]);
 
     let html = tpl;
     // head — function replacers so `$`/`%` in data is never read as a backreference
@@ -842,7 +953,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // market pages are public/indexable
-    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
     // content — marker-based put() (immune to `$` in the data)
     html = put(html, "<!-- M:CRUMB -->", "<!-- /M:CRUMB -->", esc(j.name), j.slug);
     html = put(html, "<!-- M:FOLDERS -->", "<!-- /M:FOLDERS -->", foldersFor(j.slug), j.slug);
@@ -901,10 +1012,11 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const painsLis = (a.pains || []).map((p) => `          <li>${p}</li>`).join("\n");
     const helpLis = (a.helpPoints || []).map((p) => `          <li>${p}</li>`).join("\n");
     const faqHtml = (a.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
-    const jsonld = JSON.stringify({
-      "@context": "https://schema.org", "@type": "FAQPage",
-      mainEntity: (a.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
-    });
+    const jsonld = graphLd([
+      { "@type": "WebPage", url: canonical, name: a.title || a.name, description: a.metaDesc, isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, audience: { "@type": "Audience", audienceType: a.name }, dateModified: "2026-07-01", inLanguage: "en-US" },
+      (a.faq || []).length ? { "@type": "FAQPage", mainEntity: a.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
+      breadcrumbLd([["Home", `${SITE}/`], ["Who We Help", `${SITE}/audiences.html`], [a.name, null]]),
+    ]);
 
     let html = tpl;
     // head — function replacers so any `$` in copy is never read as a backreference
@@ -912,7 +1024,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // audience pages are public/indexable
-    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
     // content — marker-based put()
     html = put(html, "<!-- A:CRUMB -->", "<!-- /A:CRUMB -->", esc(a.name), a.slug);
     html = put(html, "<!-- A:FOLDERS -->", "<!-- /A:FOLDERS -->", foldersFor(a.slug), a.slug);
@@ -976,10 +1088,11 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const ids = JSON.stringify((c.fields || []).map((f) => f.id));
     const notesLis = (c.notes || []).map((n) => `          <li>${n}</li>`).join("\n");
     const faqHtml = (c.faq || []).map((f) => `          <details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n");
-    const jsonld = JSON.stringify({
-      "@context": "https://schema.org", "@type": "FAQPage",
-      mainEntity: (c.faq || []).map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } }))
-    });
+    const jsonld = graphLd([
+      { "@type": "WebApplication", name: c.name, description: c.metaDesc || c.lead, url: canonical, applicationCategory: "FinanceApplication", operatingSystem: "Any", isPartOf: WEBSITE_REF, offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: PUBLISHER },
+      (c.faq || []).length ? { "@type": "FAQPage", mainEntity: c.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) } : null,
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], ["Calculators", `${SITE}/calculators.html`], [c.name, null]]),
+    ]);
     const script =
 `  <script>
     (function () {
@@ -1008,7 +1121,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // calculator pages are public/indexable
-    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => `<script type="application/ld+json">${jsonld}</script>`);
+    html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
     html = put(html, "<!-- C:CRUMB -->", "<!-- /C:CRUMB -->", esc(c.name), c.slug);
     html = put(html, "<!-- C:FOLDERS -->", "<!-- /C:FOLDERS -->", foldersFor(c.slug), c.slug);
     html = put(html, "<!-- C:KICKER -->", "<!-- /C:KICKER -->", esc(c.kicker), c.slug);
@@ -1068,16 +1181,38 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       })
       .join("\n");
 
-  const listHtml = (node) => {
+  const LINK = buildLinkDict();
+  const mkLinkify = (currentUrl) => {
+    if (!LINK.re) return (s) => esc(s);
+    const used = new Set(); let count = 0; const CAP = 12;
+    return (raw) => {
+      LINK.re.lastIndex = 0;
+      let out = "", last = 0, m;
+      while ((m = LINK.re.exec(raw))) {
+        const whole = m[0];
+        const entry = LINK.bySurface.get(m[1].toLowerCase());
+        out += esc(raw.slice(last, m.index));
+        last = m.index + whole.length;
+        if (!entry || entry.url === currentUrl || used.has(entry.key) || count >= CAP) { out += esc(whole); continue; }
+        used.add(entry.key); count++;
+        out += `<a href="${entry.url.replace(SITE, "")}">${esc(whole)}</a>`;
+      }
+      out += esc(raw.slice(last));
+      return out;
+    };
+  };
+
+  const listHtml = (node, lk) => {
+    const f = lk || esc;
     const tag = node.t === "ol" ? "ol" : "ul";
     const lis = node.items
       .map((it) => {
         // bold a lead-in term when the item is "Term — description" or "Term. Description"
         let m = /^(.{2,45}?)\s+[—–]\s+(.+)$/.exec(it);
-        if (m) return `          <li><strong>${esc(m[1])}</strong> &mdash; ${esc(m[2])}</li>`;
+        if (m) return `          <li><strong>${esc(m[1])}</strong> &mdash; ${f(m[2])}</li>`;
         m = /^([A-Z][\w'’&/ -]{1,38}?)\.\s+(.+)$/.exec(it);
-        if (m && m[1].split(/\s+/).length <= 4) return `          <li><strong>${esc(m[1])}</strong>. ${esc(m[2])}</li>`;
-        return `          <li>${esc(it)}</li>`;
+        if (m && m[1].split(/\s+/).length <= 4) return `          <li><strong>${esc(m[1])}</strong>. ${f(m[2])}</li>`;
+        return `          <li>${f(it)}</li>`;
       })
       .join("\n");
     return `        <${tag}>\n${lis}\n        </${tag}>`;
@@ -1108,24 +1243,26 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     }
     return `        <ul class="learn-contact">\n${lis.join("\n")}\n        </ul>`;
   };
-  const blockHtml = (p) => {
-    if (typeof p === "string") return `        <p>${esc(p)}</p>`;
+  const blockHtml = (p, lk) => {
+    if (typeof p === "string") return `        <p>${(lk || esc)(p)}</p>`;
     if (p.t === "stats") return statHtml(p);
     if (p.t === "contact") return contactHtml(p);
-    return listHtml(p);
+    return listHtml(p, lk);
   };
+  const pillarLabel = Object.fromEntries(PILLARS.map(([k, label]) => [k, label]));
 
   let count = 0;
   for (let i = 0; i < articles.length; i++) {
     const a = articles[i];
     const canonical = `${SITE}/learn/${a.slug}/`;
+    const lk = mkLinkify(canonical); // per-article: first-occurrence links, capped
 
     // ----- article inner -----
     const parts = [];
     parts.push(`        <div class="kicker">${esc(a.kicker)}</div>`);
     parts.push(`        <h1>${esc(a.title)}</h1>`);
     parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${esc(a.updated)} &middot; ${a.readMin} min read</div>`);
-    for (const p of a.lead) parts.push(blockHtml(p));
+    for (const p of a.lead) parts.push(blockHtml(p, lk));
     if (a.takeaways && a.takeaways.length) {
       parts.push(`        <div class="takeaways"><strong>Key takeaways</strong><ul>${a.takeaways.map((t) => `<li>${esc(t)}</li>`).join("")}</ul></div>`);
     }
@@ -1133,19 +1270,30 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
       const hasBlocks = s.paras.length > 0;
       if (s.heading && hasBlocks) {
         parts.push(`        <h2>${esc(s.heading)}</h2>`);
-        for (const p of s.paras) parts.push(blockHtml(p));
+        for (const p of s.paras) parts.push(blockHtml(p, lk));
       } else if (s.heading) {
         parts.push(`        <p>${esc(s.heading)}</p>`); // heading with no body — demote to paragraph
       } else {
-        for (const p of s.paras) parts.push(blockHtml(p));
+        for (const p of s.paras) parts.push(blockHtml(p, lk));
       }
     }
     const faq = (a.faq || []).filter((f) => f.a && f.a.length);
     if (faq.length) {
       parts.push(`        <h2 class="faq-h">Frequently asked questions</h2>`);
       for (const f of faq) {
-        parts.push(`        <details class="faq"><summary>${esc(f.q)}</summary>${f.a.map((p) => `<p>${esc(p)}</p>`).join("")}</details>`);
+        parts.push(`        <details class="faq"><summary>${esc(f.q)}</summary>${f.a.map((p) => `<p>${lk(p)}</p>`).join("")}</details>`);
       }
+    }
+    // ----- related in-pillar block -----
+    const sibs = byPillar[a.pillar] || [];
+    const j = sibs.findIndex((s) => s.slug === a.slug);
+    const rel = [];
+    for (let d = 1; rel.length < 4 && d < sibs.length; d++) {
+      const s = sibs[(j + d) % sibs.length];
+      if (s.slug !== a.slug && !rel.includes(s)) rel.push(s);
+    }
+    if (rel.length) {
+      parts.push(`        <div class="learn-related"><h2>Related in ${pillarLabel[a.pillar]}</h2><ul>${rel.map((s) => `<li><a href="/learn/${s.slug}/">${esc(s.title)}</a></li>`).join("")}</ul></div>`);
     }
     const prev = i > 0 ? articles[i - 1] : null;
     const next = i < articles.length - 1 ? articles[i + 1] : null;
@@ -1157,25 +1305,32 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     parts.push(footNav);
     const articleInner = "\n" + parts.join("\n") + "\n        ";
 
-    // ----- head fields -----
-    const articleLd = JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: a.title,
-      description: a.metaDesc,
-      dateModified: "2026-06-01",
-      author: { "@type": "Person", name: 'Gerald F. "Jerry" Baker, III' },
-      publisher: { "@type": "Organization", name: "Baker 1031 Investments" },
-      mainEntityOfPage: canonical,
-    });
-    const faqLd = faq.length
-      ? `<script type="application/ld+json">${JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "FAQPage",
-          mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })),
-        })}</script>`
-      : "";
-    const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><script type="application/ld+json">${articleLd}</script>${faqLd}`;
+    // ----- head fields: Article + FAQPage + BreadcrumbList in one @graph -----
+    const dateM = isoDate(a.updated);
+    const nodes = [
+      {
+        "@type": ["Article", "BlogPosting"],
+        headline: a.title,
+        description: a.metaDesc,
+        datePublished: dateM,
+        dateModified: dateM,
+        author: AUTHOR,
+        publisher: PUBLISHER,
+        image: OG_IMAGE,
+        url: canonical,
+        mainEntityOfPage: canonical,
+        inLanguage: "en-US",
+        articleSection: (a.pillarName || pillarLabel[a.pillar] || "").replace(/&amp;/g, "&"),
+        wordCount: a.words || undefined,
+        timeRequired: `PT${a.readMin || 5}M`,
+        isPartOf: WEBSITE_REF,
+      },
+      faq.length
+        ? { "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })) }
+        : null,
+      breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn.html`], [a.title, null]]),
+    ];
+    const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
     let html = tpl;
     html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} &mdash; Baker 1031 Investments</title>`);
@@ -1228,7 +1383,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     "calculators.html", "calculators",
     "sponsors.html", "sponsors",
     "offerings", "data", "css", "js", "assets", "documents",
-    "sitemap.xml", "robots.txt"
+    "sitemap.xml", "robots.txt", "llms.txt"
   ];
   let copied = 0;
   for (const item of COPY) {

@@ -13,7 +13,8 @@
   /* Ink (text) */
   --ink:      #2f3237;   /* primary text */
   --ink-soft: #4a4a4a;   /* body / secondary text */
-  --muted: #767b85;   /* labels, captions, fine print */
+  --muted: #5f646e;   /* labels, captions, fine print (AA 4.5:1 on white) */
+  --muted-strong: #565b64;   /* uppercase headings, fine legal print */
 
   /* Surfaces & lines */
   --hairline: #e4e4e4;   /* borders and dividers */
@@ -102,5 +103,38 @@
     max-height: 62vh !important;
     overflow-y: auto;
     margin-bottom: 1.5rem;
+  }
+}
+
+/* Accessibility: a visible keyboard focus ring on every interactive element,
+   site-wide (many custom controls reset the UA outline). */
+:focus-visible { outline: 2px solid var(--navy); outline-offset: 2px; border-radius: 2px; }
+
+/* Contrast fixes for grays that were hard-coded in page <style> blocks below
+   the WCAG AA threshold. tokens.css loads first, so !important applies them. */
+.site-footer .footer-disclosure p { color: #565b64 !important; } /* was #8a8f99 (3.3:1) */
+.site-footer h5 { color: #666b74 !important; }                    /* was #9aa0ab (2.6:1) */
+
+/* Soft gate (Learn + Performance) — injected by auth.js for signed-out humans
+   only. Content stays in the DOM for crawlers/LLMs; this is a dismissible
+   registration prompt, not an intrusive interstitial. */
+#soft-gate { position: fixed; inset: 0; z-index: 9000; display: flex; align-items: center; justify-content: center; padding: 1.5rem; background: rgba(20,26,38,0.55); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
+#soft-gate .soft-gate-card { background: #fff; border-radius: 14px; max-width: 26rem; width: 100%; padding: 2rem 1.9rem; box-shadow: 0 24px 60px rgba(9,14,26,0.28); text-align: center; }
+#soft-gate .soft-gate-kicker { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; color: var(--navy); margin-bottom: 0.6rem; }
+#soft-gate h2 { font-size: 1.3rem; font-weight: 800; color: var(--ink); margin: 0 0 0.6rem; letter-spacing: -0.01em; }
+#soft-gate p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-soft); margin: 0 0 1.3rem; }
+#soft-gate .soft-gate-btn { display: block; width: 100%; background: var(--navy); color: #fff; border: none; border-radius: 8px; padding: 0.8rem 1rem; font: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+#soft-gate .soft-gate-btn:hover { background: var(--navy-dark); }
+#soft-gate .soft-gate-dismiss { display: block; width: 100%; background: none; border: none; color: var(--muted); font: inherit; font-size: 0.85rem; font-weight: 600; margin-top: 0.8rem; cursor: pointer; }
+#soft-gate .soft-gate-dismiss:hover { color: var(--navy); text-decoration: underline; }
+
+/* Print deterrent: printing a page shows a notice instead of the content.
+   Screen reading/selection is unaffected; crawlers ignore print styles. */
+@media print {
+  body * { visibility: hidden !important; }
+  body::after {
+    visibility: visible; content: "© Baker 1031 Investments — this content is not available for printing. Visit baker1031.com.";
+    position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+    padding: 2rem; text-align: center; font-family: -apple-system, sans-serif; font-size: 14pt; color: #2b3a5f;
   }
 }

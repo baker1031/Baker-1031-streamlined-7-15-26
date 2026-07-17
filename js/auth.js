@@ -18,6 +18,43 @@
    - Allowed logout URLs:    https://<your-domain>/
    ============================================================ */
 
+/* ---------- Google Analytics 4 (loaded on every page via this shared module) ---------- */
+(function loadGA() {
+  var id = "G-P29LR49RL8";
+  if (window.gtag) return;
+  var s = document.createElement("script");
+  s.async = true;
+  s.src = "https://www.googletagmanager.com/gtag/js?id=" + id;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = function () { window.dataLayer.push(arguments); };
+  window.gtag("js", new Date());
+  window.gtag("config", id);
+})();
+
+/* ---------- Light content-protection deterrents ----------
+   Best-effort deterrents only. These run in the browser AFTER load, so they do
+   NOT affect performance meaningfully, do NOT touch crawlers/LLMs (bots don't
+   execute JS), and leave text selection/keyboard accessibility intact.
+   NOTE: a browser fundamentally cannot block OS screenshots, screen recording,
+   or screen-sharing, and dev-tools "blocking" is unreliable + hurts perf, so
+   those are intentionally omitted (per the no-performance-impact requirement). */
+(function contentProtection() {
+  try {
+    // Disable right-click context menu and image drag-to-save
+    document.addEventListener("contextmenu", function (e) { e.preventDefault(); }, { capture: true });
+    document.addEventListener("dragstart", function (e) { if (e.target && e.target.tagName === "IMG") e.preventDefault(); });
+    // Best-effort intercept of save/print/devtools shortcuts (OS-level capture cannot be blocked)
+    document.addEventListener("keydown", function (e) {
+      var k = (e.key || "").toLowerCase();
+      var mod = e.ctrlKey || e.metaKey;
+      if (mod && (k === "s" || k === "p")) { e.preventDefault(); return false; }
+      if (mod && e.shiftKey && (k === "i" || k === "j" || k === "c")) { e.preventDefault(); return false; }
+      if (k === "printscreen") { try { navigator.clipboard && navigator.clipboard.writeText(""); } catch (_) {} }
+    });
+  } catch (_) {}
+})();
+
 // Local file previews can't do OAuth redirects — skip auth entirely there
 const isLocalPreview = window.location.protocol === "file:";
 
@@ -144,6 +181,39 @@ if (genericLogin) {
 
 const gateEl = document.getElementById("offering-gate");
 const gateLogin = document.getElementById("offering-gate-login");
+
+/* ---------- Soft gate (Learn + Performance) ----------
+   Content stays fully in the DOM (crawlers/LLMs index everything — bots don't
+   run this JS, so they never see the overlay). Only signed-out humans get a
+   dismissible registration prompt, so it's not an intrusive interstitial. */
+function showSoftGate(kinde) {
+  if (document.getElementById("soft-gate")) return;
+  const el = document.createElement("div");
+  el.id = "soft-gate";
+  el.innerHTML =
+    '<div class="soft-gate-card" role="dialog" aria-label="Free access">' +
+    '<div class="soft-gate-kicker">Baker 1031 &middot; Free access</div>' +
+    '<h2>Register for free to keep reading</h2>' +
+    '<p>Create a free investor account for full access to our research library and full-cycle performance data. No cost, no obligation.</p>' +
+    '<button type="button" class="soft-gate-btn" id="soft-gate-register">Register free &rarr;</button>' +
+    '<button type="button" class="soft-gate-dismiss" id="soft-gate-keep">Continue reading</button>' +
+    "</div>";
+  document.body.appendChild(el);
+  document.getElementById("soft-gate-register").addEventListener("click", function () {
+    kinde.register({ app_state: { returnTo: window.location.pathname } });
+  });
+  document.getElementById("soft-gate-keep").addEventListener("click", function () {
+    el.remove();
+    document.documentElement.style.overflow = "";
+  });
+  // reveal after a brief read so it reads as "soft", and never block scroll hard
+  document.documentElement.style.overflow = "hidden";
+}
+function removeSoftGate() {
+  const el = document.getElementById("soft-gate");
+  if (el) el.remove();
+  document.documentElement.style.overflow = "";
+}
 if (gateLogin) {
   gateLogin.addEventListener("click", async function (e) {
     e.preventDefault();
@@ -176,11 +246,18 @@ ready.then(function (s) {
   // Account box (Welcome + Log Out)
   const accountBox = document.querySelector(".account-box");
   if (accountBox) {
-    // The homepage's account-box (#home-account) is a PUBLIC nav, not a gated
-    // portal page — it must never trigger the hard-gate redirect below.
+    // Page gate classification (body[data-gate]): "soft" = Learn/Performance
+    // (overlay prompt, content stays crawlable), "public" = supporting SEO
+    // content (no gate), else hard gate (portal directory). The homepage's
+    // #home-account is always public.
     const isHomeNav = accountBox.id === "home-account";
+    const gateType = document.body.getAttribute("data-gate");
+    const isPublic = isHomeNav || gateType === "public";
+    const isSoft = gateType === "soft" || !!gateEl;
     if (!authed) {
-      if (!gateEl && !isHomeNav) {
+      if (isSoft) {
+        showSoftGate(kinde);
+      } else if (!isPublic) {
         // Portal directory: hard gate — send to Kinde, then back here.
         // Loop breaker: if we already bounced through Kinde seconds ago and
         // still look logged out, stop redirecting instead of flickering.
@@ -196,9 +273,9 @@ ready.then(function (s) {
       // Stale cache (logged out elsewhere): revert to the signed-out nav
       sessionStorage.removeItem("b1031-name");
       applyLoggedOutNav();
-      // Offering pages: the overlay handles the rest
       return;
     }
+    removeSoftGate();
     sessionStorage.removeItem("b1031-auth-redirect");
 
     // Signed in: reveal the full nav and remember the name for instant

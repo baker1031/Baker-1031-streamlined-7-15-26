@@ -57,6 +57,12 @@ function tidy(s) {
   return decodeEntities(s || "")
     .replace(/[ \t]+([.,;:!?)\]])/g, "$1")
     .replace(/([(\[])[ \t]+/g, "$1")
+    // spaces left inside quotes when an inline link was flattened out
+    .replace(/[ \t]+([”’])/g, "$1") // space before a closing curly quote
+    .replace(/([“‘])[ \t]+/g, "$1") // space after an opening curly quote
+    .replace(/(^|\s)'[ \t]+([^']{1,60}?)[ \t]+'(?=[\s.,;:)]|$)/g, "$1'$2'") // ' spaced phrase ' → 'phrase'
+    // duplicate word at a flattened cross-link boundary (safe, unambiguous set)
+    .replace(/\b(our|estate|check|close|potentially)[ \t]+\1\b/gi, "$1")
     .replace(/[ \t]{2,}/g, " ")
     .trim();
 }
