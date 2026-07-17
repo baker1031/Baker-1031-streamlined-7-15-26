@@ -1484,10 +1484,38 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     "/data-center.html": "/performance.html",
     "/contact.html": "/#request-access",
     "/request-access.html": "/#request-access",
+    "/sitemap.html": "/",
+    "/ask-llm.html": "/",
+    // Legal pages: point to the PDFs that exist; the rest fall back to the homepage
+    // footer (which carries the disclosures + PDF links) until real pages are built.
+    "/privacy-policy.html": "/documents/privacy-policy.pdf",
+    "/form-crs.html": "/documents/form-crs.pdf",
+    "/terms.html": "/",
+    "/reg-bi.html": "/",
+    "/dst-suitability-and-finra-reg-bi.html": "/",
+    "/ccpa.html": "/",
+    "/disclosures.html": "/",
+    "/accessibility.html": "/",
+    "/commitment-to-privacy.html": "/",
   };
-  // Legal/functional pages that have no good destination — leave unmapped rather
-  // than misdirect them to Learn (they should get real pages of their own).
-  const NO_REDIRECT = /^\/(privacy-policy|terms|reg-bi|dst-suitability[\w-]*|ccpa|disclosures|accessibility|commitment-to-privacy|sitemap|ask-llm|index)\.html$/i;
+  // Map the old calculator URLs to the 10 new calculators (or the hub).
+  const CALC_MAP = {
+    "1031-exchange-boot-calculator": "boot",
+    "1031-exchange-calculator-estimate-deferred-tax": "capital-gains",
+    "1031-exchange-capital-gains-tax-calculator": "capital-gains",
+    "capital-gains-tax-calculator": "capital-gains",
+    "capital-gains-tax-calculator-property-sales": "capital-gains",
+    "1031-exchange-deadline-calculator-45-180": "deadline",
+    "45-180-day-deadline-calculator": "deadline",
+    "1031-replacement-property-value-calculator": "replacement-debt",
+    "debt-replacement-ltv-calculator": "replacement-debt",
+    "ltv-calculator-1031-debt-matching": "replacement-debt",
+    "cap-rate-cash-on-cash-calculator": "cap-rate",
+    "depreciation-recapture-calculator": "depreciation-recapture",
+    "passive-income-calculator": "cash-on-cash",
+    "royalties-vs-dst-income-calculator": "tax-adjusted-yield",
+    "sell-vs-1031-exchange-calculator": "after-tax-proceeds",
+  };
 
   for (const p of manifest) {
     let raw;
@@ -1498,13 +1526,14 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     if (!/\.html$/.test(from) || from === "/index.html") continue;
     if (existsSync(join(dist, from.replace(/^\//, "")))) continue; // old URL is a real page now (e.g. /sponsors.html) — never redirect it
     if (OVERRIDE[from]) { add(from, OVERRIDE[from]); mapped++; continue; }
-    if (NO_REDIRECT.test(from)) continue;
 
     const candidates = [];
     if (learn.has(p.slug)) candidates.push(`/learn/${p.slug}/`);
     if (p.category === "state") candidates.push(`/markets/${p.slug.replace(/^1031-exchange-/, "")}/`);
     if (p.category === "glossary" && p.slug !== "glossary") candidates.push(`/glossary/${p.slug.replace(/^glossary-/, "")}/`);
     if (p.category === "offering") candidates.push(`/offerings/${p.slug}/`);
+    if (p.category === "calculator" && CALC_MAP[p.slug]) candidates.push(`/calculators/${CALC_MAP[p.slug]}/`);
+    if (p.category === "sponsor") candidates.push(`/sponsors/${p.slug.replace(/^sponsor-/, "")}/`); // upgrades to direct once profiles are built
 
     const dest = candidates.find((c) => exists(c));
     if (dest && dest !== from) { add(from, dest); mapped++; }
@@ -1514,6 +1543,8 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
         p.category === "state" ? "/markets.html" :
         p.category === "glossary" ? "/glossary.html" :
         p.category === "offering" ? "/current-offerings.html" :
+        p.category === "calculator" ? "/calculators.html" :
+        p.category === "sponsor" ? "/sponsors.html" :
         ["article", "guide", "strategy", "detail"].includes(p.category) ? "/learn.html" : null;
       if (hub && from !== hub) { add(from, hub); fallback++; }
     }
