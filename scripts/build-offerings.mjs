@@ -1050,6 +1050,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     ["opportunity-zones", "Opportunity Zones", "QOF timelines, basis step-ups, and how OZ investing compares to a 1031."],
     ["mineral-royalties", "Mineral &amp; Royalty Interests", "Direct-title mineral and royalty interests as 1031-eligible real property."],
     ["taxes-planning", "Taxes &amp; Planning", "Depreciation, estate planning, state considerations, and working with your CPA."],
+    ["firm", "Firm, Fees &amp; Methodology", "How we work, how we&rsquo;re paid, our performance-data methodology, and who we serve."],
   ];
   const byPillar = {};
   for (const [k] of PILLARS) byPillar[k] = [];
