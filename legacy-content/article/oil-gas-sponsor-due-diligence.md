@@ -1,0 +1,131 @@
+---
+url: https://baker1031.com/oil-gas-sponsor-due-diligence.html
+slug: oil-gas-sponsor-due-diligence
+title: "How to Vet an Oil &amp; Gas Drilling Program Sponsor"
+category: article
+words: 4291
+---
+
+How to Vet an Oil &amp; Gas Drilling Program Sponsor | Baker 1031
+Home ❯ Insights ❯ How to Vet an Oil & Gas Drilling Program Sponsor
+How to Vet an Oil & Gas Drilling Program Sponsor
+Back to All Insights
+Oil & Gas Gerald F. "Jerry" Baker, III · Updated June 2026 · 13 min read
+In oil & gas, the operator is everything. Here's how to judge a drilling program's sponsor before you commit — and the red flags that should send you elsewhere.
+In oil and gas, you are buying an operator before you are buying a barrel. You will never see the rock, log the well, or sign the drilling contract. The sponsor does all of it, and the gap between a disciplined operator and a weak or predatory one is the gap between a calculated bet and a near-certain loss. The geology gets the slides in most pitch decks, but the geology rarely sinks an investor. The sponsor does. This memo is the diligence playbook for vetting a drilling-program sponsor: the track record to verify, the well economics to interrogate, the fees and alignment to pin down, and the red flags that should end the conversation.
+Key Takeaways
+The operator's competence and honesty drive your outcome more than the geology or the tax write-off. Spend most of your diligence here.
+Demand the full-cycle track record: completed wells, the dry-hole rate, and the actual cash returned to prior investors, not just glossy projections.
+Pressure-test the well economics. Projections built on an optimistic price deck and a flat decline curve will not survive contact with a real well.
+Read the fee stack line by line. A program that pays the sponsor whether or not the well produces is built against you.
+Alignment is the tell. A sponsor that co-invests on your terms and gets paid after you do is pointed the same direction you are.
+Guaranteed returns, opaque fees, a tax-only pitch, and cold-call solicitation are walk-away signals. One is a caution; several together end it.
+Owners weighing a tax-deferred exit from minerals instead can start with our pillar guide on 1031 exchanges for minerals and royalties .
+Why the operator matters more than the rock
+Start from your actual position in the deal. You are a passive capital provider in a technical, capital-intensive, high-failure-rate business. You cannot interpret the seismic, manage the drilling rig, or control the cost of casing and steel. The operator does every part of that, and so the operator, not the prospect, is what you are really underwriting. Two sponsors can drill the same acreage and produce opposite results, because one budgets honestly, hires real engineers, and controls costs, while the other marks up every line item and walks away once the offering is sold.
+This sector also carries a fraud history that most asset classes do not. Energy programs have been a favorite vehicle for boiler rooms for decades precisely because the geology is opaque, the outcomes are uncertain, and a polished story is easy to tell. Our memo on oil and gas investment risks walks through the dry-hole, commodity-price, and operator risks in detail. The point for diligence is simple: a great prospect run by a bad operator is a bad investment, while a fair prospect run by a disciplined operator can work. Put your effort into the people and the structure before you spend a minute admiring the map.
+One more framing helps. In oil and gas you are usually offered a working interest , which means you bear a share of the drilling and operating costs and the operating risk. That is the opposite of a passive royalty. A working interest is non-passive, its intangible drilling cost deductions can offset active or W-2 income, and it can also write you a bill in a capital call you did not expect. Because the operator controls those costs, the operator controls how much that working interest helps or hurts you. The structure raises the stakes on sponsor quality rather than lowering them.
+Track record: what to verify, not just read
+Begin with what the sponsor has actually done, measured in completed wells and dollars returned, not in years in business or assets under management. Ask how many programs they have sponsored, how many wells they have drilled and completed, and what share produced commercially. The number that matters most is rarely on the first page of the deck: what did prior investors actually receive in cash, on which programs, over what period? Projections are free to write. Distribution histories are not.
+Insist on the full set, including the programs that disappointed. A sponsor with a real record has losers, because everyone in this business does, and a sponsor who shows you only winners is either new, lucky, or editing. Ask for the vintage years, so you can see whether the wins came in a $90 oil market and the losses came when prices fell. Ask whether the wells they tout are still producing or have already declined to a trickle. A program can look strong in year one and return little over its life if the decline was steep and the price rolled over.
+Then verify independently. Operators file with state oil and gas commissions, and much production data is public. A sponsor's claimed wells can often be checked against state records for spud dates, completion, and production volumes. If a sponsor resists letting you confirm basic facts, treat the resistance as data. The strongest evidence you can get is a long, checkable history of completed wells with documented cash distributions, and the absence of that history is itself an answer.
+Well economics and the numbers behind the projection
+Every drilling program comes with a return projection, and the projection is only as honest as its assumptions. Your job is to take the model apart. Three inputs do most of the damage when they are wrong: the price deck , the decline curve , and the cost-per-well estimate . Get those three honest and the rest of the math tends to follow.
+Start with the price deck, the assumed price of oil and gas across the life of the wells. A projection built on a flat or rising price deck well above the current strip is engineering the answer. Ask the sponsor to show you the projected internal rate of return and payback at today's strip price and at a price 25 to 30 percent lower. If the program only works at an optimistic price, it does not really work; it is a bet on the commodity wearing the costume of an operating business. A credible sponsor models a downside case without being asked.
+Next, the decline curve. Oil and gas wells, especially modern shale wells, produce most of their lifetime volume in the first year or two and then fall off hard. A model that assumes gentle, gradual decline will overstate later-year cash flow badly. Ask what decline assumption the projection uses and whether it matches offset wells in the same formation. Then the cost per well: ask for the authorization for expenditure , the AFE, which is the operator's itemized drilling and completion budget. Compare it to actual costs on the sponsor's prior wells. Overruns are common, and a program that does not budget for them is fragile.
+Finally, ask what payback and what return the sponsor underwrites to, and over what time. A serious answer comes with a range and a set of assumptions you can check. A number with no assumptions behind it is marketing. None of this guarantees an outcome, and nothing in oil and gas does, but a projection you can stress-test is worth far more than a confident headline IRR.
+Geology, the basin, and offset production
+You do not need to become a petroleum geologist, but you should expect the sponsor to explain, in plain terms, why these specific wells are likely to produce. The first question is proven versus speculative. Developmental wells are drilled in or next to fields already producing, where nearby wells, called offsets, show what the rock does. Exploratory or wildcat wells target unproven areas and carry far higher dry-hole risk. Both can have a place, but they are different risk products and should be priced and described differently. A program selling exploratory risk at developmental confidence is mislabeling itself.
+Ask what data supports the prospect: well logs, 3D seismic, and above all offset production from nearby wells in the same formation. Offset production is the closest thing to evidence you will get before the bit turns, because it shows what comparable wells have actually done. Ask which basin and which formation, and whether the sponsor has operated there before. A team drilling its first wells in a new basin is climbing a learning curve on your money. A team repeating a play it has drilled fifty times is a different proposition. Vague geology paired with a confident return number is one of the most reliable warning signs in the whole exercise.
+The team and third-party engineering
+Behind the geology are the people who formed the thesis, and their resumes matter more than the firm's brochure. Look for genuine operating experience : petroleum engineers and geologists who have drilled and completed wells, not just raised funds. Ask who on the team has actually run field operations, how long they have worked together, and what they did in the last price downturn. Downturns separate operators who manage costs from promoters who simply stop returning calls.
+Then look for independent verification. A credible program supports its reserve and economic claims with a third-party reserve report , an engineering estimate of recoverable reserves prepared by an outside firm rather than the sponsor's own staff. Ask who prepared it, when, and to what reserve category. Proved developed reserves are a stronger basis than probable or possible reserves, which are more speculative. A reserve report is not a guarantee, and reserves are estimates that get revised, but an outside engineering opinion is far more useful than the sponsor grading its own homework. If no third party has looked at the numbers, ask why.
+Cost transparency and the fee stack
+Follow the money from your check to the wellhead and count what gets skimmed on the way. Programs use different cost structures, and the difference decides who bears overruns. In a turnkey arrangement the operator drills for a fixed price and eats any overrun, which protects you but can tempt a weak operator to cut corners. In a cost-plus or footage arrangement you bear the overruns, so the operator's cost discipline becomes your problem. Neither is automatically better, but you must know which one you are in.
+Then map the full fee stack. Ask what percentage of your investment is consumed by the upfront load , syndication and offering costs, and selling commissions before a dollar reaches the ground. Ask about ongoing management fees , the operator's overhead charge, any markups on equipment or services bought from sponsor affiliates, and the carried interest or promote the sponsor takes on the upside. The single most useful number is the share of your capital that actually funds drilling versus the share that funds the sponsor. The table below shows how the same questions separate a sponsor worth backing from one worth avoiding.
+What to ask Green-flag sponsor Red-flag sponsor
+Track record Full-cycle results on prior programs, including losers, verifiable against state records Only winners, only recent deals, or no checkable history at all
+Price deck Models today's strip and a 25–30% downside; deal still works Built on a price well above strip; only works if prices rise
+Decline curve Matches offset wells in the same formation Gentle, generic decline that overstates later-year cash flow
+Cost budget (AFE) Itemized, with a contingency, near prior actuals Vague, no contingency, history of large overruns
+Fee stack Load and fees disclosed in full; most capital funds drilling Opaque fees; large share consumed before drilling
+Co-investment Sponsor invests its own money on the same terms Sponsor risks nothing; earns mainly from fees
+Promote timing Sponsor profits after investors reach a return Sponsor paid up front regardless of outcome
+Engineering Independent third-party reserve report provided Sponsor's own numbers only; no outside review
+Illustrative diligence comparison. No single row is decisive; the pattern across rows is what tells you who you are dealing with.
+Alignment: how and when the sponsor gets paid
+The cleanest read on a sponsor is whether it makes money with you by finding oil, or from you by raising and charging fees. Two questions settle it. First, does the sponsor co-invest its own capital in the program on the same terms as you, sharing the downside? Real skin in the game points the sponsor's incentives at the wells rather than at the raise. A sponsor that puts nothing of its own at risk has little reason to care how the wells perform once the offering closes.
+Second, when does the sponsor get paid relative to you? The structure of the promote matters as much as its size. A sponsor that earns its carried interest only after investors have received their capital back, or reached a preferred return, is aligned with your outcome. A sponsor that collects most of its money through upfront loads and management fees gets paid whether the wells produce or not, which means its best day can be the day the offering sells out, not the day the well comes in. Ask for the distribution waterfall in writing and read the order of payments. The order is the alignment.
+Program structure, IDCs, and capital calls
+Understand the legal shape of what you are buying, because it determines both your tax treatment and your downside. Most drilling programs offer a working interest , often held through a general partnership or a joint venture in the drilling phase before converting to a limited partnership. A working interest bears its share of drilling and operating costs and is non-passive, which is what allows its intangible drilling cost deductions to offset active or W-2 income. By contrast, a royalty interest bears no costs, carries no control, and is passive. The two are different instruments with different tax behavior, and a program should be explicit about which one you are getting.
+The tax mechanics are real and worth understanding before you rely on them. Intangible drilling costs typically run 60 to 80 percent of a well's cost and can usually be deducted in the first year, which is why IDCs drive much of the first-year write-off in these programs. Once a well produces, percentage depletion is generally 15 percent of gross income, subject to limits. Whether those losses can offset your W-2 income depends on the working-interest structure and the at-risk and passive rules, so model it with your CPA rather than trusting the brochure. The tax benefits are a feature of a sound investment, never a substitute for one.
+Then read the mechanics that can cost you more than you put in. Ask whether the structure is recourse or non-recourse , and whether you can be subject to a capital call if drilling costs exceed the budget. A working interest in a general partnership phase can expose you to additional assessments, and an investor who budgeted a fixed check can be surprised by a demand for more. Know your maximum exposure before you sign, not after the AFE blows through its estimate.
+The PPM, conflicts, and litigation
+These programs are sold by private placement memorandum to verified accredited investors, and the PPM is where the real story lives, usually in the sections nobody reads. Start with the risk factors. A serious PPM spells out dry-hole risk, commodity-price risk, operator risk, and the prospect of losing your entire investment in plain language. Thin or evasive risk factors are a warning, not a comfort. If the document reads like marketing, the deal is being sold rather than disclosed. Our guides on how to review a PPM and the PPM review checklist walk through the document section by section.
+Read the conflicts of interest disclosure closely. Is the sponsor buying services or equipment from its own affiliates, and at what markup? Is the same operator running other programs that compete for capital, rigs, or the best acreage? Does the sponsor get to allocate wells among programs, and on what basis? These conflicts are not automatically disqualifying, but they should be disclosed and you should understand how they are managed. Then check the litigation and regulatory disclosures and run the principals through the SEC, FINRA BrokerCheck, and your state securities regulator. A history of investor lawsuits or regulatory actions against the people running the program is among the most important facts you can find, and it almost never appears in the slide deck.
+Red flags that should end the conversation
+Guaranteed or "can't-lose" returns. Oil and gas is speculative and can lose everything. Anyone promising a guaranteed return is either misinformed or misrepresenting the deal.
+Opaque fees or evasiveness about what share of your money funds drilling versus the sponsor.
+Projections that only work on an optimistic price deck , with no honest downside case.
+A thin, all-winners, or unverifiable track record , or resistance to letting you confirm wells against public records.
+A tax-write-off pitch with little detail on geology, engineering, or economics. The deduction is not the investment.
+High-pressure or time-limited sales tactics designed to short-circuit diligence.
+Cold-call or boiler-room solicitation , a classic vector for energy fraud, especially toward retirees.
+No sponsor co-investment and a promote paid up front, so the sponsor wins on the raise rather than the result.
+Any one of these warrants caution. Several together warrant walking away. The investor who insists on a verifiable record, an honest model, transparent fees, real alignment, and a readable PPM, and who refuses to be rushed, avoids most of the traps this sector is known for.
+A practical diligence checklist
+Bring these questions to the sponsor and write down the answers. Vague answers, or no answers, are answers in themselves.
+Track record: How many programs and wells have you completed? What did prior investors actually receive in cash, by vintage? Can I verify the wells against state records?
+Economics: What price deck and decline curve does the projection use? Show me the IRR and payback at today's strip and 25 to 30 percent lower. What is the AFE per well, and how did prior wells compare?
+Geology: Developmental or exploratory? Which basin and formation? What offset production supports the prospects, and have you operated here before?
+Team and engineering: Who has run field operations, and for how long together? Who prepared the reserve report, when, and to what reserve category?
+Fees and alignment: What is the full load and fee stack? How much of my capital reaches the ground? Do you co-invest on the same terms, and when do you get paid relative to me?
+Structure: Working interest or royalty? Recourse or non-recourse? Can I face a capital call, and what is my maximum exposure?
+Documents and record: May I read the full PPM, including risk factors and conflicts? Any litigation or regulatory history on the principals? What do BrokerCheck and my state regulator show?
+Run the program by your own CPA and securities attorney before you commit, and make sure it would stand up as an investment even without the tax benefits. The deduction is a feature of a sound deal, never the reason to accept an unsound one.
+Frequently Asked Questions
+What is the single most important thing to vet in an oil and gas sponsor?
+The full-cycle track record. Ask how many wells the sponsor has drilled and completed, what share produced commercially, and what cash prior investors actually received by vintage year. Verify the claimed wells against public state records. Realized results matter far more than projections, and a sponsor who resists verification is telling you something.
+How do I know if a return projection is realistic?
+Take it apart. Ask what price deck it assumes and whether the deal still works at today's strip and 25 to 30 percent lower. Ask whether the decline curve matches offset wells in the same formation. Ask for the AFE, the per-well cost budget, and compare it to the sponsor's prior actuals. A projection you can stress-test is credible; a confident IRR with no assumptions behind it is marketing.
+Why does the operator matter more than the geology?
+Because you are a passive investor and the operator controls everything that determines the result: cost discipline, engineering, completion quality, and honesty about the numbers. A strong operator can make a fair prospect work, and a weak or predatory one can lose money on a good one. The geology gets the slides, but the sponsor decides the outcome.
+Should the sponsor invest its own money in the program?
+Ideally yes, on the same terms as you. Co-investment points the sponsor's incentives at the wells rather than at the fundraise. Equally important is when the sponsor gets paid: a promote earned only after investors get their capital back or hit a preferred return is aligned, while a sponsor paid mainly through upfront loads and fees profits whether or not the wells produce.
+What is the difference between a working interest and a royalty interest?
+A working interest bears a share of the drilling and operating costs and the operating risk, and it is non-passive, so its intangible drilling cost deductions can offset active or W-2 income. A royalty interest bears no costs, carries no control, and is passive. Most drilling programs offer a working interest, which is why sponsor quality and the cost structure matter so much.
+Can I be asked for more money after I invest?
+Possibly. A working interest, especially during a general-partnership drilling phase, can expose you to a capital call if drilling costs exceed the budget, and the structure may be recourse or non-recourse. Ask for your maximum exposure in writing before you sign, rather than assuming your initial check is the end of it.
+What are the clearest red flags in a drilling program?
+Guaranteed-return language, opaque fees, projections that only work on an optimistic price deck, a thin or all-winners track record, a pitch built on the tax write-off, high-pressure sales, no sponsor co-investment, and cold-call solicitation. One alone warrants caution; several together warrant walking away.
+How does the PPM help me vet a sponsor?
+The private placement memorandum is where the real disclosures live. Read the risk factors, which should spell out dry-hole, price, and operator risk plainly; the conflicts of interest, which reveal affiliate markups and competing programs; and the litigation and regulatory history of the principals. Then run the people through SEC, FINRA BrokerCheck, and your state regulator before you commit.
+Glossary
+Operator The firm that drills, completes, and manages the wells. The central determinant of a drilling program's outcome and the main subject of sponsor diligence.
+Sponsor Promote / Carried Interest The share of profits the sponsor earns above its invested capital. Its size and, critically, its timing relative to investor returns signal whether the sponsor is aligned with you.
+Working Interest An ownership interest that bears a share of drilling and operating costs and operating risk. Non-passive, so its IDC deductions can offset active or W-2 income, and it can be subject to capital calls.
+Royalty Interest A right to a share of production revenue that bears no costs and carries no operating control. Passive, with no exposure to drilling or operating expense.
+Net Revenue Interest An owner's share of production revenue after royalties and other burdens are deducted. What you actually keep, as distinct from the gross working interest percentage.
+Reserve Report An engineering estimate of recoverable reserves, ideally prepared by an independent third party, used to support a program's reserve and economic claims.
+Decline Curve The expected drop in a well's production over time. Most wells produce heavily early and fall off fast, so an over-gentle decline assumption overstates later-year cash flow.
+AFE (Authorization for Expenditure) The operator's itemized budget to drill and complete a well. Compared against prior actuals to judge whether cost assumptions are realistic.
+Private Placement Memorandum (PPM) The offering document for a private securities sale to accredited investors, containing the risk factors, conflicts, fees, and disclosures that reveal the real deal.
+Sources & References
+U.S. Securities and Exchange Commission. SEC — Oil and Gas Scams: Common Red Flags and Steps You Can Take to Protect Yourself
+U.S. Securities and Exchange Commission. SEC — Private Placements Under Regulation D, Investor Bulletin
+Cornell Legal Information Institute. 26 U.S. Code § 263 — Intangible drilling and development costs (§ 263(c))
+Baker 1031. Baker 1031 Data Center — sponsor, offering, and program data
+Disclosures
+This article is published by Baker 1031 for general informational and educational purposes only. It is not investment, legal, or tax advice, and is not an offer to sell or a solicitation to buy any security. Sponsor diligence is fact-specific; consult your own CPA and attorney and read the offering documents before acting.
+Every figure and example here is general and illustrative, not a projection or a representation about any specific transaction. Oil and gas and mineral programs are speculative, illiquid securities sold only to verified accredited investors via private placement memorandum, and they are exposed to commodity-price and geologic risk, dry-hole and operator risk, and reserve depletion that can cause loss of principal. Past performance does not guarantee future results, and no return or tax outcome is guaranteed.
+Executive summary audio
+Your browser does not support the audio player. Open the audio summary .
+Explore the Baker 1031 research library
+1031 Exchanges
+DSTs
+721 / UPREITs
+Opportunity Zones
+Mineral & Royalty Interests
+REITs
+Current Offerings
+Sponsor Directory

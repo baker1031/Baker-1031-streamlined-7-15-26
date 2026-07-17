@@ -1,0 +1,128 @@
+---
+url: https://baker1031.com/property-type-multifamily.html
+slug: property-type-multifamily
+title: "Multifamily Properties for 1031 Exchange &amp; DST Investors"
+category: article
+words: 4120
+---
+
+Multifamily Properties for 1031 Exchange &amp; DST Investors | Baker 1031
+Home ❯ Property Types ❯ Multifamily Properties for 1031 Exchange & DST Investors
+Multifamily Properties for 1031 Exchange & DST Investors
+Back to All Property Types
+Property Types Gerald F. "Jerry" Baker, III · Updated June 2026 · 14 min read
+Apartments are the deepest, most-traded property type in the DST world. Steady renter demand and the strongest rent growth of any sector we follow are why so many exchangers land here.
+Multifamily means residential rental property with five or more units: garden-style suburban communities, mid-rise infill buildings, the occasional high-rise. For an investor finishing a 1031 exchange or placing proceeds in a Delaware Statutory Trust , apartments are usually the first asset on the table, and for good reason. People always need somewhere to live, the leases reset every year, and the sector has produced the strongest net-operating-income growth of anything we track. This guide covers what multifamily is, why it dominates the DST shelf, how an apartment DST is built, what the record shows, where the risks sit, and who the asset really suits.
+What multifamily means here
+When investors say multifamily, they mean residential rental property with five or more units under one ownership. That threshold matters. Below it, a duplex or fourplex usually trades and finances like a house. At five units and up, the property is valued like a business, on the income it produces, and it qualifies for the kind of institutional ownership a DST represents.
+The category spans a wide band. On one end sit garden-style communities, two and three stories spread across leafy suburban acreage, the workhorse of the apartment world. In the middle are mid-rise buildings on infill lots closer to job centers. At the top are urban high-rises, which carry higher construction and operating costs and tend to swing harder with the local economy. Most of what reaches the DST market is garden-style and mid-rise product in growing metros, because that is where the demand is steadiest and the management most repeatable.
+What ties the category together is the lease. Apartment leases typically run twelve months, which means the entire rent roll reprices every year. That is the single feature that separates multifamily from the long-lease world of net lease, and it shapes almost everything that follows.
+Why apartments dominate the DST shelf
+Walk through almost any DST marketplace and apartments make up the largest single slice of what is on offer. The depth is not an accident. Multifamily is the most institutionalized property type in the country, with decades of sales data, a deep bench of professional operators, and lenders who understand it cold. Sponsors can assemble apartment portfolios at scale, finance them on good terms, and run them with playbooks that have been refined over many cycles.
+That depth shows up in our own files. Our sponsor track-record database holds 307 full-cycle multifamily deals, far more than any other property type we follow, which tells you both how much apartment product has traded and how much of it has already gone full circle from purchase to sale. Those figures come from sponsor track records across the marketplace we monitor, not Baker 1031's own returns, and past performance does not guarantee future results. We will put numbers to that record further down.
+For an exchanger on a clock, depth is practical, not academic. A deep market means more offerings open at any moment, more variety in geography and strategy, and a better chance of finding a deal that fits an exact replacement amount inside the 45-day identification window. When the menu is thin, investors compromise. With apartments, the menu is rarely thin.
+What keeps the apartments full
+The demand case for multifamily starts with a number that has been a long time in the making: the country has not built enough housing. Estimates of the national shortfall run into the millions of units, the result of more than a decade of underbuilding after the last housing crash. When supply lags household formation by that much for that long, rental demand stays firm even when the broader economy cools.
+Demographics push the same direction. Younger adults are renting longer and buying their first home later, priced out by home values and mortgage rates that have made ownership a stretch in much of the country. At the other end, older households are downsizing out of single-family homes and renting by choice. Both groups land in apartments. High mortgage rates add a near-term tailwind: when buying a house is expensive, the renter pool grows, because the family that would have bought stays put and signs another lease.
+None of this guarantees any single building stays full. Local supply, jobs, and pricing all matter, and we get to the oversupply risk below. The point is broader. The structural demand for rental housing rests on forces, a housing deficit, delayed ownership, an aging population, that move slowly and do not reverse in a quarter.
+Annual leases as an inflation hedge
+Here is where the twelve-month lease earns its keep. Because the whole rent roll resets every year, an apartment owner can move rents to market quickly when costs and prices rise. Compare that with a net-lease asset locked into a fixed bump for fifteen years: when inflation runs hot, the long-lease owner watches real income erode while the apartment owner re-prices. That responsiveness is why multifamily is often described as a natural inflation hedge.
+The record backs the story. Across the multifamily offerings we track in the current market, net-operating-income growth has averaged 33.66 percent, the strongest growth of any sector we follow. That figure reflects what well-run apartment portfolios have done with rents and operations over a hold, and it is the engine behind multifamily's total return. The catch is that the same mechanism runs in reverse. When a metro is oversupplied or jobs soften, annual leases let rents fall just as fast as they rose. The lease is a feature in a strong market and a liability in a weak one, which is why operator skill and market selection carry so much weight here.
+The annual lease is the whole argument for apartments. It lets a good operator chase inflation in real time, and it punishes a bad one just as quickly when a market turns. Gerald F. "Jerry" Baker, III
+Core, core-plus, and value-add
+Not every apartment deal is built the same way. Sponsors sort their strategies into a rough ladder of risk and intended return, and knowing where a given DST sits tells you most of what you need about how it will behave.
+Core deals own stabilized, well-located, newer properties with little debt and little work to do. The return arrives mostly as steady distributions; the swings are small. Core-plus takes a step out: slightly older buildings, a bit more debt, some light upgrades to push rents. Value-add is the active end, buying older or underperforming communities, renovating units, raising rents, and aiming for a larger gain on sale. The trade-off is plain. Value-add can deliver more if the plan works, and it relies on rent growth, renovation budgets, and a sale at a good price, any of which can slip.
+Strategy Leverage Return mix Risk
+Core Low Mostly current income Lower
+Core-plus Moderate Income plus some growth Moderate
+Value-add Higher More from sale, less current Higher
+Where a multifamily DST sits on this ladder shapes its leverage, how much of the return is current cash versus gain on sale, and how hard it gets hit if the plan or the market disappoints.
+Most DSTs sit toward the core and core-plus end, because the structure leaves little room for the active management a deep value-add plan needs. We tell clients to read the business plan and the debt before the photos. A glossy renovation pitch with heavy leverage is a different investment from a stabilized community throwing off rent on day one, even when both wear the multifamily label.
+How a multifamily DST is built
+Most accredited investors do not buy an apartment complex outright. They buy a fractional beneficial interest in a Delaware Statutory Trust that owns one community or a portfolio of several. The trust holds title, a sponsor arranges the financing, and a professional property-management company handles the leasing, the maintenance, the resident relations, all the daily work an apartment building demands. The investor's interest is sized to whatever dollar figure their exchange requires, which solves a problem the open market cannot: you cannot buy 58 percent of an apartment building, but you can buy 58 percent worth of a DST.
+That professional-management layer is more important in multifamily than in almost any other DST asset. An apartment community is an operating business with hundreds of moving parts and a rent roll that turns over every year. Run well, it grows income; run poorly, it bleeds. The sponsor and the management company they hire are doing real work every day, well beyond collecting a long-lease rent check, which makes operator selection central to the diligence.
+The trade-off is control, and the IRS draws that line on purpose. Under Revenue Procedure 2004-86, the rules that let a DST interest qualify for 1031 treatment, the trust operates inside tight limits sometimes called the seven deadly sins. Once the offering closes, the sponsor cannot raise new capital, cannot refinance, and cannot reinvest sale proceeds. Those constraints are part of why multifamily DSTs lean toward stabilized, income-producing communities rather than ground-up or deep-turnaround plays that would need more active intervention than the structure allows.
+Yields, growth, and what the record shows
+Multifamily is bought for a blend of current income and growth, and that blend is what separates it from a pure-yield asset like net lease. Going-in cash yields tend to start lower than net lease, because buyers are paying for the rent growth ahead. Across the multifamily offerings we track in the current market, going-in yields average 5.04 percent, with the higher end reaching toward 5.95 percent.
+Realized results from apartment programs that have already run their full course fill in the rest. The figures below come from 307 full-cycle multifamily deals in our sponsor track-record database. They reflect sponsor track records across the marketplace we monitor, not Baker 1031's own returns, and past performance does not guarantee future results.
+Metric Multifamily Basis
+Avg. going-in yield 5.04% Current market benchmark
+Avg. yield, high end 5.95% Current market benchmark
+Avg. NOI growth 33.66% Current market benchmark
+Avg. annual return, realized 18.3% 307 full-cycle deals
+Avg. equity multiple, realized 1.78x 307 full-cycle deals
+Avg. hold, realized 4.6 yrs 307 full-cycle deals
+Benchmark yields and NOI growth from Baker 1031 sector data; realized figures from 307 full-cycle multifamily programs in the Baker 1031 sponsor track-record database. Illustrative, not a projection or guarantee.
+Where a multifamily return tends to come from
+~5.0%
+majority
+Current rent Income growth + gain
+Source: Gerald F. &quot;Jerry&quot; Baker, III. Illustrative split of a typical multifamily return; actual results vary by deal and market.
+Read that table against the net-lease record and the difference is the whole story. Net-lease holds run long and pay you mostly in steady rent. Multifamily holds are shorter, the going-in yield is thinner, and the heavy lifting comes from income growth and the gain on sale. The 18.3 percent average annual return on realized deals carries a loud asterisk: it leans on a stretch of unusually strong apartment appreciation, it is an average across many deals that did not all behave alike, and nothing about it is promised on the next one.
+Sun Belt growth and the supply problem
+Much of the apartment product in DSTs sits in the Sun Belt, the band of fast-growing metros across the South and Southwest: Texas, Florida, the Carolinas, Arizona, Georgia, Tennessee. The pull is obvious. Jobs and people have moved there for years, drawn by lower costs, warmer weather, and business-friendly states, and that in-migration has fed strong rent growth across a long stretch.
+The same growth invites its own undoing. Builders chase rising rents, and because much of the Sun Belt is easy to build in, with flat land and lighter permitting, supply can arrive in a flood. When too many new units open in the same metro in the same eighteen months, even a city adding residents fast can find itself with more apartments than renters at current rents. The result is concessions, free months, soft renewals, and flat or falling rents until the market absorbs the glut. Several popular Sun Belt metros worked through exactly that kind of supply wave recently.
+This is the risk that most often surprises a first-time apartment investor. Strong demand and heavy new supply can sit in the same market at the same time, and the second can swamp the first for a year or two. We read a deal's submarket supply pipeline as carefully as its demand story. A community in a metro about to absorb a wall of new deliveries is a different investment from one in a market where building has slowed, even if both sit in the same fast-growing state.
+Interest rates and the debt picture
+Multifamily deals usually carry more debt than a typical net-lease DST, and that leverage cuts both ways. In a rising-rent market, debt magnifies the gain to equity. When rents stall or rates climb, the same debt magnifies the pain. Interest rates touch an apartment deal through two doors. They lift the property's cap rate, which softens value even if the building performs, and they raise the cost of the loan itself, which eats into the cash that reaches investors.
+The detail that catches people is loan structure. Some deals carry fixed-rate debt that locks the cost for the hold; others use floating-rate or shorter-term loans that have to be refinanced before the property is sold. A floating-rate deal underwritten when money was cheap can look very different after rates jump, and because a DST generally cannot refinance, a loan coming due can force a sale at an inconvenient moment. We read the debt terms, the rate, fixed or floating, the maturity, any rate cap, before we read the return projection. The projection assumes the debt behaves. The debt does not always cooperate.
+Key Takeaways
+Multifamily's annual leases make it a real inflation hedge in a strong market and a fast-falling one in a weak market; operator and metro selection carry the weight.
+Sun Belt growth and Sun Belt oversupply often arrive together. Read a deal's submarket supply pipeline as closely as its demand story.
+Apartment deals usually carry more debt than net lease. Check whether the loan is fixed or floating and when it matures before trusting the projected return.
+721 UPREIT roll-ups in multifamily
+Apartments are where the 721 UPREIT exchange shows up most often, so it is worth understanding even before you buy. In a 721 transaction, a real estate investment trust acquires the property and the DST investors receive operating-partnership units in the REIT instead of cash. Their single-asset, illiquid position converts into a stake in a larger, diversified apartment portfolio, with continued tax deferral on the original gain.
+Several large sponsors run apartment DSTs as a pipeline into a REIT they also control, with the 721 roll-up as the planned exit from the start. That can be an appealing path: it trades one building's concentration for a diversified portfolio and gives the investor a more liquid holding than a single DST interest. It also has real trade-offs. Once you hold OP units, you are along for the REIT's ride, your future returns track its performance, not your original property, and the move generally closes the door on another 1031 exchange of that specific asset later. We walk clients through the mechanics before they commit, because a deal sold partly on its UPREIT exit deserves scrutiny of the REIT on the other side, as much as the building going in.
+Who it suits, and who should look elsewhere
+Multifamily fits an investor who wants real estate that can grow, who is comfortable trading some current yield for the chance at rent growth and a gain on sale, and who can accept more moving parts than a single long lease. Exchangers who want their replacement property to keep pace with inflation, and who do not need the very highest day-one cash, tend to land here. The depth of the market also makes apartments a practical default when the clock is tight and you need real options fast.
+It is a weaker fit for an investor whose first need is the steadiest possible monthly check with minimal swings; net lease usually serves that goal better, since a long credit lease does not reprice every year. It is also a poor fit for anyone uncomfortable with leverage or with the value swings that come from annual leases and rate moves. Apartments reward patience and a tolerance for operating risk. If neither describes you, the asset can disappoint even in a good market.
+Working with Baker 1031
+Most investors reach institutional apartment portfolios through a Delaware Statutory Trust rather than buying a building alone, because it lowers the entry point, spreads risk across many units and often several markets, and fits an exact exchange amount. We provide sponsor-agnostic diligence on multifamily DST programs, reading the operator's track record, the submarket supply pipeline, and the debt terms, and we are paid to be skeptical on your behalf rather than to push any one sponsor.
+Multifamily trades in and out of the market, and at this moment we do not have an apartment offering on our shelf, though that turns over often. The 45-day identification window moves fast, so the time to map your options is before you sell, not after. We keep a current shelf of vetted DST offerings open to accredited investors and are happy to walk through which markets, strategies, and sponsors back them, and how multifamily compares with a non-traded REIT for what you are trying to do.
+View Available Multifamily DSTs →
+Frequently Asked Questions
+What counts as a multifamily property?
+Multifamily means residential rental property with five or more units under one ownership: garden-style suburban communities, mid-rise infill buildings, and the occasional high-rise. Below five units, property like a duplex or fourplex usually finances and trades like a house. At five and up, the asset is valued on the income it produces and qualifies for institutional ownership such as a DST.
+Why is multifamily so common in the DST market?
+Apartments are the most institutionalized property type in the country, with deep sales data, experienced operators, and lenders who know it well. Sponsors can assemble and run portfolios at scale, so apartments make up the largest single slice of most DST marketplaces. For an exchanger on a 45-day clock, that depth means more options that fit an exact replacement amount.
+Is multifamily a good inflation hedge?
+It can be. Apartment leases typically run twelve months, so the entire rent roll reprices every year, which lets a good operator move rents toward market when prices rise. That responsiveness is the core of the inflation-hedge case. The same feature works in reverse: in an oversupplied or weakening market, rents can fall as quickly as they rose. These figures are illustrative and not a guarantee.
+What yield do multifamily DSTs pay?
+Across the multifamily offerings we currently track, going-in cash yields average around 5 percent, lower than net lease because buyers are paying for expected rent growth ahead. More of the total return is meant to come from income growth and the gain on sale than from day-one cash. Actual results depend on the operator, the market, and the debt, and are not projections or guarantees.
+What is the difference between core, core-plus, and value-add?
+Core deals own stabilized, newer, well-located properties with low debt and steady income. Core-plus adds slightly older buildings, a bit more debt, and light upgrades. Value-add buys older or underperforming communities, renovates, and aims for a larger gain on sale, with more risk. Most DSTs sit toward the core and core-plus end, since the structure limits active management.
+What are the main risks of multifamily investing?
+The biggest are oversupply, where too much new construction in one metro pushes rents down even amid strong demand, and interest-rate and debt risk, since apartment deals carry more leverage than net lease and can reprice or face a forced refinance when rates climb. Annual leases also let rents fall fast in a weak market, and a DST interest is illiquid and largely outside your control.
+What is a 721 UPREIT exchange in multifamily?
+In a 721 UPREIT exchange, a REIT acquires the property and DST investors receive operating-partnership units instead of cash, converting a single-asset position into a stake in a larger, diversified portfolio with continued tax deferral. Apartments are where this exit shows up most. The trade-off is that your returns then track the REIT, and the move generally ends future 1031 options on that asset.
+Can I do a 1031 exchange into apartments through a DST?
+Yes, and most accredited investors do exactly that. A multifamily DST holds one community or a portfolio of several, and you buy a fractional beneficial interest that lowers the minimum, spreads risk across units and markets, and lets you hit your exact exchange number while a professional company manages the property. We provide diligence on apartment DST programs across the marketplace.
+Glossary
+Multifamily Residential rental property with five or more units under one ownership, valued on the income it produces rather than as a residence.
+Garden-Style Apartments Two- and three-story residential communities spread across leafy suburban grounds; the most common multifamily product in the DST market.
+Net Operating Income (NOI) A property's rental income after operating expenses but before debt service; rising NOI is the engine of a multifamily return.
+Value-Add A strategy of buying older or underperforming apartments, renovating, and raising rents to drive a larger gain on sale, at higher risk.
+Core A lower-risk strategy of owning stabilized, well-located, newer properties with little debt, where most of the return is current income.
+Sun Belt The band of fast-growing metros across the U.S. South and Southwest where much DST apartment product sits, prized for in-migration but prone to oversupply.
+721 UPREIT Exchange A transaction in which a REIT acquires a property and investors receive operating-partnership units instead of cash, deferring tax and gaining diversification.
+Master Tenant In a DST, an entity that leases the property from the trust and operates it, passing income through to the beneficial owners.
+Revenue Procedure 2004-86 The IRS guidance that lets a beneficial interest in a Delaware Statutory Trust qualify as like-kind property for a 1031 exchange, while restricting what the trust may do.
+Sources & References
+IRS. Like-Kind Exchanges — Real Estate Tax Tips U.S. SEC — Investor.gov. Investor Bulletin: Non-Traded REITs
+Disclosures
+This article is published by Baker 1031 Investments, LLC for general educational purposes for accredited investors and is not an offer to sell or a solicitation of an offer to buy any security, nor is it tax, legal, accounting, or investment advice or a recommendation. Any securities offering is made solely through a sponsor’s private placement memorandum (PPM) following a suitability determination. Securities offered through Aurora Securities, Inc. (ASI), member FINRA / SIPC; Baker 1031 Investments is independent of ASI. Oil & gas mineral and royalty interests and DST programs are speculative, illiquid securities sold only to verified accredited investors and involve substantial risk, including possible loss of principal, commodity-price and production-decline risk, lack of control, and the risk that an intended 1031 exchange fails to qualify for tax deferral. Whether a particular interest qualifies as like-kind real property is a fact-specific legal determination that varies by state and by the terms of the instrument. Tax results depend on your individual circumstances. Consult your own CPA and attorney before acting. Past performance does not guarantee future results.
+Filed under Property Types 1031 Exchange DSTs
+Gerald F. "Jerry" Baker, III
+Founder & Principal, Baker 1031 Investments
+Gerald F. "Jerry" Baker, III is the founder of Baker 1031 Investments, an independent San Francisco real-estate-securities brokerage guiding accredited investors through 1031 exchanges, Delaware Statutory Trusts, Qualified Opportunity Funds, 721 UPREIT exchanges, and mineral & royalty interests. He spent his career in Wall Street real estate private equity across more than $10 billion in transactions and holds FINRA Series 22, 63, and SIE registrations. Educational only — not tax or legal advice.
+Executive summary audio
+Your browser does not support the audio player. Open the audio summary .
+Explore the Baker 1031 research library
+1031 Exchanges
+DSTs
+721 / UPREITs
+Opportunity Zones
+Mineral & Royalty Interests
+REITs
+Current Offerings
+Sponsor Directory

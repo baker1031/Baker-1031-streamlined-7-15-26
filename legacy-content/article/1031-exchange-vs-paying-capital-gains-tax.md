@@ -1,0 +1,134 @@
+---
+url: https://baker1031.com/1031-exchange-vs-paying-capital-gains-tax.html
+slug: 1031-exchange-vs-paying-capital-gains-tax
+title: "1031 Exchange vs. Paying Capital Gains Tax"
+category: article
+words: 4304
+---
+
+1031 Exchange vs. Paying Capital Gains Tax | Baker 1031 Investments
+Home ❯ Insights ❯ 1031 Exchange vs. Paying Capital Gains Tax
+1031 Exchange vs. Paying Capital Gains Tax
+Back to All Insights
+1031 Exchange Gerald F. "Jerry" Baker, III · Updated June 2026 · 16 min read
+Selling an investment property and paying the tax versus exchanging and deferring it isn't a close call over the long run. This guide quantifies the cost of paying tax, shows how deferral compounds wealth, walks a 20-year side-by-side example, explains the estate-planning multiplier, and is honest about when paying the tax actually makes sense.
+When you sell an appreciated investment property, you face a choice: pay the capital gains tax now and reinvest what's left, or defer the entire tax through a 1031 exchange and reinvest the full proceeds. It can feel like a wash — you'll owe the tax eventually either way, won't you? But over a long holding period, the two paths diverge dramatically, because deferring the tax keeps a large chunk of capital working and compounding for you instead of going to the government. The difference, played out over decades and capped by the estate-planning step-up at death, can amount to a substantial share of your wealth. This guide quantifies that difference honestly — the cost of paying, the compounding math, a worked 20-year example, and the estate multiplier — while also being clear about the situations where simply paying the tax is the better choice.
+The cost of selling and paying tax
+Start with what paying the tax actually costs, because it's larger than the headline capital gains rate suggests. When you sell an appreciated investment property, the gain can face four layers of tax: federal capital gains (up to 20% for long-term gains), depreciation recapture on every dollar you previously wrote off (taxed at a maximum of 25%), the 3.8% net investment income tax for higher-income taxpayers, and state income tax, which in high-tax states can add several more points. Stacked together, this four-layer bill routinely exceeds a third of the gain.
+Depreciation recapture is the layer that surprises people. If you've owned a rental for years and depreciated it annually, your adjusted basis is far below what you paid, which means a large share of your sale price is gain even if the property's market value rose only modestly. Recapture on that depreciation is taxed up to 25% regardless of how long you held, and on a long-held property it's often the single largest layer. The cumulative effect is that the tax on a sale claims a meaningful fraction of your equity.
+The key insight is that this tax, once paid, is gone — it can never compound for you again. Every dollar you send to the government at the sale is a dollar that won't be earning returns in your next investment. That's the real cost of paying: not just the tax itself, but the lifetime of compounding on that money that you forfeit. A 1031 exchange 's entire advantage flows from avoiding this forfeiture — keeping the full proceeds, including the dollars that would have gone to tax, invested and compounding.
+How deferral compounds wealth
+The power of deferral is the power of compounding on a larger base. When you exchange instead of selling, you reinvest the full proceeds — including the third or so that would have gone to tax — into your next property. That larger base earns returns, and those returns earn returns, year after year. The deferred tax acts like an interest-free loan from the government that stays invested in your portfolio, and the longer it compounds, the larger the advantage grows.
+This is why the defer-versus-pay difference is small over a year or two but enormous over decades. In the early years, the extra capital from deferral earns modestly more, and the gap between the two paths is narrow. But compounding is exponential: the gap widens at an accelerating rate as the years pass, because the deferral-funded extra capital keeps generating returns that compound on themselves. Over a 20- or 30-year horizon, the difference between deferring and paying can become a large multiple of the original tax.
+Crucially, deferral isn't a one-time event — you can chain exchanges indefinitely, deferring the gain again each time you trade up or reposition. Each exchange keeps the full, growing base invested, and the deferred tax (now larger, because the gain has grown) stays deferred. This chaining is what lets a disciplined investor compound on the pre-tax base for an entire investing lifetime, which is the foundation of the long-term wealth advantage and the 'swap till you drop' strategy. The compounding math is the whole case for deferral, and it only gets more compelling the longer the horizon.
+The deferred tax acts like an interest-free loan that stays invested in your portfolio. The longer it compounds, the larger the advantage grows — exponentially.
+A side-by-side 20-year example
+Make it concrete with a simplified, illustrative example. Suppose you own an investment property with $1,000,000 of equity, of which $400,000 is gain (after depreciation), and you're deciding whether to exchange or sell. If you sell, assume a combined four-layer tax of roughly 30% on the gain — about $120,000 — leaving you $880,000 to reinvest. If you exchange, you reinvest the full $1,000,000. Both then grow at the same assumed rate; the only difference is the starting base.
+Assume both portfolios appreciate at, say, 6% annually over 20 years (purely illustrative). The $880,000 after-tax base grows to roughly $2,822,000; the $1,000,000 deferred base grows to roughly $3,207,000 — a difference of about $385,000 from that single decision, more than three times the original $120,000 of tax deferred. The extra $120,000 you kept invested compounded into a far larger sum, which is the compounding advantage in action. And this ignores the ability to chain further exchanges, which would widen the gap.
+The example is deliberately simplified — real returns vary, the tax depends on your specifics, and a real comparison would model cash flows, leverage, and reinvestment differences — so your CPA and advisor should run your actual numbers. But the shape of the result is robust: over a long horizon, deferring a meaningful tax and keeping it invested produces materially more wealth than paying it and reinvesting the remainder. The longer the horizon and the larger the deferred tax, the more pronounced the difference. This is the quantitative heart of why long-term investors so consistently choose to exchange.
+The estate-planning multiplier
+The compounding advantage is powerful on its own, but the estate-planning dimension is what can make deferral not just better but permanent. When you hold appreciated property (or a chain of exchanged properties) until death, your heirs generally receive a stepped-up basis equal to the property's fair-market value at that time. The deferred gain — all of it, accumulated across a lifetime of exchanges — is erased. The tax you deferred for decades is never paid by anyone.
+This transforms the defer-versus-pay comparison. If you pay the tax at the sale, that money is gone forever. If you defer through exchanges and hold until death, not only did the deferred tax compound for you throughout your life, but the gain itself disappears at the step-up, so neither you nor your heirs ever pay it. The combination — a lifetime of compounding on the pre-tax base, then elimination of the gain at death — is the 'swap till you drop' strategy, and it's the most tax-efficient outcome available to a long-term real estate investor.
+The estate multiplier also reframes the 'you'll owe it eventually' objection to deferral. The objection assumes the deferred tax will someday be paid, making deferral merely a timing benefit. But with the step-up, the deferred tax may never be paid at all — deferral can become permanent elimination. So the real comparison isn't 'pay now versus pay later'; for an investor who holds until death, it's 'pay now versus never pay.' That's a profound difference, and it's why the estate-planning dimension is central to the case for exchanging rather than selling.
+When paying the tax makes sense
+Deferral isn't always the right choice, and an honest comparison acknowledges when paying the tax is better. The clearest case is when you need the cash for a non-real-estate purpose — funding a business, paying off other debt, a major life expense, or simply diversifying out of real estate entirely. A 1031 only defers tax by reinvesting in like-kind real estate; if you don't want to stay invested in real estate, deferral doesn't serve you, and paying the tax to free up the cash may be the right move.
+Another case is when the tax is small relative to the friction of an exchange. If your gain is modest — perhaps because of a recent purchase, a stepped-up basis from a recent inheritance, or limited appreciation — the tax you'd defer may not justify the cost, complexity, and deadline pressure of an exchange. The compounding advantage is large only when the deferred tax is large; when it's small, simply paying and reinvesting freely can be cleaner and nearly as efficient.
+There are also situations where you'd rather not be locked into the exchange's constraints — the deadlines, the like-kind requirement, the same-taxpayer rule — or where you have offsetting losses that reduce the tax, or where your time horizon is short enough that the compounding advantage won't have time to develop. And some investors simply prefer the simplicity and flexibility of selling, paying, and reinvesting however they like. The point is that deferral is a powerful default for long-term real estate investors but not a universal rule; the right choice depends on your goals, your horizon, the size of the tax, and what you want to do with the proceeds. Modeling both paths with your CPA is how you decide.
+Key Takeaways
+Paying tax on a sale costs more than the headline rate — a four-layer stack often exceeding a third of the gain — and that money never compounds for you again.
+Deferral keeps the full proceeds (including the tax) invested, and compounding makes the advantage grow exponentially over decades.
+Held until death, exchanged property gets a stepped-up basis that erases the deferred gain — deferral becomes permanent, not just delayed.
+Paying makes sense when you need the cash for non-real-estate purposes, the tax is small, or your horizon is short.
+How to decide for your situation
+The decision comes down to a few questions your CPA and advisor can help you answer. First, how large is the tax you'd defer? Quantify the four-layer stack on your specific property; the larger it is, the stronger the case for deferral. Second, what's your horizon and intent? If you plan to stay invested in real estate for many years — ideally until death, for the step-up — deferral's compounding and estate advantages are compelling. If your horizon is short or you want out of real estate, they're muted.
+Third, what do you want from the proceeds? If you want to keep building a real estate portfolio, defer. If you need cash for another purpose, paying may be necessary. Fourth, can you tolerate the exchange's constraints — the deadlines, the like-kind requirement, the reinvestment of all proceeds? If so, deferral is available; if those constraints don't fit your situation, paying may be simpler. These questions, run with your numbers, point clearly to one path or the other for most investors.
+For the large majority of long-term real estate investors with a meaningful gain, the answers favor deferral — the compounding and estate advantages are simply too large to leave on the table by paying tax unnecessarily. But the right answer is individual, and the discipline of modeling both paths — the after-tax reinvestment versus the full-proceeds exchange, over your actual horizon, with your actual numbers — is what turns a gut feeling into an informed decision. The math usually favors deferral; confirming it for your situation is what gives you confidence in the choice.
+Beyond the math: other factors in the comparison
+The compounding math is the heart of the comparison, but several other factors round it out. Cash flow is one: an exchange keeps the full proceeds invested, so it generally produces more current income than reinvesting the after-tax remainder — meaningful for an investor relying on the income. Over a long hold, the larger income base from deferral compounds the advantage further, since reinvested income also grows on the bigger base.
+Diversification and flexibility cut the other way and deserve honest weight. Paying the tax frees you to reinvest however you like — into any asset class, not just like-kind real estate — and without the deadlines, the same-taxpayer rule, or the reinvest-everything requirement. For an investor who values that freedom, or who wants to move capital out of real estate entirely, the flexibility of paying can be worth more than the compounding advantage of deferring. The right answer depends on how much you value staying in real estate versus going anywhere.
+Risk and concentration matter too. Continuously deferring can keep you concentrated in real estate (or in a chain of exchanges) when diversification might serve you better, and the strategy's value assumes real estate performs reasonably over your horizon. Paying the tax and diversifying broadly reduces that concentration. None of these factors overturns the core math for a committed long-term real estate investor, but they're real considerations that make the decision individual. The fullest comparison weighs the compounding advantage against cash-flow needs, flexibility, diversification, and your tolerance for staying concentrated in real estate — which is why modeling it with your own goals and numbers, not a generic rule, is what produces the right answer.
+How Baker 1031 helps you compare
+Baker 1031 Investments helps investors run this comparison for their own situation — coordinating with your CPA to quantify the four-layer tax you'd defer, modeling the long-term compounding difference between deferring and paying, and weighing the estate-planning step-up against your goals and horizon. We're candid when paying the tax is the better choice for your circumstances, and equally clear when the compounding and estate advantages make an exchange the obviously stronger path.
+Where an exchange fits, we help identify replacement property and coordinate the transaction; securities such as DSTs are offered through our broker-dealer, Aurora Securities, Inc. (member FINRA/SIPC), with any recommendation following a suitability review. Our aim is to give you an honest, numbers-based comparison — not a one-size-fits-all push toward exchanging — so you choose the path that genuinely builds the most wealth for your situation and goals.
+Frequently Asked Questions
+Is a 1031 exchange better than paying capital gains tax?
+For most long-term real estate investors with a meaningful gain, yes — deferring keeps the full proceeds (including the tax) invested and compounding, and the advantage grows exponentially over decades. Held until death, the step-up can erase the deferred gain entirely. But paying makes sense when you need the cash for non-real-estate purposes or the tax is small.
+What does paying the tax actually cost?
+Potentially four layers: federal capital gains (up to 20%), depreciation recapture (up to 25%), the 3.8% net investment income tax, and state tax — often exceeding a third of the gain combined. Beyond the tax itself, the real cost is the lifetime of compounding you forfeit on the money sent to the government, which never earns returns for you again.
+How does deferral build more wealth?
+By keeping a larger base invested. When you exchange, you reinvest the full proceeds including the tax you'd otherwise pay, and that larger base compounds. The deferred tax acts like an interest-free loan that stays in your portfolio. Compounding is exponential, so the gap between deferring and paying widens at an accelerating rate over time.
+What's the long-term difference in a real example?
+Illustratively, on $1,000,000 of equity with $400,000 gain, paying ~30% tax leaves ~$880,000 to reinvest versus $1,000,000 deferred. At 6% for 20 years, that's roughly $2.82M versus $3.21M — about $385,000 more from deferral, over three times the original tax deferred. Figures are illustrative; your CPA should run your actual numbers.
+What is the estate-planning multiplier?
+When you hold exchanged property until death, your heirs generally receive a stepped-up basis equal to the property's value then, erasing the deferred gain entirely. So deferral isn't just 'pay later' — combined with the step-up, it can become 'never pay.' A lifetime of compounding plus elimination of the gain at death is the most tax-efficient outcome available.
+Don't I owe the deferred tax eventually anyway?
+Not necessarily. The 'you'll owe it eventually' objection assumes the deferred tax will be paid someday. But if you keep exchanging and hold until death, the step-up erases the gain, so it may never be paid at all. For an investor who holds until death, the real comparison is 'pay now versus never pay,' not 'pay now versus pay later.'
+When does paying the tax make more sense?
+When you need the cash for a non-real-estate purpose (a business, debt, diversifying out of real estate), when the tax is small relative to the friction of an exchange, when your horizon is too short for compounding to develop, when you have offsetting losses, or when you simply prefer the flexibility of selling and reinvesting freely. Deferral only helps if you stay invested in real estate.
+How big does the gain need to be for deferral to be worth it?
+There's no fixed threshold, but the larger the deferred tax, the stronger the case, because the compounding advantage scales with the amount kept invested. A small gain (from a recent purchase or stepped-up inheritance) may not justify the cost and complexity of an exchange, while a large gain on a long-held property makes deferral compelling. Model it with your CPA.
+Does my time horizon affect the decision?
+Significantly. Compounding is exponential, so the deferral advantage grows with the horizon — it's modest over a year or two and large over decades. A long horizon, ideally holding until death for the step-up, maximizes the benefit. A short horizon mutes it, since the extra invested capital has little time to compound. Longer horizons favor deferral.
+Can I keep deferring indefinitely?
+Yes — you can chain exchanges indefinitely, deferring the gain again each time you trade or reposition. Each exchange keeps the full, growing base invested and the (now larger) gain deferred. This chaining is what lets you compound on the pre-tax base for an investing lifetime, and combined with the step-up at death, it's the 'swap till you drop' strategy.
+What are the constraints of choosing to defer?
+A 1031 requires reinvesting in like-kind real estate, using a qualified intermediary, meeting the 45- and 180-day deadlines, reinvesting all proceeds (and replacing debt) to fully defer, and observing the same-taxpayer rule. If these constraints don't fit your goals — for instance, you want out of real estate or need the cash — paying the tax may be simpler despite the compounding cost.
+How do I decide between deferring and paying?
+Answer four questions with your CPA: How large is the tax you'd defer? What's your horizon and intent (staying in real estate, ideally until death)? What do you want from the proceeds? Can you tolerate the exchange's constraints? Run both paths with your actual numbers. For most long-term investors with a meaningful gain, the answers favor deferral, but the right choice is individual.
+Does deferring produce more current income?
+Generally yes — an exchange keeps the full proceeds invested, so it produces more current income than reinvesting the after-tax remainder, which matters if you rely on the income. Over a long hold, the larger income base compounds the advantage further, since reinvested income also grows on the bigger base. This cash-flow edge adds to the case for deferral.
+Does paying the tax give me more flexibility?
+Yes — paying frees you to reinvest into any asset class, not just like-kind real estate, and without the deadlines, same-taxpayer rule, or reinvest-everything requirement of a 1031. For an investor who values that freedom or wants out of real estate entirely, the flexibility of paying can be worth more than the compounding advantage of deferring.
+Does deferring keep me too concentrated in real estate?
+It can. Continuously deferring keeps your capital in real estate (or a chain of exchanges) when broader diversification might serve you better, and the strategy assumes real estate performs reasonably over your horizon. Paying the tax and diversifying reduces that concentration. Weigh the compounding advantage against your need to diversify when deciding.
+Is the compounding advantage guaranteed?
+No — it depends on your reinvestments performing. The math shows that keeping more capital invested produces more wealth if returns are similar on both paths, but actual returns vary and aren't guaranteed. The advantage is robust over long horizons with reasonable returns, but it's an expectation based on assumptions, which is why modeling it with realistic numbers matters.
+Glossary
+Tax Deferral Postponing tax on a gain by reinvesting through a 1031, keeping the full proceeds invested.
+Four-Layer Tax Stack Federal capital gains, depreciation recapture, NIIT, and state tax — the combined cost of a sale.
+Capital Gains Tax Federal tax on the gain from selling an asset, up to 20% for long-term gains.
+Depreciation Recapture Tax on prior depreciation deductions, up to 25%, often the largest layer on a long-held property.
+Net Investment Income Tax (NIIT) A 3.8% tax on investment income for higher-income taxpayers.
+Compounding The exponential growth of returns earning further returns over time.
+Adjusted Basis Original cost reduced by depreciation; a low basis means a larger taxable gain.
+Step-Up in Basis The reset of basis to fair market value at death, which can erase deferred gain for heirs.
+Swap Till You Drop Chaining exchanges and holding until death so the deferred gain is erased by the step-up.
+Like-Kind The standard requiring exchanged property to be real property held for investment.
+Qualified Intermediary (QI) The independent party that holds proceeds so the seller never takes constructive receipt.
+Boot Cash or non-like-kind value received in an exchange; taxable up to the gain.
+Reinvestment Base The amount available to reinvest — full proceeds with deferral, after-tax remainder if you pay.
+Holding Period How long an asset is held; longer horizons amplify deferral's compounding advantage.
+Interest-Free Loan Analogy The idea that deferred tax stays invested in your portfolio, like a loan from the government.
+Delaware Statutory Trust (DST) A securitized real-property interest qualifying as 1031 replacement property.
+Sources & References
+IRS. Topic No. 409, Capital Gains and Losses IRS. Like-Kind Exchanges Under IRC Section 1031 (FS-2008-18) Cornell Legal Information Institute. 26 U.S. Code § 1014 — Basis of property acquired from a decedent Cornell Legal Information Institute. 26 U.S. Code § 1031
+Deferring vs. paying the tax at a glance
+How completing a 1031 exchange compares with selling and paying the capital-gains tax, across the factors that shape long-term wealth:
+Factor 1031 Exchange (Defer) Sell & Pay Tax
+Tax at sale Deferred under §1031 Due now — gains, recapture, NIIT, state
+Capital reinvested Full pre-tax proceeds keep working Only the after-tax remainder
+Compounding base Larger — deferral compounds over time Smaller — tax leakage up front
+Flexibility Must reinvest in like-kind real estate Free to use proceeds for anything
+Estate planning Heirs may receive a step-up, erasing deferred gain No deferred gain to erase
+Complexity Deadlines, identification rules, QI required Simple — sell and settle
+Best when You want real estate exposure to continue You want to exit real estate entirely
+Which should you choose?
+Deferral wins on the math when you intend to stay invested in real estate: keeping the full pre-tax amount at work lets it compound over years, and a step-up at death can eliminate the deferred gain for heirs.
+Paying the tax can be the right call when you genuinely want out of real estate, need the cash for another purpose, or your gain is modest enough that the deferral benefit does not justify the added complexity and deadlines.
+Disclosures
+This article is published by Baker 1031 Investments, LLC for general educational purposes for accredited investors and is not an offer to sell or a solicitation of an offer to buy any security, nor is it tax, legal, accounting, or investment advice or a recommendation. Any securities offering is made solely through a sponsor’s private placement memorandum (PPM) following a suitability determination. Securities offered through Aurora Securities, Inc. (ASI), member FINRA / SIPC; Baker 1031 Investments is independent of ASI. Oil & gas mineral and royalty interests and DST programs are speculative, illiquid securities sold only to verified accredited investors and involve substantial risk, including possible loss of principal, commodity-price and production-decline risk, lack of control, and the risk that an intended 1031 exchange fails to qualify for tax deferral. Whether a particular interest qualifies as like-kind real property is a fact-specific legal determination that varies by state and by the terms of the instrument. Tax results depend on your individual circumstances. Consult your own CPA and attorney before acting. Past performance does not guarantee future results.
+Filed under 1031 Exchange 1031 Exchange
+Gerald F. "Jerry" Baker, III
+The research desk at Baker 1031 Investments
+Gerald F. &quot;Jerry&quot; Baker, III leads the editorial work at Baker 1031 Investments, an independent San Francisco real-estate-securities brokerage. Our notes are reviewed by founder Gerald F. "Jerry" Baker III, who spent his career in Wall Street real estate private equity across more than $10 billion in transactions. Educational only — not tax or legal advice.
+Executive summary audio
+Your browser does not support the audio player. Open the audio summary .
+Explore the Baker 1031 research library
+1031 Exchanges
+DSTs
+721 / UPREITs
+Opportunity Zones
+Mineral & Royalty Interests
+REITs
+Current Offerings
+Sponsor Directory
