@@ -758,6 +758,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     { loc: `${SITE}/`, priority: "1.0" },
     { loc: `${SITE}/learn.html`, priority: "0.6" },
     { loc: `${SITE}/performance.html`, priority: "0.6" },
+    { loc: `${SITE}/current-offerings.html`, priority: "0.6" },
     { loc: `${SITE}/glossary.html`, priority: "0.6" },
     { loc: `${SITE}/markets.html`, priority: "0.6" },
     { loc: `${SITE}/audiences.html`, priority: "0.6" },
@@ -1324,6 +1325,10 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
         wordCount: a.words || undefined,
         timeRequired: `PT${a.readMin || 5}M`,
         isPartOf: WEBSITE_REF,
+        // Login-gated for humans but crawlable: tell Google this is gated content
+        // (registered-investor access) so serving it to bots is not cloaking.
+        isAccessibleForFree: false,
+        hasPart: { "@type": "WebPageElement", isAccessibleForFree: false, cssSelector: ".learn-article" },
       },
       faq.length
         ? { "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })) }

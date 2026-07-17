@@ -182,32 +182,32 @@ if (genericLogin) {
 const gateEl = document.getElementById("offering-gate");
 const gateLogin = document.getElementById("offering-gate-login");
 
-/* ---------- Soft gate (Learn + Performance) ----------
-   Content stays fully in the DOM (crawlers/LLMs index everything — bots don't
-   run this JS, so they never see the overlay). Only signed-out humans get a
-   dismissible registration prompt, so it's not an intrusive interstitial. */
+/* ---------- Login gate (Learn + Performance + Listings) ----------
+   Login-only for humans, but crawlable for search/LLM bots: the full content is
+   rendered in the page HTML (bots don't run this JS, so they index everything),
+   while signed-out humans get a NON-dismissible register/sign-in wall. Paired
+   with `isAccessibleForFree:false` paywall markup in the JSON-LD so serving
+   content to crawlers but gating users is not treated as cloaking. */
 function showSoftGate(kinde) {
   if (document.getElementById("soft-gate")) return;
   const el = document.createElement("div");
   el.id = "soft-gate";
   el.innerHTML =
-    '<div class="soft-gate-card" role="dialog" aria-label="Free access">' +
-    '<div class="soft-gate-kicker">Baker 1031 &middot; Free access</div>' +
-    '<h2>Register for free to keep reading</h2>' +
-    '<p>Create a free investor account for full access to our research library and full-cycle performance data. No cost, no obligation.</p>' +
+    '<div class="soft-gate-card" role="dialog" aria-modal="true" aria-label="Sign in or register">' +
+    '<div class="soft-gate-kicker">Baker 1031 &middot; Investor access</div>' +
+    '<h2>Sign in to view this page</h2>' +
+    '<p>This content is available to registered investors. Create a free account or sign in to continue &mdash; no cost, no obligation.</p>' +
     '<button type="button" class="soft-gate-btn" id="soft-gate-register">Register free &rarr;</button>' +
-    '<button type="button" class="soft-gate-dismiss" id="soft-gate-keep">Continue reading</button>' +
+    '<button type="button" class="soft-gate-dismiss" id="soft-gate-login">Already have an account? Sign in</button>' +
     "</div>";
   document.body.appendChild(el);
   document.getElementById("soft-gate-register").addEventListener("click", function () {
-    kinde.register({ app_state: { returnTo: window.location.pathname } });
+    kinde.register({ app_state: { returnTo: window.location.pathname + window.location.search } });
   });
-  document.getElementById("soft-gate-keep").addEventListener("click", function () {
-    el.remove();
-    document.documentElement.style.overflow = "";
+  document.getElementById("soft-gate-login").addEventListener("click", function () {
+    kinde.login({ app_state: { returnTo: window.location.pathname + window.location.search } });
   });
-  // reveal after a brief read so it reads as "soft", and never block scroll hard
-  document.documentElement.style.overflow = "hidden";
+  document.documentElement.style.overflow = "hidden"; // non-dismissible: lock scroll behind the wall
 }
 function removeSoftGate() {
   const el = document.getElementById("soft-gate");
