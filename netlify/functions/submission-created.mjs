@@ -16,6 +16,7 @@
    ============================================================ */
 
 import { upsertContact, findOpenDealForContact, createDeal, updateDeal, createNote } from "./lib/hubspot.mjs";
+import { DEAL_STAGES, PIPELINE, assessAccreditation } from "./lib/hs-config.mjs";
 
 const API = "https://api.pipedrive.com/v1";
 
@@ -184,6 +185,9 @@ function buildSubmissionNote(data) {
 async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 }) {
   if (!data.email) return;
 
+  // Opening lifecycle + lead status from the accreditation answer.
+  const { leadStatus, lifecycle } = assessAccreditation(data.accreditation_check);
+
   const contactProps = clean({
     firstname: data.first_name,
     lastname: data.last_name,
@@ -198,7 +202,9 @@ async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv
     current_plan: data.current_plan,
     us_check: data.us_check,
     accreditation_check: data.accreditation_check,
-    crs_delivery_date: toDate(data.crs_accepted_at)
+    crs_delivery_date: toDate(data.crs_accepted_at),
+    lifecyclestage: lifecycle,
+    hs_lead_status: leadStatus
   });
   const contactId = await upsertContact(data.email, contactProps);
   if (!contactId) return;
@@ -221,8 +227,14 @@ async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv
 
   const openDeal = await findOpenDealForContact(contactId);
   let dealId;
-  if (openDeal) { await updateDeal(openDeal.id, dealProps); dealId = openDeal.id; }
-  else { dealId = await createDeal(dealProps, contactId); }
+  if (openDeal) {
+    // Re-submission: update fields, but don't yank an advanced deal back a stage.
+    await updateDeal(openDeal.id, dealProps);
+    dealId = openDeal.id;
+  } else {
+    // New deal enters the pipeline at "New Inquiry".
+    dealId = await createDeal({ ...dealProps, dealstage: DEAL_STAGES.NEW_INQUIRY, pipeline: PIPELINE }, contactId);
+  }
 
   await createNote({ body: buildSubmissionNote(data), contactId, dealId });
 }

@@ -28,6 +28,8 @@ import { getStore } from "@netlify/blobs";
 import { json, ok, verifyCalSignature } from "./lib/http.mjs";
 import { pd, findPersonByEmail, findOpenDeal, esc } from "./lib/pipedrive.mjs";
 import { kindeToken, createUser, findUserByEmail, unsuspendUser } from "./lib/kinde.mjs";
+import { upsertContact, findOpenDealForContact, createDeal, updateDeal, createNote } from "./lib/hubspot.mjs";
+import { DEAL_STAGES, PIPELINE, LEAD_STATUS } from "./lib/hs-config.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
@@ -76,6 +78,14 @@ export default async (req) => {
 
   const store = getStore("cal-bookings");
   const mapKey = uid ? `uid:${uid}` : null;
+
+  // ---------- HubSpot: deal-stage advance, lead status, no-show (parallel-run; safe no-op if HUBSPOT_TOKEN unset) ----------
+  // Cal→HubSpot meeting LOGGING is native; this adds the pipeline automation the
+  // native integration doesn't do. Never interferes with the Pipedrive writes below.
+  if (process.env.HUBSPOT_TOKEN) {
+    try { await syncBookingToHubSpot({ event, email, attendeeName, eventTitle, start, end, uid, attendeeNoShow: attendee && attendee.noShow === true }); }
+    catch (e) { console.error("cal→hubspot sync failed:", e); }
+  }
 
   if (event === "BOOKING_CREATED" || event === "BOOKING_RESCHEDULED") {
     const rescheduled = event === "BOOKING_RESCHEDULED";
@@ -162,6 +172,65 @@ async function markPortalAccess(token, personId) {
     method: "PATCH", v: 2,
     body: { custom_fields: { [fieldKey]: Number(yes) } }
   });
+}
+
+/* Cal.com booking → HubSpot pipeline automation.
+   - BOOKING_CREATED / RESCHEDULED: lead status → Intro Call Scheduled, move (or
+     create) the open deal into "Consultation Scheduled", and queue the
+     consultation (in Netlify Blobs) for the auto-advance poller.
+   - BOOKING_NO_SHOW_UPDATED (or an attendee noShow flag): lead status → No-Show,
+     add a note, and flag the queued consultation so the poller won't advance it.
+   - BOOKING_CANCELLED: drop it from the poller queue + note it. */
+async function syncBookingToHubSpot({ event, email, attendeeName, eventTitle, start, end, uid, attendeeNoShow }) {
+  if (!email) return;
+  const hsStore = getStore("hs-consultations");
+  const key = uid ? `uid:${uid}` : `email:${email}`;
+
+  const contactId = await upsertContact(email, {}); // resolve/create the contact; no field overwrite
+  if (!contactId) return;
+
+  // Fires on Cal's dedicated no-show event, or any event whose attendee is flagged no-show.
+  const noShow = event === "BOOKING_NO_SHOW_UPDATED" || attendeeNoShow === true;
+  const cancelled = event === "BOOKING_CANCELLED";
+  const booked = event === "BOOKING_CREATED" || event === "BOOKING_RESCHEDULED";
+
+  if (booked) {
+    await upsertContact(email, { hs_lead_status: LEAD_STATUS.INTRO_CALL_SCHEDULED });
+    let deal = await findOpenDealForContact(contactId);
+    let dealId;
+    if (deal) {
+      await updateDeal(deal.id, { dealstage: DEAL_STAGES.CONSULTATION_SCHEDULED, pipeline: PIPELINE });
+      dealId = deal.id;
+    } else {
+      dealId = await createDeal(
+        { dealname: `${attendeeName || email} — Consultation`, dealstage: DEAL_STAGES.CONSULTATION_SCHEDULED, pipeline: PIPELINE },
+        contactId
+      );
+    }
+    await hsStore.set(key, JSON.stringify({
+      dealId, contactId, endTime: end ? end.toISOString() : null, noShow: false, title: eventTitle
+    })).catch(() => {});
+    return;
+  }
+
+  if (noShow) {
+    await upsertContact(email, { hs_lead_status: LEAD_STATUS.NO_SHOW });
+    const rec = await hsStore.get(key, { type: "json" }).catch(() => null);
+    await createNote({
+      body: `<b>No-show</b> — ${esc(eventTitle || "consultation")}${start ? ` scheduled for ${start.toISOString()}` : ""} (marked in Cal.com).`,
+      contactId, dealId: rec && rec.dealId
+    });
+    if (rec) await hsStore.set(key, JSON.stringify({ ...rec, noShow: true })).catch(() => {});
+    return;
+  }
+
+  if (cancelled) {
+    await hsStore.delete(key).catch(() => {});
+    await createNote({
+      body: `<b>Consultation cancelled</b> — ${esc(eventTitle || "consultation")}${start ? ` (was ${start.toISOString()})` : ""} (Cal.com).`,
+      contactId
+    });
+  }
 }
 
 function msToHHMM(ms) {
