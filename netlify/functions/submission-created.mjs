@@ -15,6 +15,8 @@
         optional PD_PIPELINE_ID (default 2), PD_STAGE_ID (default 6)
    ============================================================ */
 
+import { upsertContact, findOpenDealForContact, createDeal, updateDeal, createNote } from "./lib/hubspot.mjs";
+
 const API = "https://api.pipedrive.com/v1";
 
 export default async (req) => {
@@ -36,6 +38,10 @@ export default async (req) => {
       await pd("PATCH", `/persons/${person.id}`, token, {
         custom_fields: { [fields.person["CRS Delivery Date"]]: toDate(data.crs_accepted_at) }
       }, 2);
+    }
+    if (process.env.HUBSPOT_TOKEN) {
+      try { await upsertContact(data.email, { email: data.email, crs_delivery_date: toDate(data.crs_accepted_at) }); }
+      catch (e) { console.error("hubspot crs dual-write failed:", e); }
     }
     return ok("crs recorded");
   }
@@ -127,6 +133,13 @@ export default async (req) => {
     pinned_to_deal_flag: dealId ? 1 : undefined
   }));
 
+  // ---------- HubSpot dual-write (parallel-run; safe no-op if HUBSPOT_TOKEN unset) ----------
+  if (process.env.HUBSPOT_TOKEN) {
+    try {
+      await syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
+    } catch (e) { console.error("hubspot dual-write failed:", e); }
+  }
+
   return ok("synced");
 };
 
@@ -162,6 +175,56 @@ function buildSubmissionNote(data) {
     .filter(([k]) => data[k] !== undefined && data[k] !== "" && data[k] !== null)
     .map(([k, label]) => `<b>${label}:</b> ${esc(String(data[k]))}`);
   return `<b>Request Investment Access — full submission</b><br><br>${rows.join("<br>")}`;
+}
+
+/* HubSpot dual-write: upsert the Contact (by email), update-or-create their
+   open Deal with the mapped custom properties, and attach the full submission
+   as a Note. Property internal names match hs-setup.mjs. Runs alongside — and
+   never interferes with — the Pipedrive writes above. */
+async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 }) {
+  if (!data.email) return;
+
+  const contactProps = clean({
+    firstname: data.first_name,
+    lastname: data.last_name,
+    phone: data.phone,
+    preferred_name: data.preferred_name,
+    state_of_residence: data.state,
+    investor_role: data.role_other ? `${data.role} — ${data.role_other}` : data.role,
+    marital_status: data.marital_status,
+    household_income: data.household_income,
+    net_worth: data.net_worth,
+    dst_familiarity: data.dst_familiarity,
+    current_plan: data.current_plan,
+    us_check: data.us_check,
+    accreditation_check: data.accreditation_check,
+    crs_delivery_date: toDate(data.crs_accepted_at)
+  });
+  const contactId = await upsertContact(data.email, contactProps);
+  if (!contactId) return;
+
+  const dealProps = clean({
+    dealname: `${name} — ${data.situation || "Investment"}`,
+    amount: dealValue || undefined,
+    closedate: day45 || undefined,                    // 45-day deadline drives close date (per Jerry)
+    situation: data.situation_other ? `${data.situation} — ${data.situation_other}` : data.situation,
+    closing_date: toDate(data.closing_date),
+    equity: equity || undefined,
+    debt: (data.debt_amount !== undefined && data.debt_amount !== "") ? debt : undefined,
+    anticipated_investment: anticipated || undefined,
+    in_place_ltv: (equity + debt > 0) ? ltv : undefined,
+    total_investment_size: total || undefined,
+    deadline_45: day45,
+    deadline_180: day180,
+    routed_to: data.routed_to
+  });
+
+  const openDeal = await findOpenDealForContact(contactId);
+  let dealId;
+  if (openDeal) { await updateDeal(openDeal.id, dealProps); dealId = openDeal.id; }
+  else { dealId = await createDeal(dealProps, contactId); }
+
+  await createNote({ body: buildSubmissionNote(data), contactId, dealId });
 }
 
 function esc(s) {
