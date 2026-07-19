@@ -36,6 +36,13 @@ const SITE = "https://baker1031.com";
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
 const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
 const OG_IMAGE = `${SITE}/assets/og-card.png`;
+// HubSpot tracking code (analytics/attribution ONLY — the real form→CRM data
+// flow is the submission-created dual-write, not this loader). Injected before
+// </head> on every dist page in the cache-bust pass below. Portal + region
+// default to this account; override via HUBSPOT_PORTAL_ID / HUBSPOT_REGION.
+const HS_PORTAL_ID = process.env.HUBSPOT_PORTAL_ID || "246795892";
+const HS_REGION = process.env.HUBSPOT_REGION || "na2";
+const HS_TRACKING = `<!-- HubSpot embed code --><script type="text/javascript" id="hs-script-loader" async defer src="//js-${HS_REGION}.hs-scripts.com/${HS_PORTAL_ID}.js"></script>`;
 // Social-card coverage (audit): every generated page gets OG/Twitter tags.
 function ensureOg(html, title, desc, url) {
   if (html.includes('property="og:image"')) return html;
@@ -1852,6 +1859,11 @@ ${rows}
   let busted = 0;
   for (const hf of htmlFiles) {
     let s = readFileSync(hf, "utf8"), changed = false;
+    // HubSpot tracking loader — one per page, before </head> (idempotent).
+    if (!s.includes("hs-scripts.com") && s.includes("</head>")) {
+      s = s.replace("</head>", `${HS_TRACKING}\n</head>`);
+      changed = true;
+    }
     for (const { attr, dir, hashes } of assets) {
       for (const [f, h] of Object.entries(hashes)) {
         // Match absolute ("/css/tokens.css") and relative ("css/tokens.css") refs
