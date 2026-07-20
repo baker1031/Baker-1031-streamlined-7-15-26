@@ -1635,6 +1635,7 @@
     <input type="text" name="accreditation_check">
     <input type="text" name="routed_to">
     <input type="text" name="crs_accepted_at">
+    <input type="text" name="sms_consent">
   </form>
 
   <!-- Static form so Netlify registers CRS receipts; notification target: crs@baker1031.com -->
@@ -1805,6 +1806,9 @@
           <a id="crs-link" data-field="CRS URL" href="/documents/form-crs.pdf" target="_blank" rel="noopener" style="display:inline-block;font-size:0.95rem;font-weight:600;color:var(--navy);text-decoration:underline;margin-bottom:1rem">View the Form CRS (PDF) &rarr;</a>
           <div class="radio-set">
             <label><input type="checkbox" id="crs-accept" name="crs_accepted" value="accepted" required> I confirm that I have received and read the Form CRS.</label>
+          </div>
+          <div class="radio-set" style="margin-top:0.85rem">
+            <label style="align-items:flex-start"><input type="checkbox" id="sms-consent" name="sms_consent" value="yes"> <span style="font-size:0.9rem;line-height:1.55">I agree to receive text messages from <strong>Baker 1031 Investments</strong> about appointment reminders, account updates, and confirmations at the phone number provided. Message frequency may vary. Message &amp; data rates may apply. Text HELP for help, reply STOP to opt out. See our <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms.html" target="_blank" rel="noopener">Terms</a>. <em>(optional)</em></span></label>
           </div>
           <p class="modal-fineprint">A receipt of your acknowledgment (name, email, date, and time) is recorded and emailed to crs@baker1031.com for our compliance records.</p>
         </div>
@@ -2357,6 +2361,46 @@
         });
       }
 
+      // GoHighLevel booking widget (single "Introductory Consultation" calendar),
+      // prefilled with the form data. Account provisioning + Portal Access happen
+      // server-side via the GHL "Booking -> Portal Provisioning" workflow.
+      var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
+      function initGhlEmbed(elementId, routeNs) {
+        var rawPhone = (form.elements['phone'].value || '').trim();
+        var digits = rawPhone.replace(/\D/g, '');
+        var e164Phone = rawPhone.charAt(0) === '+' ? '+' + digits
+          : digits.length === 10 ? '+1' + digits
+          : digits.length === 11 && digits.charAt(0) === '1' ? '+' + digits
+          : '';
+        var params = new URLSearchParams({
+          first_name: form.elements['first_name'].value || '',
+          last_name: form.elements['last_name'].value || '',
+          email: form.elements['email'].value || ''
+        });
+        if (e164Phone) params.set('phone', e164Phone);
+        var holder = document.getElementById(elementId);
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + '?' + params.toString();
+        iframe.style.cssText = 'width:100%;height:100%;min-height:60vh;border:none;overflow:hidden';
+        iframe.setAttribute('scrolling', 'no');
+        holder.appendChild(iframe);
+        if (!document.getElementById('ghl-embed-js')) {
+          var s = document.createElement('script');
+          s.id = 'ghl-embed-js';
+          s.src = 'https://link.msgsndr.com/js/form_embed.js';
+          document.body.appendChild(s);
+        }
+        // Best-effort: fire the GA conversion if the GHL widget posts a booking message.
+        window.addEventListener('message', function (e) {
+          var o = String(e.origin || '');
+          if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
+          var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
+          if (!/appointment|booked|booking|scheduled/i.test(raw)) return;
+          if (window.__ghlBooked) return; window.__ghlBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: routeNs, currency: 'USD', value: 1 });
+        });
+      }
+
       /* ---------- "Other" reveals a required explanation box ---------- */
       function wireOther(selectId, fieldId) {
         var sel = document.getElementById(selectId);
@@ -2414,7 +2458,7 @@
         Array.prototype.forEach.call(form.elements, function (el) {
           if (!el.name) return;
           if (el.disabled) return;
-          if (el.type === 'radio' && !el.checked) return;
+          if ((el.type === 'radio' || el.type === 'checkbox') && !el.checked) return;
           // Only send fields from steps that were part of this path
           var panel = el.closest('.form-step');
           if (panel && order.indexOf(panel.getAttribute('data-step')) === -1) return;
@@ -2460,14 +2504,26 @@
         thanks.querySelector('p').textContent = isConsult
           ? 'Thanks for the details. The right next step is a quick consultation call. Pick a time that works for you below.'
           : 'Your request is in. Pick a time below and we’ll walk through the current offering menu together.';
-        var id = isConsult ? 'my-cal-inline-consultation' : 'my-cal-inline-25min';
+        var id = 'ghl-booking-holder';
         if (!document.getElementById(id)) {
           var holder = document.createElement('div');
           holder.id = id;
           holder.className = 'cal-holder';
           thanks.appendChild(holder);
-          initCalEmbed(isConsult ? 'consultation' : '25min', id,
-            isConsult ? 'jerry-baker-yn6qn1/consultation' : 'jerry-baker-yn6qn1/25min');
+          initGhlEmbed(id, isConsult ? 'consultation' : '25min');
+          if (!document.getElementById('portal-cta')) {
+            var cta = document.createElement('div');
+            cta.id = 'portal-cta';
+            cta.style.textAlign = 'center';
+            cta.innerHTML = '<p style="margin:1rem 0 0.5rem;font-size:0.92rem;color:var(--ink-soft)">Once you book your call, your investor portal is set up automatically.</p>' +
+              '<button type="button" class="portal-btn">Access your investor portal &rarr;</button>';
+            thanks.appendChild(cta);
+            cta.querySelector('.portal-btn').addEventListener('click', function () {
+              var em = form.elements['email'].value;
+              if (window.baker1031Login) window.baker1031Login(em);
+              else window.location.href = '/current-offerings';
+            });
+          }
         }
       }
 
@@ -2510,10 +2566,11 @@
         progress.style.display = '';
         thanks.classList.remove('show');
         document.querySelector('.modal').classList.remove('modal-wide');
-        ['my-cal-inline-25min', 'my-cal-inline-consultation'].forEach(function (id) {
+        ['ghl-booking-holder', 'portal-cta'].forEach(function (id) {
           var n = document.getElementById(id);
           if (n) n.remove();
         });
+        window.__ghlBooked = false;
         btnNext.disabled = false;
         backdrop.classList.add('open');
         document.body.style.overflow = 'hidden';
