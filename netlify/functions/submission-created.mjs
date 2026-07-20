@@ -11,12 +11,23 @@
        Deal value         = (equity || anticipated) * 0.05 * 0.9
    - crs-receipts → stamp CRS Delivery Date on the Person
 
+   Dual-writes (parallel-run, each guarded by its own token so it's a
+   safe no-op when unset): HubSpot (HUBSPOT_TOKEN), GHL (GHL_TOKEN).
+
    Env: PIPEDRIVE_API_TOKEN, PD_FIELDS_JSON (output of pd-setup),
         optional PD_PIPELINE_ID (default 2), PD_STAGE_ID (default 6)
    ============================================================ */
 
 import { upsertContact, findOpenDealForContact, createDeal, updateDeal, createNote } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, PIPELINE, assessAccreditation } from "./lib/hs-config.mjs";
+import {
+  upsertContact as ghlUpsertContact, getContactFieldMap, resolvePipeline,
+  findOpenOpportunity, createOpportunity, updateOpportunity, createNote as ghlCreateNote, stageId
+} from "./lib/ghl.mjs";
+import {
+  PIPELINE_NAME as GHL_PIPELINE, STAGES as GHL_STAGES, buildContactFields,
+  assessAccreditation as ghlAssessAccreditation
+} from "./lib/ghl-config.mjs";
 
 const API = "https://api.pipedrive.com/v1";
 
@@ -43,6 +54,13 @@ export default async (req) => {
     if (process.env.HUBSPOT_TOKEN) {
       try { await upsertContact(data.email, { email: data.email, crs_delivery_date: toDate(data.crs_accepted_at) }); }
       catch (e) { console.error("hubspot crs dual-write failed:", e); }
+    }
+    if (process.env.GHL_TOKEN) {
+      try {
+        const fieldMap = await getContactFieldMap();
+        const cf = buildContactFields(fieldMap, { crs_delivery_date: toDate(data.crs_accepted_at) });
+        await ghlUpsertContact({ email: data.email, customFields: cf });
+      } catch (e) { console.error("ghl crs dual-write failed:", e); }
     }
     return ok("crs recorded");
   }
@@ -141,6 +159,13 @@ export default async (req) => {
     } catch (e) { console.error("hubspot dual-write failed:", e); }
   }
 
+  // ---------- GHL dual-write (parallel-run; safe no-op if GHL_TOKEN unset) ----------
+  if (process.env.GHL_TOKEN) {
+    try {
+      await syncToGHL({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
+    } catch (e) { console.error("ghl dual-write failed:", e); }
+  }
+
   return ok("synced");
 };
 
@@ -237,6 +262,69 @@ async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv
   }
 
   await createNote({ body: buildSubmissionNote(data), contactId, dealId });
+}
+
+/* GHL dual-write: upsert the Contact (by email) with all investor + deal
+   fields as CONTACT custom fields, update-or-create their open Opportunity
+   (New Registration stage, value = dealValue), and attach the submission as
+   a note. Runs alongside — and never interferes with — the writes above.
+   Field names match lib/ghl-config.mjs / ghl-setup.mjs. */
+async function syncToGHL({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 }) {
+  if (!data.email) return;
+  const { leadStatus } = ghlAssessAccreditation(data.accreditation_check);
+  const fieldMap = await getContactFieldMap();
+  const cf = buildContactFields(fieldMap, {
+    preferred_name: data.preferred_name,
+    state_of_residence: data.state,
+    investor_role: data.role_other ? `${data.role} — ${data.role_other}` : data.role,
+    marital_status: data.marital_status,
+    household_income: data.household_income,
+    net_worth: data.net_worth,
+    dst_familiarity: data.dst_familiarity,
+    current_plan: data.current_plan,
+    us_check: data.us_check,
+    accreditation_check: data.accreditation_check,
+    crs_delivery_date: toDate(data.crs_accepted_at),
+    lead_status: leadStatus,
+    situation: data.situation_other ? `${data.situation} — ${data.situation_other}` : data.situation,
+    closing_date: toDate(data.closing_date),
+    equity: equity || undefined,
+    debt: (data.debt_amount !== undefined && data.debt_amount !== "") ? debt : undefined,
+    anticipated_investment: anticipated || undefined,
+    in_place_ltv: (equity + debt > 0) ? ltv : undefined,
+    total_investment_size: total || undefined,
+    deadline_45: day45,
+    deadline_180: day180,
+    routed_to: data.routed_to
+  });
+
+  const contact = await ghlUpsertContact({
+    email: data.email,
+    firstName: data.first_name,
+    lastName: data.last_name,
+    name,
+    phone: data.phone,
+    customFields: cf
+  });
+  if (!contact) return;
+
+  const pipe = await resolvePipeline(GHL_PIPELINE);
+  const oppName = `${name} — ${data.situation || "Investment"}`;
+  const open = await findOpenOpportunity(contact.id);
+  if (open) {
+    // Re-submission: refresh name + value, don't move an advanced opportunity back.
+    await updateOpportunity(open.id, { name: oppName, monetaryValue: dealValue || undefined });
+  } else if (pipe) {
+    await createOpportunity({
+      name: oppName,
+      pipelineId: pipe.id,
+      pipelineStageId: stageId(pipe, GHL_STAGES.ENTRY),
+      monetaryValue: dealValue || undefined,
+      contactId: contact.id
+    });
+  }
+
+  await ghlCreateNote(contact.id, buildSubmissionNote(data));
 }
 
 function esc(s) {
