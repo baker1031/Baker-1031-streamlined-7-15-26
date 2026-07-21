@@ -316,7 +316,11 @@
           var o = String(e.origin || '');
           if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
           var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
-          if (!/appointment|booked|booking|scheduled/i.test(raw)) return;
+          // Match ONLY the real booking-completion message: it carries a completion
+          // word alongside the booking context. On load the widget posts a message
+          // that merely contains its own ".../widget/booking/..." URL — that has the
+          // word "booking" but NO completion word, so it must not trigger a redirect.
+          if (!(/booking|appointment/i.test(raw) && /complete|booked|confirmed|success/i.test(raw))) return;
           if (window.__ghlBooked) return; window.__ghlBooked = true;
           if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: route, currency: 'USD', value: 1 });
           // Booking complete — hand off to the branded confirmation page. Small delay
