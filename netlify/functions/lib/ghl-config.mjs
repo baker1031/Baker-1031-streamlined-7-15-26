@@ -57,6 +57,7 @@ export const CONTACT_FIELDS = [
   { key: "portal_access", name: PORTAL_FIELD_NAME, dataType: "SINGLE_OPTIONS", options: ["Yes", "No"] },
   { key: "lead_status",   name: "Lead Status",     dataType: "SINGLE_OPTIONS",
     options: Object.values(LEAD_STATUS) },
+  { key: "sms_consent",   name: "SMS Consent",     dataType: "SINGLE_OPTIONS", options: ["Yes", "No"] },
   // --- deal (kept on the contact) ---
   T("situation",             "Situation"),
   D("closing_date",          "Closing Date"),
