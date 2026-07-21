@@ -89,12 +89,15 @@
   <main class="container" id="main-content">
     <div class="sched-wrap">
       <div class="sched-head">
-        <div class="sched-badge" aria-hidden="true">
+        <div class="sched-badge" id="sched-badge" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
         </div>
-        <div class="sched-kicker">Request received</div>
+        <div class="sched-kicker" id="sched-kicker">Request received</div>
         <h1 id="sched-title">One last step.</h1>
         <p class="sched-lead" id="sched-lead">After a quick suitability review, we&rsquo;ll send the current offering menu and documents to your email. The next step is to pick a time for a short introductory call below.</p>
+        <div id="sched-gate-cta" style="display:none;margin-top:1.1rem">
+          <a href="/#request-access" class="portal-btn" style="text-decoration:none;display:inline-block">Request investment access &rarr;</a>
+        </div>
       </div>
 
       <div class="sched-steps" id="sched-steps">
@@ -216,84 +219,120 @@
       var data = {};
       try { data = JSON.parse(sessionStorage.getItem('b1031_booking') || '{}') || {}; } catch (e) { data = {}; }
       var hasSubmission = !!(data.email || data.first_name);
+      var approved = data.approved === true;   // self-reported accredited AND US-based
       var first = (data.first_name || '').trim();
+      var firstSafe = first.replace(/[<>&]/g, '');
       var route = data.route === 'consultation' ? 'consultation' : '25min';
 
+      var badgeEl = document.getElementById('sched-badge');
+      var kickerEl = document.getElementById('sched-kicker');
       var titleEl = document.getElementById('sched-title');
       var leadEl = document.getElementById('sched-lead');
-      var noteEl = document.getElementById('sched-cal-note');
+      var stepsEl = document.getElementById('sched-steps');
+      var calCard = document.querySelector('.sched-cal-card');
+      var portalCard = document.querySelector('.portal-card');
+      var ctaEl = document.getElementById('sched-gate-cta');
 
-      if (hasSubmission) {
-        if (first) titleEl.innerHTML = 'One last step, ' + first.replace(/[<>&]/g, '') + '.';
+      var CLOCK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 14"/></svg>';
+
+      // Hide the calendar / steps / portal and show a message instead.
+      function gate(kicker, title, lead, showCta) {
+        if (stepsEl) stepsEl.style.display = 'none';
+        if (calCard) calCard.style.display = 'none';
+        if (portalCard) portalCard.style.display = 'none';
+        if (badgeEl) badgeEl.innerHTML = CLOCK;
+        kickerEl.textContent = kicker;
+        titleEl.innerHTML = title;
+        leadEl.innerHTML = lead;
+        if (showCta && ctaEl) ctaEl.style.display = 'block';
+      }
+
+      if (hasSubmission && approved) {
+        // Approved for access → show the booking calendar.
+        kickerEl.textContent = 'Request received';
+        titleEl.innerHTML = first ? ('One last step, ' + firstSafe + '.') : 'One last step.';
         leadEl.innerHTML = (route === 'consultation')
-          ? 'Thanks for the details. The right next step is a short consultation call &mdash; pick a time below that works for you, and we&rsquo;ll take it from there.'
+          ? 'Thanks for the details. The right next step is a short consultation call &mdash; pick a time below and we&rsquo;ll take it from there.'
           : 'After a quick suitability review, we&rsquo;ll send the current offering menu and documents to your email. Pick a time below and we&rsquo;ll walk through your options together.';
+        buildCalendar();
+      } else if (hasSubmission && !approved) {
+        // Not approved → registration-pending notice, no booking.
+        gate(
+          'Registration pending',
+          first ? ('Thanks, ' + firstSafe + ' &mdash; your registration is in review.') : 'Your registration is in review.',
+          'Thanks for your interest. We&rsquo;re reviewing your details to confirm your eligibility to access our current offerings, and we&rsquo;ll follow up by email to confirm your access. Questions in the meantime? Reach out to <a href="mailto:invest@baker1031.com" style="color:var(--navy);font-weight:600">invest@baker1031.com</a>.',
+          false
+        );
       } else {
-        // Direct visit, no form submission in this session.
-        document.getElementById('sched-steps').style.display = 'none';
-        titleEl.textContent = 'Schedule an introductory call';
-        leadEl.innerHTML = 'Pick a time below for a short introductory consultation. Haven&rsquo;t shared your details yet? <a href="/#request-access" style="color:var(--navy);font-weight:600">Request investment access first &rarr;</a>';
+        // Direct visit, no submission this session → route to the request form.
+        gate(
+          'Request access',
+          'Request investment access',
+          'To book an introductory call, first request access so we can review your details.',
+          true
+        );
       }
 
       // Build the GoHighLevel booking widget (same calendar the site uses),
       // prefilled from the stashed values. form_embed.js auto-sizes the iframe to
       // its full content height, so the calendar never needs an inner scrollbar.
-      var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
-      var holder = document.getElementById('sched-cal');
-      var loading = document.getElementById('sched-cal-loading');
+      function buildCalendar() {
+        var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
+        var holder = document.getElementById('sched-cal');
+        var loading = document.getElementById('sched-cal-loading');
 
-      var rawPhone = (data.phone || '').trim();
-      var digits = rawPhone.replace(/\D/g, '');
-      var e164Phone = rawPhone.charAt(0) === '+' ? '+' + digits
-        : digits.length === 10 ? '+1' + digits
-        : (digits.length === 11 && digits.charAt(0) === '1') ? '+' + digits
-        : '';
-      var params = new URLSearchParams();
-      if (data.first_name) params.set('first_name', data.first_name);
-      if (data.last_name) params.set('last_name', data.last_name);
-      if (data.email) params.set('email', data.email);
-      if (e164Phone) params.set('phone', e164Phone);
+        var rawPhone = (data.phone || '').trim();
+        var digits = rawPhone.replace(/\D/g, '');
+        var e164Phone = rawPhone.charAt(0) === '+' ? '+' + digits
+          : digits.length === 10 ? '+1' + digits
+          : (digits.length === 11 && digits.charAt(0) === '1') ? '+' + digits
+          : '';
+        var params = new URLSearchParams();
+        if (data.first_name) params.set('first_name', data.first_name);
+        if (data.last_name) params.set('last_name', data.last_name);
+        if (data.email) params.set('email', data.email);
+        if (e164Phone) params.set('phone', e164Phone);
 
-      var iframe = document.createElement('iframe');
-      iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + (params.toString() ? '?' + params.toString() : '');
-      iframe.id = GHL_BOOKING_ID + '_' + Date.now();
-      iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
-      iframe.setAttribute('scrolling', 'no');
-      iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
-      holder.appendChild(iframe);
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + (params.toString() ? '?' + params.toString() : '');
+        iframe.id = GHL_BOOKING_ID + '_' + Date.now();
+        iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
+        iframe.setAttribute('scrolling', 'no');
+        iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
+        holder.appendChild(iframe);
 
-      if (!document.getElementById('ghl-embed-js')) {
-        var s = document.createElement('script');
-        s.id = 'ghl-embed-js';
-        s.src = 'https://link.msgsndr.com/js/form_embed.js';
-        document.body.appendChild(s);
+        if (!document.getElementById('ghl-embed-js')) {
+          var s = document.createElement('script');
+          s.id = 'ghl-embed-js';
+          s.src = 'https://link.msgsndr.com/js/form_embed.js';
+          document.body.appendChild(s);
+        }
+
+        // Conversion signals. The GoHighLevel tracker (external-tracking.js, injected
+        // at build) records the /scheduled.html pageview automatically; these gtag
+        // calls are best-effort if GA4 is present.
+        if (window.gtag) gtag('event', 'generate_lead', { method: 'access_request_form', currency: 'USD', value: 1 });
+        window.addEventListener('message', function (e) {
+          var o = String(e.origin || '');
+          if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
+          var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
+          if (!/appointment|booked|booking|scheduled/i.test(raw)) return;
+          if (window.__ghlBooked) return; window.__ghlBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: route, currency: 'USD', value: 1 });
+          // Booking complete — hand off to the branded confirmation page. Small delay
+          // lets the GHL widget settle and the analytics beacon flush first.
+          setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
+        });
+
+        // Investor-portal shortcut (account provisioning happens server-side via the
+        // GHL "Booking -> Portal Provisioning" workflow once the call is booked).
+        var pb = document.getElementById('sched-portal-btn');
+        if (pb) pb.addEventListener('click', function () {
+          var em = data.email || '';
+          if (window.baker1031Login) window.baker1031Login(em);
+          else window.location.href = '/current-offerings';
+        });
       }
-
-      // Conversion signals. The GoHighLevel tracker (external-tracking.js, injected
-      // at build) records the /scheduled.html pageview automatically; these gtag
-      // calls are best-effort if GA4 is present.
-      if (window.gtag) gtag('event', 'generate_lead', { method: 'access_request_form', currency: 'USD', value: 1 });
-      window.addEventListener('message', function (e) {
-        var o = String(e.origin || '');
-        if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
-        var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
-        if (!/appointment|booked|booking|scheduled/i.test(raw)) return;
-        if (window.__ghlBooked) return; window.__ghlBooked = true;
-        if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: route, currency: 'USD', value: 1 });
-        // Booking complete — hand off to the branded confirmation page. Small delay
-        // lets the GHL widget settle and the analytics beacon flush first.
-        try { sessionStorage.setItem('b1031_booked', '1'); } catch (e) {}
-        setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
-      });
-
-      // Investor-portal shortcut (account provisioning happens server-side via the
-      // GHL "Booking -> Portal Provisioning" workflow once the call is booked).
-      var pb = document.getElementById('sched-portal-btn');
-      if (pb) pb.addEventListener('click', function () {
-        var em = data.email || '';
-        if (window.baker1031Login) window.baker1031Login(em);
-        else window.location.href = '/current-offerings';
-      });
     })();
   </script>
 </body>

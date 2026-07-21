@@ -2481,7 +2481,10 @@
               last_name: form.elements['last_name'].value || '',
               email: form.elements['email'].value || '',
               phone: form.elements['phone'].value || '',
-              route: route
+              route: route,
+              // "Approved for access" = self-reported accredited AND US-based. Drives
+              // whether /scheduled.html shows the calendar or a pending-review notice.
+              approved: !!(us.isUS && accr.accredited)
             }));
           } catch (e) {}
           window.location.href = '/scheduled.html';
