@@ -45,6 +45,18 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# Post-submission scheduling + booking-confirmation pages — conversion
+# endpoints, not landing pages. Keep them out of the index.
+[[headers]]
+  for = "/scheduled.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/call-confirmed.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # ---------- Security ----------
 [[headers]]
   for = "/*"
@@ -56,4 +68,4 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     # CSP in REPORT-ONLY mode first (audit): watch the console / reports for a week,
     # then move to Content-Security-Policy once no legitimate source is blocked.
-    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://app.cal.com https://*.cal.com https://esm.sh https://*.hs-scripts.com https://*.hs-analytics.net https://*.hscollectedforms.net https://*.hsforms.net https://*.usemessages.com https://*.hs-banner.com https://*.hsadspixel.net; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://img.logo.dev https://assets.baker1031.com https://*.hubspot.com https://*.hs-analytics.net https://track.hubspot.com; media-src 'self' https://res.cloudinary.com; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://auth.baker1031.com https://*.kinde.com https://app.cal.com https://*.cal.com https://api.cal.com https://*.hubspot.com https://*.hubapi.com https://*.hs-analytics.net https://*.hscollectedforms.net https://*.hsforms.com; frame-src https://app.cal.com https://*.cal.com https://auth.baker1031.com https://player.vimeo.com https://*.hubspot.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://auth.baker1031.com"
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://esm.sh https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://img.logo.dev https://assets.baker1031.com https://*.leadconnectorhq.com https://*.msgsndr.com; media-src 'self' https://res.cloudinary.com; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://auth.baker1031.com https://*.kinde.com https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com; frame-src https://api.leadconnectorhq.com https://*.leadconnectorhq.com https://*.msgsndr.com https://auth.baker1031.com https://player.vimeo.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://auth.baker1031.com"

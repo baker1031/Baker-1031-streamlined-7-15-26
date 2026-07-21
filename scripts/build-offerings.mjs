@@ -36,13 +36,12 @@ const SITE = "https://baker1031.com";
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
 const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
 const OG_IMAGE = `${SITE}/assets/og-card.png`;
-// HubSpot tracking code (analytics/attribution ONLY — the real form→CRM data
-// flow is the submission-created dual-write, not this loader). Injected before
-// </head> on every dist page in the cache-bust pass below. Portal + region
-// default to this account; override via HUBSPOT_PORTAL_ID / HUBSPOT_REGION.
-const HS_PORTAL_ID = process.env.HUBSPOT_PORTAL_ID || "246795892";
-const HS_REGION = process.env.HUBSPOT_REGION || "na2";
-const HS_TRACKING = `<!-- HubSpot embed code --><script type="text/javascript" id="hs-script-loader" async defer src="//js-${HS_REGION}.hs-scripts.com/${HS_PORTAL_ID}.js"></script>`;
+// GoHighLevel website tracking (analytics/attribution ONLY — the real form→CRM
+// data flow is the submission-created write + the booking workflow, NOT this
+// loader). Injected before </head> on every dist page in the cache-bust pass
+// below. The access form submits via fetch and has onsubmit prevented, so this
+// script never sees a native form submit — no double-counting of leads.
+const GHL_TRACKING = `<!-- GoHighLevel website tracking --><script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_7ab70c544749430ba9bc3086c9f8053d"></script>`;
 // Social-card coverage (audit): every generated page gets OG/Twitter tags.
 function ensureOg(html, title, desc, url) {
   if (html.includes('property="og:image"')) return html;
@@ -116,7 +115,7 @@ function buildLinkDict() {
    partials/*.html are the single source of truth; every page keeps its
    last-baked copy between PARTIAL markers so it still previews locally. */
 const PT_PAGES = existsSync(join(ROOT, "property-types")) ? readdirSync(join(ROOT, "property-types")).filter((d) => existsSync(join(ROOT, "property-types", d, "index.html"))).map((d) => `property-types/${d}/index.html`) : [];
-for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "process.html", "404.html"]) {
+for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "privacy-policy.html", "scheduled.html", "call-confirmed.html", "process.html", "404.html"]) {
   const p = join(ROOT, shell);
   writeFileSync(p, injectPartials(readFileSync(p, "utf8"), ROOT, shell));
 }
@@ -1051,6 +1050,7 @@ ${rows}
     { loc: `${SITE}/ccpa.html`, priority: "0.3" },
     { loc: `${SITE}/accessibility.html`, priority: "0.3" },
     { loc: `${SITE}/commitment-to-privacy.html`, priority: "0.3" },
+    { loc: `${SITE}/privacy-policy.html`, priority: "0.3" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
@@ -1797,6 +1797,7 @@ ${rows}
     "property-types.html", "property-types",
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
+    "privacy-policy.html", "scheduled.html", "call-confirmed.html",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
@@ -1859,9 +1860,9 @@ ${rows}
   let busted = 0;
   for (const hf of htmlFiles) {
     let s = readFileSync(hf, "utf8"), changed = false;
-    // HubSpot tracking loader — one per page, before </head> (idempotent).
-    if (!s.includes("hs-scripts.com") && s.includes("</head>")) {
-      s = s.replace("</head>", `${HS_TRACKING}\n</head>`);
+    // GoHighLevel website tracking — one per page, before </head> (idempotent).
+    if (!s.includes("external-tracking.js") && s.includes("</head>")) {
+      s = s.replace("</head>", `${GHL_TRACKING}\n</head>`);
       changed = true;
     }
     for (const { attr, dir, hashes } of assets) {
@@ -1901,10 +1902,10 @@ ${rows}
     "/request-access.html": "/#request-access",
     "/sitemap.html": "/",
     "/ask-llm.html": "/",
-    // Privacy Policy + Form CRS live as PDFs; the other legal pages are now real
-    // HTML pages (built by build-aux-pages.mjs) so they serve directly — only the
-    // renamed suitability URL needs a redirect to its new slug.
-    "/privacy-policy.html": "/documents/privacy-policy.pdf",
+    // Form CRS lives as a PDF; the other legal pages — including the Privacy
+    // Policy, which now carries the SMS / mobile opt-in disclosures — are real
+    // HTML pages that serve directly. Only the renamed suitability URL and the
+    // Form CRS PDF need redirects.
     "/form-crs.html": "/documents/form-crs.pdf",
     "/dst-suitability-and-finra-reg-bi.html": "/reg-bi.html",
   };
