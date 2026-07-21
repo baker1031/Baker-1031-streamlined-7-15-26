@@ -45,10 +45,15 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
-# Post-submission scheduling / thank-you page — a conversion endpoint, not a
-# landing page. Keep it out of the index.
+# Post-submission scheduling + booking-confirmation pages — conversion
+# endpoints, not landing pages. Keep them out of the index.
 [[headers]]
   for = "/scheduled.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/call-confirmed.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 

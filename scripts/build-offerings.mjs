@@ -115,7 +115,7 @@ function buildLinkDict() {
    partials/*.html are the single source of truth; every page keeps its
    last-baked copy between PARTIAL markers so it still previews locally. */
 const PT_PAGES = existsSync(join(ROOT, "property-types")) ? readdirSync(join(ROOT, "property-types")).filter((d) => existsSync(join(ROOT, "property-types", d, "index.html"))).map((d) => `property-types/${d}/index.html`) : [];
-for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "privacy-policy.html", "scheduled.html", "process.html", "404.html"]) {
+for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "privacy-policy.html", "scheduled.html", "call-confirmed.html", "process.html", "404.html"]) {
   const p = join(ROOT, shell);
   writeFileSync(p, injectPartials(readFileSync(p, "utf8"), ROOT, shell));
 }
@@ -1797,7 +1797,7 @@ ${rows}
     "property-types.html", "property-types",
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
-    "privacy-policy.html", "scheduled.html",
+    "privacy-policy.html", "scheduled.html", "call-confirmed.html",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
