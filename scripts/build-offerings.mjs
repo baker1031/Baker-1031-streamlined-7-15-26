@@ -115,7 +115,7 @@ function buildLinkDict() {
    partials/*.html are the single source of truth; every page keeps its
    last-baked copy between PARTIAL markers so it still previews locally. */
 const PT_PAGES = existsSync(join(ROOT, "property-types")) ? readdirSync(join(ROOT, "property-types")).filter((d) => existsSync(join(ROOT, "property-types", d, "index.html"))).map((d) => `property-types/${d}/index.html`) : [];
-for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "process.html", "404.html"]) {
+for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn.html", "glossary.html", "markets.html", "audiences.html", "calculators.html", "sponsors.html", "templates/offering.html", "templates/performance.html", "learn/article-template.html", "glossary/term-template.html", "markets/state-template.html", "audiences/audience-template.html", "calculators/calculator-template.html", "sponsors/sponsor-template.html", "property-types.html", "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html", "privacy-policy.html", "scheduled.html", "process.html", "404.html"]) {
   const p = join(ROOT, shell);
   writeFileSync(p, injectPartials(readFileSync(p, "utf8"), ROOT, shell));
 }
@@ -1050,6 +1050,7 @@ ${rows}
     { loc: `${SITE}/ccpa.html`, priority: "0.3" },
     { loc: `${SITE}/accessibility.html`, priority: "0.3" },
     { loc: `${SITE}/commitment-to-privacy.html`, priority: "0.3" },
+    { loc: `${SITE}/privacy-policy.html`, priority: "0.3" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
@@ -1796,6 +1797,7 @@ ${rows}
     "property-types.html", "property-types",
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
+    "privacy-policy.html", "scheduled.html",
     "offerings", "data", "css", "js", "assets", "documents",
     "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
@@ -1900,10 +1902,10 @@ ${rows}
     "/request-access.html": "/#request-access",
     "/sitemap.html": "/",
     "/ask-llm.html": "/",
-    // Privacy Policy + Form CRS live as PDFs; the other legal pages are now real
-    // HTML pages (built by build-aux-pages.mjs) so they serve directly — only the
-    // renamed suitability URL needs a redirect to its new slug.
-    "/privacy-policy.html": "/documents/privacy-policy.pdf",
+    // Form CRS lives as a PDF; the other legal pages — including the Privacy
+    // Policy, which now carries the SMS / mobile opt-in disclosures — are real
+    // HTML pages that serve directly. Only the renamed suitability URL and the
+    // Form CRS PDF need redirects.
     "/form-crs.html": "/documents/form-crs.pdf",
     "/dst-suitability-and-finra-reg-bi.html": "/reg-bi.html",
   };

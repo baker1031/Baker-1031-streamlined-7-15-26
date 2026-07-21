@@ -2471,12 +2471,27 @@
         data.append('routed_to', route);
 
         btnNext.disabled = true;
+        // Hand the values the scheduler needs to the dedicated /scheduled.html page
+        // via sessionStorage (never the URL — keeps email/phone out of query
+        // strings), then redirect there once the submission POST completes.
+        function goSchedule() {
+          try {
+            sessionStorage.setItem('b1031_booking', JSON.stringify({
+              first_name: form.elements['first_name'].value || '',
+              last_name: form.elements['last_name'].value || '',
+              email: form.elements['email'].value || '',
+              phone: form.elements['phone'].value || '',
+              route: route
+            }));
+          } catch (e) {}
+          window.location.href = '/scheduled.html';
+        }
         fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: data.toString()
-        }).then(function () { showThanks(route); })
-          .catch(function () { showThanks(route); }); // shown either way while designing; real delivery requires Netlify hosting
+          body: data.toString(),
+          keepalive: true
+        }).then(goSchedule).catch(goSchedule);
 
         // CRS receipt: separate Netlify form whose notification emails crs@baker1031.com
         if (crsAcceptedAt) {
@@ -2490,7 +2505,8 @@
           fetch('/', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: receipt.toString()
+            body: receipt.toString(),
+            keepalive: true
           }).catch(function () {});
         }
       }
