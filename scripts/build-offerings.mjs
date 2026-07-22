@@ -554,7 +554,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
           <h3><a href="${page}" style="color:inherit">${esc(o["Investment Name"])}</a></h3>
           <div class="sponsor-line">${esc(o["Sponsor"] || "")}</div>
           <div class="card-stats">
-            <div class="cs"><span class="label">Min Investment</span><span class="value">${esc(o["Minimum Investment"] || "—")}</span></div>
+            <div class="cs"><span class="label">Minimum</span><span class="value">${esc(o["Minimum Investment"] || "—")}</span></div>
             <div class="cs"><span class="label">Avg Yield</span><span class="value">${esc(o["Average Yield"] || "—")}</span></div>
             <div class="cs"><span class="label">LTV</span><span class="value">${esc(o["In-Place LTV"] || "—")}</span></div>
             <div class="cs"><span class="label">Strategy</span><span class="value">${esc(o["Strategy"] || "—")}</span></div>
