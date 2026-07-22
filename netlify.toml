@@ -10,7 +10,13 @@
   # and fails the build. It is NOT a secret — exclude only this key from the
   # scan. The real secret (GRANOLA_API_KEY) is still scanned and never appears
   # in build output.
-  SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL"
+  #
+  # SITE_RECAPTCHA_KEY is the PUBLIC reCAPTCHA site key — it is meant to be
+  # embedded in index.html (client-side), so the scanner flags its value there
+  # as a "leaked secret." It is not a secret. The private SITE_RECAPTCHA_SECRET
+  # is NOT omitted and is still scanned, so a genuine leak would still fail the
+  # build.
+  SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL,SITE_RECAPTCHA_KEY"
 
 # ---------- Caching ----------
 [[headers]]
