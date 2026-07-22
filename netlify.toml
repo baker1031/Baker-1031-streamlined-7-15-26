@@ -10,7 +10,7 @@
   # and fails the build. It is NOT a secret — exclude only this key from the
   # scan. The real secret (GRANOLA_API_KEY) is still scanned and never appears
   # in build output.
-  SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL"
+  SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL,SITE_RECAPTCHA_KEY"
 
 # ---------- Caching ----------
 [[headers]]
