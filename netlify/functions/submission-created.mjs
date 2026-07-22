@@ -32,6 +32,7 @@ export default async (req) => {
   const formName = payload.form_name || data["form-name"] || "";
 
   if (formName === "crs-receipts") {
+    if (!data.email) return ok("crs: no email");
     try {
       const fieldMap = await getContactFieldMap();
       const cf = buildContactFields(fieldMap, { crs_delivery_date: toDate(data.crs_accepted_at) });
@@ -41,6 +42,18 @@ export default async (req) => {
   }
 
   if (formName !== "request-investment-access") return ok("ignored");
+
+  // ---------- spam / empty-submission guard ----------
+  // Bots POST directly to the Netlify endpoint, skip the multi-step modal
+  // (and its per-step validation), and send only an email — or nothing.
+  // A genuine completion always carries these fields; drop anything missing
+  // them before any GoHighLevel write.
+  const required = ["first_name", "last_name", "email", "phone", "state"];
+  const missing = required.filter((k) => !data[k] || String(data[k]).trim() === "");
+  if (missing.length) {
+    console.warn(`skipping incomplete/spam submission — missing: ${missing.join(", ")} — email=${data.email || "(none)"}`);
+    return ok(`skipped: missing ${missing.join(", ")}`);
+  }
 
   const name = [data.first_name, data.last_name].filter(Boolean).join(" ") || data.email;
 

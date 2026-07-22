@@ -1611,7 +1611,7 @@
   </main>
 
   <!-- Static form so Netlify detects it at deploy time; the popup submits these fields via AJAX -->
-  <form name="request-investment-access" data-netlify="true" netlify-honeypot="company" hidden>
+  <form name="request-investment-access" data-netlify="true" data-netlify-recaptcha="true" netlify-honeypot="company" hidden>
     <input type="text" name="company">
     <input type="text" name="first_name">
     <input type="text" name="last_name">
@@ -1812,6 +1812,7 @@
             <label style="align-items:flex-start"><input type="checkbox" id="sms-consent" name="sms_consent" value="yes"> <span style="font-size:0.9rem;line-height:1.55">I agree to receive text messages from <strong>Baker 1031 Investments</strong> about appointment reminders, account updates, and confirmations at the phone number provided. Message frequency may vary. Message &amp; data rates may apply. Text HELP for help, reply STOP to opt out. See our <a href="/privacy-policy.html" target="_blank" rel="noopener">Privacy Policy</a> and <a href="/terms.html" target="_blank" rel="noopener">Terms</a>. <em>(optional)</em></span></label>
           </div>
           <p class="modal-fineprint">A receipt of your acknowledgment (name, email, date, and time) is recorded and emailed to crs@baker1031.com for our compliance records.</p>
+          <div class="g-recaptcha" data-sitekey="6LfgF18tAAAAAKb-S7qSFxAUJynsOHi0bMMAFRH8" style="margin-top:1rem"></div>
         </div>
 
         <p class="form-error" id="form-error">Please complete the highlighted fields before continuing.</p>
@@ -2327,6 +2328,15 @@
       }
 
       function submitForm() {
+        // reCAPTCHA: require a solved challenge before we submit. Netlify also
+        // validates the token server-side (data-netlify-recaptcha on the form),
+        // so a missing/invalid token is rejected regardless — block here for UX.
+        var recaptchaToken = (window.grecaptcha && typeof grecaptcha.getResponse === 'function') ? grecaptcha.getResponse() : '';
+        if (!recaptchaToken) {
+          errorMsg.textContent = 'Please complete the “I’m not a robot” verification before submitting.';
+          errorMsg.classList.add('show');
+          return;
+        }
         var us = usCheck();
         var accr = accreditationCheck();
         // Route: US + not-cash + (accredited investor, or any non-investor role) → 25min;
@@ -2352,6 +2362,7 @@
         data.append('us_check', us.detail);
         data.append('accreditation_check', accr.detail);
         data.append('routed_to', route);
+        data.append('g-recaptcha-response', recaptchaToken);
 
         btnNext.disabled = true;
         // Hand the values the scheduler needs to the dedicated /scheduled.html page
@@ -2548,5 +2559,6 @@
   </script>
 
   <script type="module" src="js/auth.js"></script>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 </html>
