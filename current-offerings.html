@@ -189,18 +189,18 @@
     padding-top: 0.85rem;
     margin-bottom: 0.95rem;
   }
-  .card-stats .cs { min-width: 0; }
+  .card-stats .cs { min-width: 0; display: flex; flex-direction: column; }
   .card-stats .label {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--muted);
     margin-bottom: 0.15rem;
-    white-space: nowrap;
+    overflow-wrap: break-word;
   }
-  .card-stats .value { font-size: 0.85rem; font-weight: 700; }
+  .card-stats .value { font-size: 0.85rem; font-weight: 700; margin-top: auto; overflow-wrap: break-word; }
 
   .availability { margin-bottom: 1rem; }
   .availability .bar {
