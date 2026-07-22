@@ -1518,6 +1518,7 @@ ${rows}
     "delaware-statutory-trusts": "dst-guide",
     "delaware-statutory-trust-faq": "dst-guide",
     "dst-pros-and-cons": "dst-guide",
+    "what-is-a-delaware-statutory-trust-dst-complete-guide": "dst-guide",
     "45-day-identification-period": "1031-exchange-timeline",
     "the-45-day-trap": "1031-exchange-timeline",
     "how-to-identify-dsts-within-the-45-day-window": "1031-exchange-timeline",
@@ -1694,6 +1695,20 @@ ${rows}
         ? { "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a.join(" ") } })) }
         : null,
       breadcrumbLd([["Home", `${SITE}/`], ["Learn", `${SITE}/learn`], [a.title, null]]),
+      a.slug === "jerry-baker-bio" ? {
+        "@type": "ProfilePage",
+        mainEntity: {
+          "@type": "Person",
+          "@id": `${SITE}/#jerry`,
+          name: 'Gerald F. "Jerry" Baker, III',
+          alternateName: ["Jerry Baker", "Baker Investments"],
+          jobTitle: "Founder & Managing Principal",
+          worksFor: { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments, LLC", alternateName: "Baker Investments", url: `${SITE}/`, telephone: "+1-415-579-1660", address: { "@type": "PostalAddress", streetAddress: "650 California Street, 7th Floor", addressLocality: "San Francisco", addressRegion: "CA", postalCode: "94108", addressCountry: "US" } },
+          url: `${SITE}/learn/jerry-baker-bio/`,
+          knowsAbout: ["Delaware Statutory Trusts", "1031 Exchange", "721 UPREIT Exchange", "Real Estate Investment"],
+          identifier: { "@type": "PropertyValue", propertyID: "FINRA CRD", value: "7537416" },
+        },
+      } : null,
     ];
     const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
