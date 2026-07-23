@@ -22,6 +22,8 @@ function shell({ title, desc, canonical, jsonld = "", main, gate = "soft" }) {
   h = h.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
   h = h.replace(/<body data-gate="[^"]*">/, `<body data-gate="${gate}">`);
   h = h.replace(/<main class="container" id="main-content">[\s\S]*?<\/main>/, () => `<main class="container" id="main-content">\n${main}\n  </main>`);
+  const ogTitle = String(title).replace(/\s*(?:&mdash;|—|\|)\s*Baker 1031.*$/, "").trim();
+  h = h.replace("</head>", `  <meta property="og:type" content="website">\n  <meta property="og:site_name" content="Baker 1031 Investments">\n  <meta property="og:title" content="${attr(ogTitle)}">\n  <meta property="og:description" content="${attr(desc)}">\n  <meta property="og:url" content="${canonical}">\n  <meta property="og:image" content="${SITE}/assets/og-card.png">\n  <meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${attr(ogTitle)}">\n  <meta name="twitter:description" content="${attr(desc)}">\n  <meta name="twitter:image" content="${SITE}/assets/og-card.png">\n</head>`);
   return h;
 }
 
@@ -183,7 +185,7 @@ ${cards}
     "@context": "https://schema.org", "@type": "CollectionPage", name: "DST & 1031 Property Types", url: `${SITE}/property-types.html`,
     hasPart: TYPES.map(([slug, , name]) => ({ "@type": "Article", name, url: `${SITE}/property-types/${slug}/` }))
   })}</script>`;
-  let html = shell({ title: "DST &amp; 1031 Property Types &mdash; Baker 1031 Investments", desc: "Guides to every DST and 1031-exchange property type — multifamily, industrial, net lease, self-storage, healthcare, data centers, and more.", canonical: `${SITE}/property-types.html`, jsonld, main });
+  let html = shell({ title: "DST &amp; 1031 Property Types &mdash; Baker 1031 Investments", desc: "Guides to every DST and 1031-exchange property type — multifamily, industrial, net lease, self-storage, healthcare, data centers, and more.", canonical: `${SITE}/property-types`, jsonld, main });
   html = html.replace("</head>", `${extraCss}\n</head>`);
   writeFileSync(join(ROOT, "property-types.html"), html);
 }

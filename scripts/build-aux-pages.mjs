@@ -26,6 +26,8 @@ function shell({ title, desc, canonical, jsonld = "", main, gate = "public" }) {
   h = h.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
   h = h.replace(/<body data-gate="[^"]*">/, `<body data-gate="${gate}">`);
   h = h.replace(/<main class="container" id="main-content">[\s\S]*?<\/main>/, () => `<main class="container" id="main-content">\n${main}\n  </main>`);
+  const ogTitle = String(title).replace(/\s*(?:&mdash;|—|\|)\s*Baker 1031.*$/, "").trim();
+  h = h.replace("</head>", `  <meta property="og:type" content="website">\n  <meta property="og:site_name" content="Baker 1031 Investments">\n  <meta property="og:title" content="${attr(ogTitle)}">\n  <meta property="og:description" content="${attr(desc)}">\n  <meta property="og:url" content="${canonical}">\n  <meta property="og:image" content="${SITE}/assets/og-card.png">\n  <meta name="twitter:card" content="summary_large_image">\n  <meta name="twitter:title" content="${attr(ogTitle)}">\n  <meta name="twitter:description" content="${attr(desc)}">\n  <meta name="twitter:image" content="${SITE}/assets/og-card.png">\n</head>`);
   return h;
 }
 
@@ -92,16 +94,16 @@ function renderLegal(p) {
         ${introRest}
 ${sections}
         ${disclaimer ? `<p class="mk-disclosure">${t(disclaimer)}</p>` : ""}
-        <div class="article-footer-nav"><a href="/">&larr; Home</a><a href="/disclosures.html">Important disclosures &rarr;</a></div>
+        <div class="article-footer-nav"><a href="/">&larr; Home</a><a href="/disclosures">Important disclosures &rarr;</a></div>
       </article>
     </div>`;
 
   const desc = `${p.title} — Baker 1031 Investments.`;
   const jsonld = `<script type="application/ld+json">${JSON.stringify({
-    "@context": "https://schema.org", "@type": "WebPage", name: p.title, url: `${SITE}/${p.slug}.html`,
+    "@context": "https://schema.org", "@type": "WebPage", name: p.title, url: `${SITE}/${p.slug}`,
     isPartOf: { "@id": `${SITE}/#website` }, inLanguage: "en-US"
   })}</script>`;
-  return shell({ title: `${t(p.title)} &mdash; Baker 1031 Investments`, desc, canonical: `${SITE}/${p.slug}.html`, jsonld, main });
+  return shell({ title: `${t(p.title)} &mdash; Baker 1031 Investments`, desc, canonical: `${SITE}/${p.slug}`, jsonld, main });
 }
 
 let n = 0;
@@ -160,9 +162,9 @@ ${stepHtml}
   const jsonld = `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org", "@type": "HowTo", name: "The Baker 1031 DST exchange process",
     description: "How Baker 1031 works a 1031 exchange into a diversified DST portfolio, step by step.",
-    step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.head })), url: `${SITE}/process.html`
+    step: steps.map((s, i) => ({ "@type": "HowToStep", position: i + 1, name: s.head })), url: `${SITE}/process`
   })}</script>`;
-  return shell({ title: "Our Process &mdash; Baker 1031 Investments", desc: "How Baker 1031 works a 1031 exchange into a diversified DST portfolio — exchange math, position count, diversification, debt, and closing.", canonical: `${SITE}/process.html`, jsonld, main });
+  return shell({ title: "Our Process &mdash; Baker 1031 Investments", desc: "How Baker 1031 works a 1031 exchange into a diversified DST portfolio — exchange math, position count, diversification, debt, and closing.", canonical: `${SITE}/process`, jsonld, main });
 }
 writeFileSync(join(ROOT, "process.html"), renderProcess());
 n++;
