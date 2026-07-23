@@ -544,11 +544,15 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const tag = slugify(o["Property Type"] || "other");
     const pctNum = parseFloat(o["Available Percentage"]) || 0;
     const sChip = statusClass(o["Status"]);
+    const ltvRaw = (o["In-Place LTV"] || "").trim().replace(/\s*LTV\s*$/i, "");
+    const ltvDisplay = !ltvRaw ? "—" : (/^0(\.0+)?\s*%$/.test(ltvRaw) ? "All-Cash" : ltvRaw);
     return `      <article class="offering-card" data-tags="${esc(tag)}">
         <a class="card-photo" href="${page}">
-          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy">` : ""}
-          <span class="status-chip${sChip ? " " + sChip : ""}">${esc(o["Status"])}</span>
-          <span class="type-chip">${esc(o["Property Type"] || "")}</span>
+          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy" onerror="this.style.display='none'">` : ""}
+          <div class="chip-row">
+            <span class="status-chip${sChip ? " " + sChip : ""}">${esc(o["Status"])}</span>
+            <span class="type-chip">${esc(o["Property Type"] || "")}</span>
+          </div>
         </a>
         <div class="card-body">
           <h3><a href="${page}" style="color:inherit">${esc(o["Investment Name"])}</a></h3>
@@ -556,7 +560,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
           <div class="card-stats">
             <div class="cs"><span class="label">Minimum</span><span class="value">${esc(o["Minimum Investment"] || "—")}</span></div>
             <div class="cs"><span class="label">Avg Yield</span><span class="value">${esc(o["Average Yield"] || "—")}</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">${esc(o["In-Place LTV"] || "—")}</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">${esc(ltvDisplay)}</span></div>
             <div class="cs"><span class="label">Strategy</span><span class="value">${esc(o["Strategy"] || "—")}</span></div>
             <div class="cs"><span class="label">Est. Hold</span><span class="value">${esc(o["Estimated Hold Period"] || "—")}</span></div>
             <div class="cs"><span class="label">Location</span><span class="value">${esc(o["Location (Use)"] || "—")}</span></div>
