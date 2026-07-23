@@ -175,18 +175,31 @@
     transform: translateY(-2px);
   }
   .offering-card.hidden { display: none; }
-  .card-photo { position: relative; }
+  .card-photo {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 9;
+    background: var(--wash);
+    overflow: hidden;
+  }
   .card-photo img {
     display: block;
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: 100%;
     object-fit: cover;
-    background: var(--wash);
   }
-  .status-chip {
+  .chip-row {
     position: absolute;
     top: 0.8rem;
     left: 0.8rem;
+    right: 0.8rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .status-chip {
     font-size: 0.64rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -195,15 +208,14 @@
     border-radius: 999px;
     background: rgba(255, 255, 255, 0.94);
     color: var(--good);
+    white-space: nowrap;
   }
   .status-chip.limited { color: #b7791f; }
   .status-chip.backup { color: #b7791f; }
   .status-chip.soon { color: var(--navy); }
   .status-chip.closed { color: #8a8f99; }
   .type-chip {
-    position: absolute;
-    top: 0.8rem;
-    right: 0.8rem;
+    margin-left: auto;
     font-size: 0.64rem;
     font-weight: 700;
     letter-spacing: 0.08em;
@@ -212,6 +224,7 @@
     border-radius: 999px;
     background: rgba(13, 20, 38, 0.72);
     color: #fff;
+    white-space: nowrap;
   }
   .card-body { padding: 1.1rem 1.25rem 1.25rem; display: flex; flex-direction: column; flex: 1; }
   .card-body h3 { font-size: 1.05rem; font-weight: 700; line-height: 1.3; }
