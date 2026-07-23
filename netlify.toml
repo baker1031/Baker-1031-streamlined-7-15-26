@@ -152,6 +152,13 @@
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
+# Private, token-gated direct booking link for already-vetted contacts.
+# Unlisted (not in nav/footer/sitemap) — keep it out of the index too.
+[[headers]]
+  for = "/book.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
 # ---------- Security ----------
 [[headers]]
   for = "/*"
