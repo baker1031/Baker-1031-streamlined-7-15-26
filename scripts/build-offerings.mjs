@@ -550,7 +550,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
         <a class="card-photo" href="${page}">
           ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy" onerror="this.style.display='none'">` : ""}
           <div class="chip-row">
-            <span class="status-chip${sChip ? " " + sChip : ""}">${esc(o["Status"])}</span>
+            <span class="status-chip${sChip ? " " + sChip : ""}">${esc((o["Status"] || "").replace(/\s*\/\s*Under Review\s*$/i, ""))}</span>
             <span class="type-chip">${esc(o["Property Type"] || "")}</span>
           </div>
         </a>
