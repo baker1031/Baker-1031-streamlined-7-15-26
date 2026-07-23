@@ -18,7 +18,96 @@
   # build.
   SECRETS_SCAN_OMIT_KEYS = "GRANOLA_OWNER_EMAIL,SITE_RECAPTCHA_KEY"
 
+# ---------- Redirects ----------
+# Collapse the www redirect chain to a single hop to the apex host.
+# (Also set https://baker1031.com as the Primary domain in Netlify → Domain management.)
+[[redirects]]
+  from = "https://www.baker1031.com/*"
+  to = "https://baker1031.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "http://www.baker1031.com/*"
+  to = "https://baker1031.com/:splat"
+  status = 301
+  force = true
+
+# .html → extensionless: one clean, self-canonical URL per page.
+[[redirects]]
+  from = "/property-types.html"
+  to = "/property-types"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/terms.html"
+  to = "/terms"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/disclosures.html"
+  to = "/disclosures"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/privacy-policy.html"
+  to = "/privacy-policy"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/process.html"
+  to = "/process"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/accessibility.html"
+  to = "/accessibility"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/reg-bi.html"
+  to = "/reg-bi"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/ccpa.html"
+  to = "/ccpa"
+  status = 301
+  force = true
+[[redirects]]
+  from = "/commitment-to-privacy.html"
+  to = "/commitment-to-privacy"
+  status = 301
+  force = true
+
 # ---------- Caching ----------
+# Edge-cache the content pages (served static from dist) so they stay fast and
+# survive crawl-load spikes. Netlify invalidates the edge cache on each deploy.
+[[headers]]
+  for = "/learn/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800, durable"
+[[headers]]
+  for = "/sponsors/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800, durable"
+[[headers]]
+  for = "/markets/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800, durable"
+[[headers]]
+  for = "/glossary/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800, durable"
+[[headers]]
+  for = "/property-types/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=86400, stale-while-revalidate=604800, durable"
+[[headers]]
+  for = "/offerings/*"
+  [headers.values]
+    Netlify-CDN-Cache-Control = "public, s-maxage=3600, stale-while-revalidate=86400, durable"
+
 [[headers]]
   for = "/assets/*"
   [headers.values]
