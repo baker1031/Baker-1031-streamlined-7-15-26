@@ -314,6 +314,13 @@ ready.then(function (s) {
       logoutBtn.addEventListener("click", function (e) {
         e.preventDefault();
         sessionStorage.removeItem("b1031-name");
+        // Kinde's PKCE SDK (is_dangerously_use_local_storage) leaves the
+        // refresh token in localStorage on the current auth flow, so the
+        // session silently restores on the next page load and the user
+        // appears never to log out. Purge every Kinde key before redirecting.
+        try {
+          Object.keys(localStorage).forEach(function (k) { if (/^kinde/i.test(k)) localStorage.removeItem(k); });
+        } catch (_) { /* storage may be unavailable — ignore */ }
         kinde.logout();
       });
     }
