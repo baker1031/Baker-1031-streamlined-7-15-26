@@ -1336,7 +1336,7 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so any `$` in copy is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
     html = ensureOg(html, a.title, a.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
@@ -1434,7 +1434,7 @@ ${rows}
   </script>`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} | Baker 1031</title>`);
     html = ensureOg(html, c.title, c.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
@@ -1610,7 +1610,7 @@ ${rows}
     parts.push(`        <div class="kicker">${esc(a.kicker)}</div>`);
     parts.push(`        <h1>${esc(a.title)}</h1>`);
     const ad = DATES[a.slug] || { published: isoDate(a.updated), modified: isoDate(a.updated) };
-    parts.push(`        <div class="meta">By Gerald F. &ldquo;Jerry&rdquo; Baker, III &middot; Updated ${fmtDate(ad.modified)} &middot; ${a.readMin} min read</div>`);
+    parts.push(`        <div class="meta">By <a href="/learn/jerry-baker-bio/" rel="author">Gerald F. &ldquo;Jerry&rdquo; Baker, III</a> &middot; Updated ${fmtDate(ad.modified)} &middot; ${a.readMin} min read</div>`);
     if (CANONICAL_PILLAR[a.slug]) {
       const pil = articles.find((x) => x.slug === CANONICAL_PILLAR[a.slug]);
       if (pil) parts.push(`        <p class="pillar-callout">This article is part of a series &mdash; start with the definitive guide: <a href="/learn/${pil.slug}/"><strong>${esc(pil.title)}</strong></a>.</p>`);
@@ -1713,7 +1713,7 @@ ${rows}
     const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} &mdash; Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // articles are public/indexable
     html = put(html, "<!-- L:HEAD -->", "<!-- /L:HEAD -->", headBlock, a.slug);
     html = put(html, "<!-- L:CRUMB -->", "<!-- /L:CRUMB -->", esc(a.title), a.slug);
