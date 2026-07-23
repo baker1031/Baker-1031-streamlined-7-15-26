@@ -359,7 +359,7 @@ function buildPage(o) {
   ].filter(Boolean).join("\n");
   html = html.replace(
     /<title>[\s\S]*?<\/title>/,
-    `<title>${esc(name)} | ${esc(o["Structure"] || "DST")}${o["Property Type"] ? " " + esc(o["Property Type"]) : ""} Offering | Baker 1031 Investments</title>\n${headBits}`
+    `<title>${esc(name)} | Baker 1031</title>\n${headBits}`
   );
 
   /* ----- Available Equity cell (contains the nested % small tag) ----- */
@@ -983,7 +983,7 @@ ${rows}
     ]);
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile &mdash; Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile | Baker 1031</title>`);
     html = ensureOg(html, `${s.name} — DST Sponsor Profile`, metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
@@ -1264,7 +1264,7 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$`/`%` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} — Baker 1031 Investments</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} | Baker 1031</title>`);
     html = ensureOg(html, `1031 Exchange & DST Investing in ${j.name}`, j.metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
