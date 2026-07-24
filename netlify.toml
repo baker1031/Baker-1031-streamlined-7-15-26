@@ -100,14 +100,13 @@
   status = 302
   force = true
 
-# /schedule → the public booking page (schedule.html). No redirect entry is
-#           needed to serve it — Netlify serves schedule.html at /schedule —
-#           but keep the trailing-slash form pointed at the same place.
-[[redirects]]
-  from = "/schedule/"
-  to = "/schedule"
-  status = 301
-  force = true
+# /schedule → the public booking page. NO redirect entry belongs here: Netlify
+#           already serves schedule.html at /schedule the same way it serves
+#           terms.html at /terms. A forced "/schedule/" -> "/schedule" rule was
+#           added here originally and caused ERR_TOO_MANY_REDIRECTS on the live
+#           site — Netlify canonicalizes /schedule to the trailing-slash form,
+#           the forced rule bounced it straight back, and the two ping-ponged.
+#           Don't reintroduce it.
 
 # ---------- Caching ----------
 # Edge-cache the content pages (served static from dist) so they stay fast and
