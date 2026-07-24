@@ -79,6 +79,35 @@
   to = "/commitment-to-privacy"
   status = 301
   force = true
+[[redirects]]
+  from = "/schedule.html"
+  to = "/schedule"
+  status = 301
+  force = true
+
+# ---------- Short links ----------
+# Human-typeable/speakable links for email signatures, texts, and print.
+# Deliberately 302 (not 301): browsers cache 301s aggressively, and these are
+# marketing shortcuts we may want to repoint later without stranding anyone
+# who already clicked one.
+#
+# /start  → homepage with the Request Access popup auto-opened. The
+#           ?request-access= param is already handled in index.html (the Kinde
+#           login screen uses the same param), so no page change is needed.
+[[redirects]]
+  from = "/start"
+  to = "/?request-access=1"
+  status = 302
+  force = true
+
+# /schedule → the public booking page (schedule.html). No redirect entry is
+#           needed to serve it — Netlify serves schedule.html at /schedule —
+#           but keep the trailing-slash form pointed at the same place.
+[[redirects]]
+  from = "/schedule/"
+  to = "/schedule"
+  status = 301
+  force = true
 
 # ---------- Caching ----------
 # Edge-cache the content pages (served static from dist) so they stay fast and
@@ -156,6 +185,18 @@
 # Unlisted (not in nav/footer/sitemap) — keep it out of the index too.
 [[headers]]
   for = "/book.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Public /schedule short link — an open booking endpoint we hand out directly.
+# Kept out of the index so it doesn't compete with the Request Access funnel.
+[[headers]]
+  for = "/schedule"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+[[headers]]
+  for = "/schedule.html"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
