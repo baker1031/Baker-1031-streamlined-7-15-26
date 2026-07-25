@@ -48,14 +48,69 @@ function bodyLines(slug) {
   return out;
 }
 
+/* The source markdown carries an "On this page" line listing every section
+   heading, in order, concatenated. Each section line then *starts* with its
+   own heading followed by the body text. Walking the two in lockstep and
+   taking the longest common prefix recovers the heading/body split exactly,
+   with no guessing — which is what lets these pages carry real <h2>s
+   (the Jul-2026 crawl flagged all six legal pages as having none). */
+function tocOf(slug) {
+  const raw = readFileSync(join(LEGACY, `${slug}.md`), "utf8");
+  const line = raw.split("\n").map((l) => l.trim()).find((l) => /^On this page/i.test(l));
+  return line ? line.replace(/^On this page\s*/i, "").replace(/\s+/g, " ").trim() : "";
+}
+
+/* Split "…heading…body" using the remaining TOC text. Takes the LONGEST TOC
+   prefix (ending on a word boundary) that the section text also starts with —
+   label-style docs repeat a short label first ("Standard Conformance standard
+   We aim to…"), so the text is tried both as-is and with the label dropped.
+   Returns null when nothing matches, so callers can fall back to a plain <p>. */
+function splitHeading(text, tocState) {
+  const norm = (s) => String(s).replace(/\s+/g, " ").trim();
+  const toc = norm(tocState.rest);
+  if (!toc) return null;
+
+  // Labels run one to three words ("Categories", "Sources & purposes").
+  const variants = [norm(text)];
+  for (let d = 1; d <= 3; d++) {
+    const v = norm(text).split(" ").slice(d).join(" ");
+    if (v.length > 20) variants.push(v);
+  }
+
+  // Candidate cut points: every word boundary in the remaining TOC, longest first.
+  const cuts = [];
+  for (let i = 0; i < toc.length; i++) if (toc[i] === " ") cuts.push(i);
+  cuts.push(toc.length);
+
+  for (let ci = cuts.length - 1; ci >= 0; ci--) {
+    const k = cuts[ci];
+    const heading = toc.slice(0, k);
+    if (heading.length < 4) continue;
+    for (const v of variants) {
+      if (!v.startsWith(heading)) continue;
+      const body = v.slice(heading.length).trim();
+      if (body && body.length < 20) continue; // heading swallowed the section
+      tocState.rest = toc.slice(k).trim();
+      return { heading, body };
+    }
+  }
+  return null;
+}
+
 /* ============================ LEGAL PAGES ============================ */
 const LEGAL = [
-  { slug: "terms", file: "terms", crumb: "Terms & Conditions", kicker: "Legal", title: "Terms & Conditions" },
-  { slug: "disclosures", file: "disclosures", crumb: "Important Disclosures", kicker: "Legal", title: "Important Disclosures" },
-  { slug: "reg-bi", file: "dst-suitability-and-finra-reg-bi", crumb: "Reg BI & DST Suitability", kicker: "Legal", title: "Regulation Best Interest & DST Suitability" },
-  { slug: "ccpa", file: "ccpa", crumb: "California Privacy (CCPA/CPRA)", kicker: "Legal", title: "California Privacy Notice (CCPA/CPRA)" },
-  { slug: "accessibility", file: "accessibility", crumb: "Accessibility", kicker: "Legal", title: "Accessibility Statement" },
-  { slug: "commitment-to-privacy", file: "commitment-to-privacy", crumb: "Commitment to Privacy", kicker: "Legal", title: "Our Commitment to Privacy" },
+  { slug: "terms", file: "terms", crumb: "Terms & Conditions", kicker: "Legal", title: "Terms & Conditions",
+    desc: "The terms governing use of the Baker 1031 website — eligibility, informational use, accounts, intellectual property, liability, and SMS consent." },
+  { slug: "disclosures", file: "disclosures", crumb: "Important Disclosures", kicker: "Legal", title: "Important Disclosures",
+    desc: "Important disclosures for Baker 1031: accredited-investor requirements, DST and 1031 risks, how we are compensated, and our Aurora Securities affiliation." },
+  { slug: "reg-bi", file: "dst-suitability-and-finra-reg-bi", crumb: "Reg BI & DST Suitability", kicker: "Legal", title: "Regulation Best Interest & DST Suitability",
+    desc: "How Regulation Best Interest applies to DST recommendations — the care, disclosure, conflict, and compliance duties behind every 1031 replacement option." },
+  { slug: "ccpa", file: "ccpa", crumb: "California Privacy (CCPA/CPRA)", kicker: "Legal", title: "California Privacy Notice (CCPA/CPRA)",
+    desc: "California privacy notice for Baker 1031: the personal information we collect, why we collect it, and how California residents exercise CCPA rights." },
+  { slug: "accessibility", file: "accessibility", crumb: "Accessibility", kicker: "Legal", title: "Accessibility Statement",
+    desc: "Baker 1031's accessibility commitment: our WCAG 2.1 Level AA conformance target, the measures we take, known limitations, and how to report a barrier." },
+  { slug: "commitment-to-privacy", file: "commitment-to-privacy", crumb: "Commitment to Privacy", kicker: "Legal", title: "Our Commitment to Privacy",
+    desc: "How Baker 1031 Investments protects investor information — what we collect, how it is safeguarded and shared, and the choices you have over your data." },
 ];
 
 function renderLegal(p) {
@@ -78,9 +133,24 @@ function renderLegal(p) {
 
   const lead = intro.length ? `<p style="font-size:1.05rem;font-weight:500;color:var(--ink)">${t(intro[0])}</p>` : "";
   const introRest = intro.slice(1).map((l) => `<p>${t(l)}</p>`).join("\n        ");
+  const tocState = { rest: tocOf(p.file) };
   const sections = body.map((l) => {
     const m = l.match(/^(\d+)\s+(.+)$/);
-    if (m) return `        <p><strong>${m[1]}.</strong> ${t(m[2])}</p>`;
+    const num = m ? m[1] : "";
+    let text = m ? m[2] : l;
+    let split = splitHeading(text, tocState);
+    // Label-style docs repeat a short label before the real heading
+    // ("Standard Conformance standard We aim to…") — retry past the label.
+    if (!split && !m) {
+      const after = text.replace(/^\S+\s+/, "");
+      const retry = splitHeading(after, tocState);
+      if (retry) split = retry;
+    }
+    if (split) {
+      const head = num ? `${num}. ${split.heading}` : split.heading;
+      return `        <h2>${t(head)}</h2>\n        ${split.body ? `<p>${t(split.body)}</p>` : ""}`;
+    }
+    if (m) return `        <p><strong>${num}.</strong> ${t(text)}</p>`;
     return `        <p>${t(l)}</p>`;
   }).join("\n");
 
@@ -98,12 +168,13 @@ ${sections}
       </article>
     </div>`;
 
-  const desc = `${p.title} — Baker 1031 Investments.`;
+  const desc = p.desc || `${p.title} — Baker 1031 Investments.`;
   const jsonld = `<script type="application/ld+json">${JSON.stringify({
     "@context": "https://schema.org", "@type": "WebPage", name: p.title, url: `${SITE}/${p.slug}`,
     isPartOf: { "@id": `${SITE}/#website` }, inLanguage: "en-US"
   })}</script>`;
-  return shell({ title: `${t(p.title)} &mdash; Baker 1031 Investments`, desc, canonical: `${SITE}/${p.slug}`, jsonld, main });
+  const title = `${t(p.title)} | Baker 1031`;
+  return shell({ title, desc, canonical: `${SITE}/${p.slug}`, jsonld, main });
 }
 
 let n = 0;

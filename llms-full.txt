@@ -118,6 +118,8 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [What Is a Free DST Property List and How to Use One](https://baker1031.com/learn/what-is-a-free-dst-property-list-and-how-to-use-one/): A free DST property list is a curated menu of the DST offerings currently available, showing the key data for each. This guide explains what's inside a DST
 - [Who Can Invest in a DST? Accredited Investor Rules](https://baker1031.com/learn/who-can-invest-in-a-dst-accredited-investor-rules/): Who can actually invest in a DST? This guide explains the accredited investor rules that govern DST eligibility — the income and net-worth tests, how accre
 - [Zero-Coupon DSTs for High-Debt Exchanges](https://baker1031.com/learn/zero-coupon-dsts-for-high-debt-exchanges/): What is a zero-coupon DST, and why would a 1031 investor choose one? This guide explains the high-leverage zero-coupon structure, why some exchanges requir
+- [DST Properties for Sale: How to Find 1031 Replacement Property](https://baker1031.com/learn/dst-properties-for-sale/): DST properties for sale explained: how to find 1031 exchange replacement property, see what's available now, and exchange from any state into DSTs.
+- [The Top 1031 DST Sponsor Firms on Baker 1031's Preferred Sponsor List](https://baker1031.com/learn/top-1031-dst-sponsor-firms/): Baker 1031's Preferred Sponsor List: the top 1031 DST sponsor firms — ExchangeRight, Bluerock, Capital Square, NexPoint and more, by asset class.
 
 ### 1031 Basics
 
@@ -554,6 +556,10 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [What Is a Qualified Opportunity Fund (QOF)?](https://baker1031.com/learn/what-is-a-qualified-opportunity-fund-qof/): A Qualified Opportunity Fund (QOF) is the investment vehicle through which investors access Opportunity Zones and earn the tax benefits. This foundational
 - [Who Should Invest in Opportunity Zone Funds?](https://baker1031.com/learn/who-should-invest-in-opportunity-zone-funds/): Opportunity Zone funds offer powerful tax benefits, but they aren't right for everyone. This guide profiles the investors who fit — those with a big capita
 
+### Firm, Fees & Methodology
+
+- [The Top DST Brokerage Firms for 1031 Exchange Investors](https://baker1031.com/learn/top-dst-brokerage-firms-for-1031-investors/): The top DST brokerage and advisory firms for 1031 exchange investors in 2026 — how to evaluate them and why independence matters.
+
 ## Glossary (with definitions)
 
 - [10-Year Hold](https://baker1031.com/glossary/10-year-hold/): Holding a Qualified Opportunity Fund investment for at least 10 years lets an investor eliminate capital gains tax on the fund's own appreciation when sold.
@@ -609,33 +615,33 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 
 ## Markets by state
 
-- [Alaska](https://baker1031.com/markets/alaska/): 1031 exchange and DST investing in Alaska: no state income tax on real estate gains, plus passive DST, 721 UPREIT, and Opportunity Zone replacement options.
-- [Arizona](https://baker1031.com/markets/arizona/): 1031 exchange and DST investing in Arizona: a 2.5% flat income tax that conforms to Section 1031, no clawback, and Sun Belt replacement markets in Phoenix and Tucson.
-- [California](https://baker1031.com/markets/california/): 1031 exchange and DST investing in California: full Section 1031 conformity, a 13.3% top rate, the FTB 3840 clawback filing, and 3.33% seller withholding explained.
-- [Colorado](https://baker1031.com/markets/colorado/): 1031 exchange and DST investing in Colorado: full Section 1031 conformity, a 4.4% flat rate, 2% nonresident seller withholding, and Denver-area replacement markets.
-- [Hawaii](https://baker1031.com/markets/hawaii/): 1031 exchange and DST investing in Hawaii: Section 1031 conformity, a 7.25% capital-gains cap, and the 7.25% HARPTA nonresident withholding explained for exchangers.
-- [Idaho](https://baker1031.com/markets/idaho/): 1031 exchange and DST investing in Idaho: full Section 1031 conformity, a 5.695% flat rate, no clawback or nonresident withholding, and fast-growing Boise-area markets.
-- [Montana](https://baker1031.com/markets/montana/): 1031 exchange and DST investing in Montana: Section 1031 conformity, a 4.1% long-term capital-gains rate, a clawback provision, and growing Bozeman and Billings markets.
-- [Nevada](https://baker1031.com/markets/nevada/): 1031 exchange and DST investing in Nevada: no state income tax on real estate gains, no clawback or withholding, and strong Las Vegas and Reno replacement markets.
-- [New Mexico](https://baker1031.com/markets/new-mexico/): 1031 exchange and DST investing in New Mexico: Section 1031 conformity, a 5.9% top rate, no clawback or nonresident withholding, and Albuquerque-area replacement markets.
-- [Oregon](https://baker1031.com/markets/oregon/): 1031 exchange and DST investing in Oregon: Section 1031 conformity, a 9.9% top rate, the Form 24 clawback filing for out-of-state exchanges, and Portland-area markets.
-- [Utah](https://baker1031.com/markets/utah/): 1031 exchange and DST investing in Utah: full Section 1031 conformity, a 4.55% flat rate, no clawback or nonresident withholding, and fast-growing Salt Lake and Provo markets.
-- [Washington](https://baker1031.com/markets/washington/): 1031 exchange and DST investing in Washington: no income tax and real estate exempt from the state capital-gains tax, plus strong Seattle-area replacement markets.
-- [Wyoming](https://baker1031.com/markets/wyoming/): 1031 exchange and DST investing in Wyoming: no state income tax on real estate gains, no clawback or withholding, and a small market that favors out-of-state DSTs.
-- [Oklahoma](https://baker1031.com/markets/oklahoma/): 1031 exchange and DST investing in Oklahoma: Section 1031 conformity, a 4.75% top rate, a state capital-gains deduction, and value-oriented Oklahoma City and Tulsa markets.
-- [Texas](https://baker1031.com/markets/texas/): 1031 exchange and DST investing in Texas: no state income tax on real estate gains, no clawback or withholding, and deep Dallas, Houston, and Austin replacement markets.
+- [Alaska](https://baker1031.com/markets/alaska/): 1031 exchange and DST investing in Alaska: no state income tax on gains, plus passive DST, 721 UPREIT, and Opportunity Zone replacement options.
+- [Arizona](https://baker1031.com/markets/arizona/): 1031 exchange and DST investing in Arizona: a 2.5% flat tax that conforms to Section 1031, no clawback, and Sun Belt markets in Phoenix and Tucson.
+- [California](https://baker1031.com/markets/california/): 1031 exchange and DST investing in California: full Section 1031 conformity, a 13.3% top rate, the FTB 3840 clawback, and 3.33% seller withholding.
+- [Colorado](https://baker1031.com/markets/colorado/): 1031 exchange and DST investing in Colorado: full Section 1031 conformity, a 4.4% flat rate, 2% nonresident withholding, and Denver-area markets.
+- [Hawaii](https://baker1031.com/markets/hawaii/): 1031 exchange and DST investing in Hawaii: Section 1031 conformity, a 7.25% capital-gains cap, and the 7.25% HARPTA nonresident withholding.
+- [Idaho](https://baker1031.com/markets/idaho/): 1031 exchange and DST investing in Idaho: full Section 1031 conformity, a 5.695% flat rate, no clawback or withholding, and Boise-area markets.
+- [Montana](https://baker1031.com/markets/montana/): 1031 exchange and DST investing in Montana: Section 1031 conformity, a 4.1% capital-gains rate, a clawback, and Bozeman and Billings markets.
+- [Nevada](https://baker1031.com/markets/nevada/): 1031 exchange and DST investing in Nevada: no state income tax on gains, no clawback or withholding, and Las Vegas and Reno replacement markets.
+- [New Mexico](https://baker1031.com/markets/new-mexico/): 1031 exchange and DST investing in New Mexico: Section 1031 conformity, a 5.9% top rate, no clawback or withholding, and Albuquerque markets.
+- [Oregon](https://baker1031.com/markets/oregon/): 1031 exchange and DST investing in Oregon: Section 1031 conformity, a 9.9% top rate, the Form 24 clawback filing, and Portland-area markets.
+- [Utah](https://baker1031.com/markets/utah/): 1031 exchange and DST investing in Utah: full Section 1031 conformity, a 4.55% flat rate, no clawback or withholding, and Salt Lake markets.
+- [Washington](https://baker1031.com/markets/washington/): 1031 exchange and DST investing in Washington: no income tax and real estate exempt from the state capital-gains tax, plus Seattle-area markets.
+- [Wyoming](https://baker1031.com/markets/wyoming/): 1031 exchange and DST investing in Wyoming: no state income tax on gains, no clawback or withholding, and a small market that favors DSTs.
+- [Oklahoma](https://baker1031.com/markets/oklahoma/): 1031 exchange and DST investing in Oklahoma: Section 1031 conformity, a 4.75% top rate, a state gains deduction, and Oklahoma City and Tulsa.
+- [Texas](https://baker1031.com/markets/texas/): 1031 exchange and DST investing in Texas: no state income tax on gains, no clawback or withholding, and deep Dallas, Houston, and Austin markets.
 - [Illinois](https://baker1031.com/markets/illinois/): How Illinois taxes 1031 exchanges: flat 4.95% rate, full IRC conformity, no nonresident withholding. DST and 721 options for accredited Illinois investors.
-- [Indiana](https://baker1031.com/markets/indiana/): Indiana and 1031 exchanges: low 3.0% flat tax, full IRC conformity, no nonresident withholding. Passive DST and 721 replacement options for Indiana investors.
+- [Indiana](https://baker1031.com/markets/indiana/): Indiana and 1031 exchanges: low 3.0% flat tax, full IRC conformity, no nonresident withholding. Passive DST and 721 options for Indiana investors.
 - [Iowa](https://baker1031.com/markets/iowa/): Iowa and 1031 exchanges: new 3.8% flat tax, full IRC conformity, no nonresident withholding. DST and 721 passive replacement options for Iowa investors.
 - [Kansas](https://baker1031.com/markets/kansas/): Kansas and 1031 exchanges: 5.58% top rate, full IRC conformity, no nonresident withholding. Passive DST and 721 replacement options for Kansas investors.
-- [Michigan](https://baker1031.com/markets/michigan/): Michigan and 1031 exchanges: flat 4.25% tax, full IRC conformity, no nonresident withholding. DST and 721 passive replacement options for Michigan investors.
+- [Michigan](https://baker1031.com/markets/michigan/): Michigan and 1031 exchanges: flat 4.25% tax, full IRC conformity, no nonresident withholding. DST and 721 passive options for Michigan investors.
 - [Minnesota](https://baker1031.com/markets/minnesota/): Minnesota and 1031 exchanges: high 9.85% top rate, full IRC conformity, no nonresident withholding. Passive DST and 721 options for Minnesota investors.
-- [Missouri](https://baker1031.com/markets/missouri/): Missouri now exempts individual long-term capital gains (2025). It still conforms to IRC 1031, with no nonresident withholding. DST and 721 options for investors.
+- [Missouri](https://baker1031.com/markets/missouri/): Missouri now exempts individual long-term capital gains (2025). It still conforms to IRC 1031, with no nonresident withholding. DST and 721 options.
 - [Nebraska](https://baker1031.com/markets/nebraska/): Nebraska and 1031 exchanges: 5.2% top rate for 2025, full IRC conformity, no nonresident withholding. Passive DST and 721 options for Nebraska investors.
-- [North Dakota](https://baker1031.com/markets/north-dakota/): North Dakota and 1031 exchanges: low 2.5% top rate, full IRC conformity, no nonresident withholding. Passive DST and 721 options for North Dakota investors.
-- [Ohio](https://baker1031.com/markets/ohio/): Ohio and 1031 exchanges: 3.125% top rate for 2025 (flat 2.75% in 2026), full IRC conformity, no nonresident withholding. DST and 721 options for Ohio investors.
-- [South Dakota](https://baker1031.com/markets/south-dakota/): South Dakota has no state income tax, so real estate gains face no state tax. A 1031 exchange defers the federal gain. DST and 721 options for SD investors.
-- [Wisconsin](https://baker1031.com/markets/wisconsin/): Wisconsin and 1031 exchanges: 7.65% top rate with a 30% gains exclusion, full IRC conformity, no nonresident withholding. DST and 721 options for WI investors.
+- [North Dakota](https://baker1031.com/markets/north-dakota/): North Dakota and 1031 exchanges: low 2.5% top rate, full IRC conformity, no nonresident withholding. Passive DST and 721 options for investors.
+- [Ohio](https://baker1031.com/markets/ohio/): Ohio and 1031 exchanges: 3.125% top rate for 2025 (flat 2.75% in 2026), full IRC conformity, no nonresident withholding. DST and 721 options.
+- [South Dakota](https://baker1031.com/markets/south-dakota/): South Dakota has no state income tax, so real estate gains face no state tax. A 1031 exchange defers the federal gain. DST and 721 options.
+- [Wisconsin](https://baker1031.com/markets/wisconsin/): Wisconsin and 1031 exchanges: 7.65% top rate with a 30% gains exclusion, full IRC conformity, no withholding. DST and 721 options for WI investors.
 - [Alabama](https://baker1031.com/markets/alabama/): How Alabama taxes a 1031 exchange, plus DST and 721 replacement options for accredited investors trading out of active real estate into passive income.
 - [Arkansas](https://baker1031.com/markets/arkansas/): How Arkansas taxes a 1031 exchange, plus DST and 721 replacement options for accredited investors moving from active real estate into passive income.
 - [Florida](https://baker1031.com/markets/florida/): Florida has no state income tax, so a 1031 exchange faces only federal deferral. Explore DST and 721 replacement options for accredited investors.
@@ -648,30 +654,30 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [Tennessee](https://baker1031.com/markets/tennessee/): Tennessee has no state income tax, so a 1031 exchange faces only federal deferral. Explore DST and 721 replacement options for accredited investors.
 - [Virginia](https://baker1031.com/markets/virginia/): How Virginia taxes a 1031 exchange, plus DST and 721 replacement options for accredited investors moving from active real estate into passive income.
 - [West Virginia](https://baker1031.com/markets/west-virginia/): How West Virginia taxes a 1031 exchange and its 2.5% nonresident withholding, plus DST and 721 options for accredited real estate investors.
-- [Connecticut](https://baker1031.com/markets/connecticut/): Selling Connecticut investment property? See how 1031 exchanges and DSTs let accredited investors defer state and federal capital gains and shift to passive income.
-- [Delaware](https://baker1031.com/markets/delaware/): Selling Delaware investment property? Learn how 1031 exchanges and Delaware Statutory Trusts help accredited investors defer capital gains and move to passive income.
-- [Maine](https://baker1031.com/markets/maine/): Selling Maine investment property? See how 1031 exchanges and DSTs help accredited investors defer state and federal capital gains and move into passive income.
-- [Maryland](https://baker1031.com/markets/maryland/): Selling Maryland investment property? Learn how 1031 exchanges and DSTs let accredited investors defer capital gains and shift to passive income across state lines.
-- [Massachusetts](https://baker1031.com/markets/massachusetts/): Selling Massachusetts investment property? See how 1031 exchanges and DSTs help accredited investors defer capital gains and move into passive income out of state.
-- [New Hampshire](https://baker1031.com/markets/new-hampshire/): New Hampshire has no capital gains tax. See how 1031 exchanges and DSTs let accredited investors defer federal gain and move real estate equity into passive income.
-- [New Jersey](https://baker1031.com/markets/new-jersey/): Selling New Jersey investment property? Learn how 1031 exchanges and DSTs help accredited investors defer high state and federal capital gains and gain passive income.
-- [New York](https://baker1031.com/markets/new-york/): Selling New York investment property? See how 1031 exchanges and DSTs let accredited investors defer high state and federal capital gains and move to passive income.
-- [Pennsylvania](https://baker1031.com/markets/pennsylvania/): Selling Pennsylvania investment property? Learn how 1031 exchanges and DSTs let accredited investors defer capital gains now that PA recognizes like-kind exchanges.
-- [Rhode Island](https://baker1031.com/markets/rhode-island/): Selling Rhode Island investment property? See how 1031 exchanges and DSTs help accredited investors defer capital gains and move into passive, diversified income.
-- [Vermont](https://baker1031.com/markets/vermont/): Selling Vermont investment property? Learn how 1031 exchanges and DSTs let accredited investors defer state and federal capital gains and shift to passive income.
-- [Washington, D.C.](https://baker1031.com/markets/washington-dc/): Selling Washington, D.C. investment property? See how 1031 exchanges and DSTs help accredited investors defer high capital gains tax and move to passive income.
+- [Connecticut](https://baker1031.com/markets/connecticut/): Selling Connecticut investment property? 1031 exchanges and DSTs let accredited investors defer state and federal gains and shift to passive income.
+- [Delaware](https://baker1031.com/markets/delaware/): Selling Delaware investment property? 1031 exchanges and Delaware Statutory Trusts help accredited investors defer gains and move to passive income.
+- [Maine](https://baker1031.com/markets/maine/): Selling Maine investment property? 1031 exchanges and DSTs help accredited investors defer state and federal capital gains and move to passive income.
+- [Maryland](https://baker1031.com/markets/maryland/): Selling Maryland investment property? 1031 exchanges and DSTs let accredited investors defer capital gains and shift to passive income across states.
+- [Massachusetts](https://baker1031.com/markets/massachusetts/): Selling Massachusetts investment property? 1031 exchanges and DSTs help accredited investors defer gains and move into passive out-of-state income.
+- [New Hampshire](https://baker1031.com/markets/new-hampshire/): New Hampshire has no capital gains tax. See how 1031 exchanges and DSTs let accredited investors defer federal gain and move equity into passive income.
+- [New Jersey](https://baker1031.com/markets/new-jersey/): Selling New Jersey investment property? 1031 exchanges and DSTs help accredited investors defer high state and federal gains and gain passive income.
+- [New York](https://baker1031.com/markets/new-york/): Selling New York investment property? 1031 exchanges and DSTs let accredited investors defer high state and federal gains and move to passive income.
+- [Pennsylvania](https://baker1031.com/markets/pennsylvania/): Selling Pennsylvania investment property? 1031 exchanges and DSTs let accredited investors defer capital gains now that PA recognizes like-kind swaps.
+- [Rhode Island](https://baker1031.com/markets/rhode-island/): Selling Rhode Island investment property? 1031 exchanges and DSTs help accredited investors defer gains and move into passive, diversified income.
+- [Vermont](https://baker1031.com/markets/vermont/): Selling Vermont investment property? 1031 exchanges and DSTs let accredited investors defer state and federal capital gains and shift to passive income.
+- [Washington, D.C.](https://baker1031.com/markets/washington-dc/): Selling Washington, D.C. investment property? 1031 exchanges and DSTs help accredited investors defer high capital gains tax and move to passive income.
 - [Atlanta, GA](https://baker1031.com/markets/atlanta-ga/): 1031 exchange and DST investing in Atlanta: a logistics and multifamily hub. Georgia taxes gains at 5.39% and withholds 3% from nonresident sellers.
 - [Austin, TX](https://baker1031.com/markets/austin-tx/): 1031 exchange and DST investing in Austin: a tech-driven Sun Belt market. Texas has no state income tax, so an exchange faces no state capital-gains tax.
 - [Charlotte, NC](https://baker1031.com/markets/charlotte-nc/): 1031 exchange and DST investing in Charlotte: a banking and multifamily growth market. North Carolina conforms and taxes gains at a flat 4.25%.
 - [Dallas–Fort Worth, TX](https://baker1031.com/markets/dallas-fort-worth-tx/): 1031 exchange and DST investing in Dallas-Fort Worth: a top industrial and corporate market. Texas has no state income tax, so no state capital-gains tax.
-- [Denver, CO](https://baker1031.com/markets/denver-co/): 1031 exchange and DST investing in Denver: a diversified Front Range market. Colorado conforms and taxes gains at a flat 4.4% with 2% nonresident withholding.
-- [Houston, TX](https://baker1031.com/markets/houston-tx/): 1031 exchange and DST investing in Houston: energy, medical, and port-driven market. Texas has no state income tax, so no state capital-gains tax on an exchange.
+- [Denver, CO](https://baker1031.com/markets/denver-co/): 1031 exchange and DST investing in Denver: a diversified Front Range market. Colorado conforms and taxes gains at 4.4% with 2% nonresident withholding.
+- [Houston, TX](https://baker1031.com/markets/houston-tx/): 1031 exchange and DST investing in Houston: an energy, medical, and port-driven market. Texas has no state income tax, so no state tax on the gain.
 - [Nashville, TN](https://baker1031.com/markets/nashville-tn/): 1031 exchange and DST investing in Nashville: a healthcare and relocation growth market. Tennessee has no state income tax, so no state capital-gains tax.
-- [Orlando, FL](https://baker1031.com/markets/orlando-fl/): 1031 exchange and DST investing in Orlando: a tourism, medical, and logistics market. Florida has no state income tax, so no state capital-gains tax on an exchange.
-- [Phoenix, AZ](https://baker1031.com/markets/phoenix-az/): 1031 exchange and DST investing in Phoenix: a semiconductor and industrial boom market. Arizona conforms and taxes gains at a flat 2.5% with no withholding.
+- [Orlando, FL](https://baker1031.com/markets/orlando-fl/): 1031 exchange and DST investing in Orlando: a tourism, medical, and logistics market. Florida has no state income tax, so no state tax on the gain.
+- [Phoenix, AZ](https://baker1031.com/markets/phoenix-az/): 1031 exchange and DST investing in Phoenix: a semiconductor and industrial boom market. Arizona conforms and taxes gains at a flat 2.5%.
 - [Raleigh–Durham, NC](https://baker1031.com/markets/raleigh-durham-nc/): 1031 exchange and DST investing in Raleigh-Durham: a life-science and tech Triangle market. North Carolina conforms and taxes gains at a flat 4.25%.
-- [Salt Lake City, UT](https://baker1031.com/markets/salt-lake-city-ut/): 1031 exchange and DST investing in Salt Lake City: a tech and logistics crossroads market. Utah conforms and taxes gains at a flat 4.55% with no withholding.
-- [Tampa, FL](https://baker1031.com/markets/tampa-fl/): 1031 exchange and DST investing in Tampa: a finance, healthcare, and logistics market. Florida has no state income tax, so no state capital-gains tax on an exchange.
+- [Salt Lake City, UT](https://baker1031.com/markets/salt-lake-city-ut/): 1031 exchange and DST investing in Salt Lake City: a tech and logistics market. Utah conforms and taxes gains at a flat 4.55% with no withholding.
+- [Tampa, FL](https://baker1031.com/markets/tampa-fl/): 1031 exchange and DST investing in Tampa: a finance, healthcare, and logistics market. Florida has no state income tax, so no state tax on the gain.
 
 ## Calculators
 
