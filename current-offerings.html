@@ -91,6 +91,12 @@
   .page-head p { font-size: 0.98rem; line-height: 1.6; color: var(--ink-soft); max-width: 52rem; }
 
   /* ---------- Filters ---------- */
+  .section-head {
+    font-size: clamp(1.35rem, 2.2vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.25rem;
+  }
   .filter-pills {
     display: flex;
     flex-wrap: wrap;
@@ -349,7 +355,7 @@
       <p>Browse current DST properties for sale &mdash; 1031 exchange replacement offerings from our vetted sponsors, spanning multifamily, net-lease, industrial, healthcare and more. Every offering here has been through our underwriting review, and the documents behind each one are a click away. New to DST replacement property? Start with our guide to <a href="/learn/dst-properties-for-sale/">finding DST properties for sale</a>.</p>
     </div>
 
-    <h2>Available DST &amp; 1031 Replacement Offerings</h2>
+    <h2 class="section-head">Available DST &amp; 1031 Replacement Offerings</h2>
     <div class="filter-pills" role="group" aria-label="Filter offerings by property type">
       <!-- FILTERS:START -->
       <button type="button" class="active" data-filter="all">All</button>
