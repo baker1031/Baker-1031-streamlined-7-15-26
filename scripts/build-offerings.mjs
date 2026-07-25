@@ -16,13 +16,13 @@
      node scripts/build-offerings.mjs
    ============================================================ */
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { parseCSV } from "./lib/csv.mjs";
-import { esc, truncate, slugify, put } from "./lib/html.mjs";
-import { optimizedPhoto, directDownload } from "./lib/images.mjs";
+import { esc, truncate, slugify, put, brandTitle, metaTrim } from "./lib/html.mjs";
+import { optimizedPhoto, directDownload, normalizeLogo, BRAND_LOGO, LOGO_W, LOGO_H } from "./lib/images.mjs";
 import { injectPartials } from "./lib/partials.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -34,7 +34,7 @@ const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq
 const SITE = "https://baker1031.com";
 
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
-const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
+const LOGO_URL = BRAND_LOGO;
 const OG_IMAGE = `${SITE}/assets/og-card.png`;
 // GoHighLevel website tracking (analytics/attribution ONLY — the real form→CRM
 // data flow is the submission-created write + the booking workflow, NOT this
@@ -256,11 +256,15 @@ function setField(html, field, value) {
   );
   return html.replace(re, (_, open, _tag, close) => `${open}${esc(value)}${close}`);
 }
-function setImg(html, field, src, alt) {
+function setImg(html, field, src, alt, dims) {
   const re = new RegExp(`<img([^>]*\\bdata-field="${reEsc(field)}"[^>]*)>`, "g");
   return html.replace(re, (m, attrs) => {
     let a = attrs.replace(/\bsrc="[^"]*"/, () => `src="${esc(src)}"`);
     if (alt) a = /\balt="/.test(a) ? a.replace(/\balt="[^"]*"/, () => `alt="${esc(alt)}"`) : `${a} alt="${esc(alt)}"`;
+    // Explicit intrinsic size stops the image from collapsing the layout as it
+    // loads (crawl: 161 images with no size attributes). The CSS box uses
+    // object-fit: cover, so a ratio mismatch crops rather than distorts.
+    if (dims) a = a.replace(/\s+(width|height)="[^"]*"/g, "") + ` width="${dims[0]}" height="${dims[1]}"`;
     return `<img${a}>`;
   });
 }
@@ -270,8 +274,11 @@ function buildPage(o) {
   const name = o["Investment Name"];
   const canonical = `${SITE}/offerings/${o._slug}/`;
   const photo = o["Photo Link Use"] || o["Property Photo Link"] || "";
-  const metaDesc = truncate(o["Description"], 158) ||
-    `${name} — ${o["Structure"] || "DST"} offering from ${o["Sponsor"]} presented by Baker 1031 Investments.`;
+  /* The sheet Description is a full PPM paragraph. metaTrim cuts it at a
+     sentence (or clause) boundary inside 155 chars instead of hard-cutting
+     mid-word at 158, which is what the Jul-2026 crawl flagged on ~40 pages. */
+  const metaDesc = metaTrim(o["Description"], 155) ||
+    metaTrim(`${name} — ${o["Structure"] || "DST"} offering from ${o["Sponsor"]} presented by Baker 1031 Investments.`, 155);
 
   /* ----- asset paths (page lives two levels deep) ----- */
   html = html.replace(/(href|src)="(css|js|assets|documents)\//g, `$1="/$2/`);
@@ -359,8 +366,28 @@ function buildPage(o) {
   ].filter(Boolean).join("\n");
   html = html.replace(
     /<title>[\s\S]*?<\/title>/,
-    `<title>${esc(name)} | Baker 1031</title>\n${headBits}`
+    `<title>${esc(brandTitle(name))}</title>\n${headBits}`
   );
+
+  /* ----- unique section H2s -----
+     The Jul-2026 crawl flagged duplicate <h2>s on 284 pages (92% of the
+     site): every offering shipped "Overview"/"Analysis", every sponsor
+     "Overview"/"Key strategies & advantages", and so on. Interpolating the
+     entity name makes each page's headings descriptive for readers, search
+     engines, and AI answer extraction. The exact-string match only hits the
+     <h2>; the tab/anchor links with the same words are untouched. */
+  {
+    const n = esc(name);
+    const sponsorName = esc(o["Investment Firm"] || o["Sponsor"] || "the Sponsor");
+    for (const [from, to] of [
+      ["<h2>Overview</h2>", `<h2>${n} Overview</h2>`],
+      ["<h2>Analysis</h2>", `<h2>Analysis of ${n}</h2>`],
+      ["<h2>Projected Distributions</h2>", `<h2>${n} Projected Distributions</h2>`],
+      ["<h2>Financing</h2>", `<h2>${n} Financing</h2>`],
+      ["<h2>The Sponsor</h2>", `<h2>About ${sponsorName}</h2>`],
+      ["<h2>Documents</h2>", `<h2>${n} Documents</h2>`],
+    ]) html = html.replace(from, to);
+  }
 
   /* ----- Available Equity cell (contains the nested % small tag) ----- */
   html = html.replace(
@@ -423,7 +450,7 @@ function buildPage(o) {
   </style>
   <div id="offering-gate" role="dialog" aria-modal="true" aria-label="Investor access required">
     <div class="gate-card">
-      <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+      <img width="400" height="75" src="${LOGO_URL}" alt="Baker 1031 Investments">
       <h3>Verified investors only</h3>
       <p>Full offering details, projections, and documents for ${esc(name)} are available to verified accredited investors.</p>
       <a class="gate-login" id="offering-gate-login" href="#">Investor Log In</a>
@@ -444,14 +471,14 @@ function buildPage(o) {
 
   /* ----- sponsor logo (proxied through Cloudinary so pages never call
      logo.dev directly with the public token — audit item) ----- */
-  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(o["Sponsor Image"], 240), o["Sponsor"]);
+  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(normalizeLogo(o["Sponsor Image"]), 240), o["Sponsor"], [240, 240]);
   else html = html.replace(/<img([^>]*data-field="Sponsor Image"[^>]*)>/, `<img$1 style="display:none">`);
 
   /* ----- advantages list: no sheet columns — remove the block ----- */
   html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
 
   /* ----- hero photo ----- */
-  if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`);
+  if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`, [1600, 900]);
 
   /* ----- benchmark chips: above/below class from Interpret text ----- */
   html = html.replace(
@@ -548,7 +575,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     const ltvDisplay = !ltvRaw ? "—" : (/^0(\.0+)?\s*%$/.test(ltvRaw) ? "All-Cash" : ltvRaw);
     return `      <article class="offering-card" data-tags="${esc(tag)}">
         <a class="card-photo" href="${page}">
-          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy" onerror="this.style.display='none'">` : ""}
+          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" width="640" height="360" loading="lazy" onerror="this.style.display='none'">` : ""}
           <div class="chip-row">
             <span class="status-chip${sChip ? " " + sChip : ""}">${esc((o["Status"] || "").replace(/\s*\/\s*Under Review\s*$/i, ""))}</span>
             <span class="type-chip">${esc(o["Property Type"] || "")}</span>
@@ -835,7 +862,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
         advantages: [1, 2, 3, 4, 5].map((i) => noData(r[sci(`Key Strategy / Advantage ${i}`)])).filter(Boolean),
         website, domain,
         hq: noData(r[sci("Headquarters (City, State)")]),
-        logo: noData(r[sci("Logo")]),
+        logo: normalizeLogo(noData(r[sci("Logo")])),
         fullCycle: noData(r[sci("Full-Cycle Deals")]),
         avgAnnual: noData(r[sci("Average Annual Return")]),
         avgMultiple: noData(r[sci("Average Equity Multiple")]),
@@ -901,7 +928,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   let count = 0;
   for (const s of sponsors) {
     const canonical = `${SITE}/sponsors/${s.slug}/`;
-    const metaDesc = `${s.name} — DST sponsor profile: ${s.aum ? s.aum + " AUM, " : ""}${s.fullCycle ? s.fullCycle + " full-cycle deals, " : ""}strategy, and full-cycle track record tracked by Baker 1031 Investments.`.slice(0, 300);
+    const metaDesc = metaTrim(`${s.name} — DST sponsor profile: ${s.aum ? s.aum + " AUM, " : ""}${s.fullCycle ? s.fullCycle + " full-cycle deals, " : ""}strategy, and full-cycle track record tracked by Baker 1031.`, 155);
 
     // meta line
     const metaBits = [];
@@ -966,7 +993,7 @@ ${rows}
 
     const chipHtml = s.preferred ? `<span class="sp-chip">Preferred</span>` : "";
     const logoHtml = s.logo
-      ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">`
+      ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" width="240" height="240" onerror="this.style.display='none'">`
       : "";
 
     const jsonld = graphLd([
@@ -987,12 +1014,19 @@ ${rows}
     ]);
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`${s.name} — DST Sponsor Profile`))}</title>`);
     html = ensureOg(html, `${s.name} — DST Sponsor Profile`, metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // gated but crawlable (paywall markup)
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Overview</h2>", `<h2>${esc(s.name)} Overview</h2>`],
+      ["<h2>Key strategies &amp; advantages</h2>", `<h2>${esc(s.name)} Strategies &amp; Advantages</h2>`],
+      ["<h2>Track record</h2>", `<h2>${esc(s.name)} Track Record</h2>`],
+      ["<h2>Current offerings from this sponsor</h2>", `<h2>Current ${esc(s.name)} Offerings</h2>`],
+    ]) html = html.replace(from, to);
     html = put(html, "<!-- SP:CRUMB -->", "<!-- /SP:CRUMB -->", esc(s.name), s.slug);
     html = put(html, "<!-- SP:NAV -->", "<!-- /SP:NAV -->", navFor(s.slug), s.slug);
     html = put(html, "<!-- SP:LOGO -->", "<!-- /SP:LOGO -->", logoHtml, s.slug);
@@ -1014,7 +1048,12 @@ ${rows}
   // ----- hub: nav + cards (Preferred first, then A–Z) -----
   const cardOrder = [...prefList, ...alpha.filter((s) => !s.preferred)];
   const cards = cardOrder.map((s) => {
-    const logo = s.logo ? `<img src="${esc(s.logo)}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">` : `<span></span>`;
+    /* Hub cards go through Cloudinary too, so the directory page never calls
+       logo.dev directly with the public token (same rule as the profiles),
+       and carry explicit dimensions so 85 logos don't shift the grid. */
+    const logo = s.logo
+      ? `<img src="${esc(optimizedPhoto(s.logo, 260))}" alt="${esc(s.name)} logo" width="260" height="260" loading="lazy" onerror="this.style.display='none'">`
+      : `<span></span>`;
     const chip = s.preferred ? `<span class="chip">Preferred</span>` : `<span class="chip" style="visibility:hidden">.</span>`;
     const oneLine = s.aum
       ? `${esc(s.aum)} AUM${s.fullCycle ? ` &middot; ${esc(s.fullCycle)} full-cycle deals` : ""}${s.deals.length ? ` &middot; deal-by-deal track record` : ""}`
@@ -1182,11 +1221,19 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(t.term)} — Glossary | Baker 1031</title>`);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(t.lead)}">`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`${t.term} — Glossary`))}</title>`);
+    // t.lead doubles as the visible Definition paragraph, so long entries carry
+    // a purpose-written metaDesc instead of being truncated on the page.
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(t.metaDesc || t.lead, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // glossary term pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Definition</h2>", `<h2>What Is ${esc(t.term)}?</h2>`],
+      ["<h2>Key points</h2>", `<h2>Key Points About ${esc(t.term)}</h2>`],
+      ["<h2>Related terms</h2>", `<h2>Terms Related to ${esc(t.term)}</h2>`],
+    ]) html = html.replace(from, to);
     // nested one level deeper (/glossary/<slug>/) → asset paths already absolute (/css, /js) — good
     // content — marker-based put() is fully immune to `$` in the data
     html = put(html, "<!-- T:CRUMB -->", "<!-- /T:CRUMB -->", esc(t.term), t.slug);
@@ -1268,12 +1315,20 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$`/`%` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`1031 Exchange & DST Investing in ${j.name}`))}</title>`);
     html = ensureOg(html, `1031 Exchange & DST Investing in ${j.name}`, j.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(j.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // market pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>State tax treatment of a 1031 exchange</h2>", `<h2>${esc(j.name)} Tax Treatment of a 1031 Exchange</h2>`],
+      ["<h2>Market snapshot</h2>", `<h2>${esc(j.name)} Market Snapshot</h2>`],
+      ["<h2>Why 1031 &amp; DST investors look here</h2>", `<h2>Why 1031 &amp; DST Investors Look at ${esc(j.name)}</h2>`],
+      ["<h2>Replacement-property options</h2>", `<h2>Replacement-Property Options for ${esc(j.name)} Investors</h2>`],
+      ["<h2>Frequently asked questions</h2>", `<h2>${esc(j.name)} 1031 Exchange FAQ</h2>`],
+    ]) html = html.replace(from, to);
     // content — marker-based put() (immune to `$` in the data)
     html = put(html, "<!-- M:CRUMB -->", "<!-- /M:CRUMB -->", esc(j.name), j.slug);
     html = put(html, "<!-- M:FOLDERS -->", "<!-- /M:FOLDERS -->", foldersFor(j.slug), j.slug);
@@ -1340,12 +1395,19 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so any `$` in copy is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(a.title))}</title>`);
     html = ensureOg(html, a.title, a.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(a.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // audience pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Is this you?</h2>", `<h2>Is This You? Signs a 1031 Exchange Fits ${esc(a.name)}</h2>`],
+      ["<h2>How Baker 1031 helps</h2>", `<h2>How Baker 1031 Helps ${esc(a.name)}</h2>`],
+      ["<h2>Why work with Baker 1031</h2>", `<h2>Why ${esc(a.name)} Work With Baker 1031</h2>`],
+      ["<h2>Frequently asked questions</h2>", `<h2>${esc(a.name)}: 1031 Exchange FAQ</h2>`],
+    ]) html = html.replace(from, to);
     // content — marker-based put()
     html = put(html, "<!-- A:CRUMB -->", "<!-- /A:CRUMB -->", esc(a.name), a.slug);
     html = put(html, "<!-- A:FOLDERS -->", "<!-- /A:FOLDERS -->", foldersFor(a.slug), a.slug);
@@ -1438,9 +1500,9 @@ ${rows}
   </script>`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(c.title))}</title>`);
     html = ensureOg(html, c.title, c.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(c.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // calculator pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
@@ -1714,10 +1776,10 @@ ${rows}
         },
       } : null,
     ];
-    const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
+    const headBlock = `<meta name="description" content="${esc(metaTrim(a.metaDesc, 155))}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(a.seoTitle || a.title))}</title>`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // articles are public/indexable
     html = put(html, "<!-- L:HEAD -->", "<!-- /L:HEAD -->", headBlock, a.slug);
     html = put(html, "<!-- L:CRUMB -->", "<!-- /L:CRUMB -->", esc(a.title), a.slug);
@@ -2057,6 +2119,40 @@ ${rows}
 
   writeFileSync(join(dist, "_redirects"), lines.join("\n") + "\n");
   console.log(`Wrote dist/_redirects (${lines.length} redirects: ${mapped} direct, ${fallback} hub-fallback).`);
+}
+
+/* ---------------- SEO guard (audit) ----------------
+   Reports anything in dist/ that would trip the Screaming Frog checks again:
+   over-length titles/descriptions, missing <h2>, images with no dimensions,
+   and any brand logo that slipped out untransformed. Warns rather than fails
+   — a handful of Learn headlines are long on their own words and are worked
+   through editorially — but a regression shows up in the deploy log. */
+{
+  const dist = join(ROOT, "dist");
+  const long = { title: [], desc: [], noH2: [], noDim: 0, rawLogo: 0 };
+  (function walk(dir) {
+    for (const e of readdirSync(dir)) {
+      if (["assets", "css", "js", "documents", "data"].includes(e)) continue;
+      const p = join(dir, e);
+      if (statSync(p).isDirectory()) { walk(p); continue; }
+      if (!e.endsWith(".html")) continue;
+      const s = readFileSync(p, "utf8");
+      const rel = p.slice(dist.length) || "/";
+      const unesc = (x) => x.replace(/&amp;/g, "&").replace(/&mdash;/g, "—").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&rsquo;/g, "’").replace(/&ldquo;/g, "“").replace(/&rdquo;/g, "”");
+      const tm = s.match(/<title>([\s\S]*?)<\/title>/);
+      if (tm && unesc(tm[1]).trim().length > 60) long.title.push(`${rel} (${unesc(tm[1]).trim().length})`);
+      const dm = s.match(/<meta name="description" content="([\s\S]*?)">/);
+      if (dm && unesc(dm[1]).length > 155) long.desc.push(`${rel} (${unesc(dm[1]).length})`);
+      if (!/<h2[\s>]/.test(s)) long.noH2.push(rel);
+      for (const tag of s.match(/<img[^>]*>/g) || []) if (!/width=/.test(tag) || !/height=/.test(tag)) long.noDim++;
+      long.rawLogo += (s.match(/upload\/v1783843015/g) || []).length;
+    }
+  })(dist);
+  const n = (a) => a.length;
+  console.log(`SEO guard: ${n(long.title)} titles >60, ${n(long.desc)} descriptions >155, ${n(long.noH2)} pages with no <h2>, ${long.noDim} images without dimensions, ${long.rawLogo} untransformed logo refs.`);
+  if (n(long.desc)) console.warn(`  descriptions >155: ${long.desc.join(", ")}`);
+  if (n(long.noH2)) console.warn(`  no <h2>: ${long.noH2.join(", ")}`);
+  if (long.rawLogo) console.warn(`  WARNING: untransformed brand logo is back — check lib/images.mjs BRAND_LOGO usage.`);
 }
 
 console.log("Build complete.");
