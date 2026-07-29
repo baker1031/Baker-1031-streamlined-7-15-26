@@ -22,7 +22,7 @@ import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { parseCSV } from "./lib/csv.mjs";
 import { esc, truncate, slugify, put, brandTitle, metaTrim } from "./lib/html.mjs";
-import { optimizedPhoto, directDownload, normalizeLogo, BRAND_LOGO, LOGO_W, LOGO_H } from "./lib/images.mjs";
+import { optimizedPhoto, directDownload, normalizeLogo, BRAND_LOGO, BRAND_LOGO_ABS, LOGO_W, LOGO_H } from "./lib/images.mjs";
 import { injectPartials } from "./lib/partials.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -53,7 +53,7 @@ function ensureOg(html, title, desc, url) {
 const ORG_REF = { "@id": `${SITE}/#org` };
 const WEBSITE_REF = { "@id": `${SITE}/#website` };
 const PERSON_REF = { "@id": `${SITE}/#jerry` };
-const PUBLISHER = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments", logo: { "@type": "ImageObject", url: LOGO_URL } };
+const PUBLISHER = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments", logo: { "@type": "ImageObject", url: BRAND_LOGO_ABS } };
 const AUTHOR = { "@type": "Person", "@id": `${SITE}/#jerry`, name: 'Gerald F. "Jerry" Baker, III', jobTitle: "Founder & Principal", worksFor: ORG_REF };
 
 const MONTHS = { january: "01", february: "02", march: "03", april: "04", may: "05", june: "06", july: "07", august: "08", september: "09", october: "10", november: "11", december: "12" };
@@ -1879,7 +1879,7 @@ ${rows}
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
     "privacy-policy.html", "scheduled.html", "call-confirmed.html", "book.html", "schedule.html",
-    "offerings", "data", "css", "js", "assets", "documents",
+    "offerings", "data", "css", "js", "assets", "video", "documents",
     "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
   let copied = 0;
@@ -2132,7 +2132,7 @@ ${rows}
   const long = { title: [], desc: [], noH2: [], noDim: 0, rawLogo: 0 };
   (function walk(dir) {
     for (const e of readdirSync(dir)) {
-      if (["assets", "css", "js", "documents", "data"].includes(e)) continue;
+      if (["assets", "css", "js", "documents", "data", "video"].includes(e)) continue;
       const p = join(dir, e);
       if (statSync(p).isDirectory()) { walk(p); continue; }
       if (!e.endsWith(".html")) continue;
