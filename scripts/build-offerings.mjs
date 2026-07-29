@@ -1091,14 +1091,17 @@ ${rows}
     { loc: `${SITE}/sponsors`, priority: "0.6" },
     { loc: `${SITE}/property-types`, priority: "0.6" },
     ...["data-centers","government-leased","healthcare","hospitality","industrial","land","life-sciences","marina","multifamily","net-lease","office","oil-gas-royalties","self-storage","senior-living","small-bay-industrial","student-housing"].map((s) => ({ loc: `${SITE}/property-types/${s}/`, priority: "0.5" })),
-    { loc: `${SITE}/process.html`, priority: "0.5" },
-    { loc: `${SITE}/terms.html`, priority: "0.3" },
-    { loc: `${SITE}/disclosures.html`, priority: "0.3" },
-    { loc: `${SITE}/reg-bi.html`, priority: "0.3" },
-    { loc: `${SITE}/ccpa.html`, priority: "0.3" },
-    { loc: `${SITE}/accessibility.html`, priority: "0.3" },
-    { loc: `${SITE}/commitment-to-privacy.html`, priority: "0.3" },
-    { loc: `${SITE}/privacy-policy.html`, priority: "0.3" },
+    /* A sitemap should only list final 200 URLs. These 8 were listed with .html,
+       which netlify.toml force-301s to the extensionless form the pages already
+       self-canonicalize to (build-aux-pages.mjs). */
+    { loc: `${SITE}/process`, priority: "0.5" },
+    { loc: `${SITE}/terms`, priority: "0.3" },
+    { loc: `${SITE}/disclosures`, priority: "0.3" },
+    { loc: `${SITE}/reg-bi`, priority: "0.3" },
+    { loc: `${SITE}/ccpa`, priority: "0.3" },
+    { loc: `${SITE}/accessibility`, priority: "0.3" },
+    { loc: `${SITE}/commitment-to-privacy`, priority: "0.3" },
+    { loc: `${SITE}/privacy-policy`, priority: "0.3" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
@@ -1977,7 +1980,10 @@ ${rows}
   const lines = [];
   const seen = new Set();
   let mapped = 0, fallback = 0;
-  const add = (from, to) => {
+  const add = (fromRaw, to) => {
+    /* _redirects is whitespace-delimited: a literal space in the source path
+       silently corrupts the rule. Percent-encode before emitting. */
+    const from = fromRaw.replace(/ /g, "%20");
     if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); }
     /* GSC 2026-07-29: Google also has the EXTENSIONLESS variants of the old flat URLs
        indexed (/1031-exchange-boot as well as /1031-exchange-boot.html) - 479 of them
@@ -2169,7 +2175,37 @@ ${rows}
   for (const [f, t] of LEGACY_DIR) add(f, t);
   /* Safety net: any /sponsors/<x> with no profile page lands on the hub, not a 404.
      Non-forced, so real profile pages still serve. */
-  lines.push("/sponsors/*  /sponsors  301");
+  /* Netlify silently DROPS self-referential splats: a rule of the form "/x/*  /x"
+     is treated as a loop and never fires. That is why the pre-existing
+     "/property-types/*  /property-types" rule never worked and the old TitleCase-
+     with-spaces URLs stayed 404. Enumerate the variants instead of relying on it. */
+  const titleWords = (slug) => slug.split("-").map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join(" ");
+  for (const slug of readdirSync(join(dist, "property-types")).filter((d) => statSync(join(dist, "property-types", d)).isDirectory())) {
+    for (const v of new Set([titleWords(slug), titleWords(slug).replace(/ /g, "-")])) {
+      if (v === slug) continue;
+      add(`/property-types/${v}`, `/property-types/${slug}/`);
+      add(`/property-types/${v}/`, `/property-types/${slug}/`);
+    }
+  }
+  for (const [from, to] of [
+    ["/property-types/Net-Lease Retail", "/property-types/net-lease/"],
+    ["/property-types/Manufactured Housing", "/property-types"],
+    ["/property-types/Medical Office", "/property-types/healthcare/"],
+  ]) { add(from, to); add(from + "/", to); }
+
+  /* Same self-referential problem killed "/sponsors/*  /sponsors". */
+  for (const slug of sponsorSlugs) {
+    if (!exists(`/sponsors/${slug}/`)) continue;
+    for (const v of new Set([titleWords(slug), titleWords(slug).replace(/ And /g, " & "), slug.replace(/-and-/g, "-&-")])) {
+      if (v === slug) continue;
+      add(`/sponsors/${v}`, `/sponsors/${slug}/`);
+      add(`/sponsors/${v}/`, `/sponsors/${slug}/`);
+    }
+  }
+  for (const [from, to] of [
+    ["/sponsors/AEI", "/sponsors/aei-capital-corporation/"],
+    ["/sponsors/Sealy", "/sponsors/sealy-and-company/"],
+  ]) { add(from, to); add(from + "/", to); }
   // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
   // lands on the new 404 — no worse than today, and hits carry their equity.
   /* GSC 2026-07-29: these two were slug-PRESERVING and forwarded blindly, so
