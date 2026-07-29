@@ -992,19 +992,24 @@ ${rows}
     }
 
     const chipHtml = s.preferred ? `<span class="sp-chip">Preferred</span>` : "";
+    /* GSC Security 2026-07-29: nominative-use disclaimer, rendered above the fold on
+       every sponsor profile. Required alongside the schema change below to clear the
+       "Deceptive pages" manual action. */
+    const disclaimerHtml = `\n<p class="sp-disclaimer" style="margin:1rem 0 0;padding:.75rem 1rem;border-left:3px solid #c9d2e4;background:#f5f7fb;font-size:.8125rem;line-height:1.5;color:#4a5568">Baker 1031 Investments is an independent broker-dealer representative and is <strong>not affiliated with, endorsed by, or sponsored by ${esc(s.name)}</strong>. This page is Baker 1031&rsquo;s own research profile of the sponsor. ${esc(s.name)} and its logo are trademarks of their respective owner, used here for identification only.</p>`;
     const logoHtml = s.logo
       ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" width="240" height="240" onerror="this.style.display='none'">`
       : "";
 
+    /* GSC Security 2026-07-29 ("Deceptive pages"): this graph previously emitted a
+       standalone Organization node carrying the SPONSOR's own name, url and logo on a
+       baker1031.com URL - markup that asserts the page IS that company. With the
+       sponsor's trademark logo and no disclaimer, that reads as third-party
+       impersonation under Google's Social Engineering policy. The sponsor is now the
+       SUBJECT of our profile page (about); the only Organization we assert is ours. */
     const jsonld = graphLd([
       {
-        "@type": "Organization", name: s.name,
-        ...(s.website ? { url: (s.website.match(/^https?:/i) ? s.website : "https://" + s.website) } : {}),
-        ...(s.logo ? { logo: s.logo } : {}),
-        description: truncate(desc, 300),
-      },
-      {
         "@type": ["ProfilePage", "WebPage"], url: canonical,
+        about: { "@type": "Organization", name: s.name },
         name: `${s.name} — DST Sponsor Profile`, description: metaDesc,
         isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US",
         isAccessibleForFree: false,
@@ -1033,7 +1038,7 @@ ${rows}
     html = put(html, "<!-- SP:CHIP -->", "<!-- /SP:CHIP -->", chipHtml, s.slug);
     html = put(html, "<!-- SP:NAME -->", "<!-- /SP:NAME -->", esc(s.name), s.slug);
     html = put(html, "<!-- SP:META -->", "<!-- /SP:META -->", metaLine, s.slug);
-    html = put(html, "<!-- SP:LEAD -->", "<!-- /SP:LEAD -->", esc(lead), s.slug);
+    html = put(html, "<!-- SP:LEAD -->", "<!-- /SP:LEAD -->", esc(lead) + disclaimerHtml, s.slug);
     html = put(html, "<!-- SP:FACTS -->", "<!-- /SP:FACTS -->", facts, s.slug);
     html = put(html, "<!-- SP:OVERVIEW -->", "<!-- /SP:OVERVIEW -->", overview, s.slug);
     html = put(html, "<!-- SP:ADV -->", "<!-- /SP:ADV -->", advHtml, s.slug);
@@ -1972,7 +1977,16 @@ ${rows}
   const lines = [];
   const seen = new Set();
   let mapped = 0, fallback = 0;
-  const add = (from, to) => { if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); } };
+  const add = (from, to) => {
+    if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); }
+    /* GSC 2026-07-29: Google also has the EXTENSIONLESS variants of the old flat URLs
+       indexed (/1031-exchange-boot as well as /1031-exchange-boot.html) - 479 of them
+       were 404ing. Emit both forms, never shadowing a page that exists in dist/. */
+    const bare = from.replace(/\.html$/, "");
+    if (bare !== from && bare !== "" && !seen.has(bare) && !exists(bare)) {
+      seen.add(bare); lines.push(`${bare}  ${to}  301`);
+    }
+  };
 
   const OVERRIDE = {
     "/investments.html": "/current-offerings",
@@ -2099,13 +2113,92 @@ ${rows}
       LEGACY_DIR.push([`/property-types/${v}/`, `/property-types/${newSlug}/`]);
     }
   }
+  /* Flat legacy slugs not in the legacy-content manifest but still indexed and
+     404ing (GSC 2026-07-29). Every destination verified against dist/. */
+  const FLAT_LEGACY = {
+    "/1031-deals": "/current-offerings", "/1031-properties": "/current-offerings",
+    "/listings": "/current-offerings", "/all-listings": "/current-offerings",
+    "/shares": "/current-offerings", "/realized-dsts": "/current-offerings",
+    "/diversified-portfolios": "/current-offerings", "/investment-properties": "/current-offerings",
+    "/1031-exchange-properties": "/current-offerings", "/access-1031-exchange-listings": "/current-offerings",
+    "/1031-delaware-statutory-trust-marketplace": "/current-offerings",
+    "/request-listings": "/current-offerings", "/request-listings-access": "/current-offerings",
+    "/request-investment-listings": "/current-offerings", "/request-1031-dst-listings": "/current-offerings",
+    "/register": "/#request-access", "/registration": "/#request-access",
+    "/verification": "/#request-access", "/verification-confirm": "/#request-access",
+    "/baker1031.com/registration": "/#request-access",
+    "/historical-performance": "/performance", "/historical-1031-dst-performance": "/performance",
+    "/past-dst-performance-data": "/performance", "/sponsor-track-records": "/performance",
+    "/about-us": "/learn/about/", "/meet-jerry-baker": "/learn/jerry-baker-bio/",
+    "/about-jerry-baker": "/learn/jerry-baker-bio/",
+    "/glossary-1031-dst-properties": "/glossary",
+    "/glossary-of-1031-exchange-and-dst-property-terms": "/glossary",
+    "/1031-exchange": "/learn/1031-exchange-guide/",
+    "/learn/what-is-a-1031-exchange/": "/learn/1031-exchange-guide/",
+    "/learn/what-is-a-dst/": "/learn/dst-guide/",
+    "/delaware-statutory-trusts-dsts": "/learn/delaware-statutory-trusts/",
+    "/tenant-in-common-tic-1031-exchange": "/learn/delaware-statutory-trusts/",
+    "/721-exchange-1031-exchange-into-a-reit": "/learn/721-exchange-guide/",
+    "/1031-exchange-and-delaware-statutory-trust-faq": "/learn/1031-exchange-faq/",
+    "/1031-exchange-dst-resources": "/learn", "/1031-investment-strategies": "/learn",
+    "/real-estate-memos": "/learn", "/content-hub-1": "/learn",
+    "/real-estate-has-swung-too-far-toward-simplicity": "/learn",
+    "/the-quiet-compounder-a-rational-case-for-the-delaware-statutory-trust": "/learn",
+    "/the-estate-planner-s-exchange-how-the-721-dst-quietly-solves-the-problem-most-heirs-never-see-coming": "/learn",
+    "/lander": "/", "/homepage": "/", "/search": "/learn",
+    "/1031-exchange-calculator": "/calculators",
+    "/calculators/1031-dst-portfolio-builder": "/calculators",
+    "/calculators/sell-vs-1031-exchange-calculator": "/calculators/after-tax-proceeds/",
+    "/calculators/depreciation-recapture-calculator": "/calculators/depreciation-recapture/",
+  };
+  for (const [f, t] of Object.entries(FLAT_LEGACY)) { add(f, t); if (!f.endsWith("/")) add(f + "/", t); }
+
+  /* Netlify redirect matching is case-SENSITIVE; the old site linked sponsors in
+     TitleCase (/sponsors/Brookfield). Emit a cased variant per real profile page. */
+  const sponsorSlugs = existsSync(join(dist, "sponsors"))
+    ? readdirSync(join(dist, "sponsors")).filter((d) => statSync(join(dist, "sponsors", d)).isDirectory())
+    : [];
+  for (const slug of sponsorSlugs) {
+    if (!exists(`/sponsors/${slug}/`)) continue;
+    const v = slug.split("-").map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join("-");
+    if (v === slug) continue;
+    add(`/sponsors/${v}`, `/sponsors/${slug}/`);
+    add(`/sponsors/${v}/`, `/sponsors/${slug}/`);
+  }
+
   for (const [f, t] of LEGACY_DIR) add(f, t);
+  /* Safety net: any /sponsors/<x> with no profile page lands on the hub, not a 404.
+     Non-forced, so real profile pages still serve. */
+  lines.push("/sponsors/*  /sponsors  301");
   // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
   // lands on the new 404 — no worse than today, and hits carry their equity.
-  lines.push("/insights/*  /learn/:splat  301");
-  lines.push("/properties/*  /offerings/:splat  301");
+  /* GSC 2026-07-29: these two were slug-PRESERVING and forwarded blindly, so
+     /properties/<x> and /insights/<x> 301'd straight into 404s. */
+  lines.push("/insights/*  /learn  301");
+  const offeringSlugs = existsSync(join(dist, "offerings"))
+    ? readdirSync(join(dist, "offerings")).filter((d) => statSync(join(dist, "offerings", d)).isDirectory())
+    : [];
+  for (const slug of offeringSlugs) {
+    add(`/properties/${slug}`, `/offerings/${slug}/`);
+    add(`/properties/${slug}/`, `/offerings/${slug}/`);
+  }
+  lines.push("/properties/*  /current-offerings  301");
+  add("/offerings", "/current-offerings");
+  add("/offerings/", "/current-offerings");
   lines.push("/strategies/*  /learn  301");
   lines.push("/property-types/*  /property-types  301");
+
+  /* Retired Squarespace-era collections still being crawled (GSC 2026-07-29). */
+  for (const [pre, hub] of [
+    ["/1031-dst-education", "/learn"], ["/1031-education-insights", "/learn"],
+    ["/content-hub", "/learn"], ["/1031-dst-success-stories", "/learn"],
+    ["/jerrys-insights", "/learn"], ["/tax-center", "/learn"],
+    ["/guides", "/learn"], ["/1031-exchange-strategies", "/learn"],
+    ["/capabilities", "/learn"], ["/about-baker-1031", "/learn/about/"],
+    ["/investor-portal", "/current-offerings"], ["/property-listings", "/current-offerings"],
+    ["/available-dst-properties", "/current-offerings"], ["/delaware-statutory-trust", "/current-offerings"],
+    ["/request-access", "/#request-access"], ["/data-center", "/performance"],
+  ]) { add(pre, hub); add(pre + "/", hub); lines.push(`${pre}/*  ${hub}  301`); }
 
   /* ---- URL standardization (audit): extensionless is the canonical form the
      nav already uses; force the .html duplicates to it so the 9 exact-duplicate
