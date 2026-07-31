@@ -318,8 +318,110 @@
     padding: 0.3rem 0.7rem;
     border-radius: 999px;
   }
+  /* Neutral chip ("Meets Average") gets a pill background too */
+  .bm-chip { background: #eef1f6; color: var(--ink-soft); }
   .bm-chip.above { background: #eaf4ea; color: var(--good); }
   .bm-chip.below { background: #f9ece9; color: var(--bad); }
+
+  /* ---------- Field info (ⓘ) buttons + central popup ---------- */
+  .info-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    margin-left: 0.35em;
+    vertical-align: -2px;
+    border: 1px solid #c3cad6;
+    border-radius: 50%;
+    background: #fff;
+    color: #7d8594;
+    font-size: 10px;
+    font-weight: 700;
+    font-style: normal;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    font-family: Georgia, serif;
+  }
+  .info-btn:hover, .info-btn:focus { border-color: var(--navy); color: var(--navy); }
+  #field-info {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 380;
+    background: rgba(13, 20, 38, 0.5);
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  #field-info.open { display: flex; }
+  #field-info .fi-card {
+    background: #fff;
+    border-radius: 12px;
+    max-width: 30rem;
+    width: 100%;
+    max-height: 80vh;
+    overflow-y: auto;
+    padding: 1.6rem 1.75rem 1.5rem;
+    box-shadow: 0 18px 48px rgba(9, 14, 26, 0.4);
+    position: relative;
+  }
+  #field-info h4 { font-size: 1.02rem; font-weight: 700; color: var(--ink); margin: 0 2rem 0.6rem 0; }
+  #field-info p { font-size: 0.88rem; line-height: 1.6; color: var(--ink-soft); margin: 0 0 0.7rem; }
+  #field-info .fi-note { font-size: 0.76rem; color: #8a8f99; margin-bottom: 0; }
+  #field-info .fi-close {
+    position: absolute;
+    top: 0.7rem;
+    right: 0.8rem;
+    font-size: 1.4rem;
+    line-height: 1;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0.25rem 0.4rem;
+  }
+  #field-info .fi-close:hover { color: var(--ink); }
+
+  /* ---------- All-cash financing note ---------- */
+  .fin-note {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    background: #f6f8fb;
+    border: 1px solid var(--hairline);
+    border-left: 4px solid var(--navy);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    max-width: 46rem;
+  }
+
+  /* ---------- Complete offering data (catch-all) ---------- */
+  .data-grid { border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; }
+  .data-grid .dg-group {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: #f6f8fb;
+    padding: 0.6rem 1.1rem;
+    border-top: 1px solid var(--hairline);
+  }
+  .data-grid .dg-group:first-child { border-top: 0; }
+  .data-grid .dg-row {
+    display: grid;
+    grid-template-columns: 16rem 1fr;
+    gap: 1rem;
+    padding: 0.55rem 1.1rem;
+    border-top: 1px solid #f0f2f6;
+  }
+  .data-grid .dg-label { font-size: 0.83rem; font-weight: 600; color: var(--ink-soft); }
+  .data-grid .dg-value { font-size: 0.86rem; font-weight: 600; color: var(--ink); overflow-wrap: anywhere; }
+  @media (max-width: 640px) {
+    .data-grid .dg-row { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
 
   /* ---------- Sponsor ---------- */
   .sponsor-head { display: flex; align-items: center; gap: 1.25rem; margin-bottom: 1rem; }
@@ -510,13 +612,9 @@
       <div class="stat-cell"><span class="label">Location</span><span class="value" data-field="Location (Use)">AZ, CT, TX</span></div>
       <div class="stat-cell"><span class="label">Estimated Hold Period</span><span class="value" data-field="Estimated Hold Period">10 years</span></div>
       <div class="stat-cell"><span class="label">721 Exchange Exit</span><span class="value" data-field="721 Exchange Exit">Optional</span></div>
-      <div class="stat-cell"><span class="label">Total Load</span><span class="value" data-field="Total Load">9.12%</span></div>
       <div class="stat-cell"><span class="label">Strategy</span><span class="value" data-field="Strategy">Core</span></div>
       <div class="stat-cell"><span class="label">Offering Type</span><span class="value" data-field="Offering Type (Reg D)"></span></div>
       <div class="stat-cell"><span class="label">Connected REIT</span><span class="value" data-field="Connected REIT"></span></div>
-      <div class="stat-cell"><span class="label">Market Tier</span><span class="value" data-field="MSA Tier"></span></div>
-      <div class="stat-cell"><span class="label">Y1 Payout Ratio</span><span class="value" data-field="Y1 Payout Ratio"></span></div>
-      <div class="stat-cell"><span class="label">Initial Reserves</span><span class="value" data-field="Initial Reserves"></span></div>
       <div class="stat-cell"><span class="label">Status</span><span class="value" data-field="Status">Available</span></div>
     </div>
   </div>
@@ -532,6 +630,7 @@
         <a href="#benchmarks">Benchmarks</a>
         <a href="#sponsor">Sponsor</a>
         <a href="#documents">Documents</a>
+        <a href="#all-data">All Data</a>
       </div>
       <select class="nav-select" aria-label="Jump to section">
         <option value="" selected disabled>Jump to section&hellip;</option>
@@ -542,6 +641,7 @@
         <option value="#benchmarks">Benchmarks</option>
         <option value="#sponsor">Sponsor</option>
         <option value="#documents">Documents</option>
+        <option value="#all-data">All Data</option>
       </select>
     </div>
   </nav>
@@ -685,6 +785,16 @@
       </ul>
     </section>
 
+    <!-- Complete offering data (catch-all reference table) -->
+    <section id="all-data">
+      <h2>Complete Offering Data</h2>
+      <div class="data-grid">
+        <!-- ALLDATA:START -->
+        <!-- ALLDATA:END -->
+      </div>
+      <p class="note">Every data point Baker 1031 tracks for this offering, in one place. Figures are drawn from the offering&rsquo;s private placement memorandum and sponsor materials unless noted, are summaries for convenience only, and are qualified in their entirety by the PPM. Tap the &#9432; icon next to any label for what it means and how it is calculated.</p>
+    </section>
+
   </main>
 
   <!-- Footer (same as homepage) -->
@@ -790,6 +900,102 @@
         t = setTimeout(check, 120);
       });
       check();
+    })();
+  </script>
+
+  <!-- Field info popup (opened from the ⓘ buttons the script below attaches) -->
+  <div id="field-info" role="dialog" aria-modal="true" aria-labelledby="fi-title">
+    <div class="fi-card">
+      <button type="button" class="fi-close" aria-label="Close">&times;</button>
+      <h4 id="fi-title"></h4>
+      <p id="fi-body"></p>
+      <p class="fi-note">Summary information for convenience only, qualified in its entirety by the offering&rsquo;s private placement memorandum. Nothing here is an offer, a recommendation, or tax or legal advice &mdash; consult your own CPA and attorney.</p>
+    </div>
+  </div>
+
+  <script>
+    // ---- Field explainers: attach a ⓘ button to every known label; clicking
+    //      opens a centered popup with the definition + disclosures. ----
+    (function () {
+      var INFO = {
+        "minimum investment": "The smallest amount the sponsor will accept from a single investor in this offering, as set in the private placement memorandum. Minimums can differ for cash investors versus 1031 exchangers and may change at the sponsor's discretion.",
+        "total offering": "The total equity the sponsor is raising for this program. This figure includes sales commissions, fees, acquisition costs, and reserves as itemized in the PPM — not just the real estate purchase price.",
+        "available equity": "The portion of the offering the sponsor reports as still open for investment, as of the most recent update we received. Availability moves quickly and can change without notice — always confirm current availability with Baker 1031 before identifying this offering for a 1031 exchange.",
+        "equity": "The total investor equity in the offering's capital structure (the offering amount, excluding any mortgage financing).",
+        "debt": "In-place mortgage financing on the property held inside the trust. “All-Cash” means the property is owned free and clear. For 1031 exchangers, a proportionate share of in-place debt generally counts toward your debt-replacement requirement — consult your advisor.",
+        "in-place ltv": "Loan-to-value: the in-place financing divided by the property value. 0.00% means all-cash. Higher leverage amplifies both potential returns and risk, and increases the debt credited to 1031 investors.",
+        "average yield": "The simple average of the sponsor's projected annual cash distribution rates over the projection period, expressed as a percentage of equity invested. This is a sponsor projection, not a promise — distributions are not guaranteed and can be reduced or suspended.",
+        "tax-adjusted yield": "Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate. Individual tax outcomes vary widely — consult your CPA regarding your specific situation.",
+        "est. tax-adjusted yield": "Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate. Individual tax outcomes vary widely — consult your CPA regarding your specific situation.",
+        "cap rate equivalent": "A Baker 1031 Investments calculation intended to allow comparison with direct property ownership. It is not a sponsor-reported figure and does not represent a rate of return.",
+        "location": "The state or states where the offering's properties are located.",
+        "estimated hold period": "The sponsor's projected time from closing to a sale or other capital event. Actual holds can be materially longer or shorter — DST interests are illiquid with no public market, so plan to hold for the full period and beyond.",
+        "721 exchange exit": "Whether the sponsor contemplates a Section 721 UPREIT exit: None, Optional, or Mandatory. A 721 exit converts your DST interest into REIT operating-partnership units — tax deferral generally continues, but the position typically loses eligibility for future 1031 exchanges.",
+        "strategy": "The offering's risk-and-return profile. Core: stabilized, income-focused. Core-Plus: mostly stabilized with modest upside. Value-Add: meaningful improvement plans and execution risk. Opportunistic: development-level risk and return.",
+        "offering type": "The Regulation D exemption used. 506(b): no general solicitation; accredited investors self-certify. 506(c): the sponsor may advertise publicly but must verify accredited status. Both are private placements limited to accredited investors.",
+        "connected reit": "The affiliated REIT platform this offering's Section 721 exit would roll into, if exercised. The value of a 721 exit ultimately depends on that REIT's performance and unit pricing.",
+        "status": "The offering's availability per the most recent information available to Baker 1031 — see the status legend on the Current Offerings page for definitions. Always confirm availability with us before identifying an offering for your 1031 exchange.",
+        "market tier": "An internal market-quality rating for the property's metro area: Tier 1 = primary/strongest markets, Tier 3 = tertiary markets. A Baker 1031 analytical metric, not a sponsor-reported figure.",
+        "y1 payout ratio": "Projected Year-1 net operating income divided by projected Year-1 distributions. Above 1.00 means projected property income covers the first-year distribution without drawing on reserves; below 1.00 means reserves or other sources are projected to support it. Based on sponsor projections.",
+        "initial reserves": "Cash set aside at closing, shown as a percentage of the total offering — a cushion for capital needs or income interruptions. Larger reserves add resilience but also sit outside income-producing real estate.",
+        "total load": "Total sales commissions, fees, and offering and organization costs as a percentage of the offering, per the PPM. Load reduces the share of your investment that goes into the real estate itself — the offering must appreciate past it before you are whole on a price basis.",
+        "year 1 noi": "The sponsor's projected first-year net operating income for the property or portfolio — property revenue minus operating expenses, before debt service and distributions.",
+        "lender": "The financial institution providing the offering's in-place mortgage financing, if any.",
+        "loan type": "The interest-rate structure of the in-place financing: Fixed, Variable, or Variable with a rate cap. Variable-rate debt exposes cash flow to interest-rate movements.",
+        "interest rate": "The stated interest rate on the in-place financing, per the PPM.",
+        "loan term": "The remaining term of the in-place financing. A loan maturing before the projected exit introduces refinancing risk.",
+        "i/o period": "The interest-only period — years during which the loan requires interest payments but no principal amortization. Distributions during an I/O period are typically higher, and drop when amortization begins.",
+        "amortization": "The schedule over which loan principal is repaid. “Interest-only” loans repay no principal until maturity or sale.",
+        "y1 dscr": "Year-1 Debt Service Coverage Ratio: projected net operating income divided by required debt payments. Higher is safer — below roughly 1.20x leaves little cushion if income falls short of projections.",
+        "last updated": "The date Baker 1031 last refreshed this listing's data from sponsor materials. Figures may have changed since — confirm current terms before investing.",
+        "projected yields (y1–y10)": "The sponsor's projected annual cash distribution rate for each year of the hold, as a percentage of equity. Projections, not guarantees — actual distributions can be lower, later, or suspended.",
+        "structure": "The legal wrapper of the investment. Delaware Statutory Trusts (DSTs) are structured to qualify as like-kind replacement property for Section 1031 exchanges under Rev. Rul. 2004-86; qualification depends on each investor's facts.",
+        "property type": "The primary real-estate sector of the offering's assets (multifamily, net lease, industrial, etc.).",
+        "property address": "The street address of the offering's property (or lead property, for portfolios).",
+        "avg. income": "This deal's average projected yield compared with the median across current offerings of the same property type tracked by Baker 1031. Benchmark data is internal, unaudited, and changes as our tracked inventory changes.",
+        "growth": "Projected yield growth — how much the sponsor projects annual distributions to rise from Year 1 to their peak — compared with the sector median across Baker-tracked offerings. Internal, unaudited benchmark.",
+        "peak": "The highest single-year projected distribution rate, compared with the sector median across Baker-tracked offerings. Internal, unaudited benchmark.",
+        "full-cycle deals": "The number of this sponsor's completed (“full-cycle”) programs in the Baker 1031 track-record dataset — investments that have gone from raise through final sale.",
+        "average annual return": "The average realized annualized return, net to investor, across the sponsor's completed programs in our dataset. Sponsor-reported and not independently verified; may reflect selection and survivorship bias. Past performance does not guarantee future results.",
+        "average equity multiple": "Average total capital returned per dollar invested across the sponsor's completed programs (1.50x = $1.50 back per $1.00 in, including distributions). Sponsor-reported; past performance does not guarantee future results.",
+        "average hold period": "The average number of years the sponsor's completed programs ran from investment to final disposition.",
+        "success rate": "The share of this sponsor's tracked completed programs (with a reported equity multiple) that returned at least 1.00x investor equity — i.e., did not lose principal. A Baker 1031 calculation from our dataset; unaudited, and past results do not guarantee future outcomes.",
+        "available percentage": "The share of the offering's equity still open for investment per the latest sponsor update. Changes quickly — confirm before identifying.",
+        "sponsor": "The real-estate firm that structured this offering and manages the underlying property."
+      };
+      var normalize = function (s) {
+        return String(s || "").replace(/[¹²³⁰⁴-⁹*ⓘ]/g, "").replace(/\s+/g, " ").trim().toLowerCase();
+      };
+      var modal = document.getElementById("field-info");
+      var fiTitle = document.getElementById("fi-title");
+      var fiBody = document.getElementById("fi-body");
+      function openInfo(title, body) {
+        fiTitle.textContent = title;
+        fiBody.textContent = body;
+        modal.classList.add("open");
+        modal.querySelector(".fi-close").focus();
+      }
+      function closeInfo() { modal.classList.remove("open"); }
+      modal.addEventListener("click", function (e) { if (e.target === modal) closeInfo(); });
+      modal.querySelector(".fi-close").addEventListener("click", closeInfo);
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeInfo(); });
+
+      var selectors = ".stat-cell .label, .fin-cell .label, .sponsor-stat .label, .bm-card .metric, .data-grid .dg-label";
+      document.querySelectorAll(selectors).forEach(function (el) {
+        var labelText = el.textContent.replace(/[¹²³⁰⁴-⁹*ⓘ]/g, "").replace(/\s+/g, " ").trim();
+        var info = INFO[normalize(labelText)];
+        if (!info) return;
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "info-btn";
+        btn.textContent = "i";
+        btn.setAttribute("aria-label", "What does " + labelText + " mean?");
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          openInfo(labelText, info);
+        });
+        el.appendChild(btn);
+      });
     })();
   </script>
 

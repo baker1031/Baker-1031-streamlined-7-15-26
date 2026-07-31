@@ -97,13 +97,13 @@ const STATUS_MAP = {
   "Update Needed": "Confirm Availability",
   "Limited Availability": "Limited Availability",
   "Accepting Backup Reservations": "Accepting Backup Reservations",
-  "Coming Soon / Under Review": "Coming Soon / Under Review",
-  "Coming Soon/Under Review": "Coming Soon / Under Review",
-  "Under Review": "Coming Soon / Under Review",
+  "Coming Soon / Under Review": "Under Review",
+  "Coming Soon/Under Review": "Under Review",
+  "Under Review": "Under Review",
   "Closed": "Closed",
   "Rejected": "Rejected",
 };
-export const STATUS_ORDER = ["Available", "Confirm Availability", "Limited Availability", "Accepting Backup Reservations", "Coming Soon / Under Review", "Closed", "Rejected"];
+export const STATUS_ORDER = ["Available", "Confirm Availability", "Limited Availability", "Accepting Backup Reservations", "Under Review", "Closed", "Rejected"];
 export const statusRank = (publicStatus) => {
   const i = STATUS_ORDER.indexOf(publicStatus);
   return i === -1 ? 4.5 : i;
@@ -113,7 +113,7 @@ export const statusClass = (publicStatus) => ({
   "Confirm Availability": "confirm",
   "Limited Availability": "limited",
   "Accepting Backup Reservations": "backup",
-  "Coming Soon / Under Review": "soon",
+  "Under Review": "soon",
   "Closed": "closed",
   "Rejected": "rejected",
 }[publicStatus] ?? "soon");
@@ -300,6 +300,8 @@ export async function loadAirtableData() {
         "MSA Tier": num(f["MSA Tier"]) === null ? "" : `Tier ${num(f["MSA Tier"])}`,
         "Y1 Payout Ratio": plain(f["Y1 Payout Ratio"]),
         "Initial Reserves": pct2(f["Initial Reserves % of Offering"]),
+        "Year 1 NOI": money(f["Year 1 NOI"]),
+        "I/O Period (yrs)": plain(f["I/O Period (yrs)"]),
         /* ---- internals ---- */
         _id: r.id,
         _created: r.createdTime || "",

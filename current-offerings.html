@@ -136,14 +136,32 @@
   .status-legend[open] summary .chev { transform: rotate(180deg); }
   .status-legend .legend-body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8rem 2rem;
-    padding: 0.35rem 1.1rem 1.1rem;
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 0.35rem 1.1rem 1rem;
+    max-width: 62rem;
   }
-  @media (max-width: 720px) { .status-legend .legend-body { grid-template-columns: 1fr; } }
-  .legend-row { display: flex; gap: 0.75rem; align-items: flex-start; }
-  .legend-row .status-chip { flex: none; border: 1px solid var(--hairline); margin-top: 0.05rem; }
-  .legend-row p { font-size: 0.83rem; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+  .legend-row {
+    display: grid;
+    grid-template-columns: 13rem 1fr;
+    gap: 1.1rem;
+    align-items: center;
+    padding: 0.5rem 0;
+  }
+  .legend-row + .legend-row { border-top: 1px solid #f0f2f6; }
+  .legend-row .status-chip {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    font-size: 0.7rem;
+    border: 1px solid var(--hairline);
+    background: #fff;
+  }
+  .legend-row p { font-size: 0.85rem; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+  @media (max-width: 560px) {
+    .legend-row { grid-template-columns: 1fr; gap: 0.3rem; }
+    .legend-row .status-chip { width: auto; justify-self: start; }
+  }
 
   /* ---------- Listing tabs (Current / Recently Closed / Rejected) ---------- */
   .listing-tabs {
@@ -219,6 +237,79 @@
   }
   .fctl select:hover, .fctl select:focus { border-color: var(--navy); }
   .fctl select.on { border-color: var(--navy); background-color: #eef1f7; font-weight: 700; }
+
+  /* Multi-select dropdowns (checkbox panels) */
+  .fmulti { position: relative; }
+  .fmulti summary {
+    list-style: none;
+    cursor: pointer;
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid #cfd4dd;
+    border-radius: 8px;
+    padding: 0.5rem 1.9rem 0.5rem 0.7rem;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232b3a5f' stroke-width='2.4'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.55rem center;
+    background-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .fmulti summary::-webkit-details-marker { display: none; }
+  .fmulti summary:hover { border-color: var(--navy); }
+  .fmulti.on summary { border-color: var(--navy); background-color: #eef1f7; font-weight: 700; }
+  .fmulti .fm-panel {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 60;
+    min-width: 100%;
+    width: max-content;
+    max-width: 17rem;
+    max-height: 16rem;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #cfd4dd;
+    border-radius: 8px;
+    box-shadow: 0 14px 36px rgba(9, 14, 26, 0.18);
+    padding: 0.45rem 0.6rem;
+  }
+  .fm-panel label {
+    display: flex;
+    gap: 0.55rem;
+    align-items: center;
+    font-size: 0.85rem;
+    color: var(--ink);
+    padding: 0.32rem 0.25rem;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  .fm-panel label:hover { background: #f4f6fa; }
+  .fm-panel input[type="checkbox"] { accent-color: var(--navy); width: 15px; height: 15px; flex: none; }
+
+  /* Preferred-sponsor toggle */
+  .pref-box {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--ink);
+    background: #fff;
+    border: 1px solid #cfd4dd;
+    border-radius: 8px;
+    padding: 0.5rem 0.7rem;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .pref-box input { accent-color: var(--navy); width: 15px; height: 15px; flex: none; }
+  .pref-box.on { border-color: var(--navy); background: #eef1f7; font-weight: 700; }
+  .pref-link { display: inline-block; font-size: 0.72rem; color: var(--navy); margin-top: 0.3rem; text-decoration: underline; text-underline-offset: 2px; }
+
   .fc-head, .fc-actions, .filter-scrim, .filter-toggle { display: none; }
   /* Footer row: reset left, sort + live count right */
   .fbar-foot {
@@ -297,6 +388,16 @@
     }
     .filter-controls.open { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1rem; }
     .fctl select { width: 100%; }
+    /* In the bottom sheet, checkbox panels expand inline instead of floating */
+    .fmulti .fm-panel {
+      position: static;
+      width: 100%;
+      max-width: none;
+      max-height: 13rem;
+      box-shadow: none;
+      border-radius: 0 0 8px 8px;
+      border-top: 0;
+    }
     .fc-head {
       display: flex;
       grid-column: 1 / -1;
@@ -346,6 +447,9 @@
     grid-template-columns: repeat(3, 1fr);
     gap: 1.25rem;
   }
+  /* The tab script toggles grids via the hidden attribute — make sure it wins
+     over the display rule above (UA [hidden] styles lose to author styles). */
+  .offering-grid[hidden] { display: none; }
   @media (max-width: 1000px) { .offering-grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 640px)  { .offering-grid { grid-template-columns: 1fr; } }
 
@@ -594,13 +698,14 @@
         Status legend &mdash; what each availability status means
       </summary>
       <div class="legend-body">
-        <div class="legend-row"><span class="status-chip">Available</span><p>Open for new investment &mdash; equity remains and reservations are being accepted.</p></div>
-        <div class="legend-row"><span class="status-chip confirm">Confirm Availability</span><p>Remaining equity is moving quickly or being re-verified &mdash; contact us to confirm current availability before reserving.</p></div>
-        <div class="legend-row"><span class="status-chip limited">Limited Availability</span><p>Nearly fully subscribed &mdash; only a limited amount of equity remains.</p></div>
-        <div class="legend-row"><span class="status-chip backup">Backup Reservations</span><p>Fully reserved &mdash; we can place a backup reservation in case an allocation frees up.</p></div>
-        <div class="legend-row"><span class="status-chip soon">Coming Soon</span><p>In our underwriting review or launching shortly &mdash; not yet open for reservations.</p></div>
-        <div class="legend-row"><span class="status-chip closed">Closed</span><p>Fully subscribed or completed &mdash; no longer available (see the Recently Closed tab).</p></div>
-        <div class="legend-row"><span class="status-chip rejected">Rejected</span><p>Did not pass our underwriting review (see the Rejected tab). Not a prediction of performance.</p></div>
+        <!-- LEGEND:START -->
+        <div class="legend-row"><span class="status-chip">Available</span><p>Open for new investment — equity remains and reservations are being accepted.</p></div>
+        <div class="legend-row"><span class="status-chip confirm">Confirm Availability</span><p>Remaining equity is moving quickly or being re-verified — contact us to confirm current availability before reserving.</p></div>
+        <div class="legend-row"><span class="status-chip limited">Limited Availability</span><p>Nearly fully subscribed — only a limited amount of equity remains.</p></div>
+        <div class="legend-row"><span class="status-chip soon">Under Review</span><p>In Baker 1031's underwriting review or pre-launch — not yet open for reservations.</p></div>
+        <div class="legend-row"><span class="status-chip closed">Closed</span><p>Fully subscribed or completed — no longer available (see the Recently Closed tab).</p></div>
+        <div class="legend-row"><span class="status-chip rejected">Rejected</span><p>Did not pass Baker 1031's underwriting review (see the Rejected tab). Not a prediction of performance.</p></div>
+      <!-- LEGEND:END -->
       </div>
     </details>
 
@@ -615,125 +720,149 @@
           <button type="button" class="fc-close" id="filter-close" aria-label="Close filters">&times;</button>
         </div>
         <!-- FILTERS:START -->
-        <label class="fctl"><span>Property Type</span>
-          <select class="fsel" data-key="type" aria-label="Filter by Property Type">
-            <option value="">All</option>
-            <option value="diversified">Diversified</option>
-            <option value="gsa">GSA</option>
-            <option value="healthcare">Healthcare</option>
-            <option value="hospitality">Hospitality</option>
-            <option value="industrial">Industrial</option>
-            <option value="land">Land</option>
-            <option value="life-sciences">Life Sciences</option>
-            <option value="marina">Marina</option>
-            <option value="medical-office">Medical Office</option>
-            <option value="multifamily">Multifamily</option>
-            <option value="net-lease">Net Lease</option>
-            <option value="office">Office</option>
-            <option value="self-storage">Self-Storage</option>
-            <option value="senior-living">Senior Living</option>
-            <option value="student-housing">Student Housing</option>
-          </select>
-        </label>
-        <label class="fctl"><span>Availability</span>
-          <select class="fsel" data-key="status" aria-label="Filter by Availability">
-            <option value="">All</option>
-            <option value="available">Available</option>
-            <option value="confirm-availability">Confirm Availability</option>
-            <option value="limited-availability">Limited Availability</option>
-            <option value="coming-soon-under-review">Coming Soon</option>
-          </select>
-        </label>
-        <label class="fctl"><span>Strategy</span>
-          <select class="fsel" data-key="strategy" aria-label="Filter by Strategy">
-            <option value="">All</option>
-            <option value="core">Core</option>
-            <option value="core-plus">Core-Plus</option>
-            <option value="value-add">Value-Add</option>
-            <option value="opportunistic">Opportunistic</option>
-          </select>
-        </label>
-        <label class="fctl"><span>Sponsor</span>
-          <select class="fsel" data-key="sponsor" aria-label="Filter by Sponsor">
-            <option value="">All</option>
-            <option value="aei-capital-corporation">AEI Capital Corporation</option>
-            <option value="arctrust">ARCTRUST</option>
-            <option value="apollo-global-management">Apollo Global Management</option>
-            <option value="baker-tilly">Baker Tilly</option>
-            <option value="blackstone">Blackstone</option>
-            <option value="blue-owl">Blue Owl</option>
-            <option value="bluerock">Bluerock</option>
-            <option value="brookfield">Brookfield</option>
-            <option value="cantor-fitzgerald">Cantor Fitzgerald</option>
-            <option value="capital-square">Capital Square</option>
-            <option value="core-pacific">Core Pacific</option>
-            <option value="cottonwood">Cottonwood</option>
-            <option value="erp">ERP</option>
-            <option value="exchangeright">ExchangeRight</option>
-            <option value="fortress-investment-group">Fortress Investment Group</option>
-            <option value="four-springs-capital">Four Springs Capital</option>
-            <option value="griffin-capital">Griffin Capital</option>
-            <option value="hpa-exchange">HPA Exchange</option>
-            <option value="hines">Hines</option>
-            <option value="inland">Inland</option>
-            <option value="invesco">Invesco</option>
-            <option value="jll">JLL</option>
-            <option value="jwcm">JWCM</option>
-            <option value="livingston-street-capital">Livingston Street Capital</option>
-            <option value="moody-national">Moody National</option>
-            <option value="net-lease-capital-advisors">Net Lease Capital Advisors</option>
-            <option value="newstar-exchange">NewStar Exchange</option>
-            <option value="nexpoint">NexPoint</option>
-            <option value="olympus-property">Olympus Property</option>
-            <option value="passco">Passco</option>
-            <option value="peachtree-group">Peachtree Group</option>
-            <option value="sealy-and-company">Sealy &amp; Company</option>
-            <option value="secure-properties">Secure Properties</option>
-            <option value="smartstop">SmartStop</option>
-            <option value="starboard-realty-advisors">Starboard Realty Advisors</option>
-            <option value="syndicated-equities">Syndicated Equities</option>
-            <option value="walton-global-holdings">Walton Global Holdings</option>
-          </select>
-        </label>
-        <label class="fctl"><span>State</span>
-          <select class="fsel" data-key="state" aria-label="Filter by State">
-            <option value="">All</option>
-            <option value="al">AL</option>
-            <option value="ar">AR</option>
-            <option value="az">AZ</option>
-            <option value="ca">CA</option>
-            <option value="co">CO</option>
-            <option value="ct">CT</option>
-            <option value="fl">FL</option>
-            <option value="ga">GA</option>
-            <option value="ia">IA</option>
-            <option value="il">IL</option>
-            <option value="in">IN</option>
-            <option value="ky">KY</option>
-            <option value="la">LA</option>
-            <option value="ma">MA</option>
-            <option value="md">MD</option>
-            <option value="mi">MI</option>
-            <option value="mn">MN</option>
-            <option value="mo">MO</option>
-            <option value="ms">MS</option>
-            <option value="nc">NC</option>
-            <option value="ne">NE</option>
-            <option value="nh">NH</option>
-            <option value="nj">NJ</option>
-            <option value="nv">NV</option>
-            <option value="ny">NY</option>
-            <option value="oh">OH</option>
-            <option value="ok">OK</option>
-            <option value="pa">PA</option>
-            <option value="sc">SC</option>
-            <option value="tn">TN</option>
-            <option value="tx">TX</option>
-            <option value="va">VA</option>
-            <option value="wa">WA</option>
-            <option value="wv">WV</option>
-          </select>
-        </label>
+        <div class="fctl">
+          <span>Property Type</span>
+          <details class="fmulti" data-key="type">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by Property Type">
+              <label><input type="checkbox" value="diversified"> Diversified</label>
+              <label><input type="checkbox" value="gsa"> GSA</label>
+              <label><input type="checkbox" value="healthcare"> Healthcare</label>
+              <label><input type="checkbox" value="hospitality"> Hospitality</label>
+              <label><input type="checkbox" value="industrial"> Industrial</label>
+              <label><input type="checkbox" value="land"> Land</label>
+              <label><input type="checkbox" value="life-sciences"> Life Sciences</label>
+              <label><input type="checkbox" value="marina"> Marina</label>
+              <label><input type="checkbox" value="medical-office"> Medical Office</label>
+              <label><input type="checkbox" value="multifamily"> Multifamily</label>
+              <label><input type="checkbox" value="net-lease"> Net Lease</label>
+              <label><input type="checkbox" value="office"> Office</label>
+              <label><input type="checkbox" value="self-storage"> Self-Storage</label>
+              <label><input type="checkbox" value="senior-living"> Senior Living</label>
+              <label><input type="checkbox" value="student-housing"> Student Housing</label>
+            </div>
+          </details>
+        </div>
+        <div class="fctl">
+          <span>Availability</span>
+          <details class="fmulti" data-key="status">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by Availability">
+              <label><input type="checkbox" value="available"> Available</label>
+              <label><input type="checkbox" value="confirm-availability"> Confirm Availability</label>
+              <label><input type="checkbox" value="limited-availability"> Limited Availability</label>
+              <label><input type="checkbox" value="under-review"> Under Review</label>
+            </div>
+          </details>
+        </div>
+        <div class="fctl">
+          <span>Strategy</span>
+          <details class="fmulti" data-key="strategy">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by Strategy">
+              <label><input type="checkbox" value="core"> Core</label>
+              <label><input type="checkbox" value="core-plus"> Core-Plus</label>
+              <label><input type="checkbox" value="value-add"> Value-Add</label>
+              <label><input type="checkbox" value="opportunistic"> Opportunistic</label>
+            </div>
+          </details>
+        </div>
+        <div class="fctl">
+          <span>Sponsor</span>
+          <details class="fmulti" data-key="sponsor">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by Sponsor">
+              <label><input type="checkbox" value="aei-capital-corporation"> AEI Capital Corporation</label>
+              <label><input type="checkbox" value="arctrust"> ARCTRUST</label>
+              <label><input type="checkbox" value="apollo-global-management"> Apollo Global Management</label>
+              <label><input type="checkbox" value="baker-tilly"> Baker Tilly</label>
+              <label><input type="checkbox" value="blackstone"> Blackstone</label>
+              <label><input type="checkbox" value="blue-owl"> Blue Owl</label>
+              <label><input type="checkbox" value="bluerock"> Bluerock</label>
+              <label><input type="checkbox" value="brookfield"> Brookfield</label>
+              <label><input type="checkbox" value="cantor-fitzgerald"> Cantor Fitzgerald</label>
+              <label><input type="checkbox" value="capital-square"> Capital Square</label>
+              <label><input type="checkbox" value="core-pacific"> Core Pacific</label>
+              <label><input type="checkbox" value="cottonwood"> Cottonwood</label>
+              <label><input type="checkbox" value="erp"> ERP</label>
+              <label><input type="checkbox" value="exchangeright"> ExchangeRight</label>
+              <label><input type="checkbox" value="fortress-investment-group"> Fortress Investment Group</label>
+              <label><input type="checkbox" value="four-springs-capital"> Four Springs Capital</label>
+              <label><input type="checkbox" value="griffin-capital"> Griffin Capital</label>
+              <label><input type="checkbox" value="hpa-exchange"> HPA Exchange</label>
+              <label><input type="checkbox" value="hines"> Hines</label>
+              <label><input type="checkbox" value="invesco"> Invesco</label>
+              <label><input type="checkbox" value="jwcm"> JWCM</label>
+              <label><input type="checkbox" value="livingston-street-capital"> Livingston Street Capital</label>
+              <label><input type="checkbox" value="moody-national"> Moody National</label>
+              <label><input type="checkbox" value="net-lease-capital-advisors"> Net Lease Capital Advisors</label>
+              <label><input type="checkbox" value="newstar-exchange"> NewStar Exchange</label>
+              <label><input type="checkbox" value="nexpoint"> NexPoint</label>
+              <label><input type="checkbox" value="olympus-property"> Olympus Property</label>
+              <label><input type="checkbox" value="passco"> Passco</label>
+              <label><input type="checkbox" value="peachtree-group"> Peachtree Group</label>
+              <label><input type="checkbox" value="sealy-and-company"> Sealy &amp; Company</label>
+              <label><input type="checkbox" value="secure-properties"> Secure Properties</label>
+              <label><input type="checkbox" value="smartstop"> SmartStop</label>
+              <label><input type="checkbox" value="starboard-realty-advisors"> Starboard Realty Advisors</label>
+              <label><input type="checkbox" value="syndicated-equities"> Syndicated Equities</label>
+              <label><input type="checkbox" value="walton-global-holdings"> Walton Global Holdings</label>
+            </div>
+          </details>
+        </div>
+        <div class="fctl">
+          <span>State</span>
+          <details class="fmulti" data-key="state">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by State">
+              <label><input type="checkbox" value="al"> Alabama</label>
+              <label><input type="checkbox" value="az"> Arizona</label>
+              <label><input type="checkbox" value="ar"> Arkansas</label>
+              <label><input type="checkbox" value="ca"> California</label>
+              <label><input type="checkbox" value="co"> Colorado</label>
+              <label><input type="checkbox" value="ct"> Connecticut</label>
+              <label><input type="checkbox" value="fl"> Florida</label>
+              <label><input type="checkbox" value="ga"> Georgia</label>
+              <label><input type="checkbox" value="il"> Illinois</label>
+              <label><input type="checkbox" value="in"> Indiana</label>
+              <label><input type="checkbox" value="ia"> Iowa</label>
+              <label><input type="checkbox" value="ky"> Kentucky</label>
+              <label><input type="checkbox" value="la"> Louisiana</label>
+              <label><input type="checkbox" value="md"> Maryland</label>
+              <label><input type="checkbox" value="ma"> Massachusetts</label>
+              <label><input type="checkbox" value="mi"> Michigan</label>
+              <label><input type="checkbox" value="mn"> Minnesota</label>
+              <label><input type="checkbox" value="ms"> Mississippi</label>
+              <label><input type="checkbox" value="mo"> Missouri</label>
+              <label><input type="checkbox" value="ne"> Nebraska</label>
+              <label><input type="checkbox" value="nv"> Nevada</label>
+              <label><input type="checkbox" value="nh"> New Hampshire</label>
+              <label><input type="checkbox" value="nj"> New Jersey</label>
+              <label><input type="checkbox" value="ny"> New York</label>
+              <label><input type="checkbox" value="nc"> North Carolina</label>
+              <label><input type="checkbox" value="oh"> Ohio</label>
+              <label><input type="checkbox" value="ok"> Oklahoma</label>
+              <label><input type="checkbox" value="pa"> Pennsylvania</label>
+              <label><input type="checkbox" value="sc"> South Carolina</label>
+              <label><input type="checkbox" value="tx"> Texas</label>
+              <label><input type="checkbox" value="va"> Virginia</label>
+              <label><input type="checkbox" value="wa"> Washington</label>
+              <label><input type="checkbox" value="wv"> West Virginia</label>
+            </div>
+          </details>
+        </div>
+        <div class="fctl">
+          <span>721 Exchange Exit</span>
+          <details class="fmulti" data-key="exit">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by 721 Exchange Exit">
+              <label><input type="checkbox" value="none"> None</label>
+              <label><input type="checkbox" value="optional"> Optional</label>
+              <label><input type="checkbox" value="mandatory"> Mandatory</label>
+              <label><input type="checkbox" value="unclear"> Unclear</label>
+            </div>
+          </details>
+        </div>
         <label class="fctl"><span>Minimum Investment</span>
           <select class="fsel" data-key="min" aria-label="Filter by Minimum Investment">
             <option value="">All</option>
@@ -760,23 +889,11 @@
             <option value="gte50">50%+ LTV</option>
           </select>
         </label>
-        <label class="fctl"><span>Offering Type</span>
-          <select class="fsel" data-key="regd" aria-label="Filter by Offering Type">
-            <option value="">All</option>
-            <option value="506-b">506(b)</option>
-            <option value="506-c">506(c)</option>
-          </select>
-        </label>
-        <label class="fctl"><span>721 Exchange Exit</span>
-          <select class="fsel" data-key="exit" aria-label="Filter by 721 Exchange Exit">
-            <option value="">All</option>
-            <option value="yes">Yes</option>
-            <option value="none">None</option>
-            <option value="optional">Optional</option>
-            <option value="mandatory">Mandatory</option>
-            <option value="unclear">Unclear</option>
-          </select>
-        </label>
+        <div class="fctl">
+          <span>Sponsors</span>
+          <label class="pref-box"><input type="checkbox" id="pref-only"> Preferred only</label>
+          <a class="pref-link" href="/performance">Preferred sponsor performance &rarr;</a>
+        </div>
       <!-- FILTERS:END -->
         <div class="fc-actions">
           <button type="button" class="fc-reset" id="filter-reset">Reset all</button>
@@ -807,7 +924,7 @@
 
     <div class="offering-grid" id="grid-current">
       <!-- OFFERINGS:START -->
-      <article class="offering-card" data-tags="industrial" data-status="available" data-strategy="core-plus" data-sponsor="bluerock" data-states="fl il mo" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.32" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="br diversified industrial portfolio 8, dst" data-rank="0">
+      <article class="offering-card" data-tags="industrial" data-status="available" data-strategy="core-plus" data-sponsor="bluerock" data-states="fl il mo" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.32" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="br diversified industrial portfolio 8, dst" data-rank="0" data-preferred="1">
         <a class="card-photo" href="/offerings/br-diversified-industrial-portfolio-8-dst/">
           <img src="/assets/img/listings/89307645bf.webp" alt="BR Diversified Industrial Portfolio 8, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -833,7 +950,7 @@
           <a class="view-btn" href="/offerings/br-diversified-industrial-portfolio-8-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="brookfield" data-states="ca" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.98" data-ltv="39.80" data-avail="63.6" data-created="1785376443000" data-name="brex net lease data center i dst" data-rank="0">
+      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="brookfield" data-states="ca" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.98" data-ltv="39.80" data-avail="63.6" data-created="1785376443000" data-name="brex net lease data center i dst" data-rank="0" data-preferred="0">
         <a class="card-photo" href="/offerings/brex-net-lease-data-center-i-dst/">
           <img src="/assets/img/listings/585933cd2d.webp" alt="BREX Net Lease Data Center I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -859,7 +976,7 @@
           <a class="view-btn" href="/offerings/brex-net-lease-data-center-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="exchangeright" data-states="mo" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.25" data-ltv="0.00" data-avail="21.0" data-created="1785376579000" data-name="exchangeright essential income 12 dst" data-rank="0">
+      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="exchangeright" data-states="mo" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.25" data-ltv="0.00" data-avail="21.0" data-created="1785376579000" data-name="exchangeright essential income 12 dst" data-rank="0" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-essential-income-12-dst/">
           <img src="/assets/img/listings/acd6ffdab5.webp" alt="ExchangeRight Essential Income 12 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -885,7 +1002,7 @@
           <a class="view-btn" href="/offerings/exchangeright-essential-income-12-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="" data-sponsor="exchangeright" data-states="fl ma ok sc" data-regd="506-b" data-exit="yes" data-min="100000" data-yield="5.20" data-ltv="0.00" data-avail="100.0" data-created="1785479661000" data-name="exchangeright net-leased all-cash 21 dst" data-rank="0">
+      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="exchangeright" data-states="fl ma ok sc" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.20" data-ltv="0.00" data-avail="100.0" data-created="1785479661000" data-name="exchangeright net-leased all-cash 21 dst" data-rank="0" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-net-leased-all-cash-21-dst/">
           
           <div class="chip-row">
@@ -900,8 +1017,8 @@
             <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
             <div class="cs"><span class="label">Avg Yield</span><span class="value">5.20%</span></div>
             <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">—</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">—</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">5-7 Years</span></div>
             <div class="cs"><span class="label">Location</span><span class="value">FL, MA, OK, SC</span></div>
           </div>
           <div class="availability">
@@ -911,7 +1028,7 @@
           <a class="view-btn" href="/offerings/exchangeright-net-leased-all-cash-21-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="exchangeright" data-states="ga il la oh sc" data-regd="" data-exit="optional" data-min="100000" data-yield="5.14" data-ltv="43.32" data-avail="100.0" data-created="1785376443000" data-name="exchangeright net-leased portfolio 76 dst" data-rank="0">
+      <article class="offering-card" data-tags="net-lease" data-status="available" data-strategy="core" data-sponsor="exchangeright" data-states="ga il la oh sc" data-regd="" data-exit="optional" data-min="100000" data-yield="5.14" data-ltv="43.32" data-avail="100.0" data-created="1785376443000" data-name="exchangeright net-leased portfolio 76 dst" data-rank="0" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-netleased-portfolio-76-dst/">
           <img src="/assets/img/listings/ae6328dfb4.webp" alt="ExchangeRight Net-Leased Portfolio 76 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -937,7 +1054,7 @@
           <a class="view-btn" href="/offerings/exchangeright-netleased-portfolio-76-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="available" data-strategy="core-plus" data-sponsor="jwcm" data-states="ga" data-regd="" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="50.55" data-avail="46.2" data-created="1785376579000" data-name="jwcm vivian dst" data-rank="0">
+      <article class="offering-card" data-tags="multifamily" data-status="available" data-strategy="core-plus" data-sponsor="jwcm" data-states="ga" data-regd="" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="50.55" data-avail="46.2" data-created="1785376579000" data-name="jwcm vivian dst" data-rank="0" data-preferred="0">
         <a class="card-photo" href="/offerings/jwcm-vivian-dst/">
           <img src="/assets/img/listings/4c22ca97a3.webp" alt="JWCM Vivian DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -963,7 +1080,7 @@
           <a class="view-btn" href="/offerings/jwcm-vivian-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="available" data-strategy="core" data-sponsor="livingston-street-capital" data-states="md" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.30" data-ltv="49.60" data-avail="75.2" data-created="1785376443000" data-name="lsc fort washington md dst" data-rank="0">
+      <article class="offering-card" data-tags="senior-living" data-status="available" data-strategy="core" data-sponsor="livingston-street-capital" data-states="md" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.30" data-ltv="49.60" data-avail="75.2" data-created="1785376443000" data-name="lsc fort washington md dst" data-rank="0" data-preferred="0">
         <a class="card-photo" href="/offerings/lsc-fort-washington-md-dst/">
           <img src="/assets/img/listings/b04e2378b4.webp" alt="LSC Fort Washington MD DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -989,7 +1106,7 @@
           <a class="view-btn" href="/offerings/lsc-fort-washington-md-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="available" data-strategy="core-plus" data-sponsor="passco" data-states="va" data-regd="506-b" data-exit="optional" data-min="25000" data-yield="4.40" data-ltv="45.22" data-avail="68.3" data-created="1785376443000" data-name="passco allure dst" data-rank="0">
+      <article class="offering-card" data-tags="multifamily" data-status="available" data-strategy="core-plus" data-sponsor="passco" data-states="va" data-regd="506-b" data-exit="optional" data-min="25000" data-yield="4.40" data-ltv="45.22" data-avail="68.3" data-created="1785376443000" data-name="passco allure dst" data-rank="0" data-preferred="0">
         <a class="card-photo" href="/offerings/passco-allure-dst/">
           <img src="/assets/img/listings/323e977d1d.webp" alt="Passco Allure DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1015,7 +1132,7 @@
           <a class="view-btn" href="/offerings/passco-allure-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="healthcare" data-status="confirm-availability" data-strategy="core" data-sponsor="aei-capital-corporation" data-states="az ct tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.54" data-ltv="0.00" data-avail="50.9" data-created="1785376579000" data-name="aei healthcare portfolio vii dst" data-rank="1">
+      <article class="offering-card" data-tags="healthcare" data-status="confirm-availability" data-strategy="core" data-sponsor="aei-capital-corporation" data-states="az ct tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.54" data-ltv="0.00" data-avail="50.9" data-created="1785376579000" data-name="aei healthcare portfolio vii dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/aei-healthcare-portfolio-vii-dst/">
           <img src="/assets/img/listings/4c89b036d8.webp" alt="AEI Healthcare Portfolio VII DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1041,7 +1158,7 @@
           <a class="view-btn" href="/offerings/aei-healthcare-portfolio-vii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="arctrust" data-states="al nc wv" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.75" data-ltv="41.98" data-avail="100.0" data-created="1785376443000" data-name="arctrust exchange dst" data-rank="1">
+      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="arctrust" data-states="al nc wv" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.75" data-ltv="41.98" data-avail="100.0" data-created="1785376443000" data-name="arctrust exchange dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/arctrust-exchange-dst/">
           <img src="/assets/img/listings/e4e65cc463.webp" alt="ARCTRUST Exchange DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1067,7 +1184,7 @@
           <a class="view-btn" href="/offerings/arctrust-exchange-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="apollo-global-management" data-states="wa" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.35" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="ax essential retail portfolio dst" data-rank="1">
+      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="apollo-global-management" data-states="wa" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.35" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="ax essential retail portfolio dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/ax-essential-retail-portfolio-dst/">
           <img src="/assets/img/listings/7e0cdbbd26.webp" alt="AX Essential Retail Portfolio DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1093,7 +1210,7 @@
           <a class="view-btn" href="/offerings/ax-essential-retail-portfolio-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="self-storage" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="smartstop" data-states="fl tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.71" data-ltv="0.00" data-avail="64.5" data-created="1785376579000" data-name="blue door property ii, dst" data-rank="1">
+      <article class="offering-card" data-tags="self-storage" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="smartstop" data-states="fl tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.71" data-ltv="0.00" data-avail="64.5" data-created="1785376579000" data-name="blue door property ii, dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/blue-door-property-ii-dst/">
           <img src="/assets/img/listings/d816aa2ab8.webp" alt="Blue Door Property II, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1119,7 +1236,7 @@
           <a class="view-btn" href="/offerings/blue-door-property-ii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="self-storage" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="smartstop" data-states="az fl tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.28" data-ltv="45.96" data-avail="100.0" data-created="1785376579000" data-name="blue door property iii, dst" data-rank="1">
+      <article class="offering-card" data-tags="self-storage" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="smartstop" data-states="az fl tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.28" data-ltv="45.96" data-avail="100.0" data-created="1785376579000" data-name="blue door property iii, dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/blue-door-property-iii-dst/">
           <img src="/assets/img/listings/828180d82f.webp" alt="Blue Door Property III, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1145,7 +1262,7 @@
           <a class="view-btn" href="/offerings/blue-door-property-iii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="bluerock" data-states="al fl mo va" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.51" data-ltv="0.00" data-avail="9.0" data-created="1785376579000" data-name="br diversified industrial portfolio 7, dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="bluerock" data-states="al fl mo va" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.51" data-ltv="0.00" data-avail="9.0" data-created="1785376579000" data-name="br diversified industrial portfolio 7, dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/br-diversified-industrial-portfolio-7-dst/">
           <img src="/assets/img/listings/32771e9386.webp" alt="BR Diversified Industrial Portfolio 7, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1171,7 +1288,7 @@
           <a class="view-btn" href="/offerings/br-diversified-industrial-portfolio-7-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="bluerock" data-states="ga" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="5.04" data-ltv="49.45" data-avail="45.8" data-created="1785376579000" data-name="br parkview multifamily, dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="bluerock" data-states="ga" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="5.04" data-ltv="49.45" data-avail="45.8" data-created="1785376579000" data-name="br parkview multifamily, dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/br-parkview-multifamily-dst/">
           <img src="/assets/img/listings/49f9d4bae1.webp" alt="BR Parkview Multifamily, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1197,7 +1314,7 @@
           <a class="view-btn" href="/offerings/br-parkview-multifamily-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="ny" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.01" data-ltv="50.30" data-avail="100.0" data-created="1785376443000" data-name="cf fleetwood multifamily dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="ny" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.01" data-ltv="50.30" data-avail="100.0" data-created="1785376443000" data-name="cf fleetwood multifamily dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/cf-fleetwood-multifamily-dst/">
           <img src="/assets/img/listings/0539aa2176.webp" alt="CF Fleetwood Multifamily DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1223,7 +1340,7 @@
           <a class="view-btn" href="/offerings/cf-fleetwood-multifamily-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="fl" data-regd="506-b" data-exit="none" data-min="100000" data-yield="4.53" data-ltv="55.16" data-avail="100.0" data-created="1785376579000" data-name="cf westshore multifamily dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="fl" data-regd="506-b" data-exit="none" data-min="100000" data-yield="4.53" data-ltv="55.16" data-avail="100.0" data-created="1785376579000" data-name="cf westshore multifamily dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/cf-westshore-multifamily-dst/">
           <img src="/assets/img/listings/29cc0e3265.webp" alt="CF Westshore Multifamily DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1249,7 +1366,7 @@
           <a class="view-btn" href="/offerings/cf-westshore-multifamily-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="land" data-status="confirm-availability" data-strategy="opportunistic" data-sponsor="walton-global-holdings" data-states="co" data-regd="506-c" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="0.00" data-avail="27.8" data-created="1785376579000" data-name="colorado growth 1 - holly ridge dst" data-rank="1">
+      <article class="offering-card" data-tags="land" data-status="confirm-availability" data-strategy="opportunistic" data-sponsor="walton-global-holdings" data-states="co" data-regd="506-c" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="0.00" data-avail="27.8" data-created="1785376579000" data-name="colorado growth 1 - holly ridge dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/colorado-growth-1-holly-ridge-dst/">
           <img src="/assets/img/listings/82d9fb109b.webp" alt="Colorado Growth 1 - Holly Ridge DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1275,7 +1392,7 @@
           <a class="view-btn" href="/offerings/colorado-growth-1-holly-ridge-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="cottonwood" data-states="ca" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="4.30" data-ltv="36.22" data-avail="100.0" data-created="1785376443000" data-name="cottonwood riverfront dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="cottonwood" data-states="ca" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="4.30" data-ltv="36.22" data-avail="100.0" data-created="1785376443000" data-name="cottonwood riverfront dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/cottonwood-riverfront-dst/">
           
           <div class="chip-row">
@@ -1301,7 +1418,7 @@
           <a class="view-btn" href="/offerings/cottonwood-riverfront-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="core-pacific" data-states="co" data-regd="506-c" data-exit="none" data-min="100000" data-yield="3.77" data-ltv="43.67" data-avail="100.0" data-created="1785376443000" data-name="cpa arbour commons dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="core-pacific" data-states="co" data-regd="506-c" data-exit="none" data-min="100000" data-yield="3.77" data-ltv="43.67" data-avail="100.0" data-created="1785376443000" data-name="cpa arbour commons dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/cpa-arbour-commons-dst/">
           <img src="/assets/img/listings/c1436f40e8.webp" alt="CPA Arbour Commons DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1327,7 +1444,7 @@
           <a class="view-btn" href="/offerings/cpa-arbour-commons-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="capital-square" data-states="fl" data-regd="506-c" data-exit="none" data-min="50000" data-yield="4.78" data-ltv="44.39" data-avail="97.5" data-created="1785376443000" data-name="cs1031 cacema townhomes, dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="capital-square" data-states="fl" data-regd="506-c" data-exit="none" data-min="50000" data-yield="4.78" data-ltv="44.39" data-avail="97.5" data-created="1785376443000" data-name="cs1031 cacema townhomes, dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-cacema-townhomes-dst/">
           <img src="/assets/img/listings/ae1967d909.webp" alt="CS1031 Cacema Townhomes, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1353,7 +1470,7 @@
           <a class="view-btn" href="/offerings/cs1031-cacema-townhomes-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.93" data-ltv="0.00" data-avail="0.7" data-created="1785376579000" data-name="cs1031 texas active living portfolio i dst" data-rank="1">
+      <article class="offering-card" data-tags="senior-living" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.93" data-ltv="0.00" data-avail="0.7" data-created="1785376579000" data-name="cs1031 texas active living portfolio i dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-texas-active-living-portfolio-i-dst/">
           <img src="/assets/img/listings/356f6e7346.webp" alt="CS1031 Texas Active Living Portfolio I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1379,7 +1496,7 @@
           <a class="view-btn" href="/offerings/cs1031-texas-active-living-portfolio-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="5.00" data-ltv="0.00" data-avail="96.7" data-created="1785376579000" data-name="cs1031 texas active living portfolio ii, dst" data-rank="1">
+      <article class="offering-card" data-tags="senior-living" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="5.00" data-ltv="0.00" data-avail="96.7" data-created="1785376579000" data-name="cs1031 texas active living portfolio ii, dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-texas-active-living-portfolio-ii-dst/">
           <img src="/assets/img/listings/cfbaaf42ad.webp" alt="CS1031 Texas Active Living Portfolio II, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1405,7 +1522,7 @@
           <a class="view-btn" href="/offerings/cs1031-texas-active-living-portfolio-ii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="hospitality" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="0.00" data-ltv="77.78" data-avail="35.7" data-created="1785376579000" data-name="cs1031 zero-coupon dfw hospitality dst" data-rank="1">
+      <article class="offering-card" data-tags="hospitality" data-status="confirm-availability" data-strategy="core" data-sponsor="capital-square" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="0.00" data-ltv="77.78" data-avail="35.7" data-created="1785376579000" data-name="cs1031 zero-coupon dfw hospitality dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-zerocoupon-dfw-hospitality-dst/">
           <img src="/assets/img/listings/3784535b7d.webp" alt="CS1031 Zero-Coupon DFW Hospitality DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1431,7 +1548,7 @@
           <a class="view-btn" href="/offerings/cs1031-zerocoupon-dfw-hospitality-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="exchangeright" data-states="ca ia mi ms nc ne oh pa tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.20" data-ltv="42.23" data-avail="100.0" data-created="1785376443000" data-name="exchangeright net-leased portfolio 74 dst" data-rank="1">
+      <article class="offering-card" data-tags="net-lease" data-status="confirm-availability" data-strategy="core" data-sponsor="exchangeright" data-states="ca ia mi ms nc ne oh pa tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.20" data-ltv="42.23" data-avail="100.0" data-created="1785376443000" data-name="exchangeright net-leased portfolio 74 dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-net-leased-portfolio-74-dst/">
           
           <div class="chip-row">
@@ -1457,7 +1574,7 @@
           <a class="view-btn" href="/offerings/exchangeright-net-leased-portfolio-74-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="land" data-status="confirm-availability" data-strategy="opportunistic" data-sponsor="walton-global-holdings" data-states="fl" data-regd="506-c" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="0.00" data-avail="14.8" data-created="1785376579000" data-name="florida growth 2 - jubilee 1 dst" data-rank="1">
+      <article class="offering-card" data-tags="land" data-status="confirm-availability" data-strategy="opportunistic" data-sponsor="walton-global-holdings" data-states="fl" data-regd="506-c" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="0.00" data-avail="14.8" data-created="1785376579000" data-name="florida growth 2 - jubilee 1 dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/florida-growth-2-jubilee-1-dst/">
           <img src="/assets/img/listings/ce4750f25e.webp" alt="Florida Growth 2 - Jubilee 1 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1483,7 +1600,7 @@
           <a class="view-btn" href="/offerings/florida-growth-2-jubilee-1-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="four-springs-capital" data-states="ky sc" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.11" data-ltv="48.63" data-avail="10.0" data-created="1785376579000" data-name="fsx industrial 34, dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="four-springs-capital" data-states="ky sc" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.11" data-ltv="48.63" data-avail="10.0" data-created="1785376579000" data-name="fsx industrial 34, dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/fsx-industrial-34-dst/">
           <img src="/assets/img/listings/049c9183d4.webp" alt="FSX Industrial 34, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1509,7 +1626,7 @@
           <a class="view-btn" href="/offerings/fsx-industrial-34-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="griffin-capital" data-states="mo" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.24" data-ltv="54.09" data-avail="36.3" data-created="1785376579000" data-name="griffin capital (union – kansas city, mo) dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="griffin-capital" data-states="mo" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.24" data-ltv="54.09" data-avail="36.3" data-created="1785376579000" data-name="griffin capital (union – kansas city, mo) dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/griffin-capital-union-kansas-city-mo-dst/">
           <img src="/assets/img/listings/92a73d7b23.webp" alt="Griffin Capital (Union – Kansas City, MO) DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1535,7 +1652,7 @@
           <a class="view-btn" href="/offerings/griffin-capital-union-kansas-city-mo-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="griffin-capital" data-states="ok" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.81" data-ltv="46.51" data-avail="78.9" data-created="1785376579000" data-name="griffin capital tulsa btr dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="griffin-capital" data-states="ok" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.81" data-ltv="46.51" data-avail="78.9" data-created="1785376579000" data-name="griffin capital tulsa btr dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/griffin-capital-tulsa-btr-dst/">
           <img src="/assets/img/listings/a667632d16.webp" alt="Griffin Capital Tulsa BTR DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1561,7 +1678,7 @@
           <a class="view-btn" href="/offerings/griffin-capital-tulsa-btr-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="medical-office" data-status="confirm-availability" data-strategy="core" data-sponsor="hpa-exchange" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="6.02" data-ltv="51.46" data-avail="100.0" data-created="1785376443000" data-name="hpa exchange - vital medical dallas tx dst" data-rank="1">
+      <article class="offering-card" data-tags="medical-office" data-status="confirm-availability" data-strategy="core" data-sponsor="hpa-exchange" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="6.02" data-ltv="51.46" data-avail="100.0" data-created="1785376443000" data-name="hpa exchange - vital medical dallas tx dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/hpa-vital-medical-dallas-tx-dst/">
           <img src="/assets/img/listings/4bfd7b22f1.webp" alt="HPA Exchange - Vital Medical Dallas TX DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1587,7 +1704,7 @@
           <a class="view-btn" href="/offerings/hpa-vital-medical-dallas-tx-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="hines" data-states="fl il" data-regd="506-b" data-exit="mandatory" data-min="250000" data-yield="4.02" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="hrex 9, dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core" data-sponsor="hines" data-states="fl il" data-regd="506-b" data-exit="mandatory" data-min="250000" data-yield="4.02" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="hrex 9, dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/hrex-9-dst/">
           
           <div class="chip-row">
@@ -1613,7 +1730,7 @@
           <a class="view-btn" href="/offerings/hrex-9-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="invesco" data-states="fl nc" data-regd="506-c" data-exit="mandatory" data-min="250000" data-yield="4.33" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="irex iv industrial portfolio dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="invesco" data-states="fl nc" data-regd="506-c" data-exit="mandatory" data-min="250000" data-yield="4.33" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="irex iv industrial portfolio dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/irex-iv-industrial-portfolio-dst/">
           <img src="/assets/img/listings/a948d47e9a.webp" alt="IREX IV Industrial Portfolio DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1639,7 +1756,7 @@
           <a class="view-btn" href="/offerings/irex-iv-industrial-portfolio-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="hospitality" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="moody-national" data-states="tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="6.40" data-ltv="0.00" data-avail="35.8" data-created="1785376579000" data-name="moody med center 2 dst" data-rank="1">
+      <article class="offering-card" data-tags="hospitality" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="moody-national" data-states="tx" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="6.40" data-ltv="0.00" data-avail="35.8" data-created="1785376579000" data-name="moody med center 2 dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/moody-med-center-2-dst/">
           <img src="/assets/img/listings/c437847533.webp" alt="Moody Med Center 2 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1665,7 +1782,7 @@
           <a class="view-btn" href="/offerings/moody-med-center-2-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="office" data-status="confirm-availability" data-strategy="core" data-sponsor="moody-national" data-states="tx" data-regd="506-c" data-exit="none" data-min="100000" data-yield="6.24" data-ltv="35.35" data-avail="49.2" data-created="1785376579000" data-name="moody village towers dst" data-rank="1">
+      <article class="offering-card" data-tags="office" data-status="confirm-availability" data-strategy="core" data-sponsor="moody-national" data-states="tx" data-regd="506-c" data-exit="none" data-min="100000" data-yield="6.24" data-ltv="35.35" data-avail="49.2" data-created="1785376579000" data-name="moody village towers dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/moody-village-towers-dst/">
           <img src="/assets/img/listings/976fed321b.webp" alt="Moody Village Towers DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1691,7 +1808,7 @@
           <a class="view-btn" href="/offerings/moody-village-towers-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="life-sciences" data-status="confirm-availability" data-strategy="core" data-sponsor="nexpoint" data-states="mn" data-regd="" data-exit="optional" data-min="100000" data-yield="4.07" data-ltv="50.52" data-avail="12.5" data-created="1785376579000" data-name="nexpoint life sciences iii dst" data-rank="1">
+      <article class="offering-card" data-tags="life-sciences" data-status="confirm-availability" data-strategy="core" data-sponsor="nexpoint" data-states="mn" data-regd="" data-exit="optional" data-min="100000" data-yield="4.07" data-ltv="50.52" data-avail="12.5" data-created="1785376579000" data-name="nexpoint life sciences iii dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-life-sciences-iii-dst/">
           <img src="/assets/img/listings/834bb2f7a6.webp" alt="NexPoint Life Sciences III DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1717,7 +1834,7 @@
           <a class="view-btn" href="/offerings/nexpoint-life-sciences-iii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="marina" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="il ok" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="7.98" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="nexpoint marina dst" data-rank="1">
+      <article class="offering-card" data-tags="marina" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="il ok" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="7.98" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="nexpoint marina dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-marina-dst/">
           <img src="/assets/img/listings/83d1e4b04a.webp" alt="NexPoint Marina DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1743,7 +1860,7 @@
           <a class="view-btn" href="/offerings/nexpoint-marina-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="nexpoint" data-states="fl" data-regd="" data-exit="optional" data-min="100000" data-yield="4.91" data-ltv="53.05" data-avail="28.1" data-created="1785376579000" data-name="nexpoint oasis dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="nexpoint" data-states="fl" data-regd="" data-exit="optional" data-min="100000" data-yield="4.91" data-ltv="53.05" data-avail="28.1" data-created="1785376579000" data-name="nexpoint oasis dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-oasis-dst/">
           <img src="/assets/img/listings/d419dd3d98.webp" alt="NexPoint Oasis DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1769,7 +1886,7 @@
           <a class="view-btn" href="/offerings/nexpoint-oasis-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="al" data-regd="" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="49.85" data-avail="100.0" data-created="1785376579000" data-name="nexpoint outlook dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="al" data-regd="" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="49.85" data-avail="100.0" data-created="1785376579000" data-name="nexpoint outlook dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-outlook-dst/">
           <img src="/assets/img/listings/7be2d12744.webp" alt="NexPoint Outlook DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1795,7 +1912,7 @@
           <a class="view-btn" href="/offerings/nexpoint-outlook-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="fl tx" data-regd="" data-exit="optional" data-min="100000" data-yield="5.36" data-ltv="44.87" data-avail="55.6" data-created="1785376579000" data-name="nexpoint small bay iii dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="value-add" data-sponsor="nexpoint" data-states="fl tx" data-regd="" data-exit="optional" data-min="100000" data-yield="5.36" data-ltv="44.87" data-avail="55.6" data-created="1785376579000" data-name="nexpoint small bay iii dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-small-bay-iii-dst/">
           <img src="/assets/img/listings/6adc61adfe.webp" alt="NexPoint Small Bay III DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1821,7 +1938,7 @@
           <a class="view-btn" href="/offerings/nexpoint-small-bay-iii-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="nexpoint" data-states="nc" data-regd="" data-exit="optional" data-min="100000" data-yield="6.04" data-ltv="48.64" data-avail="95.7" data-created="1785376579000" data-name="nexpoint waterford dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="nexpoint" data-states="nc" data-regd="" data-exit="optional" data-min="100000" data-yield="6.04" data-ltv="48.64" data-avail="95.7" data-created="1785376579000" data-name="nexpoint waterford dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/nexpoint-waterford-dst/">
           <img src="/assets/img/listings/b456ec65e7.webp" alt="NexPoint Waterford DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1847,7 +1964,7 @@
           <a class="view-btn" href="/offerings/nexpoint-waterford-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="peachtree-group" data-states="nh" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.33" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="pg manchester industrial dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="peachtree-group" data-states="nh" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.33" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="pg manchester industrial dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/pg-manchester-industrial-dst/">
           <img src="/assets/img/listings/ad464d2bcc.webp" alt="PG Manchester Industrial DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1873,7 +1990,7 @@
           <a class="view-btn" href="/offerings/pg-manchester-industrial-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="peachtree-group" data-states="ga" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.35" data-ltv="0.00" data-avail="21.9" data-created="1785376579000" data-name="pg savannah industrial dst" data-rank="1">
+      <article class="offering-card" data-tags="industrial" data-status="confirm-availability" data-strategy="core" data-sponsor="peachtree-group" data-states="ga" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.35" data-ltv="0.00" data-avail="21.9" data-created="1785376579000" data-name="pg savannah industrial dst" data-rank="1" data-preferred="1">
         <a class="card-photo" href="/offerings/pg-savannah-industrial-dst/">
           <img src="/assets/img/listings/d094e01778.webp" alt="PG Savannah Industrial DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1899,7 +2016,7 @@
           <a class="view-btn" href="/offerings/pg-savannah-industrial-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="starboard-realty-advisors" data-states="wa" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.92" data-ltv="46.09" data-avail="96.6" data-created="1785376579000" data-name="starboard bradley dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="starboard-realty-advisors" data-states="wa" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.92" data-ltv="46.09" data-avail="96.6" data-created="1785376579000" data-name="starboard bradley dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/starboard-bradley-dst/">
           <img src="/assets/img/listings/c3f7f27cda.webp" alt="Starboard Bradley DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1925,7 +2042,7 @@
           <a class="view-btn" href="/offerings/starboard-bradley-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="starboard-realty-advisors" data-states="oh" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.93" data-ltv="52.64" data-avail="55.1" data-created="1785376579000" data-name="starboard makley dst" data-rank="1">
+      <article class="offering-card" data-tags="multifamily" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="starboard-realty-advisors" data-states="oh" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.93" data-ltv="52.64" data-avail="55.1" data-created="1785376579000" data-name="starboard makley dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/starboard-makley-dst/">
           <img src="/assets/img/listings/1573c04088.webp" alt="Starboard Makley DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1951,7 +2068,7 @@
           <a class="view-btn" href="/offerings/starboard-makley-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="healthcare" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="hpa-exchange" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="7.28" data-ltv="53.81" data-avail="100.0" data-created="1785376579000" data-name="vital capital medical - temple tx dst" data-rank="1">
+      <article class="offering-card" data-tags="healthcare" data-status="confirm-availability" data-strategy="core-plus" data-sponsor="hpa-exchange" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="7.28" data-ltv="53.81" data-avail="100.0" data-created="1785376579000" data-name="vital capital medical - temple tx dst" data-rank="1" data-preferred="0">
         <a class="card-photo" href="/offerings/vital-capital-medical-temple-tx-dst/">
           <img src="/assets/img/listings/844c873b1e.webp" alt="Vital Capital Medical - Temple TX DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -1977,7 +2094,7 @@
           <a class="view-btn" href="/offerings/vital-capital-medical-temple-tx-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="limited-availability" data-strategy="core" data-sponsor="exchangeright" data-states="sc" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.15" data-ltv="0.00" data-avail="1.6" data-created="1785376443000" data-name="exchangeright essential income 11 dst" data-rank="2">
+      <article class="offering-card" data-tags="net-lease" data-status="limited-availability" data-strategy="core" data-sponsor="exchangeright" data-states="sc" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.15" data-ltv="0.00" data-avail="1.6" data-created="1785376443000" data-name="exchangeright essential income 11 dst" data-rank="2" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-essential-income-11-dst/">
           
           <div class="chip-row">
@@ -2003,7 +2120,7 @@
           <a class="view-btn" href="/offerings/exchangeright-essential-income-11-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="limited-availability" data-strategy="core" data-sponsor="exchangeright" data-states="ar ga mi nj oh tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.30" data-ltv="43.97" data-avail="13.6" data-created="1785376579000" data-name="exchangeright net-leased portfolio 75 dst" data-rank="2">
+      <article class="offering-card" data-tags="net-lease" data-status="limited-availability" data-strategy="core" data-sponsor="exchangeright" data-states="ar ga mi nj oh tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.30" data-ltv="43.97" data-avail="13.6" data-created="1785376579000" data-name="exchangeright net-leased portfolio 75 dst" data-rank="2" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-netleased-portfolio-75-dst/">
           <img src="/assets/img/listings/e3a12b79d1.webp" alt="ExchangeRight Net-Leased Portfolio 75 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2029,7 +2146,7 @@
           <a class="view-btn" href="/offerings/exchangeright-netleased-portfolio-75-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="gsa" data-status="limited-availability" data-strategy="core-plus" data-sponsor="net-lease-capital-advisors" data-states="md nc" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.70" data-ltv="56.60" data-avail="2.1" data-created="1785376579000" data-name="government lease holdings 2 dst (glh 2 dst)" data-rank="2">
+      <article class="offering-card" data-tags="gsa" data-status="limited-availability" data-strategy="core-plus" data-sponsor="net-lease-capital-advisors" data-states="md nc" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.70" data-ltv="56.60" data-avail="2.1" data-created="1785376579000" data-name="government lease holdings 2 dst (glh 2 dst)" data-rank="2" data-preferred="0">
         <a class="card-photo" href="/offerings/government-lease-holdings-2-dst-glh-2-dst/">
           <img src="/assets/img/listings/f874a41fc2.webp" alt="Government Lease Holdings 2 DST (GLH 2 DST)" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2055,7 +2172,7 @@
           <a class="view-btn" href="/offerings/government-lease-holdings-2-dst-glh-2-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="office" data-status="limited-availability" data-strategy="core" data-sponsor="net-lease-capital-advisors" data-states="mi" data-regd="506-b" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="82.75" data-avail="6.3" data-created="1785376579000" data-name="nlc financial service hq dst" data-rank="2">
+      <article class="offering-card" data-tags="office" data-status="limited-availability" data-strategy="core" data-sponsor="net-lease-capital-advisors" data-states="mi" data-regd="506-b" data-exit="none" data-min="100000" data-yield="0.00" data-ltv="82.75" data-avail="6.3" data-created="1785376579000" data-name="nlc financial service hq dst" data-rank="2" data-preferred="0">
         <a class="card-photo" href="/offerings/nlc-financial-service-hq-dst/">
           <img src="/assets/img/listings/e5f01a5f78.webp" alt="NLC Financial Service HQ DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2081,7 +2198,7 @@
           <a class="view-btn" href="/offerings/nlc-financial-service-hq-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="limited-availability" data-strategy="core-plus" data-sponsor="passco" data-states="nc" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.81" data-ltv="46.93" data-avail="2.3" data-created="1785376579000" data-name="passco preston ridge dst" data-rank="2">
+      <article class="offering-card" data-tags="multifamily" data-status="limited-availability" data-strategy="core-plus" data-sponsor="passco" data-states="nc" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.81" data-ltv="46.93" data-avail="2.3" data-created="1785376579000" data-name="passco preston ridge dst" data-rank="2" data-preferred="0">
         <a class="card-photo" href="/offerings/passco-preston-ridge-dst/">
           <img src="/assets/img/listings/3f991d71bb.webp" alt="Passco Preston Ridge DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2107,7 +2224,7 @@
           <a class="view-btn" href="/offerings/passco-preston-ridge-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="limited-availability" data-strategy="core-plus" data-sponsor="passco" data-states="ky" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.55" data-ltv="45.49" data-avail="4.1" data-created="1785376579000" data-name="passco riverside dst" data-rank="2">
+      <article class="offering-card" data-tags="multifamily" data-status="limited-availability" data-strategy="core-plus" data-sponsor="passco" data-states="ky" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.55" data-ltv="45.49" data-avail="4.1" data-created="1785376579000" data-name="passco riverside dst" data-rank="2" data-preferred="0">
         <a class="card-photo" href="/offerings/passco-riverside-dst/">
           <img src="/assets/img/listings/6775d8cab8.webp" alt="Passco Riverside DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2133,7 +2250,7 @@
           <a class="view-btn" href="/offerings/passco-riverside-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="limited-availability" data-strategy="core" data-sponsor="sealy-and-company" data-states="in" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.05" data-ltv="0.00" data-avail="4.9" data-created="1785376579000" data-name="sealy industrial i, dst" data-rank="2">
+      <article class="offering-card" data-tags="industrial" data-status="limited-availability" data-strategy="core" data-sponsor="sealy-and-company" data-states="in" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.05" data-ltv="0.00" data-avail="4.9" data-created="1785376579000" data-name="sealy industrial i, dst" data-rank="2" data-preferred="0">
         <a class="card-photo" href="/offerings/sealy-industrial-i-dst/">
           <img src="/assets/img/listings/41254d6c54.webp" alt="Sealy Industrial I, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2159,11 +2276,11 @@
           <a class="view-btn" href="/offerings/sealy-industrial-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="blue-owl" data-states="ky mi oh" data-regd="" data-exit="mandatory" data-min="100000" data-yield="4.96" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="blue owl real estate exchange v dst" data-rank="4">
+      <article class="offering-card" data-tags="industrial" data-status="under-review" data-strategy="core" data-sponsor="blue-owl" data-states="ky mi oh" data-regd="" data-exit="mandatory" data-min="100000" data-yield="4.96" data-ltv="0.00" data-avail="100.0" data-created="1785376579000" data-name="blue owl real estate exchange v dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/blue-owl-real-estate-exchange-v-dst/">
           <img src="/assets/img/listings/fa73cb7a73.webp" alt="Blue Owl Real Estate Exchange V DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Industrial</span>
           </div>
         </a>
@@ -2185,11 +2302,11 @@
           <a class="view-btn" href="/offerings/blue-owl-real-estate-exchange-v-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="student-housing" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="baker-tilly" data-states="oh" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="4.71" data-ltv="47.68" data-avail="100.0" data-created="1785376443000" data-name="bt athens student housing dst" data-rank="4">
+      <article class="offering-card" data-tags="student-housing" data-status="under-review" data-strategy="core-plus" data-sponsor="baker-tilly" data-states="oh" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="4.71" data-ltv="47.68" data-avail="100.0" data-created="1785376443000" data-name="bt athens student housing dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/bt-athens-student-housing-dst/">
           <img src="/assets/img/listings/60498b9cf2.webp" alt="BT Athens Student Housing DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Student Housing</span>
           </div>
         </a>
@@ -2211,11 +2328,11 @@
           <a class="view-btn" href="/offerings/bt-athens-student-housing-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="blackstone" data-states="nv tx" data-regd="506-b" data-exit="mandatory" data-min="1000000" data-yield="3.41" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="bxrex portfolio i dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core" data-sponsor="blackstone" data-states="nv tx" data-regd="506-b" data-exit="mandatory" data-min="1000000" data-yield="3.41" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="bxrex portfolio i dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/bxrex-portfolio-i-dst/">
           <img src="/assets/img/listings/7ba8275652.webp" alt="BXREX Portfolio I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2237,11 +2354,11 @@
           <a class="view-btn" href="/offerings/bxrex-portfolio-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="fl" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.14" data-ltv="52.26" data-avail="100.0" data-created="1785376443000" data-name="cf biscayne multifamily dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core-plus" data-sponsor="cantor-fitzgerald" data-states="fl" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.14" data-ltv="52.26" data-avail="100.0" data-created="1785376443000" data-name="cf biscayne multifamily dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/cf-biscayne-multifamily-dst/">
           <img src="/assets/img/listings/ce9153e3bd.webp" alt="CF Biscayne Multifamily DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2263,11 +2380,11 @@
           <a class="view-btn" href="/offerings/cf-biscayne-multifamily-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="capital-square" data-states="va" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.36" data-ltv="49.31" data-avail="" data-created="1785376443000" data-name="cs1031 colony at centerpointe apartments, dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core" data-sponsor="capital-square" data-states="va" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="4.36" data-ltv="49.31" data-avail="" data-created="1785376443000" data-name="cs1031 colony at centerpointe apartments, dst" data-rank="4" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-colony-at-centerpointe-apartments-dst/">
           
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2289,11 +2406,11 @@
           <a class="view-btn" href="/offerings/cs1031-colony-at-centerpointe-apartments-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="erp" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="5.25" data-ltv="26.45" data-avail="100.0" data-created="1785376443000" data-name="erp 1031 industrial portfolio iv dst" data-rank="4">
+      <article class="offering-card" data-tags="industrial" data-status="under-review" data-strategy="core-plus" data-sponsor="erp" data-states="tx" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="5.25" data-ltv="26.45" data-avail="100.0" data-created="1785376443000" data-name="erp 1031 industrial portfolio iv dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/erp-1031-industrial-portfolio-iv-dst/">
           <img src="/assets/img/listings/c2810cd019.webp" alt="ERP 1031 Industrial Portfolio IV DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Industrial</span>
           </div>
         </a>
@@ -2315,11 +2432,11 @@
           <a class="view-btn" href="/offerings/erp-1031-industrial-portfolio-iv-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="student-housing" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="fortress-investment-group" data-states="wv" data-regd="" data-exit="mandatory" data-min="100000" data-yield="6.24" data-ltv="47.12" data-avail="63.9" data-created="1785376579000" data-name="fortress frex db series i dst" data-rank="4">
+      <article class="offering-card" data-tags="student-housing" data-status="under-review" data-strategy="core-plus" data-sponsor="fortress-investment-group" data-states="wv" data-regd="" data-exit="mandatory" data-min="100000" data-yield="6.24" data-ltv="47.12" data-avail="63.9" data-created="1785376579000" data-name="fortress frex db series i dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/fortress-frex-db-series-i-dst/">
           <img src="/assets/img/listings/0d7c71795a.webp" alt="Fortress FREX DB Series I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Student Housing</span>
           </div>
         </a>
@@ -2341,193 +2458,11 @@
           <a class="view-btn" href="/offerings/fortress-frex-db-series-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="co" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="5.15" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland alt senior living ii dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-alt-senior-living-ii-dst/">
-          <img src="/assets/img/listings/1c44cee167.webp" alt="Inland ALT Senior Living II DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Senior Living</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-alt-senior-living-ii-dst/" style="color:inherit">Inland ALT Senior Living II DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$250,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">5.15%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">CO</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $70,771,625</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-alt-senior-living-ii-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="ny" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.59" data-ltv="49.28" data-avail="100.0" data-created="1785376443000" data-name="inland long island residential dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-long-island-residential-dst/">
-          <img src="/assets/img/listings/ce6ca56a2c.webp" alt="Inland Long Island Residential DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Multifamily</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-long-island-residential-dst/" style="color:inherit">Inland Long Island Residential DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.59%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">49.28%</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">NY</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $107,581,888</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-long-island-residential-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="senior-living" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="il" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.66" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland mokena senior living dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-mokena-senior-living-dst/">
-          <img src="/assets/img/listings/7b303f819b.webp" alt="Inland Mokena Senior Living DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Senior Living</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-mokena-senior-living-dst/" style="color:inherit">Inland Mokena Senior Living DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.66%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">IL</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $86,840,527</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-mokena-senior-living-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="senior-living" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="nj" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.75" data-ltv="52.79" data-avail="100.0" data-created="1785376443000" data-name="inland nj senior living dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-nj-senior-living-dst/">
-          <img src="/assets/img/listings/41dedc7e73.webp" alt="Inland NJ Senior Living DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Senior Living</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-nj-senior-living-dst/" style="color:inherit">Inland NJ Senior Living DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.75%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">52.79%</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">NJ</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $77,255,073</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-nj-senior-living-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="self-storage" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="fl nc tn" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.51" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland self-storage portfolio xxii dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-self-storage-portfolio-xxii-dst/">
-          <img src="/assets/img/listings/a1ec9a8b1e.webp" alt="Inland Self-Storage Portfolio XXII DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Self-Storage</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-self-storage-portfolio-xxii-dst/" style="color:inherit">Inland Self-Storage Portfolio XXII DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.51%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">FL, NC, TN</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $115,869,677</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-self-storage-portfolio-xxii-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="student-housing" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="in tx va" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.43" data-ltv="46.72" data-avail="100.0" data-created="1785376443000" data-name="inland student housing portfolio dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-student-housing-portfolio-dst/">
-          <img src="/assets/img/listings/ee19f9a261.webp" alt="Inland Student Housing Portfolio DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Student Housing</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-student-housing-portfolio-dst/" style="color:inherit">Inland Student Housing Portfolio DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.43%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">46.72%</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">IN, TX, VA</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $170,770,544</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-student-housing-portfolio-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="office" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="inland" data-states="al" data-regd="506-b" data-exit="none" data-min="25000" data-yield="0.00" data-ltv="76.70" data-avail="100.0" data-created="1785376443000" data-name="inland zero coupon utility dst" data-rank="4">
-        <a class="card-photo" href="/offerings/inland-zero-coupon-utility-dst/">
-          <img src="/assets/img/listings/2640145d5d.webp" alt="Inland Zero Coupon Utility DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Office</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/inland-zero-coupon-utility-dst/" style="color:inherit">Inland Zero Coupon Utility DST</a></h3>
-          <div class="sponsor-line">Inland</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$25,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">0.00%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">76.70%</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">AL</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $39,361,999</span>
-          </div>
-          <a class="view-btn" href="/offerings/inland-zero-coupon-utility-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="diversified" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="invesco" data-states="nc sc" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.82" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="irex v diversified portfolio dst" data-rank="4">
+      <article class="offering-card" data-tags="diversified" data-status="under-review" data-strategy="core" data-sponsor="invesco" data-states="nc sc" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="4.82" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="irex v diversified portfolio dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/irex-v-diversified-portfolio-dst/">
           <img src="/assets/img/listings/0a2c68904b.webp" alt="IREX V Diversified Portfolio DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Diversified</span>
           </div>
         </a>
@@ -2549,37 +2484,11 @@
           <a class="view-btn" href="/offerings/irex-v-diversified-portfolio-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="jll" data-states="az ca ga in" data-regd="506-b" data-exit="optional" data-min="500000" data-yield="4.38" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="jllx industrial portfolio, dst" data-rank="4">
-        <a class="card-photo" href="/offerings/jllx-industrial-portfolio-dst/">
-          <img src="/assets/img/listings/75a5b991ec.webp" alt="JLLX Industrial Portfolio, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
-          <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
-            <span class="type-chip">Industrial</span>
-          </div>
-        </a>
-        <div class="card-body">
-          <h3><a href="/offerings/jllx-industrial-portfolio-dst/" style="color:inherit">JLLX Industrial Portfolio, DST</a></h3>
-          <div class="sponsor-line">JLL</div>
-          <div class="card-stats">
-            <div class="cs"><span class="label">Minimum</span><span class="value">$500,000</span></div>
-            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.38%</span></div>
-            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
-            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
-            <div class="cs"><span class="label">Est. Hold</span><span class="value">5 years</span></div>
-            <div class="cs"><span class="label">Location</span><span class="value">AZ, CA, GA, IN</span></div>
-          </div>
-          <div class="availability">
-            <div class="bar"><div class="fill" style="width: 100%"></div></div>
-            <span class="cap">100% of equity still available &middot; $253,383,866</span>
-          </div>
-          <a class="view-btn" href="/offerings/jllx-industrial-portfolio-dst/">View Offering</a>
-        </div>
-      </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="newstar-exchange" data-states="ga" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.73" data-ltv="44.66" data-avail="100.0" data-created="1785376443000" data-name="newstar 17 sweetwater springs dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core-plus" data-sponsor="newstar-exchange" data-states="ga" data-regd="506-c" data-exit="none" data-min="100000" data-yield="4.73" data-ltv="44.66" data-avail="100.0" data-created="1785376443000" data-name="newstar 17 sweetwater springs dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/newstar-17-sweetwater-springs-dst/">
           <img src="/assets/img/listings/9dcf903fb6.webp" alt="NewStar 17 Sweetwater Springs DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2601,11 +2510,11 @@
           <a class="view-btn" href="/offerings/newstar-17-sweetwater-springs-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="office" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="syndicated-equities" data-states="az" data-regd="506-c" data-exit="none" data-min="" data-yield="6.12" data-ltv="54.73" data-avail="100.0" data-created="1785376443000" data-name="northrop grumman scif &amp; lab facility dst" data-rank="4">
+      <article class="offering-card" data-tags="office" data-status="under-review" data-strategy="core" data-sponsor="syndicated-equities" data-states="az" data-regd="506-c" data-exit="none" data-min="" data-yield="6.12" data-ltv="54.73" data-avail="100.0" data-created="1785376443000" data-name="northrop grumman scif &amp; lab facility dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/northrop-grumman-scif-lab-dst/">
           <img src="/assets/img/listings/937698bd17.webp" alt="Northrop Grumman SCIF &amp; Lab Facility DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Office</span>
           </div>
         </a>
@@ -2627,11 +2536,11 @@
           <a class="view-btn" href="/offerings/northrop-grumman-scif-lab-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="olympus-property" data-states="tx" data-regd="506-c" data-exit="optional" data-min="25000" data-yield="7.12" data-ltv="50.55" data-avail="100.0" data-created="1785376443000" data-name="olympus coronado dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core-plus" data-sponsor="olympus-property" data-states="tx" data-regd="506-c" data-exit="optional" data-min="25000" data-yield="7.12" data-ltv="50.55" data-avail="100.0" data-created="1785376443000" data-name="olympus coronado dst" data-rank="4" data-preferred="1">
         <a class="card-photo" href="/offerings/olympus-coronado-dst/">
           <img src="/assets/img/listings/f8acb44656.webp" alt="Olympus Coronado DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2653,11 +2562,11 @@
           <a class="view-btn" href="/offerings/olympus-coronado-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core-plus" data-sponsor="olympus-property" data-states="tx" data-regd="506-c" data-exit="optional" data-min="25000" data-yield="6.24" data-ltv="47.40" data-avail="100.0" data-created="1785376579000" data-name="olympus tradewinds dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core-plus" data-sponsor="olympus-property" data-states="tx" data-regd="506-c" data-exit="optional" data-min="25000" data-yield="6.24" data-ltv="47.40" data-avail="100.0" data-created="1785376579000" data-name="olympus tradewinds dst" data-rank="4" data-preferred="1">
         <a class="card-photo" href="/offerings/olympus-tradewinds-dst/">
           <img src="/assets/img/listings/2ed92dd8aa.webp" alt="Olympus Tradewinds DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2679,11 +2588,11 @@
           <a class="view-btn" href="/offerings/olympus-tradewinds-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="passco" data-states="nh" data-regd="506-b" data-exit="unclear" data-min="100000" data-yield="4.40" data-ltv="47.04" data-avail="" data-created="1785376443000" data-name="passco toscana dst" data-rank="4">
+      <article class="offering-card" data-tags="multifamily" data-status="under-review" data-strategy="core" data-sponsor="passco" data-states="nh" data-regd="506-b" data-exit="unclear" data-min="100000" data-yield="4.40" data-ltv="47.04" data-avail="" data-created="1785376443000" data-name="passco toscana dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/passco-toscana-dst/">
           
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Multifamily</span>
           </div>
         </a>
@@ -2705,11 +2614,11 @@
           <a class="view-btn" href="/offerings/passco-toscana-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="coming-soon-under-review" data-strategy="core" data-sponsor="secure-properties" data-states="mi" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="6.00" data-ltv="48.35" data-avail="32.2" data-created="1785376443000" data-name="secure net lease industrial ii dst" data-rank="4">
+      <article class="offering-card" data-tags="industrial" data-status="under-review" data-strategy="core" data-sponsor="secure-properties" data-states="mi" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="6.00" data-ltv="48.35" data-avail="32.2" data-created="1785376443000" data-name="secure net lease industrial ii dst" data-rank="4" data-preferred="0">
         <a class="card-photo" href="/offerings/secure-net-lease-industrial-ii-dst/">
           <img src="/assets/img/listings/0bc18864c1.webp" alt="Secure Net Lease Industrial II DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
-            <span class="status-chip soon">Coming Soon</span>
+            <span class="status-chip soon">Under Review</span>
             <span class="type-chip">Industrial</span>
           </div>
         </a>
@@ -2736,7 +2645,7 @@
 
     <div class="offering-grid" id="grid-closed" hidden>
       <!-- CLOSED:START -->
-      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="brookfield" data-states="ma" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="7.01" data-ltv="51.20" data-avail="83.3" data-created="1785376579000" data-name="brex net lease industrial i dst" data-rank="5">
+      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="brookfield" data-states="ma" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="7.01" data-ltv="51.20" data-avail="83.3" data-created="1785376579000" data-name="brex net lease industrial i dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/brex-net-lease-industrial-i-dst/">
           <img src="/assets/img/listings/1c87c53629.webp" alt="BREX Net Lease Industrial I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2762,7 +2671,7 @@
           <a class="view-btn" href="/offerings/brex-net-lease-industrial-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="closed" data-strategy="core-plus" data-sponsor="ideal-capital-group" data-states="oh" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.08" data-ltv="51.68" data-avail="0.0" data-created="1785376443000" data-name="ideal ecco park dst" data-rank="5">
+      <article class="offering-card" data-tags="multifamily" data-status="closed" data-strategy="core-plus" data-sponsor="ideal-capital-group" data-states="oh" data-regd="506-c" data-exit="none" data-min="100000" data-yield="5.08" data-ltv="51.68" data-avail="0.0" data-created="1785376443000" data-name="ideal ecco park dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/ideal-ecco-park-dst/">
           <img src="/assets/img/listings/ebdc9deca0.webp" alt="IDEAL Ecco Park DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2788,7 +2697,7 @@
           <a class="view-btn" href="/offerings/ideal-ecco-park-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core-plus" data-sponsor="livingston-street-capital" data-states="ny" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.63" data-ltv="52.97" data-avail="0.0" data-created="1785376579000" data-name="lsc-latham ny, dst" data-rank="5">
+      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core-plus" data-sponsor="livingston-street-capital" data-states="ny" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.63" data-ltv="52.97" data-avail="0.0" data-created="1785376579000" data-name="lsc-latham ny, dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/lsclatham-ny-dst/">
           <img src="/assets/img/listings/c24202161f.webp" alt="LSC-Latham NY, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2814,7 +2723,7 @@
           <a class="view-btn" href="/offerings/lsclatham-ny-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core-plus" data-sponsor="livingston-street-capital" data-states="ut" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.30" data-ltv="51.00" data-avail="0.0" data-created="1785376579000" data-name="lsc-salt lake ut, dst" data-rank="5">
+      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core-plus" data-sponsor="livingston-street-capital" data-states="ut" data-regd="506-b" data-exit="none" data-min="100000" data-yield="5.30" data-ltv="51.00" data-avail="0.0" data-created="1785376579000" data-name="lsc-salt lake ut, dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/lscsalt-lake-ut-dst/">
           <img src="/assets/img/listings/b9f909e830.webp" alt="LSC-Salt Lake UT, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2840,7 +2749,7 @@
           <a class="view-btn" href="/offerings/lscsalt-lake-ut-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="secure-properties" data-states="fl" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.44" data-ltv="48.25" data-avail="0.0" data-created="1785376443000" data-name="secure net lease industrial i dst" data-rank="5">
+      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="secure-properties" data-states="fl" data-regd="506-c" data-exit="optional" data-min="100000" data-yield="5.44" data-ltv="48.25" data-avail="0.0" data-created="1785376443000" data-name="secure net lease industrial i dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/secure-net-lease-industrial-i-dst/">
           <img src="/assets/img/listings/8430a95334.webp" alt="Secure Net Lease Industrial I DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2866,7 +2775,7 @@
           <a class="view-btn" href="/offerings/secure-net-lease-industrial-i-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="ga sc va" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.35" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="exchangeright essential income 9 dst" data-rank="5">
+      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="ga sc va" data-regd="506-b" data-exit="mandatory" data-min="100000" data-yield="5.35" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="exchangeright essential income 9 dst" data-rank="5" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-essential-income-9-dst/">
           <img src="/assets/img/listings/e821a53841.webp" alt="ExchangeRight Essential Income 9 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2892,7 +2801,7 @@
           <a class="view-btn" href="/offerings/exchangeright-essential-income-9-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="oil-and-gas" data-status="closed" data-strategy="core-plus" data-sponsor="resource-royalty" data-states="ok tx" data-regd="" data-exit="none" data-min="100000" data-yield="9.60" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="resource royalty 27, llc" data-rank="5">
+      <article class="offering-card" data-tags="oil-and-gas" data-status="closed" data-strategy="core-plus" data-sponsor="resource-royalty" data-states="ok tx" data-regd="" data-exit="none" data-min="100000" data-yield="9.60" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="resource royalty 27, llc" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/resource-royalty-fund-27/">
           <img src="/assets/img/listings/17a66ac5e8.webp" alt="Resource Royalty 27, LLC" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2918,7 +2827,7 @@
           <a class="view-btn" href="/offerings/resource-royalty-fund-27/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="multifamily" data-status="closed" data-strategy="value-add" data-sponsor="bluerock" data-states="nc" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="5.23" data-ltv="44.86" data-avail="0.0" data-created="1785376579000" data-name="br churchill downs, dst" data-rank="5">
+      <article class="offering-card" data-tags="multifamily" data-status="closed" data-strategy="value-add" data-sponsor="bluerock" data-states="nc" data-regd="506-c" data-exit="mandatory" data-min="100000" data-yield="5.23" data-ltv="44.86" data-avail="0.0" data-created="1785376579000" data-name="br churchill downs, dst" data-rank="5" data-preferred="1">
         <a class="card-photo" href="/offerings/br-churchill-downs-dst/">
           <img src="/assets/img/listings/407ab23bcb.webp" alt="BR Churchill Downs, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2944,7 +2853,7 @@
           <a class="view-btn" href="/offerings/br-churchill-downs-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="al il wa" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="0.00" data-avail="0.3" data-created="1785376579000" data-name="exchangeright net-leased all-cash 19 dst" data-rank="5">
+      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="al il wa" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.25" data-ltv="0.00" data-avail="0.3" data-created="1785376579000" data-name="exchangeright net-leased all-cash 19 dst" data-rank="5" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-netleased-allcash-19-dst/">
           <img src="/assets/img/listings/e5e466ed56.webp" alt="ExchangeRight Net-Leased All-Cash 19 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2970,7 +2879,7 @@
           <a class="view-btn" href="/offerings/exchangeright-netleased-allcash-19-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="al sc tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.40" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="exchangeright net-leased all-cash 20 dst" data-rank="5">
+      <article class="offering-card" data-tags="net-lease" data-status="closed" data-strategy="core" data-sponsor="exchangeright" data-states="al sc tx" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="5.40" data-ltv="0.00" data-avail="0.0" data-created="1785376579000" data-name="exchangeright net-leased all-cash 20 dst" data-rank="5" data-preferred="1">
         <a class="card-photo" href="/offerings/exchangeright-netleased-allcash-20-dst/">
           <img src="/assets/img/listings/562a340fda.webp" alt="ExchangeRight Net-Leased All-Cash 20 DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -2996,7 +2905,7 @@
           <a class="view-btn" href="/offerings/exchangeright-netleased-allcash-20-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="syndicated-equities" data-states="wi" data-regd="" data-exit="none" data-min="100000" data-yield="5.90" data-ltv="55.08" data-avail="0.0" data-created="1785376579000" data-name="johnson controls r&amp;d dst" data-rank="5">
+      <article class="offering-card" data-tags="industrial" data-status="closed" data-strategy="core" data-sponsor="syndicated-equities" data-states="wi" data-regd="" data-exit="none" data-min="100000" data-yield="5.90" data-ltv="55.08" data-avail="0.0" data-created="1785376579000" data-name="johnson controls r&amp;d dst" data-rank="5" data-preferred="0">
         <a class="card-photo" href="/offerings/johnson-controls-r-and-d-dst/">
           <img src="/assets/img/listings/d9b409131e.webp" alt="Johnson Controls R&amp;D DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -3022,7 +2931,7 @@
           <a class="view-btn" href="/offerings/johnson-controls-r-and-d-dst/">View Offering</a>
         </div>
       </article>
-      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core" data-sponsor="capital-square" data-states="va" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.73" data-ltv="53.99" data-avail="0.0" data-created="1785376579000" data-name="cs1031 richmond active living apartments, dst" data-rank="5">
+      <article class="offering-card" data-tags="senior-living" data-status="closed" data-strategy="core" data-sponsor="capital-square" data-states="va" data-regd="506-c" data-exit="optional" data-min="50000" data-yield="4.73" data-ltv="53.99" data-avail="0.0" data-created="1785376579000" data-name="cs1031 richmond active living apartments, dst" data-rank="5" data-preferred="1">
         <a class="card-photo" href="/offerings/cs1031-richmond-active-living-apartments-dst/">
           <img src="/assets/img/listings/f91c105695.webp" alt="CS1031 Richmond Active Living Apartments, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
           <div class="chip-row">
@@ -3053,7 +2962,214 @@
 
     <div class="offering-grid" id="grid-rejected" hidden>
       <!-- REJECTED:START -->
-      <p class="page-note">No rejected offerings at the moment. Offerings land here when our underwriting review turns one down.</p>
+      <article class="offering-card" data-tags="senior-living" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="co" data-regd="506-b" data-exit="optional" data-min="250000" data-yield="5.15" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland alt senior living ii dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-alt-senior-living-ii-dst/">
+          <img src="/assets/img/listings/1c44cee167.webp" alt="Inland ALT Senior Living II DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Senior Living</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-alt-senior-living-ii-dst/" style="color:inherit">Inland ALT Senior Living II DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$250,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">5.15%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">CO</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-alt-senior-living-ii-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="multifamily" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="ny" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.59" data-ltv="49.28" data-avail="100.0" data-created="1785376443000" data-name="inland long island residential dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-long-island-residential-dst/">
+          <img src="/assets/img/listings/ce6ca56a2c.webp" alt="Inland Long Island Residential DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Multifamily</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-long-island-residential-dst/" style="color:inherit">Inland Long Island Residential DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.59%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">49.28%</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">NY</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-long-island-residential-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="senior-living" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="il" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.66" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland mokena senior living dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-mokena-senior-living-dst/">
+          <img src="/assets/img/listings/7b303f819b.webp" alt="Inland Mokena Senior Living DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Senior Living</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-mokena-senior-living-dst/" style="color:inherit">Inland Mokena Senior Living DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.66%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">IL</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-mokena-senior-living-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="senior-living" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="nj" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.75" data-ltv="52.79" data-avail="100.0" data-created="1785376443000" data-name="inland nj senior living dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-nj-senior-living-dst/">
+          <img src="/assets/img/listings/41dedc7e73.webp" alt="Inland NJ Senior Living DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Senior Living</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-nj-senior-living-dst/" style="color:inherit">Inland NJ Senior Living DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.75%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">52.79%</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">NJ</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-nj-senior-living-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="self-storage" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="fl nc tn" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.51" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="inland self-storage portfolio xxii dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-self-storage-portfolio-xxii-dst/">
+          <img src="/assets/img/listings/a1ec9a8b1e.webp" alt="Inland Self-Storage Portfolio XXII DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Self-Storage</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-self-storage-portfolio-xxii-dst/" style="color:inherit">Inland Self-Storage Portfolio XXII DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.51%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">FL, NC, TN</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-self-storage-portfolio-xxii-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="student-housing" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="in tx va" data-regd="506-b" data-exit="optional" data-min="100000" data-yield="4.43" data-ltv="46.72" data-avail="100.0" data-created="1785376443000" data-name="inland student housing portfolio dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-student-housing-portfolio-dst/">
+          <img src="/assets/img/listings/ee19f9a261.webp" alt="Inland Student Housing Portfolio DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Student Housing</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-student-housing-portfolio-dst/" style="color:inherit">Inland Student Housing Portfolio DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$100,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.43%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">46.72%</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">IN, TX, VA</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-student-housing-portfolio-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="office" data-status="rejected" data-strategy="core" data-sponsor="inland" data-states="al" data-regd="506-b" data-exit="none" data-min="25000" data-yield="0.00" data-ltv="76.70" data-avail="100.0" data-created="1785376443000" data-name="inland zero coupon utility dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/inland-zero-coupon-utility-dst/">
+          <img src="/assets/img/listings/2640145d5d.webp" alt="Inland Zero Coupon Utility DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Office</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/inland-zero-coupon-utility-dst/" style="color:inherit">Inland Zero Coupon Utility DST</a></h3>
+          <div class="sponsor-line">Inland</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$25,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">0.00%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">76.70%</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">10 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">AL</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/inland-zero-coupon-utility-dst/">View Offering</a>
+        </div>
+      </article>
+      <article class="offering-card" data-tags="industrial" data-status="rejected" data-strategy="core" data-sponsor="jll" data-states="az ca ga in" data-regd="506-b" data-exit="optional" data-min="500000" data-yield="4.38" data-ltv="0.00" data-avail="100.0" data-created="1785376443000" data-name="jllx industrial portfolio, dst" data-rank="6" data-preferred="0">
+        <a class="card-photo" href="/offerings/jllx-industrial-portfolio-dst/">
+          <img src="/assets/img/listings/75a5b991ec.webp" alt="JLLX Industrial Portfolio, DST" width="640" height="360" loading="lazy" onerror="this.style.display='none'">
+          <div class="chip-row">
+            <span class="status-chip rejected">Rejected</span>
+            <span class="type-chip">Industrial</span>
+          </div>
+        </a>
+        <div class="card-body">
+          <h3><a href="/offerings/jllx-industrial-portfolio-dst/" style="color:inherit">JLLX Industrial Portfolio, DST</a></h3>
+          <div class="sponsor-line">JLL</div>
+          <div class="card-stats">
+            <div class="cs"><span class="label">Minimum</span><span class="value">$500,000</span></div>
+            <div class="cs"><span class="label">Avg Yield</span><span class="value">4.38%</span></div>
+            <div class="cs"><span class="label">LTV</span><span class="value">All-Cash</span></div>
+            <div class="cs"><span class="label">Strategy</span><span class="value">Core</span></div>
+            <div class="cs"><span class="label">Est. Hold</span><span class="value">5 years</span></div>
+            <div class="cs"><span class="label">Location</span><span class="value">AZ, CA, GA, IN</span></div>
+          </div>
+          <div class="availability">
+            <div class="bar"><div class="fill" style="width: 0%"></div></div>
+            <span class="cap">Rejected in Baker underwriting review</span>
+          </div>
+          <a class="view-btn" href="/offerings/jllx-industrial-portfolio-dst/">View Offering</a>
+        </div>
+      </article>
       <!-- REJECTED:END -->
     </div>
 
@@ -3143,6 +3259,8 @@
       var grid = document.getElementById('grid-current');
       var cards = Array.prototype.slice.call(grid.querySelectorAll('.offering-card'));
       var sels = Array.prototype.slice.call(document.querySelectorAll('.fsel'));
+      var multis = Array.prototype.slice.call(document.querySelectorAll('.fmulti'));
+      var prefOnly = document.getElementById('pref-only');
       var sortSel = document.getElementById('sort-select');
       var countEl = document.getElementById('result-count');
       var badge = document.getElementById('filter-count');
@@ -3154,34 +3272,59 @@
         var v = parseFloat(card.getAttribute('data-' + key));
         return isNaN(v) ? null : v;
       }
+      function checkedValues(m) {
+        return Array.prototype.slice.call(m.querySelectorAll('input:checked')).map(function (c) { return c.value; });
+      }
       function matches(card) {
-        for (var i = 0; i < sels.length; i++) {
-          var key = sels[i].getAttribute('data-key');
-          var v = sels[i].value;
-          if (!v) continue;
-          if (key === 'type') { if ((card.getAttribute('data-tags') || '').split(' ').indexOf(v) === -1) return false; }
-          else if (key === 'state') { if ((card.getAttribute('data-states') || '').split(' ').indexOf(v) === -1) return false; }
-          else if (key === 'min') {
+        // multi-select filters: OR within a filter, AND across filters
+        for (var i = 0; i < multis.length; i++) {
+          var key = multis[i].getAttribute('data-key');
+          var vals = checkedValues(multis[i]);
+          if (!vals.length) continue;
+          if (key === 'type') {
+            var tags = (card.getAttribute('data-tags') || '').split(' ');
+            if (!vals.some(function (v) { return tags.indexOf(v) !== -1; })) return false;
+          } else if (key === 'state') {
+            var states = (card.getAttribute('data-states') || '').split(' ');
+            if (!vals.some(function (v) { return states.indexOf(v) !== -1; })) return false;
+          } else {
+            if (vals.indexOf(card.getAttribute('data-' + key)) === -1) return false;
+          }
+        }
+        if (prefOnly && prefOnly.checked && card.getAttribute('data-preferred') !== '1') return false;
+        // single-select filters
+        for (var j = 0; j < sels.length; j++) {
+          var k = sels[j].getAttribute('data-key');
+          var v2 = sels[j].value;
+          if (!v2) continue;
+          if (k === 'min') {
             var min = numAttr(card, 'min');
             if (min === null) return false;
-            var parts = v.split('-');
+            var parts = v2.split('-');
             if (parts[1] && min > parseFloat(parts[1])) return false;
             if (!parts[1] && min < parseFloat(parts[0])) return false;
-          }
-          else if (key === 'yield') {
+          } else if (k === 'yield') {
             var y = numAttr(card, 'yield');
-            if (y === null || y < parseFloat(v)) return false;
-          }
-          else if (key === 'ltv') {
+            if (y === null || y < parseFloat(v2)) return false;
+          } else if (k === 'ltv') {
             var ltv = numAttr(card, 'ltv');
             if (ltv === null) return false;
-            if (v === 'allcash' && ltv !== 0) return false;
-            if (v === 'lt50' && !(ltv > 0 && ltv < 50)) return false;
-            if (v === 'gte50' && ltv < 50) return false;
+            if (v2 === 'allcash' && ltv !== 0) return false;
+            if (v2 === 'lt50' && !(ltv > 0 && ltv < 50)) return false;
+            if (v2 === 'gte50' && ltv < 50) return false;
           }
-          else { if (card.getAttribute('data-' + key) !== v) return false; }
         }
         return true;
+      }
+      function refreshMultiLabels() {
+        multis.forEach(function (m) {
+          var vals = m.querySelectorAll('input:checked');
+          var out = m.querySelector('.msel-val');
+          if (!vals.length) out.textContent = 'All';
+          else if (vals.length === 1) out.textContent = vals[0].parentNode.textContent.trim();
+          else out.textContent = vals.length + ' selected';
+          m.classList.toggle('on', vals.length > 0);
+        });
       }
       function apply() {
         var shown = 0;
@@ -3190,8 +3333,12 @@
           card.classList.toggle('hidden', !ok);
           if (ok) shown++;
         });
-        var active = sels.filter(function (s) { return s.value; }).length;
+        var active = sels.filter(function (s) { return s.value; }).length
+          + multis.filter(function (m) { return m.querySelectorAll('input:checked').length; }).length
+          + (prefOnly && prefOnly.checked ? 1 : 0);
         sels.forEach(function (s) { s.classList.toggle('on', !!s.value); });
+        if (prefOnly) prefOnly.closest('.pref-box').classList.toggle('on', prefOnly.checked);
+        refreshMultiLabels();
         countEl.textContent = 'Showing ' + shown + ' of ' + cards.length + ' offerings';
         badge.hidden = !active;
         badge.textContent = active;
@@ -3225,15 +3372,28 @@
         toggle.setAttribute('aria-expanded', String(open));
         document.documentElement.style.overflow = open && window.matchMedia('(max-width: 1024px)').matches ? 'hidden' : '';
       }
+      function closeMultis(except) {
+        multis.forEach(function (m) { if (m !== except) m.removeAttribute('open'); });
+      }
       sels.forEach(function (s) { s.addEventListener('change', apply); });
+      multis.forEach(function (m) {
+        m.addEventListener('change', apply);
+        m.addEventListener('toggle', function () { if (m.open) closeMultis(m); });
+      });
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.fmulti')) closeMultis(null);
+      });
+      if (prefOnly) prefOnly.addEventListener('change', apply);
       sortSel.addEventListener('change', sortCards);
       toggle.addEventListener('click', function () { openPanel(!panel.classList.contains('open')); });
       document.getElementById('filter-close').addEventListener('click', function () { openPanel(false); });
       document.getElementById('filter-apply').addEventListener('click', function () { openPanel(false); });
       scrim.addEventListener('click', function () { openPanel(false); });
-      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') openPanel(false); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { openPanel(false); closeMultis(null); } });
       function resetAll() {
         sels.forEach(function (s) { s.value = ''; });
+        multis.forEach(function (m) { m.querySelectorAll('input:checked').forEach(function (c) { c.checked = false; }); m.removeAttribute('open'); });
+        if (prefOnly) prefOnly.checked = false;
         sortSel.value = '';
         apply(); sortCards();
       }
@@ -3246,7 +3406,6 @@
       var grids = { current: grid, closed: document.getElementById('grid-closed'), rejected: document.getElementById('grid-rejected') };
       var notes = { closed: document.getElementById('note-closed'), rejected: document.getElementById('note-rejected') };
       var fbar = document.querySelector('.filter-bar');
-      // Counts in the tab labels (closed/rejected grids may hold just a note, so count cards only)
       Object.keys(grids).forEach(function (k) {
         var n = grids[k] ? grids[k].querySelectorAll('.offering-card').length : 0;
         var el = document.getElementById('tabn-' + k);
@@ -3258,7 +3417,6 @@
           tabs.forEach(function (t) { t.classList.toggle('active', t === tab); });
           Object.keys(grids).forEach(function (k) { if (grids[k]) grids[k].hidden = (k !== key); });
           Object.keys(notes).forEach(function (k) { if (notes[k]) notes[k].style.display = (k === key) ? 'block' : 'none'; });
-          // Filters/sort apply to current offerings only
           fbar.style.display = (key === 'current') ? '' : 'none';
           openPanel(false);
         });

@@ -151,6 +151,13 @@
   .perf-tabs button.active { color: var(--navy); border-bottom-color: var(--navy); }
   .perf-panel { display: none; }
   .perf-panel.active { display: block; }
+  /* Breathing room between each panel's heading and the table below it —
+     matches the page-head spacing used elsewhere on the site. */
+  .perf-panel h2 { margin-bottom: 1.5rem; }
+  /* Sponsor-name links + no-data note in the sponsor table */
+  .perf td a { color: var(--navy); font-weight: 600; }
+  .perf td a:hover { text-decoration: underline; }
+  .sp-nodata { font-size: 0.72rem; line-height: 1.45; color: #8a8f99; margin-top: 0.25rem; max-width: 22rem; }
 
 /* ---------- Offering cards ---------- */
   .offering-grid {
@@ -376,8 +383,6 @@
     <div class="perf-tabs" role="tablist">
       <button type="button" class="active" data-tab="sponsors">Performance by Sponsor</button>
       <button type="button" data-tab="deals">Full Track Record</button>
-      <button type="button" data-tab="closed">Recently Closed Offerings</button>
-      <button type="button" data-tab="rejected">Rejected Offerings</button>
     </div>
 
     <section class="perf-panel active" id="panel-sponsors">
@@ -453,20 +458,6 @@
     </div>
 
     <p class="page-note">Shown to verified accredited investors only. Results are historical, realized outcomes for completed programs as reported by each sponsor and have not been independently verified except as described in the applicable offering materials. Equity multiple and average annual return are net to investor over each program&rsquo;s full hold period. Past performance does not guarantee future results; individual program results vary widely and losses can occur.</p>
-    </section>
-
-    <section class="perf-panel" id="panel-closed">
-      <div class="offering-grid">
-      <!-- PERF:CLOSED_CARDS -->
-      </div>
-      <p class="page-note">Offerings move here automatically when their status changes to Closed &mdash; they are fully subscribed or have completed and are no longer available. Details pages are retained for reference. Past performance does not guarantee future results.</p>
-    </section>
-
-    <section class="perf-panel" id="panel-rejected">
-      <div class="offering-grid">
-      <!-- PERF:REJECTED_CARDS -->
-      </div>
-      <p class="page-note">Offerings move here when they do not pass Baker 1031&rsquo;s underwriting review. A rejection reflects our internal criteria at the time of review &mdash; it is not a prediction of performance, a rating, or a recommendation regarding any security. Details pages are retained for reference.</p>
     </section>
 
   </main>
