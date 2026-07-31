@@ -251,6 +251,13 @@
           <div class="field"><label for="req721">721 exchange exit</label>
             <select id="req721"><option value="any" selected>Any</option><option value="prefer">Prefer 721 path</option><option value="require">Require 721 path</option><option value="avoidMandatory">Exclude mandatory</option></select></div>
         </div>
+        <div class="field"><label>Statuses for auto-build</label>
+          <div class="classes" id="statusChips">
+            <label class="check"><input type="checkbox" value="avail" checked> Available</label>
+            <label class="check"><input type="checkbox" value="limited" checked> Limited Availability</label>
+            <label class="check"><input type="checkbox" value="review" checked> Under Review</label>
+            <label class="check"><input type="checkbox" value="stale"> Update Needed</label>
+          </div></div>
         <div class="field"><label>Asset classes (none checked = all)</label><div class="classes" id="typeChips"></div></div>
 
         <div class="ledgerbox">
@@ -262,7 +269,7 @@
 
         <button type="button" class="run-btn" id="btnGenerate">Build Portfolios</button>
         <button type="button" class="ghost-btn" id="btnBlank">Start a blank portfolio</button>
-        <p class="side-note">Auto-generation draws only on <b>Available</b>, <b>Limited Availability</b>, and <b>Under Review</b> offerings; Limited and Under-Review picks are flagged for confirmation. The <b>Add offering</b> picker inside a portfolio can pull from every status.</p>
+        <p class="side-note">Auto-generation draws only on the <b>checked statuses</b> above; anything not fully Available (Limited, Under Review, Update Needed) is flagged for confirmation when picked. The <b>Add offering</b> picker inside a portfolio can still pull from every status, including Closed.</p>
       </div>
 
       <!-- ---------- right: portfolios ---------- -->
@@ -503,12 +510,13 @@ function ledgerReqs(){
   return {
     E: parseMoney($("reqEquity").value), D: parseMoney($("reqDebt").value),
     k: parseInt($("reqCount").value,10), x721: $("req721").value,
-    types: checkedTypes()
+    types: checkedTypes(),
+    statuses: new Set([...document.querySelectorAll("#statusChips input:checked")].map(b=>b.value))
   };
 }
 function genUniverse(reqs){
   return state.offerings.filter(o=>{
-    if (!["avail","limited","review"].includes(o.sk)) return false;
+    if (!reqs.statuses.has(o.sk)) return false;
     if (o.y1<=0 && o.avg<=0) return false;
     if (reqs.types.size && !reqs.types.has(o.type)) return false;
     if (reqs.x721==="require" && o.x721==="None") return false;
@@ -659,6 +667,7 @@ function uniqueName(base){
 function generatePortfolios(){
   const reqs = ledgerReqs();
   if (reqs.E <= 0){ toast("Enter the equity from sale first."); return; }
+  if (!reqs.statuses.size){ toast("Check at least one status for auto-build."); return; }
   const uni = genUniverse(reqs);
   if (uni.length < 2){ toast("Fewer than 2 offerings match those preferences — loosen the filters."); return; }
   const modes = [["Balanced","balanced"],["Max Income","income"],["Diversified","diversified"]];
