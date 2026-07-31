@@ -1,36 +1,36 @@
 /* ============================================================
-   Build step: Google Sheet "Master Listings" → static site data.
+   Build step: Airtable "Baker 1031 — Investments" → static site data.
 
    Runs during every Netlify build (see netlify.toml):
-   1. Fetches the sheet as CSV (public gviz export — no API key).
+   1. Fetches the Airtable base via REST (AIRTABLE_TOKEN env var;
+      see scripts/lib/airtable.mjs — AIRTABLE_SNAPSHOT for offline dev).
    2. Writes data/offerings.json (machine-readable data source).
    3. Generates a permanent static page per offering at
       offerings/<slug>/index.html from offering-template.html,
       with per-page <title>, meta description, canonical, Open
       Graph tags and JSON-LD for SEO / LLM discoverability.
-   4. Bakes the listing cards + filter pills into
+   4. Bakes the listing cards + the filter/sort bar into
       current-offerings.html (between OFFERINGS/FILTERS markers).
-   5. Regenerates sitemap.xml.
+      Default order: status (Available → Confirm Availability →
+      Limited → Backup → Coming Soon), A–Z within each group.
+   5. Regenerates sitemap.xml. Rejected listings are excluded from
+      the directory + sitemap and listed on performance.html's
+      "Rejected" tab (pages built noindex, like a research archive).
 
    No dependencies — plain Node 18+. Run locally:
-     node scripts/build-offerings.mjs
+     AIRTABLE_TOKEN=... node scripts/build-offerings.mjs
    ============================================================ */
 
 import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { parseCSV } from "./lib/csv.mjs";
 import { esc, truncate, slugify, put, brandTitle, metaTrim } from "./lib/html.mjs";
 import { optimizedPhoto, directDownload, normalizeLogo, BRAND_LOGO, BRAND_LOGO_ABS, LOGO_W, LOGO_H } from "./lib/images.mjs";
 import { injectPartials } from "./lib/partials.mjs";
+import { loadAirtableData, statusRank as atStatusRank, statusClass as atStatusClass, STATUS_ORDER } from "./lib/airtable.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SHEET_ID = "1vTqb5YX8pFjZxToGd2pJ_ncPbny2PXpW5gXx-7IlyZg";
-const SHEET_TAB = "Master Listings";
-const DOCS_TAB = "Documents";
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_TAB)}`;
-const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(DOCS_TAB)}`;
 const SITE = "https://baker1031.com";
 
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
@@ -121,29 +121,13 @@ for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn
 }
 console.log("Partials injected into page shells + templates.");
 
-/* ---------------- Fetch & normalize ---------------- */
-console.log("Fetching Master Listings…");
-const res = await fetch(CSV_URL, { redirect: "follow" });
-if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status}`);
-const csv = await res.text();
-const rows = parseCSV(csv);
-const headers = rows[0].map((h) => h.trim());
-const col = (name) => headers.indexOf(name);
-if (col("Investment Name") === -1) throw new Error("Sheet is missing 'Investment Name' — wrong tab?");
+/* ---------------- Fetch & normalize (Airtable) ---------------- */
+console.log("Fetching Airtable base…");
+const at = await loadAirtableData();
+const offerings = at.offerings;
+const atSponsors = at.sponsors;
+const atDeals = at.deals;
 
-const offerings = rows.slice(1)
-  .filter((r) => (r[col("Investment Name")] || "").trim())
-  .map((r) => {
-    const o = {};
-    headers.forEach((h, i) => { o[h] = (r[i] ?? "").trim(); });
-    o._slug = slugify(o["URL"] || o["Investment Name"]);
-    return o;
-  });
-
-// Guard: a broken/empty sheet must fail the build, not blank the site
-if (offerings.length < 10) {
-  throw new Error(`Only ${offerings.length} offerings parsed — refusing to build (sheet problem?).`);
-}
 // De-dupe slugs deterministically (append the sponsor, then a counter)
 // so no page silently overwrites another; log every collision.
 {
@@ -162,30 +146,22 @@ if (offerings.length < 10) {
   }
   if (dupes.length) console.warn(`WARNING: duplicate slugs de-duped:\n  ${dupes.join("\n  ")}`);
 }
-console.log(`Parsed ${offerings.length} offerings, ${headers.length} columns.`);
+{
+  const qc = offerings.filter((o) => o._qc);
+  if (qc.length) console.warn(`QC Check flags on ${qc.length} listings:\n  ${qc.map((o) => `${o["Investment Name"]}: ${o._qc}`).join("\n  ")}`);
+}
+console.log(`Parsed ${offerings.length} offerings from Airtable.`);
 
-/* ---------------- Documents tab (per-offering document lists) ---------------- */
+/* ---------------- Documents (per-offering document lists) ---------------- */
 const normName = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const docsByName = new Map(); // normalized Investment Name -> [{label, file, gated}]
 {
-  const res2 = await fetch(DOCS_CSV_URL, { redirect: "follow" });
-  if (!res2.ok) throw new Error(`Documents tab fetch failed: ${res2.status}`);
-  const dRows = parseCSV(await res2.text());
-  const dh = dRows[0].map((h) => h.trim());
-  const di = (n) => dh.indexOf(n);
-  if (di("Investment Name") === -1 || di("Label") === -1 || di("File") === -1) {
-    throw new Error("Documents tab is missing Investment Name / Label / File columns");
-  }
-  for (const r of dRows.slice(1)) {
-    const name = (r[di("Investment Name")] || "").trim();
-    const label = (r[di("Label")] || "").trim();
-    const file = (r[di("File")] || "").trim();
-    if (!name || !label || !file) continue;
-    const key = normName(name);
+  for (const d of at.docs) {
+    const key = normName(d.name);
     if (!docsByName.has(key)) docsByName.set(key, []);
-    docsByName.get(key).push({ label, file, gated: (r[di("Gated?")] || "").trim() });
+    docsByName.get(key).push({ label: d.label, file: d.file, gated: d.gated });
   }
-  console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
+  console.log(`Documents: ${at.docs.length} documents for ${docsByName.size} offerings.`);
 }
 
 
@@ -210,31 +186,21 @@ function displayDebt(o) {
   const d = (o["Debt"] || "").replace(/[\s,]/g, "");
   return (d === "$0" || d === "0") ? "All-Cash" : (o["Debt"] || "");
 }
-const STATUS_ORDER = ["Available", "Limited Availability", "Accepting Backup Reservations", "Coming Soon / Under Review", "Closed"];
-function statusRank(s) {
-  const i = STATUS_ORDER.indexOf((s || "").trim());
-  return i === -1 ? 3.5 : i;
-}
-function statusClass(s) {
-  return {
-    "Available": "",
-    "Limited Availability": "limited",
-    "Accepting Backup Reservations": "backup",
-    "Coming Soon / Under Review": "soon",
-    "Closed": "closed"
-  }[(s || "").trim()] ?? "soon";
-}
-const isClosed = (o) => (o["Status"] || "").trim() === "Closed";
+const statusRank = (s) => atStatusRank((s || "").trim());
+const statusClass = (s) => atStatusClass((s || "").trim());
+const isClosed = (o) => o._statusRaw === "Closed";
+const isRejected = (o) => o._statusRaw === "Rejected";
 
 /* ---------------- 1) data/offerings.json ---------------- */
 mkdirSync(join(ROOT, "data"), { recursive: true });
 writeFileSync(join(ROOT, "data", "offerings.json"), JSON.stringify({
   generated: new Date().toISOString(),
-  source: "Google Sheet — Master Listings",
+  source: "Airtable — Baker 1031 — Investments / Identity & Offering",
   count: offerings.length,
   offerings: offerings.map((o) => {
     const out = { slug: o._slug, page: `/offerings/${o._slug}/` };
-    for (const h of headers) if (h) out[h] = o[h];
+    for (const [k, v] of Object.entries(o)) if (!k.startsWith("_") && v !== "") out[k] = v;
+    out["Status (internal)"] = o._statusRaw;
     return out;
   })
 }));
@@ -333,6 +299,9 @@ function buildPage(o) {
   /* ----- head: title / meta / canonical / OG / JSON-LD ----- */
   const headBits = [
     `<link rel="canonical" href="${canonical}">`,
+    // Rejected deals keep a reference page (linked from the Performance
+    // "Rejected" tab) but stay out of search results.
+    isRejected(o) ? `<meta name="robots" content="noindex">` : "",
     `<meta name="description" content="${esc(metaDesc)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:title" content="${esc(name)} | Baker 1031 Investments">`,
@@ -407,6 +376,8 @@ function buildPage(o) {
     "Lender", "Interest Rate", "Loan Term", "I/O Period", "Amortization", "Y1 DSCR",
     "Sponsor Description", "Full-Cycle Count", "Sponsor AAR", "Sponsor AEM",
     "Sponsor Hold", "Sponsor Success",
+    "Offering Type (Reg D)", "Loan Type", "Connected REIT", "MSA Tier",
+    "Y1 Payout Ratio", "Initial Reserves",
     "BM: Avg. Income - Deal", "BM: Avg. Income - MKT", "BM: Avg. Income - Interpret",
     "BM: Growth - Deal", "BM: Growth- MKT", "BM: Growth - Interpret",
     "BM: Peak - Deal", "BM: Peak- MKT", "BM: Peak - Interpret"
@@ -459,12 +430,28 @@ function buildPage(o) {
     </div>
   </div>`;
   html = html.replace(/<\/body>/, `${gate}\n</body>`);
-  html = setField(html, "Investment Firm", o["Sponsor"] || "");
+  html = setField(html, "Investment Firm", o["Investment Firm"] || o["Sponsor"] || "");
   html = setField(html, "Year Founded", o["Sponsor Founded"] || "");
 
-  /* ----- sponsor meta line: drop HQ + external-website segments (no sheet
-     columns for them; sponsor profile pages are a later phase) ----- */
-  html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+  /* ----- sponsor meta line: HQ + website now come from the linked Sponsor
+     Connection record; fill when present, strip the segment when blank ----- */
+  if (o["Headquarters (City, State)"] || o["Website"]) {
+    html = setField(html, "Headquarters (City, State)", o["Headquarters (City, State)"] || "");
+    const site = o["Website"] || "";
+    const href = site ? (site.match(/^https?:/i) ? site : `https://${site}`) : "";
+    const domain = site.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
+    if (site) {
+      html = html.replace(/<a ([^>]*)data-field="Website"[^>]*>[\s\S]*?<\/a>/, () =>
+        `<a href="${esc(href)}" target="_blank" rel="noopener" data-field="Website">${esc(domain)}</a>`);
+    } else {
+      html = html.replace(/\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+    }
+    if (!o["Headquarters (City, State)"]) {
+      html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>/, "");
+    }
+  } else {
+    html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+  }
   if (!o["Sponsor Founded"]) {
     html = html.replace(/Founded <span data-field="Year Founded"><\/span>/, "");
   }
@@ -474,8 +461,14 @@ function buildPage(o) {
   if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(normalizeLogo(o["Sponsor Image"]), 240), o["Sponsor"], [240, 240]);
   else html = html.replace(/<img([^>]*data-field="Sponsor Image"[^>]*)>/, `<img$1 style="display:none">`);
 
-  /* ----- advantages list: no sheet columns — remove the block ----- */
-  html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
+  /* ----- advantages list: key strategies from the linked Sponsor Connection
+     record; remove the block when the sponsor has none ----- */
+  if (o._advantages && o._advantages.length) {
+    html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>/, () =>
+      `<ul class="advantages">\n${o._advantages.map((a) => `        <li>${esc(a)}</li>`).join("\n")}\n      </ul>`);
+  } else {
+    html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
+  }
 
   /* ----- hero photo ----- */
   if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`, [1600, 900]);
@@ -553,31 +546,60 @@ for (const o of offerings) {
 }
 console.log(`Wrote ${pageCount} offering pages under /offerings/`);
 
-/* ---------------- 3) Listing cards + filter pills ---------------- */
-let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed" tab
+/* ---------------- 3) Listing cards + filter/sort bar ---------------- */
+let closedCardsHtml = "";   // rendered on the Performance page's "Recently Closed" tab
+let rejectedCardsHtml = ""; // rendered on the Performance page's "Rejected" tab
 {
   const listingPath = join(ROOT, "current-offerings.html");
   let listing = readFileSync(listingPath, "utf8");
-  // Closed offerings move off the inventory and onto the Performance page
-  const open = offerings.filter((o) => !isClosed(o));
+  // Closed + Rejected offerings move off the inventory and onto the
+  // Performance page (their own tabs).
+  const open = offerings.filter((o) => !isClosed(o) && !isRejected(o));
   const closed = offerings.filter(isClosed);
-  // Default order: newest first — the sheet grows downward, so reverse the
-  // worksheet row order (bottom of the sheet = newest = top of the page)
-  const sorted = [...open].reverse();
+  const rejected = offerings.filter(isRejected);
+  /* Default order (Jerry, 2026-07-31): status groups — Available →
+     Confirm Availability → Limited → Backup → Coming Soon — A–Z inside
+     each group. */
+  const sorted = [...open].sort((a, b) =>
+    a._rank - b._rank || a["Investment Name"].localeCompare(b["Investment Name"]));
 
+  const chipText = (s) => (s || "").replace(/\s*\/\s*Under Review\s*$/i, "");
   const makeCard = (o) => {
     const page = `/offerings/${o._slug}/`;
     const photo = o["Photo Link Use"] || o["Property Photo Link"] || "";
     const tag = slugify(o["Property Type"] || "other");
-    const pctNum = parseFloat(o["Available Percentage"]) || 0;
+    const pctNum = o._availN != null ? o._availN : (parseFloat(o["Available Percentage"]) || 0);
     const sChip = statusClass(o["Status"]);
     const ltvRaw = (o["In-Place LTV"] || "").trim().replace(/\s*LTV\s*$/i, "");
     const ltvDisplay = !ltvRaw ? "—" : (/^0(\.0+)?\s*%$/.test(ltvRaw) ? "All-Cash" : ltvRaw);
-    return `      <article class="offering-card" data-tags="${esc(tag)}">
+    const states = (o["Location (Use)"] || "").split(/[,;]+/).map((s) => s.trim().toLowerCase()).filter(Boolean).join(" ");
+    /* data-* attributes drive the client-side filter/sort bar */
+    const attrs = [
+      `data-tags="${esc(tag)}"`,
+      `data-status="${esc(slugify(o["Status"] || ""))}"`,
+      `data-strategy="${esc(slugify(o["Strategy"] || ""))}"`,
+      `data-sponsor="${esc(slugify(o["Sponsor"] || ""))}"`,
+      `data-states="${esc(states)}"`,
+      `data-regd="${esc(slugify(o["Offering Type (Reg D)"] || ""))}"`,
+      `data-exit="${esc(slugify(o["721 Exchange Exit"] || ""))}"`,
+      `data-min="${o._minN ?? ""}"`,
+      `data-yield="${o._yieldN != null ? (o._yieldN * 100).toFixed(2) : ""}"`,
+      `data-ltv="${o._ltvN != null ? (o._ltvN * 100).toFixed(2) : ""}"`,
+      `data-avail="${o._availN != null ? o._availN.toFixed(1) : ""}"`,
+      `data-created="${Date.parse(o._created) || 0}"`,
+      `data-name="${esc((o["Investment Name"] || "").toLowerCase())}"`,
+      `data-rank="${o._rank}"`,
+    ].join(" ");
+    const capText = isRejected(o)
+      ? "Rejected in Baker underwriting review"
+      : isClosed(o)
+        ? "Fully subscribed &middot; closed"
+        : `${esc(o["Available Percentage"] || "—")} of equity still available${o["Available Equity"] ? ` &middot; ${esc(o["Available Equity"])}` : ""}`;
+    return `      <article class="offering-card" ${attrs}>
         <a class="card-photo" href="${page}">
           ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" width="640" height="360" loading="lazy" onerror="this.style.display='none'">` : ""}
           <div class="chip-row">
-            <span class="status-chip${sChip ? " " + sChip : ""}">${esc((o["Status"] || "").replace(/\s*\/\s*Under Review\s*$/i, ""))}</span>
+            <span class="status-chip${sChip ? " " + sChip : ""}">${esc(chipText(o["Status"]))}</span>
             <span class="type-chip">${esc(o["Property Type"] || "")}</span>
           </div>
         </a>
@@ -593,8 +615,8 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
             <div class="cs"><span class="label">Location</span><span class="value">${esc(o["Location (Use)"] || "—")}</span></div>
           </div>
           <div class="availability">
-            <div class="bar"><div class="fill" style="width: ${isClosed(o) ? 0 : Math.min(100, Math.max(0, pctNum))}%"></div></div>
-            <span class="cap">${isClosed(o) ? "Fully subscribed &middot; closed" : `${esc(o["Available Percentage"] || "—")} of equity still available &middot; ${esc(o["Available Equity"] || "")}`}</span>
+            <div class="bar"><div class="fill" style="width: ${(isClosed(o) || isRejected(o)) ? 0 : Math.min(100, Math.max(0, pctNum))}%"></div></div>
+            <span class="cap">${capText}</span>
           </div>
           <a class="view-btn" href="${page}">View Offering</a>
         </div>
@@ -602,62 +624,72 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   };
   const cards = sorted.map(makeCard).join("\n");
 
-  // "Recently closed" — newest Last Updated first (fall back to name order)
+  // "Recently closed" / "Rejected" — newest Last Updated first
   const dateVal = (o) => {
     const t = Date.parse(o["Last Updated"] || "");
     return Number.isNaN(t) ? 0 : t;
   };
-  const closedSorted = [...closed].sort((a, b) =>
-    dateVal(b) - dateVal(a) || a["Investment Name"].localeCompare(b["Investment Name"])
-  );
-  closedCardsHtml = closedSorted.length
-    ? closedSorted.map(makeCard).join("\n")
+  const byRecency = (a, b) => dateVal(b) - dateVal(a) || a["Investment Name"].localeCompare(b["Investment Name"]);
+  closedCardsHtml = closed.length
+    ? [...closed].sort(byRecency).map(makeCard).join("\n")
     : `      <p class="page-note">No recently closed offerings.</p>`;
+  rejectedCardsHtml = rejected.length
+    ? [...rejected].sort(byRecency).map(makeCard).join("\n")
+    : `      <p class="page-note">No rejected offerings at the moment. Offerings land here when our underwriting review turns one down.</p>`;
 
-  // Filter pills from the property types actually present
-  const types = [...new Set(sorted.map((o) => (o["Property Type"] || "").trim()).filter(Boolean))].sort();
-  const pills = [`      <button type="button" class="active" data-filter="all">All</button>`]
-    .concat(types.map((t) => `      <button type="button" data-filter="${esc(slugify(t))}">${esc(t)}</button>`))
-    .join("\n");
+  /* ----- filter dropdowns, built from the values actually present ----- */
+  const uniq = (fn) => [...new Set(sorted.map(fn).map((v) => (v || "").trim()).filter(Boolean))].sort();
+  const sel = (key, label, opts) => {
+    if (!opts.length) return "";
+    return `        <label class="fctl"><span>${esc(label)}</span>
+          <select class="fsel" data-key="${key}" aria-label="Filter by ${esc(label)}">
+            <option value="">All</option>
+${opts.map(([val, text]) => `            <option value="${esc(val)}">${esc(text)}</option>`).join("\n")}
+          </select>
+        </label>`;
+  };
+  const types = uniq((o) => o["Property Type"]);
+  const statuses = [...new Set(sorted.map((o) => o["Status"]))]
+    .sort((a, b) => statusRank(a) - statusRank(b));
+  const strategies = uniq((o) => o["Strategy"]).sort((a, b) =>
+    ["Core", "Core-Plus", "Value-Add", "Opportunistic"].indexOf(a) - ["Core", "Core-Plus", "Value-Add", "Opportunistic"].indexOf(b));
+  const sponsorNames = uniq((o) => o["Sponsor"]);
+  const states = [...new Set(sorted.flatMap((o) => (o["Location (Use)"] || "").split(/[,;]+/).map((s) => s.trim()).filter(Boolean)))].sort();
+  const regds = uniq((o) => o["Offering Type (Reg D)"]);
+  const exits = uniq((o) => o["721 Exchange Exit"]).sort((a, b) =>
+    ["None", "Optional", "Mandatory", "Unclear"].indexOf(a) - ["None", "Optional", "Mandatory", "Unclear"].indexOf(b));
 
-  const put = (src, startMark, endMark, content) => {
+  const filtersHtml = [
+    sel("type", "Property Type", types.map((t) => [slugify(t), t])),
+    sel("status", "Availability", statuses.map((s) => [slugify(s), chipText(s)])),
+    sel("strategy", "Strategy", strategies.map((s) => [slugify(s), s])),
+    sel("sponsor", "Sponsor", sponsorNames.map((s) => [slugify(s), s])),
+    sel("state", "State", states.map((s) => [s.toLowerCase(), s])),
+    sel("min", "Minimum Investment", [["0-50000", "Up to $50K"], ["0-100000", "Up to $100K"], ["0-250000", "Up to $250K"], ["250000-", "$250K and up"]]),
+    sel("yield", "Avg Yield", [["4", "4%+"], ["5", "5%+"], ["6", "6%+"], ["7", "7%+"]]),
+    sel("ltv", "Leverage", [["allcash", "All-Cash (no debt)"], ["lt50", "Under 50% LTV"], ["gte50", "50%+ LTV"]]),
+    sel("regd", "Offering Type", regds.map((r) => [slugify(r), r])),
+    sel("exit", "721 Exchange Exit", exits.map((e) => [slugify(e), e])),
+  ].filter(Boolean).join("\n");
+
+  const put3 = (src, startMark, endMark, content) => {
     const s = src.indexOf(startMark), e = src.indexOf(endMark);
     if (s === -1 || e === -1) throw new Error(`Missing ${startMark}/${endMark} markers`);
     return src.slice(0, s + startMark.length) + "\n" + content + "\n      " + src.slice(e);
   };
-  listing = put(listing, "<!-- OFFERINGS:START -->", "<!-- OFFERINGS:END -->", cards);
-  listing = put(listing, "<!-- FILTERS:START -->", "<!-- FILTERS:END -->", pills);
+  listing = put3(listing, "<!-- OFFERINGS:START -->", "<!-- OFFERINGS:END -->", cards);
+  listing = put3(listing, "<!-- FILTERS:START -->", "<!-- FILTERS:END -->", filtersHtml);
+  // Closed + Rejected live as tabs on this page too (per Jerry 2026-07-31);
+  // the Performance page keeps its copies.
+  listing = put3(listing, "<!-- CLOSED:START -->", "<!-- CLOSED:END -->", closedCardsHtml);
+  listing = put3(listing, "<!-- REJECTED:START -->", "<!-- REJECTED:END -->", rejectedCardsHtml);
   writeFileSync(listingPath, listing);
-  console.log(`Baked ${sorted.length} open cards + ${types.length} filter pills into current-offerings.html (${closed.length} closed → performance page)`);
+  console.log(`Baked ${sorted.length} open + ${closed.length} closed + ${rejected.length} rejected cards + filter bar into current-offerings.html`);
 }
 
 /* ---------------- 4) performance.html — Sponsor Track Record ---------------- */
 {
-  const PERF_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
-  const resP = await fetch(PERF_CSV_URL, { redirect: "follow" });
-  if (!resP.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resP.status}`);
-  const pRows = parseCSV(await resP.text());
-  const ph = pRows[0].map((h) => h.trim());
-  const pi = (n) => ph.indexOf(n);
-  for (const need of ["Sponsor", "Investment", "Hold Period", "Equity Multiple", "Annual Return"]) {
-    if (pi(need) === -1) throw new Error(`Sponsor Trackrecord tab is missing '${need}'`);
-  }
-  const deals = pRows.slice(1)
-    .filter((r) => (r[pi("Sponsor")] || "").trim() && (r[pi("Investment")] || "").trim())
-    .map((r) => ({
-      sponsor: r[pi("Sponsor")].trim(),
-      investment: r[pi("Investment")].trim(),
-      location: (r[pi("Location")] || "").trim(),
-      assetClass: (r[pi("Asset Class")] || "").trim(),
-      hold: (r[pi("Hold Period")] || "").trim(),
-      multiple: (r[pi("Equity Multiple")] || "").trim(),
-      annual: (r[pi("Annual Return")] || "").trim()
-    }));
-  if (deals.length < 50) throw new Error(`Only ${deals.length} track-record rows — refusing to build.`);
-
-  // Clean malformed multiples like "2.x" / ".x" (missing digits in the sheet)
-  const cleanMult = (m) => /^\d*\.?\d+x$/i.test(m) ? m : "";
-  deals.sort((a, b) => a.sponsor.localeCompare(b.sponsor) || a.investment.localeCompare(b.investment));
+  const deals = [...atDeals].sort((a, b) => a.sponsor.localeCompare(b.sponsor) || a.investment.localeCompare(b.investment));
 
   const rowsHtml = deals.map((d) => `          <tr>
             <td>${esc(d.sponsor)}</td>
@@ -665,75 +697,46 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
             <td>${esc(d.location || "—")}</td>
             <td>${esc(d.assetClass || "—")}</td>
             <td class="num">${esc(d.hold || "—")}</td>
-            <td class="num">${esc(cleanMult(d.multiple) || "—")}</td>
+            <td class="num">${esc(d.multiple || "—")}</td>
             <td class="num">${esc(d.annual || "—")}</td>
           </tr>`).join("\n");
-  const sponsors = [...new Set(deals.map((d) => d.sponsor))].sort();
-  const optionsHtml = sponsors.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
+  const sponsorNames = [...new Set(deals.map((d) => d.sponsor))].sort();
+  const optionsHtml = sponsorNames.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
 
-  // Sponsor-level table from the "Sponsor Connection" tab (sponsors with track records)
-  const SC_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
-  const resSC = await fetch(SC_CSV_URL, { redirect: "follow" });
-  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
-  const scRows = parseCSV(await resSC.text());
-  const sch = scRows[0].map((h) => h.trim());
-  const sci = (n) => sch.indexOf(n);
-  for (const need of ["Investment Firm", "Full-Cycle Deals", "Average Annual Return"]) {
-    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
-  }
-  const noData = (v) => {
-    const t = (v || "").trim();
-    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t)) return "";
-    if (/^\d*\.?x$/i.test(t) || t === ".x") return ""; // malformed multiples like "2.x"
-    return t;
-  };
-  const sponsorRows = scRows.slice(1)
-    .filter((r) => {
-      const fc = (r[sci("Full-Cycle Deals")] || "").trim();
-      return (r[sci("Investment Firm")] || "").trim() && fc && fc !== "0" && !/^no data$/i.test(fc);
-    })
-    .sort((a, b) => a[sci("Investment Firm")].localeCompare(b[sci("Investment Firm")]))
-    .map((r) => `          <tr>
-            <td>${esc(r[sci("Investment Firm")])}${/^yes$/i.test((r[sci("Preferred?")] || "").trim()) ? ' <span class="pref-chip">Preferred</span>' : ""}</td>
-            <td class="num">${esc(noData(r[sci("Year Founded")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("AUM")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Full-Cycle Deals")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Annual Return")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Equity Multiple")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Hold Period")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Success Rate")]) || "—")}</td>
+  // Sponsor-level table (sponsors with full-cycle track records), straight
+  // from Sponsor Connection rollups.
+  const sponsorRows = atSponsors
+    .filter((s) => s.deals.length || (parseFloat(s.fullCycle) || 0) > 0)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((s) => `          <tr>
+            <td>${esc(s.name)}${s.preferred ? ' <span class="pref-chip">Preferred</span>' : ""}</td>
+            <td class="num">${esc(s.founded || "—")}</td>
+            <td class="num">${esc(s.aum || "—")}</td>
+            <td class="num">${esc(s.fullCycle || String(s.deals.length) || "—")}</td>
+            <td class="num">${esc(s.avgAnnual || "—")}</td>
+            <td class="num">${esc(s.avgMultiple || "—")}</td>
+            <td class="num">${esc(s.avgHold || "—")}</td>
+            <td class="num">${esc(s.success || "—")}</td>
           </tr>`);
   if (sponsorRows.length < 5) throw new Error(`Only ${sponsorRows.length} sponsor rows — refusing to build.`);
 
   // ---- Preferred vs All summary (computed from the deal-level track record,
-  //      same methodology as the homepage chart: average across completed programs) ----
-  const prefSet = new Set(scRows.slice(1)
-    .filter((r) => /^yes$/i.test((r[sci("Preferred?")] || "").trim()))
-    .map((r) => normName(r[sci("Investment Firm")])));
+  //      same methodology as the homepage chart: average across completed
+  //      programs; success = share of programs returning ≥ 1.00x equity) ----
+  const prefSet = new Set(atSponsors.filter((s) => s.preferred).map((s) => normName(s.name)));
   const pct = (v) => { const m = String(v).trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
-  const multVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
-  const numVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)$/); return m ? parseFloat(m[1]) : null; };
   const mean = (arr) => arr.length ? arr.reduce((a, x) => a + x, 0) / arr.length : null;
-  // sponsor-level success rates + program counts for the weighted success figure
-  const successBySponsor = new Map(scRows.slice(1).map((r) => [normName(r[sci("Investment Firm")]), {
-    rate: pct(r[sci("Success Rate")]),
-    count: numVal(r[sci("Full-Cycle Deals")])
-  }]));
   function groupStats(label, groupDeals) {
-    const sponsors = [...new Set(groupDeals.map((d) => normName(d.sponsor)))];
-    const avgAnn = mean(groupDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
-    const avgMult = mean(groupDeals.map((d) => multVal(d.multiple)).filter((x) => x !== null));
-    const avgHold = mean(groupDeals.map((d) => numVal(d.hold)).filter((x) => x !== null));
-    let wSum = 0, wTot = 0;
-    for (const s of sponsors) {
-      const sc = successBySponsor.get(s);
-      if (sc && sc.rate !== null && sc.count) { wSum += sc.rate * sc.count; wTot += sc.count; }
-    }
-    const success = wTot ? wSum / wTot : null;
+    const gSponsors = [...new Set(groupDeals.map((d) => normName(d.sponsor)))];
+    const avgAnn = mean(groupDeals.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
+    const avgMult = mean(groupDeals.map((d) => d._multN).filter((x) => x != null));
+    const avgHold = mean(groupDeals.map((d) => d._holdN).filter((x) => x != null));
+    const ms = groupDeals.map((d) => d._multN).filter((x) => x != null);
+    const success = ms.length ? (ms.filter((x) => x >= 1).length / ms.length) * 100 : null;
     const f = (v, suffix, digits = 2) => v === null ? "—" : v.toFixed(digits) + suffix;
     return `          <tr>
             <td style="font-weight:700">${esc(label)}</td>
-            <td class="num">${sponsors.length}</td>
+            <td class="num">${gSponsors.length}</td>
             <td class="num">${groupDeals.length}</td>
             <td class="num">${f(avgAnn, "%")}</td>
             <td class="num">${f(avgMult, "x")}</td>
@@ -751,7 +754,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
      live calculation (average annual return across completed preferred-
      sponsor programs). Chart scale: 0% = y310, 25% = y54 → 10.24 px/%. ---- */
   {
-    const prefAnnual = mean(prefDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
+    const prefAnnual = mean(prefDeals.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
     if (prefAnnual === null || prefAnnual < 5 || prefAnnual > 24.5) {
       throw new Error(`Preferred-sponsor average ${prefAnnual}% outside sane chart range — refusing to build.`);
     }
@@ -771,7 +774,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     idx = idx.replace(/(aria-label="Bar chart: Baker 1031 preferred sponsors )[\d.]+%/, `$1${v}%`);
     writeFileSync(idxPath, idx);
     // FAQ: live average-hold sentence from the full track record
-    const holds = deals.map((d) => numVal(d.hold)).filter((x) => x !== null);
+    const holds = deals.map((d) => d._holdN).filter((x) => x != null);
     if (holds.length > 100) {
       const avgHold = (holds.reduce((a, x) => a + x, 0) / holds.length).toFixed(1);
       // Typical range = middle 90% of programs (5th–95th percentile), so a
@@ -794,83 +797,46 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
   perf = perf.replace("<!-- PERF:SPONSORS -->", optionsHtml);
   perf = perf.replace("<!-- PERF:CLOSED_CARDS -->", closedCardsHtml);
+  perf = perf.replace("<!-- PERF:REJECTED_CARDS -->", rejectedCardsHtml);
   writeFileSync(join(ROOT, "performance.html"), perf);
-  console.log(`Wrote performance.html (${sponsorRows.length} sponsors, ${deals.length} programs, closed cards included).`);
+  console.log(`Wrote performance.html (${sponsorRows.length} sponsors, ${deals.length} programs, closed + rejected cards included).`);
 }
 
 /* ---------------- 4b) Sponsor directory: profile pages + hub + deal-by-deal track records ---------------- */
 {
-  const SC_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
-  const TR_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
-  const [resSC, resTR] = await Promise.all([fetch(SC_URL, { redirect: "follow" }), fetch(TR_URL, { redirect: "follow" })]);
-  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
-  if (!resTR.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resTR.status}`);
-  const scRows = parseCSV(await resSC.text());
-  const sch = scRows[0].map((h) => h.trim());
-  const sci = (n) => sch.indexOf(n);
-  for (const need of ["Investment Firm", "Description / Overview", "Full-Cycle Deals"]) {
-    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
-  }
-  const trRows = parseCSV(await resTR.text());
-  const trh = trRows[0].map((h) => h.trim());
-  const ti = (n) => trh.indexOf(n);
-
-  const noData = (v) => {
-    const t = (v || "").trim();
-    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t) || /^n\/a$/i.test(t)) return "";
-    if (/^\d*\.?x$/i.test(t) || t === ".x") return "";
-    return t;
-  };
   const cleanMult = (m) => /^\d*\.?\d+x$/i.test((m || "").trim()) ? (m || "").trim() : "";
-  const pct = (v) => { const m = String(v || "").trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
-  const multVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
-  const numVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)/); return m ? parseFloat(m[1]) : null; };
   const mean = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
 
-  // Deal-by-deal track record, grouped by normalized sponsor name
+  // Deal-by-deal track record grouped by normalized sponsor name (fallback
+  // matching for override-added sponsors without linked records)
   const dealsBy = new Map();
-  for (const r of trRows.slice(1)) {
-    const s = (r[ti("Sponsor")] || "").trim();
-    const inv = (r[ti("Investment")] || "").trim();
-    if (!s || !inv) continue;
-    const k = normName(s);
+  for (const d of atDeals) {
+    const k = normName(d.sponsor);
     if (!dealsBy.has(k)) dealsBy.set(k, []);
-    dealsBy.get(k).push({
-      investment: inv,
-      location: (r[ti("Location")] || "").trim(),
-      assetClass: (r[ti("Asset Class")] || "").trim(),
-      hold: (r[ti("Hold Period")] || "").trim(),
-      multiple: (r[ti("Equity Multiple")] || "").trim(),
-      annual: (r[ti("Annual Return")] || "").trim(),
-    });
+    dealsBy.get(k).push(d);
   }
 
-  // Sponsor records (any row with a firm name)
-  const sponsors = scRows.slice(1)
-    .filter((r) => (r[sci("Investment Firm")] || "").trim())
-    .map((r) => {
-      const name = r[sci("Investment Firm")].trim();
-      const slug = slugify(name);
-      const website = noData(r[sci("Website")]);
-      const domain = website.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
-      return {
-        name, slug,
-        preferred: /^yes$/i.test((r[sci("Preferred?")] || "").trim()),
-        founded: noData(r[sci("Year Founded")]),
-        aum: noData(r[sci("AUM")]),
-        description: noData(r[sci("Description / Overview")]),
-        advantages: [1, 2, 3, 4, 5].map((i) => noData(r[sci(`Key Strategy / Advantage ${i}`)])).filter(Boolean),
-        website, domain,
-        hq: noData(r[sci("Headquarters (City, State)")]),
-        logo: normalizeLogo(noData(r[sci("Logo")])),
-        fullCycle: noData(r[sci("Full-Cycle Deals")]),
-        avgAnnual: noData(r[sci("Average Annual Return")]),
-        avgMultiple: noData(r[sci("Average Equity Multiple")]),
-        avgHold: noData(r[sci("Average Hold Period")]),
-        success: noData(r[sci("Success Rate")]),
-        deals: dealsBy.get(normName(name)) || [],
-      };
-    });
+  // Sponsor records straight from the Sponsor Connection table (adapter has
+  // already normalized formats, linked deals, and lowercased slugs).
+  const sponsors = atSponsors.map((s) => ({
+    name: s.name,
+    slug: s.slug,
+    preferred: s.preferred,
+    founded: s.founded,
+    aum: s.aum,
+    description: s.description,
+    advantages: s.advantages,
+    website: s.website,
+    domain: s.domain,
+    hq: s.hq,
+    logo: normalizeLogo(s.logo),
+    fullCycle: s.fullCycle,
+    avgAnnual: s.avgAnnual,
+    avgMultiple: s.avgMultiple,
+    avgHold: s.avgHold,
+    success: s.success,
+    deals: s.deals,
+  }));
   if (sponsors.length < 20) throw new Error(`Only ${sponsors.length} sponsors — refusing to build.`);
 
   /* Build-side supplement (data/sponsor-overrides.json): fills only BLANK
@@ -960,9 +926,9 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     let trackHtml;
     if (s.deals.length) {
       const dd = [...s.deals].sort((a, b) => a.investment.localeCompare(b.investment));
-      const aAnn = mean(dd.map((d) => pct(d.annual)).filter((x) => x !== null));
-      const aMul = mean(dd.map((d) => multVal(d.multiple)).filter((x) => x !== null));
-      const aHold = mean(dd.map((d) => numVal(d.hold)).filter((x) => x !== null));
+      const aAnn = mean(dd.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
+      const aMul = mean(dd.map((d) => d._multN).filter((x) => x != null));
+      const aHold = mean(dd.map((d) => d._holdN).filter((x) => x != null));
       const bits = [`${dd.length} full-cycle program${dd.length === 1 ? "" : "s"} in the Baker 1031 dataset`];
       if (aAnn !== null) bits.push(`averaging ${aAnn.toFixed(2)}% annual return`);
       if (aMul !== null) bits.push(`a ${aMul.toFixed(2)}x average equity multiple`);
@@ -1108,7 +1074,8 @@ ${rows}
     ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors.map((s) => ({ loc: `${SITE}/sponsors/${s.slug}/`, priority: s.deals ? "0.6" : "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6", lastmod: (ADATES[a.slug] || {}).modified })),
-    ...offerings.map((o) => ({
+    // Rejected offerings are noindex reference pages — keep them out of the sitemap
+    ...offerings.filter((o) => !isRejected(o)).map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
     }))

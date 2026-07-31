@@ -214,6 +214,8 @@
   .status-chip.backup { color: #b7791f; }
   .status-chip.soon { color: var(--navy); }
   .status-chip.closed { color: #8a8f99; }
+  .status-chip.confirm { color: #6b46c1; }
+  .status-chip.rejected { color: #b03a3a; }
   .type-chip {
     margin-left: auto;
     font-size: 0.64rem;
@@ -375,6 +377,7 @@
       <button type="button" class="active" data-tab="sponsors">Performance by Sponsor</button>
       <button type="button" data-tab="deals">Full Track Record</button>
       <button type="button" data-tab="closed">Recently Closed Offerings</button>
+      <button type="button" data-tab="rejected">Rejected Offerings</button>
     </div>
 
     <section class="perf-panel active" id="panel-sponsors">
@@ -416,7 +419,7 @@
           </tbody>
         </table>
       </div>
-      <p class="page-note">&ldquo;Preferred&rdquo; is Baker 1031&rsquo;s own designation, not an endorsement, recommendation, or guarantee of any security or of future performance. Group averages are simple averages across each group&rsquo;s completed full-cycle programs shown in the Full Track Record tab; success rate is weighted by each sponsor&rsquo;s completed-program count. Sponsor-level figures are provided by each sponsor and have not been independently verified except as described in the applicable offering materials. Averages are across each sponsor&rsquo;s completed full-cycle programs, net to investor over each program&rsquo;s hold. Past performance does not guarantee future results.</p>
+      <p class="page-note">&ldquo;Preferred&rdquo; is Baker 1031&rsquo;s own designation, not an endorsement, recommendation, or guarantee of any security or of future performance. Group averages are simple averages across each group&rsquo;s completed full-cycle programs shown in the Full Track Record tab; success rate is the share of those programs (with a reported equity multiple) that returned at least 1.00x investor equity. Sponsor-level figures are provided by each sponsor and have not been independently verified except as described in the applicable offering materials. Averages are across each sponsor&rsquo;s completed full-cycle programs, net to investor over each program&rsquo;s hold. Past performance does not guarantee future results.</p>
     </section>
 
     <section class="perf-panel" id="panel-deals">
@@ -457,6 +460,13 @@
       <!-- PERF:CLOSED_CARDS -->
       </div>
       <p class="page-note">Offerings move here automatically when their status changes to Closed &mdash; they are fully subscribed or have completed and are no longer available. Details pages are retained for reference. Past performance does not guarantee future results.</p>
+    </section>
+
+    <section class="perf-panel" id="panel-rejected">
+      <div class="offering-grid">
+      <!-- PERF:REJECTED_CARDS -->
+      </div>
+      <p class="page-note">Offerings move here when they do not pass Baker 1031&rsquo;s underwriting review. A rejection reflects our internal criteria at the time of review &mdash; it is not a prediction of performance, a rating, or a recommendation regarding any security. Details pages are retained for reference.</p>
     </section>
 
   </main>
