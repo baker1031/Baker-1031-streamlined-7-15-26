@@ -246,14 +246,8 @@
 
         <h3 style="margin-top:1.4rem">Preferences</h3>
         <div class="two">
-          <div class="field"><label for="reqTol">Debt tolerance</label>
-            <select id="reqTol"><option value="0.02">&plusmn; 2%</option><option value="0.05" selected>&plusmn; 5%</option><option value="0.10">&plusmn; 10%</option><option value="0.15">&plusmn; 15%</option></select></div>
           <div class="field"><label for="reqCount">Offerings</label>
             <select id="reqCount"><option value="2">2</option><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option></select></div>
-        </div>
-        <div class="two">
-          <div class="field"><label for="reqMaxShare">Max per offering</label>
-            <select id="reqMaxShare"><option value="0.25">25% of equity</option><option value="0.35" selected>35% of equity</option><option value="0.5">50% of equity</option><option value="0.75">75% of equity</option><option value="1">No cap</option></select></div>
           <div class="field"><label for="req721">721 exchange exit</label>
             <select id="req721"><option value="any" selected>Any</option><option value="prefer">Prefer 721 path</option><option value="require">Require 721 path</option><option value="avoidMandatory">Exclude mandatory</option></select></div>
         </div>
@@ -508,8 +502,7 @@ function checkedTypes(){
 function ledgerReqs(){
   return {
     E: parseMoney($("reqEquity").value), D: parseMoney($("reqDebt").value),
-    tol: parseFloat($("reqTol").value), k: parseInt($("reqCount").value,10),
-    maxShare: parseFloat($("reqMaxShare").value), x721: $("req721").value,
+    k: parseInt($("reqCount").value,10), x721: $("req721").value,
     types: checkedTypes()
   };
 }
@@ -578,7 +571,7 @@ function allocate(deals, reqs){
   if (!deals.length) return null;
   const E = reqs.E, D = reqs.D;
   let ds = deals.map(o=>({o, L: o.minInv,
-    U: Math.max(o.minInv, Math.min(reqs.maxShare*E, (o.avail!==null && o.avail>0) ? o.avail : Infinity)),
+    U: Math.max(o.minInv, Math.min(E, (o.avail!==null && o.avail>0) ? o.avail : Infinity)),
     x: 0, s: dealScore(o,reqs)}));
   ds = ds.filter(d=>d.U >= d.L);
   while (ds.length && ds.reduce((s,d)=>s+d.L,0) > E) ds.sort((a,b)=>a.s-b.s), ds.shift();
@@ -594,8 +587,8 @@ function allocate(deals, reqs){
     room.forEach(d=>{ d.x = Math.min(d.U, Math.max(d.L, d.x+share)); });
   }
   const f = ()=>ds.reduce((s,d)=>s+d.x*d.o.r,0);
-  const tolAmt = Math.max(reqs.tol*D, 10000);
-  for (let i=0;i<300;i++){
+  const tolAmt = 1; // exact debt replacement — solve to the dollar
+  for (let i=0;i<400;i++){
     const cur = f(), gap = D - cur;
     if (Math.abs(gap) <= tolAmt) break;
     const donors = ds.filter(d=>d.x>d.L+0.5).sort((a,b)=> gap>0 ? a.o.r-b.o.r : b.o.r-a.o.r);
@@ -605,18 +598,39 @@ function allocate(deals, reqs){
     const dr = rec.o.r - don.o.r;
     if ((gap>0 && dr<=1e-9) || (gap<0 && dr>=-1e-9)) break;
     const t = Math.min(don.x-don.L, rec.U-rec.x, Math.abs(gap/dr));
-    if (t < 100) break;
+    if (t < 0.5) break;
     don.x -= t; rec.x += t;
   }
-  ds.forEach(d=>{ d.x = Math.round(d.x/1000)*1000; });
+  ds.forEach(d=>{ d.x = Math.round(d.x); });
   const resid = E - ds.reduce((s,d)=>s+d.x,0);
-  ds.sort((a,b)=>b.x-a.x)[0].x += Math.round(resid/1000)*1000;
+  ds.sort((a,b)=>b.x-a.x)[0].x += Math.round(resid);
   ds = ds.filter(d=>d.x>0);
   return ds.map(d=>({id:d.o.id, equity:d.x}));
 }
 function buildPositions(uni, reqs, mode){
+  // Exact-match wrapper: an all-cash target uses only zero-LTV offerings, and
+  // if the requested offering count can't hit the debt target exactly, fall
+  // back to fewer offerings rather than miss the target.
+  const debtOfP = pos => pos.reduce((s,q)=>s+q.equity*state.byId[q.id].r,0);
+  let u = uni;
+  if (reqs.D === 0){
+    u = uni.filter(o=>o.r===0);
+    if (!u.length) return null;
+  }
+  let best = null, bestGap = Infinity;
+  const kMax = Math.min(reqs.k, u.length), kMin = Math.min(2, u.length);
+  for (let k = kMax; k >= kMin; k--){
+    const positions = buildPositionsK(u, Object.assign({}, reqs, {k}), mode);
+    if (!positions || !positions.length) continue;
+    const gap = Math.abs(reqs.D - debtOfP(positions));
+    if (gap < bestGap){ best = positions; bestGap = gap; }
+    if (gap <= 5) return positions;
+  }
+  return best;
+}
+function buildPositionsK(uni, reqs, mode){
   let picked = pickDeals(uni, reqs, mode);
-  const tolAmt = Math.max(reqs.tol*reqs.D, 10000);
+  const tolAmt = 5; // exact match expected; swap picks if we miss by more than $5
   const debtOf = pos => pos.reduce((s,q)=>s+q.equity*state.byId[q.id].r,0);
   let best = null, bestGap = Infinity;
   const tried = new Set(picked.map(o=>o.id));
@@ -655,7 +669,7 @@ function generatePortfolios(){
     const sig = positions.map(q=>q.id+":"+q.equity).sort().join("|");
     if (made.some(m=>m.sig===sig)) continue;
     const port = { id:"p"+(state.nextP++), name: uniqueName(label), strategy: mode,
-      reqs:{E:reqs.E,D:reqs.D,tol:reqs.tol}, positions };
+      reqs:{E:reqs.E,D:reqs.D}, positions };
     state.portfolios.push(port); made.push(Object.assign({sig},port));
   }
   if (!made.length){ toast("Couldn't build a portfolio from the current universe — try loosening constraints."); return; }
@@ -667,7 +681,7 @@ let pickerOpen = false;
 function newBlank(){
   const reqs = ledgerReqs();
   const port = { id:"p"+(state.nextP++), name: uniqueName("Custom"), strategy:"balanced",
-    reqs:{E:reqs.E,D:reqs.D,tol:reqs.tol}, positions: [] };
+    reqs:{E:reqs.E,D:reqs.D}, positions: [] };
   state.portfolios.push(port);
   state.active = port.id;
   pickerOpen = true;
@@ -710,12 +724,11 @@ function renderAll(){
   renderPortfolio(v, port);
 }
 function matchPill(port, t){
-  const {E,D,tol} = port.reqs || {E:0,D:0,tol:0.05};
+  const {E,D} = port.reqs || {E:0,D:0};
   if (!E) return null;
-  const eOk = Math.abs(t.E-E) <= Math.max(0.02*E, 5000);
-  const dTol = Math.max(tol*D, 10000);
-  const dOk = Math.abs(t.D-D) <= dTol;
-  if (eOk && dOk) return el("span",{class:"matchpill ok", text:`Matches target — ${fmt$c(E)} equity, debt within ±${fmtPct(tol,0)}`});
+  const eOk = Math.abs(t.E-E) <= 5;
+  const dOk = Math.abs(t.D-D) <= 5;
+  if (eOk && dOk) return el("span",{class:"matchpill ok", text:`Matches target — ${fmt$c(E)} equity + ${fmt$c(D)} debt replaced exactly`});
   const bits = [];
   if (!eOk) bits.push(`equity ${t.E>E?"over":"short"} by ${fmt$c(Math.abs(t.E-E))}`);
   if (!dOk) bits.push(`debt ${t.D>D?"over":"short"} by ${fmt$c(Math.abs(t.D-D))} (target ${fmt$c(D)})`);
