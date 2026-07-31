@@ -395,7 +395,7 @@ function buildPage(o) {
   html = html.replace(/&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/,
     "&#185; Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate; individual tax outcomes vary &mdash; consult your CPA regarding your specific situation. Cap Rate Equivalent is a Baker 1031 Investments calculation intended to allow comparison with direct property ownership; it is not a sponsor-reported figure and does not represent a rate of return.");
   html = html.replace(/<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/,
-    `<p class="note">Benchmarks compare this offering&rsquo;s projected figures against sector medians computed across current offerings tracked by Baker 1031 Investments as of the last-updated date shown. Benchmark data is internal, unaudited, and subject to change.</p>`);
+    `<p class="note">Benchmarks are calculated by Baker 1031 Investments: each metric is compared against the average across current offerings of the same property type tracked by Baker 1031 as of the last-updated date shown; a figure within &plusmn;10% of that average reads &ldquo;Meets Average.&rdquo; Benchmark data is internal, unaudited, and subject to change. Review each offering&rsquo;s PPM for complete information.</p>`);
 
   /* ----- soft gate: full page content stays in the HTML (crawlable), but
      js/auth.js shows this overlay to human visitors who aren't logged in.
@@ -844,15 +844,20 @@ ${opts.map(([val, text]) => `              <label><input type="checkbox" value="
     .sort((a, b) => a.name.localeCompare(b.name))
     .map((s) => {
       const hasData = s.deals.length > 0 || (parseFloat(s.fullCycle) || 0) > 0 || s.avgAnnual || s.avgMultiple;
-      return `          <tr>
-            <td>${spLink(s.name)}${s.preferred ? ' <span class="pref-chip">Preferred</span>' : ""}${hasData ? "" : `<div class="sp-nodata">${NO_DATA_NOTE}</div>`}</td>
-            <td class="num">${esc(s.founded || "—")}</td>
+      const nameCell = `<td>${spLink(s.name)}${s.preferred ? ' <span class="pref-chip">Preferred</span>' : ""}</td>`;
+      // No-data sponsors: one note spanning the metric columns (no extra row height)
+      const metricCells = hasData
+        ? `            <td class="num">${esc(s.founded || "—")}</td>
             <td class="num">${esc(s.aum || "—")}</td>
             <td class="num">${esc(s.fullCycle || (s.deals.length ? String(s.deals.length) : "") || "—")}</td>
             <td class="num">${esc(s.avgAnnual || "—")}</td>
             <td class="num">${esc(s.avgMultiple || "—")}</td>
             <td class="num">${esc(s.avgHold || "—")}</td>
-            <td class="num">${esc(s.success || "—")}</td>
+            <td class="num">${esc(s.success || "—")}</td>`
+        : `            <td class="sp-nodata-cell" colspan="7">${NO_DATA_NOTE}</td>`;
+      return `          <tr>
+            ${nameCell}
+${metricCells}
           </tr>`;
     });
   if (sponsorRows.length < 5) throw new Error(`Only ${sponsorRows.length} sponsor rows — refusing to build.`);
