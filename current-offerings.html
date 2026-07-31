@@ -97,6 +97,54 @@
     letter-spacing: -0.01em;
     margin-bottom: 1.25rem;
   }
+  /* ---------- Demand alert ---------- */
+  .demand-alert {
+    display: flex;
+    gap: 0.8rem;
+    align-items: flex-start;
+    border: 1px solid #e8c98a;
+    border-left: 4px solid #b7791f;
+    background: #fdf8ee;
+    border-radius: 10px;
+    padding: 0.95rem 1.15rem;
+    margin-bottom: 1.75rem;
+  }
+  .demand-alert svg { flex: none; width: 20px; height: 20px; color: #b7791f; margin-top: 0.1rem; }
+  .demand-alert p { font-size: 0.9rem; line-height: 1.55; color: var(--ink); margin: 0; }
+  .demand-alert strong { color: #8a5a12; }
+
+  /* ---------- Status legend ---------- */
+  .status-legend {
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    background: #fff;
+    margin-bottom: 1.5rem;
+  }
+  .status-legend summary {
+    cursor: pointer;
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--navy);
+    padding: 0.7rem 1.1rem;
+  }
+  .status-legend summary::-webkit-details-marker { display: none; }
+  .status-legend summary .chev { transition: transform 0.15s; width: 14px; height: 14px; }
+  .status-legend[open] summary .chev { transform: rotate(180deg); }
+  .status-legend .legend-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem 2rem;
+    padding: 0.35rem 1.1rem 1.1rem;
+  }
+  @media (max-width: 720px) { .status-legend .legend-body { grid-template-columns: 1fr; } }
+  .legend-row { display: flex; gap: 0.75rem; align-items: flex-start; }
+  .legend-row .status-chip { flex: none; border: 1px solid var(--hairline); margin-top: 0.05rem; }
+  .legend-row p { font-size: 0.83rem; line-height: 1.5; color: var(--ink-soft); margin: 0; }
+
   /* ---------- Listing tabs (Current / Recently Closed / Rejected) ---------- */
   .listing-tabs {
     display: flex;
@@ -527,6 +575,11 @@
       <p>Browse current DST properties for sale &mdash; 1031 exchange replacement offerings from our vetted sponsors, spanning multifamily, net-lease, industrial, healthcare and more. Every offering here has been through our underwriting review, and the documents behind each one are a click away. New to DST replacement property? Start with our guide to <a href="/learn/dst-properties-for-sale/">finding DST properties for sale</a>.</p>
     </div>
 
+    <div class="demand-alert" role="note">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <p><strong>Heightened interest in DST offerings:</strong> investment offerings are selling out quickly &mdash; and sometimes unexpectedly. If an offering interests you, please make a reservation promptly. <strong>Always confirm availability with us before identifying an offering for your 1031 exchange.</strong></p>
+    </div>
+
     <h2 class="section-head">Available DST &amp; 1031 Replacement Offerings</h2>
 
     <div class="listing-tabs" role="tablist" aria-label="Listing groups">
@@ -534,6 +587,22 @@
       <button type="button" data-ltab="closed">Recently Closed <span class="tab-n" id="tabn-closed"></span></button>
       <button type="button" data-ltab="rejected">Rejected <span class="tab-n" id="tabn-rejected"></span></button>
     </div>
+
+    <details class="status-legend">
+      <summary>
+        <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
+        Status legend &mdash; what each availability status means
+      </summary>
+      <div class="legend-body">
+        <div class="legend-row"><span class="status-chip">Available</span><p>Open for new investment &mdash; equity remains and reservations are being accepted.</p></div>
+        <div class="legend-row"><span class="status-chip confirm">Confirm Availability</span><p>Remaining equity is moving quickly or being re-verified &mdash; contact us to confirm current availability before reserving.</p></div>
+        <div class="legend-row"><span class="status-chip limited">Limited Availability</span><p>Nearly fully subscribed &mdash; only a limited amount of equity remains.</p></div>
+        <div class="legend-row"><span class="status-chip backup">Backup Reservations</span><p>Fully reserved &mdash; we can place a backup reservation in case an allocation frees up.</p></div>
+        <div class="legend-row"><span class="status-chip soon">Coming Soon</span><p>In our underwriting review or launching shortly &mdash; not yet open for reservations.</p></div>
+        <div class="legend-row"><span class="status-chip closed">Closed</span><p>Fully subscribed or completed &mdash; no longer available (see the Recently Closed tab).</p></div>
+        <div class="legend-row"><span class="status-chip rejected">Rejected</span><p>Did not pass our underwriting review (see the Rejected tab). Not a prediction of performance.</p></div>
+      </div>
+    </details>
 
     <div class="filter-bar" role="group" aria-label="Filter and sort offerings">
       <button type="button" class="filter-toggle" id="filter-toggle" aria-expanded="false" aria-controls="filter-controls">
