@@ -588,6 +588,20 @@ function buildPage(o) {
       () => `<!-- ALLDATA:START -->\n${dataHtml}\n        <!-- ALLDATA:END -->`);
   }
 
+  /* ----- hero grid: always render the identical full grid (per Jerry
+     2026-07-31) — blank Airtable fields show as "—" instead of the cell
+     being hidden. Applies ONLY to the key-figures grid above the fold;
+     later sections (distributions, benchmarks, sponsor stats) still hide
+     when they have no data. ----- */
+  {
+    const cut = html.indexOf('<section id="overview">');
+    if (cut !== -1) {
+      let head = html.slice(0, cut);
+      head = head.replace(/(<span class="value"[^>]*>)(<\/span>)/g, "$1&mdash;$2");
+      html = head + html.slice(cut);
+    }
+  }
+
   /* ----- hide cells whose value came out empty (shorter holds, coming-soon
      deals, sponsors without full-cycle stats) ----- */
   html = html.replace(

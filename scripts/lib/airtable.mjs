@@ -257,9 +257,15 @@ export async function loadAirtableData() {
         "Y6": pct2(f["Y6"]), "Y7": pct2(f["Y7"]), "Y8": pct2(f["Y8"]), "Y9": pct2(f["Y9"]), "Y10": pct2(f["Y10"]),
         "Average Yield": pct2(f["Average Yield"]),
         "Cap Rate Equivalent": pct2(f["Cap Rate Equivalent"]),
-        /* The Airtable "Tax Adjusted Yield (Use)" formula divides twice; the
-           source-of-truth display string lives in "Tax-Adj. Yield". */
-        "Tax Adjusted Yield (Use)": str(f["Tax-Adj. Yield"]),
+        /* Display the Airtable "Tax Adjusted Yield (Use)" formula (per Jerry
+           2026-07-31; formula's double-/100 bug fixed in Airtable same day):
+           sponsor-reported % when present, else Y1 + 6.84471% Baker estimate.
+           Guard: when there is no Y1 AND no sponsor %, the formula's estimate
+           is meaningless (e.g. zero-coupon "N/A (no income)") — show the
+           sponsor's text instead. */
+        "Tax Adjusted Yield (Use)": (num(f["Y1"]) || /%/.test(str(f["Tax-Adj. Yield"])))
+          ? (pct2(f["Tax Adjusted Yield (Use)"]) || str(f["Tax-Adj. Yield"]))
+          : str(f["Tax-Adj. Yield"]),
         "Tax Adj Label": str(f["Tax Adj Label"]) || "Tax-Adjusted Yield",
         "Lender": str(f["Lender"]),
         "Interest Rate": str(f["Interest Rate"]),
