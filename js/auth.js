@@ -71,9 +71,41 @@
 // Local file previews can't do OAuth redirects — skip auth entirely there
 const isLocalPreview = window.location.protocol === "file:";
 
+/* ---------- Magic-link session (special situations) ----------
+   /portal-access?t=<signed token> (netlify/functions/magic-link.mjs) verifies
+   the HMAC server-side, then drops the token in this cookie. Here we only
+   DECODE the payload (the browser can't verify HMAC without the secret) and
+   honor its expiry — the same trust depth as the rest of this client-side
+   gate. A magic session skips the Kinde SDK entirely. */
+function readMagicSession() {
+  try {
+    var m = document.cookie.match(/(?:^|;\s*)b1031_magic=([^;]+)/);
+    if (!m) return null;
+    var parts = decodeURIComponent(m[1]).split(".");
+    if (parts.length !== 2) return null;
+    var p = JSON.parse(atob(parts[0].replace(/-/g, "+").replace(/_/g, "/")));
+    if (!p || typeof p.x !== "number" || Date.now() / 1000 > p.x) return null;
+    return { email: p.e || "", name: p.n || "", exp: p.x };
+  } catch (_) { return null; }
+}
+function clearMagicSession() {
+  document.cookie = "b1031_magic=; Path=/; Max-Age=0; Secure; SameSite=Lax";
+}
+
 /* ---------- Auth client boots in the background ---------- */
 const ready = (async function () {
   if (isLocalPreview) return null;
+
+  // Magic-link session wins: no Kinde SDK load, no OAuth bounce.
+  const magic = readMagicSession();
+  if (magic) {
+    return {
+      kinde: null,
+      user: { given_name: magic.name, email: magic.email },
+      authed: true,
+      magic: true
+    };
+  }
 
   const { default: createKindeClient } =
     await import("https://esm.sh/@kinde-oss/kinde-auth-pkce-js@4");
@@ -177,7 +209,7 @@ if (loginLink) {
     if (!s) return;
     if (s.authed) {
       window.location.href = "/current-offerings";
-    } else {
+    } else if (s.kinde) {
       s.kinde.login({ app_state: { returnTo: "/current-offerings" } });
     }
   });
@@ -190,7 +222,7 @@ if (genericLogin) {
   genericLogin.addEventListener("click", async function (e) {
     e.preventDefault();
     const s = await ready;
-    if (s) await s.kinde.login();
+    if (s && s.kinde) await s.kinde.login();
   });
 }
 
@@ -237,7 +269,7 @@ if (gateLogin) {
   gateLogin.addEventListener("click", async function (e) {
     e.preventDefault();
     const s = await ready;
-    if (s) s.kinde.login({ app_state: { returnTo: window.location.pathname } });
+    if (s && s.kinde) s.kinde.login({ app_state: { returnTo: window.location.pathname } });
   });
 }
 
@@ -314,6 +346,13 @@ ready.then(function (s) {
       logoutBtn.addEventListener("click", function (e) {
         e.preventDefault();
         sessionStorage.removeItem("b1031-name");
+        // Magic-link session: just drop the cookie and return home —
+        // there is no Kinde session to end.
+        if (s.magic) {
+          clearMagicSession();
+          window.location.replace("/");
+          return;
+        }
         // Kinde's PKCE SDK (is_dangerously_use_local_storage) leaves the
         // refresh token in localStorage on the current auth flow, so the
         // session silently restores on the next page load and the user
