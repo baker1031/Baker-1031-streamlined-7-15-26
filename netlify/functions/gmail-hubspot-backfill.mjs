@@ -7,7 +7,9 @@
      POST /.netlify/functions/gmail-hubspot-backfill?secret=...&mode=write&confirm=IMPORT_GMAIL_TO_HUBSPOT&limit=10
 
    The importer searches Gmail in small contact batches, stores its cursor in
-   Netlify Blobs, and uses gmail_message_id in HubSpot for idempotency. It
+   Netlify Blobs, and uses gmail_message_id in HubSpot for idempotency when the
+   private app has email-property access. If that permission is unavailable,
+   it falls back to the protected Netlify checkpoint for idempotency. It
    imports message bodies and associates each activity with matching HubSpot
    contacts. Gmail messages are never modified.
 */
@@ -62,6 +64,7 @@ export default async (req) => {
   const stats = {
     ok: true,
     mode,
+    idempotencyMode: state.idempotencyMode || "hubspot-property",
     scannedMessages: 0,
     emailsCreated: 0,
     duplicateMessages: 0,
@@ -70,7 +73,17 @@ export default async (req) => {
   };
 
   if (!state.complete) {
-    if (mode === "write") await ensureGmailMessageProperty();
+    let idempotencyMode = state.idempotencyMode || "hubspot-property";
+    if (mode === "write" && idempotencyMode === "hubspot-property") {
+      try {
+        await ensureGmailMessageProperty();
+      } catch (error) {
+        if (!isEmailPropertyPermissionError(error)) throw error;
+        idempotencyMode = "netlify-blob";
+        state.idempotencyMode = idempotencyMode;
+      }
+    }
+    stats.idempotencyMode = idempotencyMode;
     const chunkContacts = chunks[state.chunkIndex] || [];
     const query = gmailQuery(chunkContacts.map((contact) => contact.email));
     const page = await gmailList(query, state.pageToken, limit);
@@ -99,11 +112,21 @@ export default async (req) => {
             stats.emailsCreated++;
             continue;
           }
-          const existing = await findEmailByGmailId(message.id);
+          let existing = null;
+          if (idempotencyMode === "hubspot-property") {
+            try {
+              existing = await findEmailByGmailId(message.id);
+            } catch (error) {
+              if (!isEmailPropertyPermissionError(error)) throw error;
+              idempotencyMode = "netlify-blob";
+              state.idempotencyMode = idempotencyMode;
+              stats.idempotencyMode = idempotencyMode;
+            }
+          }
           if (existing) {
             stats.duplicateMessages++;
           } else {
-            await createHubSpotEmail(detail, contactIds);
+            await createHubSpotEmail(detail, contactIds, { includeMessageId: idempotencyMode === "hubspot-property" });
             stats.emailsCreated++;
           }
           state.processedMessageIds.push(message.id);
@@ -140,6 +163,7 @@ function newState() {
     chunkIndex: 0,
     pageToken: null,
     complete: false,
+    idempotencyMode: "hubspot-property",
     processedMessageIds: [],
     totalScannedMessages: 0,
     totalEmailsCreated: 0,
@@ -150,11 +174,20 @@ function newState() {
   };
 }
 
+function isEmailPropertyPermissionError(error) {
+  const message = String(error?.message || error || "").toLowerCase();
+  return message.includes("connected-email-data-access")
+    || message.includes("object type objecttypeid{legacyobjecttype=email}")
+    || message.includes("property \\\"gmail_message_id\\\" does not exist")
+    || message.includes("property_doesnt_exist");
+}
+
 function publicState(state) {
   return {
     version: state.version,
     chunkIndex: state.chunkIndex,
     complete: Boolean(state.complete),
+    idempotencyMode: state.idempotencyMode || "hubspot-property",
     processedMessageCount: state.processedMessageIds.length,
     totalScannedMessages: state.totalScannedMessages,
     totalEmailsCreated: state.totalEmailsCreated,
@@ -281,15 +314,15 @@ async function findEmailByGmailId(messageId) {
   return result.results?.[0] || null;
 }
 
-async function createHubSpotEmail(message, contactIds) {
+async function createHubSpotEmail(message, contactIds, { includeMessageId = true } = {}) {
   const properties = {
-    gmail_message_id: message.id,
     hs_email_subject: message.subject || "(No subject)",
     hs_timestamp: message.timestamp,
     hs_email_direction: "EMAIL",
     hs_email_text: String(message.text || message.html || "").slice(0, MAX_BODY_LENGTH),
     ...(message.html ? { hs_email_html: message.html.slice(0, MAX_BODY_LENGTH) } : {})
   };
+  if (includeMessageId) properties.gmail_message_id = message.id;
   const associations = contactIds.map((id) => ({
     to: { id: String(id) },
     types: [{ associationCategory: "HUBSPOT_DEFINED", associationTypeId: 198 }]
