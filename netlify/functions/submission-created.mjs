@@ -1,6 +1,5 @@
 /* ============================================================
    Netlify event function: runs on EVERY verified form submission.
-   GoHighLevel-only (Pipedrive + HubSpot were retired at cutover).
 
    - request-investment-access -> upsert Contact + create/update the
      open Opportunity in GHL with the 1031/investment fields and calcs:
@@ -13,7 +12,7 @@
      with the consent recorded in the submission note for the A2P audit trail.
    - crs-receipts -> stamp CRS Delivery Date on the Contact.
 
-   Env: GHL_TOKEN, GHL_LOCATION_ID
+   Env: GHL_TOKEN, GHL_LOCATION_ID, HUBSPOT_TOKEN
    ============================================================ */
 
 import {
@@ -21,9 +20,17 @@ import {
   findOpenOpportunity, createOpportunity, updateOpportunity, createNote, stageId
 } from "./lib/ghl.mjs";
 import { PIPELINE_NAME, STAGES, buildContactFields, assessAccreditation } from "./lib/ghl-config.mjs";
+import {
+  upsertContact as upsertHubSpotContact,
+  findOpenDealForContact,
+  createDeal,
+  updateDeal,
+  createNote as createHubSpotNote
+} from "./lib/hubspot.mjs";
+import { DEAL_STAGES, assessAccreditation as assessHubSpotAccreditation } from "./lib/hs-config.mjs";
 
 export default async (req) => {
-  if (!process.env.GHL_TOKEN) return ok("ghl not configured");
+  if (!process.env.GHL_TOKEN && !process.env.HUBSPOT_TOKEN) return ok("crm not configured");
 
   let body;
   try { body = await req.json(); } catch { return ok("bad payload"); }
@@ -33,11 +40,17 @@ export default async (req) => {
 
   if (formName === "crs-receipts") {
     if (!data.email) return ok("crs: no email");
-    try {
-      const fieldMap = await getContactFieldMap();
-      const cf = buildContactFields(fieldMap, { crs_delivery_date: toDate(data.crs_accepted_at) });
-      await upsertContact({ email: data.email, customFields: cf });
-    } catch (e) { console.error("ghl crs write failed:", e); }
+    if (process.env.GHL_TOKEN) {
+      try {
+        const fieldMap = await getContactFieldMap();
+        const cf = buildContactFields(fieldMap, { crs_delivery_date: toDate(data.crs_accepted_at) });
+        await upsertContact({ email: data.email, customFields: cf });
+      } catch (e) { console.error("ghl crs write failed:", e); }
+    }
+    if (process.env.HUBSPOT_TOKEN) {
+      try { await upsertHubSpotContact(data.email, { crs_delivery_date: toDate(data.crs_accepted_at) }); }
+      catch (e) { console.error("hubspot crs write failed:", e); }
+    }
     return ok("crs recorded");
   }
 
@@ -68,11 +81,15 @@ export default async (req) => {
   const day45 = addDays(data.closing_date, 45);
   const day180 = addDays(data.closing_date, 180);
 
-  try {
-    await syncToGHL({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
-  } catch (e) {
-    console.error("ghl write failed:", e);
-    return ok("ghl error");
+  if (process.env.GHL_TOKEN) {
+    try {
+      await syncToGHL({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
+    } catch (e) { console.error("ghl write failed:", e); }
+  }
+  if (process.env.HUBSPOT_TOKEN) {
+    try {
+      await syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
+    } catch (e) { console.error("hubspot write failed:", e); }
   }
 
   return ok("synced");
@@ -143,6 +160,74 @@ async function syncToGHL({ data, name, equity, debt, anticipated, total, ltv, de
   await createNote(contact.id, buildSubmissionNote(data, smsOptIn));
 }
 
+/* Netlify form → HubSpot mirror. The GHL submission remains the source event;
+   this path is idempotent by email and never moves an existing open deal back
+   to the first stage on a resubmission. */
+async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 }) {
+  if (!data.email) return;
+  const { leadStatus, lifecycle } = assessHubSpotAccreditation(data.accreditation_check);
+  const smsOptIn = String(data.sms_consent || "").trim().toLowerCase() === "yes";
+  const contact = await upsertHubSpotContact(data.email, clean({
+    firstname: data.first_name,
+    lastname: data.last_name,
+    phone: data.phone,
+    preferred_name: data.preferred_name,
+    state: data.state,
+    state_of_residence: data.state,
+    investor_role: data.role,
+    role_other: data.role_other,
+    marital_status: data.marital_status,
+    household_income: data.household_income,
+    net_worth: data.net_worth,
+    dst_familiarity: data.dst_familiarity,
+    current_plan: data.current_plan,
+    us_check: data.us_check,
+    accreditation_check: data.accreditation_check,
+    crs_delivery_date: toDate(data.crs_accepted_at),
+    sms_consent: smsOptIn ? "Yes" : "No",
+    situation: data.situation_other ? `${data.situation} — ${data.situation_other}` : data.situation,
+    contact_source: "Netlify request-investment-access",
+    hs_lead_status: leadStatus,
+    lifecyclestage: lifecycle,
+    equity: equity || undefined,
+    debt: data.debt_amount !== undefined && data.debt_amount !== "" ? debt : undefined,
+    anticipated_investment: anticipated || undefined,
+    in_place_ltv: equity + debt > 0 ? ltv : undefined,
+    total_investment_size: total || undefined,
+    closing_date: toDate(data.closing_date),
+    deadline_45: day45,
+    deadline_180: day180,
+    routed_to: data.routed_to
+  }));
+  if (!contact?.id) return;
+
+  const dealProps = clean({
+    dealname: `${name} — ${data.situation || "Investment"}`,
+    amount: dealValue || undefined,
+    closedate: day45,
+    pipeline: "default",
+    dealstage: DEAL_STAGES.NEW_REGISTRATION,
+    situation: data.situation_other ? `${data.situation} — ${data.situation_other}` : data.situation,
+    closing_date: toDate(data.closing_date),
+    equity: equity || undefined,
+    debt: data.debt_amount !== undefined && data.debt_amount !== "" ? debt : undefined,
+    anticipated_investment: anticipated || undefined,
+    in_place_ltv: equity + debt > 0 ? ltv : undefined,
+    total_investment_size: total || undefined,
+    deadline_45: day45,
+    deadline_180: day180,
+    routed_to: data.routed_to,
+    ghl_stage_name: "New Registration",
+    ghl_status: "open",
+    ghl_source: "Netlify request-investment-access"
+  });
+  const existing = await findOpenDealForContact(contact.id);
+  const deal = existing
+    ? await updateDeal(existing.id, { ...dealProps, dealstage: undefined, pipeline: undefined })
+    : await createDeal(dealProps, contact.id);
+  await createHubSpotNote({ body: buildSubmissionNote(data, smsOptIn), contactId: contact.id, dealId: deal?.id || existing?.id });
+}
+
 // Every submitted answer, in form order, as one readable note.
 const NOTE_FIELDS = [
   ["first_name", "First Name"],
@@ -170,7 +255,7 @@ const NOTE_FIELDS = [
   ["crs_accepted_at", "CRS Accepted At"]
 ];
 
-function buildSubmissionNote(data, smsOptIn) {
+function buildSubmissionNote(data, smsOptIn = false) {
   const rows = NOTE_FIELDS
     .filter(([k]) => data[k] !== undefined && data[k] !== "" && data[k] !== null)
     .map(([k, label]) => `<b>${label}:</b> ${esc(String(data[k]))}`);
@@ -180,6 +265,9 @@ function buildSubmissionNote(data, smsOptIn) {
 
 function esc(s) {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+function clean(obj) {
+  return Object.fromEntries(Object.entries(obj).filter(([, v]) => v !== undefined && v !== null && v !== ""));
 }
 function money(v) {
   const n = parseFloat(String(v ?? "").replace(/[^0-9.]/g, ""));

@@ -26,6 +26,8 @@ import {
   findOpenOpportunity, createOpportunity, updateOpportunity, stageId
 } from "./lib/ghl.mjs";
 import { PIPELINE_NAME, STAGES, LEAD_STATUS, buildContactFields } from "./lib/ghl-config.mjs";
+import { upsertContact as upsertHubSpotContact, findOpenDealForContact, createDeal, updateDeal, createNote as createHubSpotNote } from "./lib/hubspot.mjs";
+import { DEAL_STAGES, LEAD_STATUS as HUBSPOT_LEAD_STATUS } from "./lib/hs-config.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
@@ -73,6 +75,30 @@ export default async (req) => {
     }
   } catch (e) {
     console.error("ghl-booking crm update failed:", e);
+  }
+
+  // Keep the HubSpot opportunity and lead status aligned with the same GHL
+  // booking automation. This is idempotent and does not change portal logic.
+  if (process.env.HUBSPOT_TOKEN) {
+    try {
+      const hsContact = await upsertHubSpotContact(email, {
+        firstname: first,
+        lastname: last,
+        phone: c.phone || body.phone,
+        hs_lead_status: HUBSPOT_LEAD_STATUS.INTRO_CALL_SCHEDULED,
+        lifecyclestage: "salesqualifiedlead",
+        portal_access: "Yes"
+      });
+      if (hsContact?.id) {
+        const existing = await findOpenDealForContact(hsContact.id);
+        if (existing) {
+          await updateDeal(existing.id, { dealstage: DEAL_STAGES.CONSULTATION_SCHEDULED, ghl_stage_name: "Consultation Scheduled" });
+        } else {
+          await createDeal({ dealname: `${fullName} — Consultation`, pipeline: "default", dealstage: DEAL_STAGES.CONSULTATION_SCHEDULED, ghl_stage_name: "Consultation Scheduled", ghl_status: "open", ghl_source: "GHL booking webhook" }, hsContact.id);
+        }
+        await createHubSpotNote({ body: "GHL booking received — moved to Consultation Scheduled.", contactId: hsContact.id });
+      }
+    } catch (e) { console.error("ghl-booking HubSpot update failed:", e); }
   }
 
   /* ---------- Server-side portal provisioning (Kinde) ---------- */

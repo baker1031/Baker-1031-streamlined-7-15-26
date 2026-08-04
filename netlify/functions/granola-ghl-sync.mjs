@@ -31,6 +31,7 @@
 import { getStore } from "@netlify/blobs";
 import { ghl, createNote } from "./lib/ghl.mjs";
 import { extractActionItems } from "./lib/action-items.mjs";
+import { upsertContact as upsertHubSpotContact, createNote as createHubSpotNote, createTask as createHubSpotTask } from "./lib/hubspot.mjs";
 
 const GRANOLA_BASE = process.env.GRANOLA_API_BASE || "https://public-api.granola.ai/v1";
 
@@ -194,6 +195,24 @@ async function handleNote(noteMeta) {
 
   await createNote(contact.id, noteBody(note));
 
+  // Granola remains connected to GHL, but the same meeting summary and action
+  // items are mirrored into HubSpot when the contact can be matched by email.
+  const hubspotContact = process.env.HUBSPOT_TOKEN && contact.email
+    ? await upsertHubSpotContact(contact.email, {
+        firstname: contact.firstName,
+        lastname: contact.lastName,
+        phone: contact.phone,
+        contact_source: "Granola meeting"
+      })
+    : null;
+  if (hubspotContact?.id) {
+    await createHubSpotNote({
+      body: `${noteBody(note)}\n\n[GHL/Granola note:${note.id}]`,
+      contactId: hubspotContact.id,
+      timestamp: note.created_at || undefined
+    });
+  }
+
   const items = extractActionItems(note.summary_markdown || "", { max: MAX_TASKS });
   const due = dueISO(DUE_DAYS);
   let tasks = 0;
@@ -206,6 +225,15 @@ async function handleNote(noteMeta) {
       assignedTo: USER_ID
     });
     if (id) tasks++;
+    if (hubspotContact?.id) {
+      await createHubSpotTask({
+        title,
+        body: `From Granola meeting "${note.title || ""}"${note.web_url ? `\n${note.web_url}` : ""}`,
+        dueDate: due,
+        contactId: hubspotContact.id,
+        marker: `[GHL/Granola task:${note.id}:${id || title}]`
+      });
+    }
   }
   return { status: `ok contact=${contact.id} via=${who.email ? "email" : "phone"}(${label}) tasks=${tasks}`, mark: true };
 }
