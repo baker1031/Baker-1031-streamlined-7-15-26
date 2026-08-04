@@ -50,6 +50,7 @@ export const CONTACT_PROPERTY_DEFINITIONS = [
   enumeration("household_income", "Household Income", ["Under $200,000", "$200,000 – $300,000", "$300,000 – $500,000", "$500,000 – $1,000,000", "Over $1,000,000"]),
   enumeration("net_worth", "Net Worth", ["Under $1,000,000", "$1,000,000 – $2,500,000", "$2,500,000 – $5,000,000", "$5,000,000 – $10,000,000", "Over $10,000,000"]),
   enumeration("dst_familiarity", "DST Familiarity", ["New to DSTs", "Somewhat familiar", "Very familiar", "Experienced DST investor"]),
+  string("dst_familiarity_details", "DST Familiarity — details"),
   enumeration("current_plan", "Current Plan (Where DSTs Fit)", ["DSTs are my main focus", "Exploring DSTs alongside other options", "Not really interested in DSTs"]),
   string("us_check", "US Check"),
   string("accreditation_check", "Accreditation Check"),

@@ -190,6 +190,7 @@ function readCustomFields(contact, fieldMap) {
     return id ? byId.get(id) : undefined;
   };
   const role = normalizeRole(get("Role"));
+  const dstFamiliarity = normalizeDstFamiliarity(get("DST Familiarity"));
   return clean({
     preferred_name: get("Preferred Name"),
     state_of_residence: get("State of Residence"),
@@ -197,7 +198,7 @@ function readCustomFields(contact, fieldMap) {
     marital_status: get("Marital Status"),
     household_income: get("Household Income"),
     net_worth: get("Net Worth"),
-    dst_familiarity: get("DST Familiarity"),
+    ...dstFamiliarity,
     current_plan: get("Current Plan (Where DSTs Fit)"),
     us_check: get("US Check"),
     accreditation_check: get("Accreditation Check"),
@@ -276,6 +277,21 @@ function normalizeRole(value) {
   const base = parts[0].trim();
   if (allowed.has(base)) return { investor_role: base, role_other: parts.slice(1).join(" — ") || undefined };
   return { investor_role: "Other", role_other: raw };
+}
+function normalizeDstFamiliarity(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return {};
+  const allowed = new Set(["New to DSTs", "Somewhat familiar", "Very familiar", "Experienced DST investor"]);
+  if (allowed.has(raw)) return { dst_familiarity: raw };
+  const lower = raw.toLowerCase();
+  const mapped = /new to|new with|not familiar|unfamiliar/.test(lower)
+    ? "New to DSTs"
+    : /experienced|sophisticated/.test(lower)
+      ? "Experienced DST investor"
+      : /very familiar|highly familiar|knowledgeable/.test(lower)
+        ? "Very familiar"
+        : "Somewhat familiar";
+  return { dst_familiarity: mapped, dst_familiarity_details: raw };
 }
 function number(value) {
   if (value === undefined || value === null || value === "") return undefined;
