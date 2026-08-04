@@ -180,7 +180,7 @@
 
       <div class="footer-bottom">
         <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
-        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/privacy-policy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a></span>
+        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/privacy-policy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html" rel="nofollow">Employee Access</a></span>
       </div>
     </div>
       <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>
@@ -193,10 +193,9 @@
       /* -------------------------------------------------------------------
          PUBLIC SHORT LINK — baker1031.com/schedule
 
-         An open, brandable shortcut to the intro-call calendar for email
-         signatures, texts, and business cards. Same GoHighLevel calendar as
-         /scheduled.html and /book.html, so the GHL "Booking -> Portal
-         Provisioning" workflow still fires and the visitor still lands on
+         An open, brandable shortcut to the Cal.com intro-call calendar for email
+         signatures, texts, and business cards. The Cal webhook syncs CRM,
+         portal access, and follow-up automation before the visitor lands on
          the branded /call-confirmed.html page afterwards.
 
          Difference vs /book.html: no access key. /book.html stays the private,
@@ -243,34 +242,46 @@
           : (digits.length === 11 && digits.charAt(0) === '1') ? '+' + digits
           : '';
 
-        var params = new URLSearchParams();
-        if (first || last) params.set('name', [first, last].filter(Boolean).join(' '));
-        if (email) params.set('email', email);
-        if (e164Phone) params.set('phone', e164Phone);
-
-        var iframe = document.createElement('iframe');
-        iframe.src = CAL_BOOKING_URL + (params.toString() ? '?' + params.toString() : '');
-        iframe.id = 'cal-phone-booking_' + Date.now();
-        iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
-        iframe.setAttribute('scrolling', 'no');
-        iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
-        holder.appendChild(iframe);
+        if (loading) loading.remove();
+        (function (C, A, L) {
+          let p = function (a, ar) { a.q.push(ar); };
+          let d = C.document;
+          C.Cal = C.Cal || function () {
+            let cal = C.Cal, ar = arguments;
+            if (!cal.loaded) {
+              cal.ns = {}; cal.q = cal.q || [];
+              d.head.appendChild(d.createElement('script')).src = A;
+              cal.loaded = true;
+            }
+            if (ar[0] === L) {
+              const api = function () { p(api, arguments); };
+              const namespace = ar[1]; api.q = api.q || [];
+              if (typeof namespace === 'string') {
+                cal.ns[namespace] = cal.ns[namespace] || api;
+                p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]);
+              } else p(cal, ar);
+              return;
+            }
+            p(cal, ar);
+          };
+        })(window, 'https://app.cal.com/embed/embed.js', 'init');
+        Cal('init', '25min', { origin: 'https://app.cal.com' });
+        Cal.ns['25min']('ui', { theme: 'light', cssVarsPerTheme: {
+          light: { 'cal-brand': '#2b3a5f', 'cal-brand-emphasis': '#22304f', 'cal-brand-text': '#ffffff', 'cal-brand-accent': '#ffffff' },
+          dark: { 'cal-brand': '#2b3a5f', 'cal-brand-emphasis': '#22304f', 'cal-brand-text': '#ffffff', 'cal-brand-accent': '#ffffff' }
+        }});
+        Cal('inline', { elementOrSelector: '#sched-cal', calLink: 'jerry-baker-yn6qn1/25min', config: {
+          layout: 'month_view', name: [first, last].filter(Boolean).join(' '), email: email, phone: e164Phone
+        }});
+        Cal.ns['25min']('on', { action: 'bookingSuccessful', callback: function () {
+          if (window.__calBooked) return; window.__calBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'cal.com_phone', event_type: 'short_link', currency: 'USD', value: 1 });
+          setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
+        }});
 
         // Best-effort conversion signal if GA4 is present.
         if (window.gtag) gtag('event', 'generate_lead', { method: 'schedule_short_link', currency: 'USD', value: 1 });
 
-        window.addEventListener('message', function (e) {
-          var o = String(e.origin || '');
-          if (o.indexOf('cal.com') === -1) return;
-          var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
-          // Only the real booking-completion message carries a completion word
-          // alongside the booking context. The widget's load-time message has
-          // "booking" (its own URL) but no completion word — must not fire.
-          if (!/bookingSuccessful|booking.*success/i.test(raw)) return;
-          if (window.__calBooked) return; window.__calBooked = true;
-          if (window.gtag) gtag('event', 'schedule', { method: 'cal.com_phone', event_type: 'short_link', currency: 'USD', value: 1 });
-          setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
-        });
       }
     })();
   </script>
