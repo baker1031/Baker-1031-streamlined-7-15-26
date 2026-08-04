@@ -43,6 +43,13 @@ export async function upsertContact(email, properties = {}) {
     return { ...existing, ...updated.data };
   }
   const created = await hs("/crm/v3/objects/contacts", { method: "POST", body: { properties: cleanProps } });
+  if (!created.ok && created.status === 409) {
+    const existingId = String(created.data?.message || "").match(/existing id[:\\s]+(\\d+)/i)?.[1];
+    if (existingId) {
+      const recovered = await hs(`/crm/v3/objects/contacts/${existingId}`, { method: "PATCH", body: { properties: cleanProps } });
+      if (recovered.ok) return { id: existingId, ...recovered.data };
+    }
+  }
   if (!created.ok) throw hubspotError("contact create", created);
   return created.data;
 }
