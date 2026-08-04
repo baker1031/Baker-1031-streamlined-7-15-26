@@ -46,6 +46,9 @@ mirrors meeting notes and action-item tasks when the participant has an email.
 Required Netlify production variables:
 
 - `HUBSPOT_TOKEN` — the HubSpot private-app token; keep it server-side
+- `LOOPS_API_KEY` — the Loops API key; keep it server-side. New website registrations
+  are created or updated as Loops contacts only; nurture subscriptions and workflow
+  events remain disabled until a separate marketing-consent flow is configured.
 - `HS_SETUP_SECRET` — existing server-side setup secret
 - `GHL_TOKEN`, `GHL_LOCATION_ID`, and `GHL_WEBHOOK_SECRET` — existing GHL values
 
