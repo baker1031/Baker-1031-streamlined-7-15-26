@@ -18,6 +18,7 @@ import { DEAL_STAGES, LEAD_STATUS } from "./lib/hs-config.mjs";
 import { getContactById, resolvePipeline } from "./lib/ghl.mjs";
 import { PIPELINE_NAME } from "./lib/ghl-config.mjs";
 import { mirrorGhlContact } from "./lib/ghl-hubspot-sync.mjs";
+import { sendLoopsEvent } from "./lib/loops.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
@@ -127,6 +128,11 @@ export default async (req) => {
         marker
       });
       noShowEmail = await sendResendNoShow(contact, marker);
+      await sendLoopsEvent(contact.email, "appointment_no_show", {
+        appointmentId: body.appointmentId || body.appointment?.id,
+        title: body.appointment?.title || body.title,
+        status: "no-show"
+      });
     } else {
       noShowEmail = "already-logged";
     }

@@ -29,7 +29,7 @@ import {
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, assessAccreditation as assessHubSpotAccreditation } from "./lib/hs-config.mjs";
 import { properName } from "./lib/name.mjs";
-import { syncRegistrationToLoops } from "./lib/loops.mjs";
+import { syncRegistrationToLoops, sendLoopsEvent } from "./lib/loops.mjs";
 
 export default async (req) => {
   if (!process.env.GHL_TOKEN && !process.env.HUBSPOT_TOKEN && !process.env.LOOPS_API_KEY) return ok("crm not configured");
@@ -95,6 +95,11 @@ export default async (req) => {
   }
   try {
     await syncRegistrationToLoops(data);
+    await sendLoopsEvent(data.email, "ghl_registration", {
+      firstName: properName(data.first_name),
+      lastName: properName(data.last_name),
+      source: "Baker 1031 website"
+    });
   } catch (e) { console.error("loops contact sync failed:", e); }
 
   return ok("synced");
