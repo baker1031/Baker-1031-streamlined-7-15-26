@@ -189,10 +189,11 @@ function readCustomFields(contact, fieldMap) {
     const id = fieldMap[String(name).trim().toLowerCase()];
     return id ? byId.get(id) : undefined;
   };
+  const role = normalizeRole(get("Role"));
   return clean({
     preferred_name: get("Preferred Name"),
     state_of_residence: get("State of Residence"),
-    investor_role: get("Role"),
+    ...role,
     marital_status: get("Marital Status"),
     household_income: get("Household Income"),
     net_worth: get("Net Worth"),
@@ -266,6 +267,16 @@ function mapLeadStatus(value, fallback) {
 }
 function mapLifecycle(value) { return /approved|scheduled/i.test(String(value || "")) ? "salesqualifiedlead" : "lead"; }
 function noteBody(note) { return `[GHL note:${note.id || "unknown"}]\n${note.body || note.content || note.note || ""}`; }
+function normalizeRole(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return {};
+  const allowed = new Set(["Investor", "Broker", "Financial Advisor", "CPA", "Attorney", "Qualified Intermediary", "Real Estate Agent", "Family Member / Assisting an Investor", "Other"]);
+  if (allowed.has(raw)) return { investor_role: raw };
+  const parts = raw.split(/\s+—\s+/);
+  const base = parts[0].trim();
+  if (allowed.has(base)) return { investor_role: base, role_other: parts.slice(1).join(" — ") || undefined };
+  return { investor_role: "Other", role_other: raw };
+}
 function number(value) {
   if (value === undefined || value === null || value === "") return undefined;
   if (typeof value === "object") value = value.value ?? value.field_value ?? value.fieldValue;
