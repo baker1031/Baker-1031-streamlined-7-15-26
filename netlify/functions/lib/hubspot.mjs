@@ -39,10 +39,12 @@ export async function upsertContact(email, properties = {}) {
   if (!existing && cleanProps.ghl_contact_id) existing = await findContactByGhlId(cleanProps.ghl_contact_id);
   if (existing) {
     const updated = await hs(`/crm/v3/objects/contacts/${existing.id}`, { method: "PATCH", body: { properties: cleanProps } });
-    return updated.ok ? { ...existing, ...updated.data } : existing;
+    if (!updated.ok) throw hubspotError("contact update", updated);
+    return { ...existing, ...updated.data };
   }
   const created = await hs("/crm/v3/objects/contacts", { method: "POST", body: { properties: cleanProps } });
-  return created.ok ? created.data : null;
+  if (!created.ok) throw hubspotError("contact create", created);
+  return created.data;
 }
 
 export async function findContactById(id) {
@@ -148,4 +150,13 @@ function association(id, associationTypeId) {
 
 function clean(values) {
   return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined && value !== null && value !== ""));
+}
+
+function hubspotError(action, result) {
+  const data = result?.data || {};
+  const propertyErrors = Array.isArray(data.errors)
+    ? data.errors.map((error) => error.propertyName || error.code).filter(Boolean).join(",")
+    : "";
+  const detail = [data.message, propertyErrors ? `properties=${propertyErrors}` : ""].filter(Boolean).join("; ");
+  return new Error(`HubSpot ${action} failed (${result?.status || "unknown"})${detail ? `: ${detail}` : ""}`);
 }
