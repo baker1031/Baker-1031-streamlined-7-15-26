@@ -196,17 +196,30 @@ async function processBooking(details, payload, markerId, triggerEvent, errors) 
 
 async function processCancellation(details, payload, markerId, errors) {
   const marker = `[Cal cancelled:${markerId}]`;
-  if (!details.email || !env("HUBSPOT_TOKEN")) return;
+  if (!details.email) return;
+
+  if (env("HUBSPOT_TOKEN")) {
+    try {
+      const contact = await upsertHubSpotContact(details.email, {
+        firstname: details.first,
+        lastname: details.last,
+        phone: details.phone
+      });
+      if (contact?.id && !(await searchNotesByMarker(marker)).length) {
+        await createHubSpotNote({ body: `${marker}\nPhone appointment cancelled.\n${appointmentSummary(payload)}`, contactId: contact.id });
+      }
+    } catch (error) { errors.push({ system: "hubspot", message: errorMessage(error) }); }
+  }
+
   try {
-    const contact = await upsertHubSpotContact(details.email, {
-      firstname: details.first,
-      lastname: details.last,
-      phone: details.phone
+    await sendLoopsEvent(details.email, "appointment_cancelled", {
+      appointmentId: markerId,
+      title: payload.title || "Introductory Phone Call",
+      startTime: payload.startTime || payload.start_time,
+      endTime: payload.endTime || payload.end_time,
+      status: "cancelled"
     });
-    if (contact?.id && !(await searchNotesByMarker(marker)).length) {
-      await createHubSpotNote({ body: `${marker}\nPhone appointment cancelled.\n${appointmentSummary(payload)}`, contactId: contact.id });
-    }
-  } catch (error) { errors.push({ system: "hubspot", message: errorMessage(error) }); }
+  } catch (error) { errors.push({ system: "loops", message: errorMessage(error) }); }
 }
 
 async function processNoShow(details, payload, markerId, errors) {
