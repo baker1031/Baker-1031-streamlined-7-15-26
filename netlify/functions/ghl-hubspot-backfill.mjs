@@ -19,7 +19,9 @@ import {
 import { DEAL_STAGES, assessAccreditation } from "./lib/hs-config.mjs";
 import { getContactFieldMap, listContacts } from "./lib/ghl.mjs";
 
-const MAX_PER_REQUEST = 100;
+// Each contact may require several sequential GHL and HubSpot API calls.
+// Keep synchronous requests comfortably below Netlify's function timeout.
+const MAX_PER_REQUEST = 5;
 const STAGE_BY_NAME = [
   ["new registration", DEAL_STAGES.NEW_REGISTRATION],
   ["new inquiry", DEAL_STAGES.NEW_REGISTRATION],
