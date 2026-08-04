@@ -226,20 +226,39 @@ function readCustomFields(contact, fieldMap) {
 }
 
 async function listContactOpportunities(contactId) {
-  const result = await ghl(`/opportunities/search`, { query: { location_id: process.env.GHL_LOCATION_ID, contact_id: contactId, page: 1, limit: 100 } });
-  return result.data?.opportunities || [];
+  try {
+    const result = await ghl(`/opportunities/search`, { query: { location_id: process.env.GHL_LOCATION_ID, contact_id: contactId, page: 1, limit: 100 } });
+    return result.data?.opportunities || [];
+  } catch (error) {
+    if (isOptionalActivityAccessError(error)) return [];
+    throw error;
+  }
 }
 
 async function listContactTasks(contactId) {
-  const result = await ghl(`/contacts/${encodeURIComponent(contactId)}/tasks`);
-  const tasks = result.data?.tasks || result.data?.data || result.data || [];
-  return Array.isArray(tasks) ? tasks : [];
+  try {
+    const result = await ghl(`/contacts/${encodeURIComponent(contactId)}/tasks`);
+    const tasks = result.data?.tasks || result.data?.data || result.data || [];
+    return Array.isArray(tasks) ? tasks : [];
+  } catch (error) {
+    if (isOptionalActivityAccessError(error)) return [];
+    throw error;
+  }
 }
 
 async function listContactNotes(contactId) {
-  const result = await ghl(`/contacts/${encodeURIComponent(contactId)}/notes`);
-  const notes = result.data?.notes || result.data?.data || result.data || [];
-  return Array.isArray(notes) ? notes : [];
+  try {
+    const result = await ghl(`/contacts/${encodeURIComponent(contactId)}/notes`);
+    const notes = result.data?.notes || result.data?.data || result.data || [];
+    return Array.isArray(notes) ? notes : [];
+  } catch (error) {
+    if (isOptionalActivityAccessError(error)) return [];
+    throw error;
+  }
+}
+
+function isOptionalActivityAccessError(error) {
+  return /returned (401|403|404)\b/i.test(String(error?.message || error));
 }
 
 async function ghl(path, { method = "GET", body, query } = {}) {
