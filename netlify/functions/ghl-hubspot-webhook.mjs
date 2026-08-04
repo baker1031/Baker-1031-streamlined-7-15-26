@@ -83,6 +83,8 @@ function mapStage(stage, status) {
   if (/closed.?won|closed funded|won/.test(value) || String(status).toLowerCase() === "won") return DEAL_STAGES.CLOSED_FUNDED;
   if (/consultation|appointment/.test(value)) return DEAL_STAGES.CONSULTATION_SCHEDULED;
   if (/review/.test(value)) return DEAL_STAGES.REVIEWING_OPPORTUNITIES;
+  if (/paperwork|committed/.test(value)) return DEAL_STAGES.COMMITTED;
+  if (/closing/.test(value)) return "contractsent";
   if (/commit/.test(value)) return DEAL_STAGES.COMMITTED;
   return DEAL_STAGES.NEW_REGISTRATION;
 }

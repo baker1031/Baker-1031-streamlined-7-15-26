@@ -30,6 +30,8 @@ const STAGE_BY_NAME = [
   ["consultation scheduled", DEAL_STAGES.CONSULTATION_SCHEDULED],
   ["reviewing opportunities", DEAL_STAGES.REVIEWING_OPPORTUNITIES],
   ["committed", DEAL_STAGES.COMMITTED],
+  ["completing paperwork", DEAL_STAGES.COMMITTED],
+  ["closing", "contractsent"],
   ["closed funded", DEAL_STAGES.CLOSED_FUNDED],
   ["closed won", DEAL_STAGES.CLOSED_FUNDED],
   ["closed lost", DEAL_STAGES.CLOSED_LOST]
