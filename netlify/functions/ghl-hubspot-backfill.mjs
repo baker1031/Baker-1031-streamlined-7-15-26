@@ -75,6 +75,7 @@ export default async (req) => {
 
 async function migrateContact(contact, fieldMap, mode, stats) {
   const values = readCustomFields(contact, fieldMap);
+  const { lead_status: ghlLeadStatus, ...contactValues } = values;
   const accreditation = assessAccreditation(values.accreditation_check);
   const properties = clean({
     ghl_contact_id: contact.id,
@@ -88,12 +89,11 @@ async function migrateContact(contact, fieldMap, mode, stats) {
     state: contact.state || values.state_of_residence,
     zip: contact.postalCode,
     website: contact.website,
-    timezone: contact.timezone,
     contact_source: contact.source,
     contact_type: contact.type,
-    ...values,
-    hs_lead_status: mapLeadStatus(values.lead_status, accreditation.leadStatus),
-    lifecyclestage: mapLifecycle(values.lead_status)
+    ...contactValues,
+    hs_lead_status: mapLeadStatus(ghlLeadStatus, accreditation.leadStatus),
+    lifecyclestage: mapLifecycle(ghlLeadStatus)
   });
   if (mode === "dry-run") {
     stats.contactsCreatedOrUpdated++;
