@@ -8,6 +8,7 @@ Disallow: /employee
 Disallow: /partials/
 Disallow: /templates/
 Disallow: /docs/
+Disallow: /.netlify/
 
 # Explicitly welcome major AI / LLM crawlers (educational content is meant to be discoverable)
 User-agent: GPTBot

@@ -1,40 +1,40 @@
 /* ============================================================
-   Build step: Google Sheet "Master Listings" → static site data.
+   Build step: Airtable "Baker 1031 — Investments" → static site data.
 
    Runs during every Netlify build (see netlify.toml):
-   1. Fetches the sheet as CSV (public gviz export — no API key).
+   1. Fetches the Airtable base via REST (AIRTABLE_TOKEN env var;
+      see scripts/lib/airtable.mjs — AIRTABLE_SNAPSHOT for offline dev).
    2. Writes data/offerings.json (machine-readable data source).
    3. Generates a permanent static page per offering at
       offerings/<slug>/index.html from offering-template.html,
       with per-page <title>, meta description, canonical, Open
       Graph tags and JSON-LD for SEO / LLM discoverability.
-   4. Bakes the listing cards + filter pills into
+   4. Bakes the listing cards + the filter/sort bar into
       current-offerings.html (between OFFERINGS/FILTERS markers).
-   5. Regenerates sitemap.xml.
+      Default order: status (Available → Confirm Availability →
+      Limited → Backup → Coming Soon), A–Z within each group.
+   5. Regenerates sitemap.xml. Rejected listings are excluded from
+      the directory + sitemap and listed on performance.html's
+      "Rejected" tab (pages built noindex, like a research archive).
 
    No dependencies — plain Node 18+. Run locally:
-     node scripts/build-offerings.mjs
+     AIRTABLE_TOKEN=... node scripts/build-offerings.mjs
    ============================================================ */
 
-import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, cpSync, rmSync, existsSync, readdirSync, statSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
-import { parseCSV } from "./lib/csv.mjs";
-import { esc, truncate, slugify, put } from "./lib/html.mjs";
-import { optimizedPhoto, directDownload } from "./lib/images.mjs";
+import { esc, truncate, slugify, put, brandTitle, metaTrim } from "./lib/html.mjs";
+import { optimizedPhoto, directDownload, normalizeLogo, BRAND_LOGO, BRAND_LOGO_ABS, LOGO_W, LOGO_H } from "./lib/images.mjs";
 import { injectPartials } from "./lib/partials.mjs";
+import { loadAirtableData, statusRank as atStatusRank, statusClass as atStatusClass, STATUS_ORDER } from "./lib/airtable.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const SHEET_ID = "1vTqb5YX8pFjZxToGd2pJ_ncPbny2PXpW5gXx-7IlyZg";
-const SHEET_TAB = "Master Listings";
-const DOCS_TAB = "Documents";
-const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_TAB)}`;
-const DOCS_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(DOCS_TAB)}`;
 const SITE = "https://baker1031.com";
 
 /* ---------------- Shared SEO / structured-data helpers ---------------- */
-const LOGO_URL = "https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
+const LOGO_URL = BRAND_LOGO;
 const OG_IMAGE = `${SITE}/assets/og-card.png`;
 // GoHighLevel website tracking (analytics/attribution ONLY — the real form→CRM
 // data flow is the submission-created write + the booking workflow, NOT this
@@ -53,7 +53,7 @@ function ensureOg(html, title, desc, url) {
 const ORG_REF = { "@id": `${SITE}/#org` };
 const WEBSITE_REF = { "@id": `${SITE}/#website` };
 const PERSON_REF = { "@id": `${SITE}/#jerry` };
-const PUBLISHER = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments", logo: { "@type": "ImageObject", url: LOGO_URL } };
+const PUBLISHER = { "@type": "Organization", "@id": `${SITE}/#org`, name: "Baker 1031 Investments", logo: { "@type": "ImageObject", url: BRAND_LOGO_ABS } };
 const AUTHOR = { "@type": "Person", "@id": `${SITE}/#jerry`, name: 'Gerald F. "Jerry" Baker, III', jobTitle: "Founder & Principal", worksFor: ORG_REF };
 
 const MONTHS = { january: "01", february: "02", march: "03", april: "04", may: "05", june: "06", july: "07", august: "08", september: "09", october: "10", november: "11", december: "12" };
@@ -121,29 +121,13 @@ for (const shell of [...PT_PAGES, "index.html", "current-offerings.html", "learn
 }
 console.log("Partials injected into page shells + templates.");
 
-/* ---------------- Fetch & normalize ---------------- */
-console.log("Fetching Master Listings…");
-const res = await fetch(CSV_URL, { redirect: "follow" });
-if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status}`);
-const csv = await res.text();
-const rows = parseCSV(csv);
-const headers = rows[0].map((h) => h.trim());
-const col = (name) => headers.indexOf(name);
-if (col("Investment Name") === -1) throw new Error("Sheet is missing 'Investment Name' — wrong tab?");
+/* ---------------- Fetch & normalize (Airtable) ---------------- */
+console.log("Fetching Airtable base…");
+const at = await loadAirtableData();
+const offerings = at.offerings;
+const atSponsors = at.sponsors;
+const atDeals = at.deals;
 
-const offerings = rows.slice(1)
-  .filter((r) => (r[col("Investment Name")] || "").trim())
-  .map((r) => {
-    const o = {};
-    headers.forEach((h, i) => { o[h] = (r[i] ?? "").trim(); });
-    o._slug = slugify(o["URL"] || o["Investment Name"]);
-    return o;
-  });
-
-// Guard: a broken/empty sheet must fail the build, not blank the site
-if (offerings.length < 10) {
-  throw new Error(`Only ${offerings.length} offerings parsed — refusing to build (sheet problem?).`);
-}
 // De-dupe slugs deterministically (append the sponsor, then a counter)
 // so no page silently overwrites another; log every collision.
 {
@@ -162,30 +146,22 @@ if (offerings.length < 10) {
   }
   if (dupes.length) console.warn(`WARNING: duplicate slugs de-duped:\n  ${dupes.join("\n  ")}`);
 }
-console.log(`Parsed ${offerings.length} offerings, ${headers.length} columns.`);
+{
+  const qc = offerings.filter((o) => o._qc);
+  if (qc.length) console.warn(`QC Check flags on ${qc.length} listings:\n  ${qc.map((o) => `${o["Investment Name"]}: ${o._qc}`).join("\n  ")}`);
+}
+console.log(`Parsed ${offerings.length} offerings from Airtable.`);
 
-/* ---------------- Documents tab (per-offering document lists) ---------------- */
+/* ---------------- Documents (per-offering document lists) ---------------- */
 const normName = (s) => String(s || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 const docsByName = new Map(); // normalized Investment Name -> [{label, file, gated}]
 {
-  const res2 = await fetch(DOCS_CSV_URL, { redirect: "follow" });
-  if (!res2.ok) throw new Error(`Documents tab fetch failed: ${res2.status}`);
-  const dRows = parseCSV(await res2.text());
-  const dh = dRows[0].map((h) => h.trim());
-  const di = (n) => dh.indexOf(n);
-  if (di("Investment Name") === -1 || di("Label") === -1 || di("File") === -1) {
-    throw new Error("Documents tab is missing Investment Name / Label / File columns");
-  }
-  for (const r of dRows.slice(1)) {
-    const name = (r[di("Investment Name")] || "").trim();
-    const label = (r[di("Label")] || "").trim();
-    const file = (r[di("File")] || "").trim();
-    if (!name || !label || !file) continue;
-    const key = normName(name);
+  for (const d of at.docs) {
+    const key = normName(d.name);
     if (!docsByName.has(key)) docsByName.set(key, []);
-    docsByName.get(key).push({ label, file, gated: (r[di("Gated?")] || "").trim() });
+    docsByName.get(key).push({ label: d.label, file: d.file, gated: d.gated });
   }
-  console.log(`Documents tab: ${[...docsByName.values()].reduce((a, b) => a + b.length, 0)} documents for ${docsByName.size} offerings.`);
+  console.log(`Documents: ${at.docs.length} documents for ${docsByName.size} offerings.`);
 }
 
 
@@ -210,31 +186,21 @@ function displayDebt(o) {
   const d = (o["Debt"] || "").replace(/[\s,]/g, "");
   return (d === "$0" || d === "0") ? "All-Cash" : (o["Debt"] || "");
 }
-const STATUS_ORDER = ["Available", "Limited Availability", "Accepting Backup Reservations", "Coming Soon / Under Review", "Closed"];
-function statusRank(s) {
-  const i = STATUS_ORDER.indexOf((s || "").trim());
-  return i === -1 ? 3.5 : i;
-}
-function statusClass(s) {
-  return {
-    "Available": "",
-    "Limited Availability": "limited",
-    "Accepting Backup Reservations": "backup",
-    "Coming Soon / Under Review": "soon",
-    "Closed": "closed"
-  }[(s || "").trim()] ?? "soon";
-}
-const isClosed = (o) => (o["Status"] || "").trim() === "Closed";
+const statusRank = (s) => atStatusRank((s || "").trim());
+const statusClass = (s) => atStatusClass((s || "").trim());
+const isClosed = (o) => o._statusRaw === "Closed";
+const isRejected = (o) => o._statusRaw === "Rejected";
 
 /* ---------------- 1) data/offerings.json ---------------- */
 mkdirSync(join(ROOT, "data"), { recursive: true });
 writeFileSync(join(ROOT, "data", "offerings.json"), JSON.stringify({
   generated: new Date().toISOString(),
-  source: "Google Sheet — Master Listings",
+  source: "Airtable — Baker 1031 — Investments / Identity & Offering",
   count: offerings.length,
   offerings: offerings.map((o) => {
     const out = { slug: o._slug, page: `/offerings/${o._slug}/` };
-    for (const h of headers) if (h) out[h] = o[h];
+    for (const [k, v] of Object.entries(o)) if (!k.startsWith("_") && v !== "") out[k] = v;
+    out["Status (internal)"] = o._statusRaw;
     return out;
   })
 }));
@@ -256,11 +222,15 @@ function setField(html, field, value) {
   );
   return html.replace(re, (_, open, _tag, close) => `${open}${esc(value)}${close}`);
 }
-function setImg(html, field, src, alt) {
+function setImg(html, field, src, alt, dims) {
   const re = new RegExp(`<img([^>]*\\bdata-field="${reEsc(field)}"[^>]*)>`, "g");
   return html.replace(re, (m, attrs) => {
     let a = attrs.replace(/\bsrc="[^"]*"/, () => `src="${esc(src)}"`);
     if (alt) a = /\balt="/.test(a) ? a.replace(/\balt="[^"]*"/, () => `alt="${esc(alt)}"`) : `${a} alt="${esc(alt)}"`;
+    // Explicit intrinsic size stops the image from collapsing the layout as it
+    // loads (crawl: 161 images with no size attributes). The CSS box uses
+    // object-fit: cover, so a ratio mismatch crops rather than distorts.
+    if (dims) a = a.replace(/\s+(width|height)="[^"]*"/g, "") + ` width="${dims[0]}" height="${dims[1]}"`;
     return `<img${a}>`;
   });
 }
@@ -270,8 +240,11 @@ function buildPage(o) {
   const name = o["Investment Name"];
   const canonical = `${SITE}/offerings/${o._slug}/`;
   const photo = o["Photo Link Use"] || o["Property Photo Link"] || "";
-  const metaDesc = truncate(o["Description"], 158) ||
-    `${name} — ${o["Structure"] || "DST"} offering from ${o["Sponsor"]} presented by Baker 1031 Investments.`;
+  /* The sheet Description is a full PPM paragraph. metaTrim cuts it at a
+     sentence (or clause) boundary inside 155 chars instead of hard-cutting
+     mid-word at 158, which is what the Jul-2026 crawl flagged on ~40 pages. */
+  const metaDesc = metaTrim(o["Description"], 155) ||
+    metaTrim(`${name} — ${o["Structure"] || "DST"} offering from ${o["Sponsor"]} presented by Baker 1031 Investments.`, 155);
 
   /* ----- asset paths (page lives two levels deep) ----- */
   html = html.replace(/(href|src)="(css|js|assets|documents)\//g, `$1="/$2/`);
@@ -326,6 +299,9 @@ function buildPage(o) {
   /* ----- head: title / meta / canonical / OG / JSON-LD ----- */
   const headBits = [
     `<link rel="canonical" href="${canonical}">`,
+    // Rejected deals keep a reference page (linked from the Performance
+    // "Rejected" tab) but stay out of search results.
+    isRejected(o) ? `<meta name="robots" content="noindex">` : "",
     `<meta name="description" content="${esc(metaDesc)}">`,
     `<meta property="og:type" content="website">`,
     `<meta property="og:title" content="${esc(name)} | Baker 1031 Investments">`,
@@ -359,8 +335,29 @@ function buildPage(o) {
   ].filter(Boolean).join("\n");
   html = html.replace(
     /<title>[\s\S]*?<\/title>/,
-    `<title>${esc(name)} | Baker 1031</title>\n${headBits}`
+    `<title>${esc(brandTitle(name))}</title>\n${headBits}`
   );
+
+  /* ----- unique section H2s -----
+     The Jul-2026 crawl flagged duplicate <h2>s on 284 pages (92% of the
+     site): every offering shipped "Overview"/"Analysis", every sponsor
+     "Overview"/"Key strategies & advantages", and so on. Interpolating the
+     entity name makes each page's headings descriptive for readers, search
+     engines, and AI answer extraction. The exact-string match only hits the
+     <h2>; the tab/anchor links with the same words are untouched. */
+  {
+    const n = esc(name);
+    const sponsorName = esc(o["Investment Firm"] || o["Sponsor"] || "the Sponsor");
+    for (const [from, to] of [
+      ["<h2>Overview</h2>", `<h2>${n} Overview</h2>`],
+      ["<h2>Analysis</h2>", `<h2>Analysis of ${n}</h2>`],
+      ["<h2>Projected Distributions</h2>", `<h2>${n} Projected Distributions</h2>`],
+      ["<h2>Financing</h2>", `<h2>${n} Financing</h2>`],
+      ["<h2>The Sponsor</h2>", `<h2>About ${sponsorName}</h2>`],
+      ["<h2>Documents</h2>", `<h2>${n} Documents</h2>`],
+      ["<h2>Complete Offering Data</h2>", `<h2>${n} &mdash; Complete Offering Data</h2>`],
+    ]) html = html.replace(from, to);
+  }
 
   /* ----- Available Equity cell (contains the nested % small tag) ----- */
   html = html.replace(
@@ -380,6 +377,8 @@ function buildPage(o) {
     "Lender", "Interest Rate", "Loan Term", "I/O Period", "Amortization", "Y1 DSCR",
     "Sponsor Description", "Full-Cycle Count", "Sponsor AAR", "Sponsor AEM",
     "Sponsor Hold", "Sponsor Success",
+    "Offering Type (Reg D)", "Loan Type", "Connected REIT", "MSA Tier",
+    "Y1 Payout Ratio", "Initial Reserves",
     "BM: Avg. Income - Deal", "BM: Avg. Income - MKT", "BM: Avg. Income - Interpret",
     "BM: Growth - Deal", "BM: Growth- MKT", "BM: Growth - Interpret",
     "BM: Peak - Deal", "BM: Peak- MKT", "BM: Peak - Interpret"
@@ -396,7 +395,7 @@ function buildPage(o) {
   html = html.replace(/&#8313; \[Tax-adjusted yield methodology footnote[\s\S]*?\]/,
     "&#185; Estimated Tax-Adjusted Yield reflects the projected impact of depreciation and amortization deductions at an assumed combined federal and state tax rate; individual tax outcomes vary &mdash; consult your CPA regarding your specific situation. Cap Rate Equivalent is a Baker 1031 Investments calculation intended to allow comparison with direct property ownership; it is not a sponsor-reported figure and does not represent a rate of return.");
   html = html.replace(/<p class="note">\[Benchmark methodology footnote[\s\S]*?<\/p>/,
-    `<p class="note">Benchmarks compare this offering&rsquo;s projected figures against sector medians computed across current offerings tracked by Baker 1031 Investments as of the last-updated date shown. Benchmark data is internal, unaudited, and subject to change.</p>`);
+    `<p class="note">Benchmarks are calculated by Baker 1031 Investments: each metric is compared against the average across current offerings of the same property type tracked by Baker 1031 as of the last-updated date shown; a figure within &plusmn;10% of that average reads &ldquo;Meets Average.&rdquo; Benchmark data is internal, unaudited, and subject to change. Review each offering&rsquo;s PPM for complete information.</p>`);
 
   /* ----- soft gate: full page content stays in the HTML (crawlable), but
      js/auth.js shows this overlay to human visitors who aren't logged in.
@@ -423,7 +422,7 @@ function buildPage(o) {
   </style>
   <div id="offering-gate" role="dialog" aria-modal="true" aria-label="Investor access required">
     <div class="gate-card">
-      <img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+      <img width="400" height="75" src="${LOGO_URL}" alt="Baker 1031 Investments">
       <h3>Verified investors only</h3>
       <p>Full offering details, projections, and documents for ${esc(name)} are available to verified accredited investors.</p>
       <a class="gate-login" id="offering-gate-login" href="#">Investor Log In</a>
@@ -432,26 +431,48 @@ function buildPage(o) {
     </div>
   </div>`;
   html = html.replace(/<\/body>/, `${gate}\n</body>`);
-  html = setField(html, "Investment Firm", o["Sponsor"] || "");
+  html = setField(html, "Investment Firm", o["Investment Firm"] || o["Sponsor"] || "");
   html = setField(html, "Year Founded", o["Sponsor Founded"] || "");
 
-  /* ----- sponsor meta line: drop HQ + external-website segments (no sheet
-     columns for them; sponsor profile pages are a later phase) ----- */
-  html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+  /* ----- sponsor meta line: HQ + website now come from the linked Sponsor
+     Connection record; fill when present, strip the segment when blank ----- */
+  if (o["Headquarters (City, State)"] || o["Website"]) {
+    html = setField(html, "Headquarters (City, State)", o["Headquarters (City, State)"] || "");
+    const site = o["Website"] || "";
+    const href = site ? (site.match(/^https?:/i) ? site : `https://${site}`) : "";
+    const domain = site.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
+    if (site) {
+      html = html.replace(/<a ([^>]*)data-field="Website"[^>]*>[\s\S]*?<\/a>/, () =>
+        `<a href="${esc(href)}" target="_blank" rel="noopener" data-field="Website">${esc(domain)}</a>`);
+    } else {
+      html = html.replace(/\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+    }
+    if (!o["Headquarters (City, State)"]) {
+      html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>/, "");
+    }
+  } else {
+    html = html.replace(/\s*&middot;\s*<span data-field="Headquarters \(City, State\)">[\s\S]*?<\/span>\s*&middot;\s*<a [^>]*data-field="Website">[\s\S]*?<\/a>/, "");
+  }
   if (!o["Sponsor Founded"]) {
     html = html.replace(/Founded <span data-field="Year Founded"><\/span>/, "");
   }
 
   /* ----- sponsor logo (proxied through Cloudinary so pages never call
      logo.dev directly with the public token — audit item) ----- */
-  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(o["Sponsor Image"], 240), o["Sponsor"]);
+  if (o["Sponsor Image"]) html = setImg(html, "Sponsor Image", optimizedPhoto(normalizeLogo(o["Sponsor Image"]), 240), o["Sponsor"], [240, 240]);
   else html = html.replace(/<img([^>]*data-field="Sponsor Image"[^>]*)>/, `<img$1 style="display:none">`);
 
-  /* ----- advantages list: no sheet columns — remove the block ----- */
-  html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
+  /* ----- advantages list: key strategies from the linked Sponsor Connection
+     record; remove the block when the sponsor has none ----- */
+  if (o._advantages && o._advantages.length) {
+    html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>/, () =>
+      `<ul class="advantages">\n${o._advantages.map((a) => `        <li>${esc(a)}</li>`).join("\n")}\n      </ul>`);
+  } else {
+    html = html.replace(/<ul class="advantages">[\s\S]*?<\/ul>\s*/, "");
+  }
 
   /* ----- hero photo ----- */
-  if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`);
+  if (photo) html = setImg(html, "Photo Link Use", optimizedPhoto(photo, 1600), `${name} property photo`, [1600, 900]);
 
   /* ----- benchmark chips: above/below class from Interpret text ----- */
   html = html.replace(
@@ -486,6 +507,99 @@ function buildPage(o) {
       /(<ul class="doc-list" data-field="Documents">)[\s\S]*?(<\/ul>)/,
       (_, open, close) => `${open}\n${items}\n      ${close}`
     );
+  }
+
+  /* ----- financing: all-cash offerings get a simple note instead of a grid
+     of "N/A (no debt)" cells ----- */
+  if (o._debtN === 0) {
+    html = html.replace(/<div class="fin-grid">[\s\S]*?<\/div>\s*(?=<\/section>)/,
+      `<p class="fin-note">This is an all-cash offering &mdash; the property is owned free and clear, with no in-place financing. There is no lender, loan balance, or scheduled debt service at the trust level.</p>\n      `);
+  }
+
+  /* ----- Complete Offering Data: every tracked field in one reference table
+     (excludes the narrative fields — Description, Highlights, Insights,
+     Pros, Cons — which have their own sections above) ----- */
+  {
+    const yieldSchedule = ["Y1", "Y2", "Y3", "Y4", "Y5", "Y6", "Y7", "Y8", "Y9", "Y10"]
+      .map((k, i) => o[k] ? `Y${i + 1} ${o[k]}` : null).filter(Boolean).join(" · ");
+    const bmVal = (deal, mkt, interp) => (o[deal] || o[mkt])
+      ? `${o[deal] || "—"} vs ${o[mkt] || "—"} market${o[interp] ? ` — ${o[interp]}` : ""}` : "";
+    const groups = [
+      ["Offering & Structure", [
+        ["Investment Name", o["Investment Name"]],
+        ["Sponsor", o["Sponsor"]],
+        ["Structure", o["Structure"]],
+        ["Offering Type", o["Offering Type (Reg D)"]],
+        ["Status", o["Status"]],
+        ["Last Updated", o["Last Updated"]],
+      ]],
+      ["Size & Availability", [
+        ["Total Offering", o["Total Offering"]],
+        ["Equity", o["Equity"]],
+        ["Debt", displayDebt(o)],
+        ["Available Equity", o["Available Equity"] ? `${o["Available Equity"]}${o["Available Percentage"] ? ` (${o["Available Percentage"]} of equity)` : ""}` : ""],
+        ["Minimum Investment", o["Minimum Investment"]],
+        ["Total Load", o["Total Load"]],
+        ["Initial Reserves", o["Initial Reserves"]],
+      ]],
+      ["Property", [
+        ["Property Type", o["Property Type"]],
+        ["Strategy", o["Strategy"]],
+        ["Location", o["Location (Use)"]],
+        ["Property Address", o["Property Address"] || ""],
+        ["Market Tier", o["MSA Tier"]],
+      ]],
+      ["Income & Projections", [
+        ["Average Yield", o["Average Yield"]],
+        ["Projected Yields (Y1–Y10)", yieldSchedule],
+        ["Tax-Adjusted Yield", o["Tax Adjusted Yield (Use)"]],
+        ["Cap Rate Equivalent", o["Cap Rate Equivalent"]],
+        ["Year 1 NOI", o["Year 1 NOI"]],
+        ["Y1 Payout Ratio", o["Y1 Payout Ratio"]],
+      ]],
+      ["Financing", [
+        ["In-Place LTV", o["In-Place LTV"]],
+        ["Lender", o["Lender"]],
+        ["Loan Type", o["Loan Type"]],
+        ["Interest Rate", o["Interest Rate"]],
+        ["Loan Term", o["Loan Term"]],
+        ["I/O Period", o["I/O Period"]],
+        ["Amortization", o["Amortization"]],
+        ["Y1 DSCR", o["Y1 DSCR"]],
+      ]],
+      ["Exit", [
+        ["Estimated Hold Period", o["Estimated Hold Period"]],
+        ["721 Exchange Exit", o["721 Exchange Exit"]],
+        ["Connected REIT", o["Connected REIT"]],
+      ]],
+      ["Benchmarks (vs sector median)", [
+        ["Avg. Income", bmVal("BM: Avg. Income - Deal", "BM: Avg. Income - MKT", "BM: Avg. Income - Interpret")],
+        ["Growth", bmVal("BM: Growth - Deal", "BM: Growth- MKT", "BM: Growth - Interpret")],
+        ["Peak", bmVal("BM: Peak - Deal", "BM: Peak- MKT", "BM: Peak - Interpret")],
+      ]],
+    ];
+    const dataHtml = groups.map(([g, rows]) => {
+      const rs = rows.filter(([, v]) => v && String(v).trim());
+      if (!rs.length) return "";
+      return `        <div class="dg-group">${esc(g)}</div>\n` +
+        rs.map(([l, v]) => `        <div class="dg-row"><span class="dg-label">${esc(l)}</span><span class="dg-value">${esc(v)}</span></div>`).join("\n");
+    }).filter(Boolean).join("\n");
+    html = html.replace(/<!-- ALLDATA:START -->[\s\S]*?<!-- ALLDATA:END -->/,
+      () => `<!-- ALLDATA:START -->\n${dataHtml}\n        <!-- ALLDATA:END -->`);
+  }
+
+  /* ----- hero grid: always render the identical full grid (per Jerry
+     2026-07-31) — blank Airtable fields show as "—" instead of the cell
+     being hidden. Applies ONLY to the key-figures grid above the fold;
+     later sections (distributions, benchmarks, sponsor stats) still hide
+     when they have no data. ----- */
+  {
+    const cut = html.indexOf('<section id="overview">');
+    if (cut !== -1) {
+      let head = html.slice(0, cut);
+      head = head.replace(/(<span class="value"[^>]*>)(<\/span>)/g, "$1&mdash;$2");
+      html = head + html.slice(cut);
+    }
   }
 
   /* ----- hide cells whose value came out empty (shorter holds, coming-soon
@@ -526,31 +640,61 @@ for (const o of offerings) {
 }
 console.log(`Wrote ${pageCount} offering pages under /offerings/`);
 
-/* ---------------- 3) Listing cards + filter pills ---------------- */
-let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed" tab
+/* ---------------- 3) Listing cards + filter/sort bar ---------------- */
+let closedCardsHtml = "";   // rendered on the Performance page's "Recently Closed" tab
+let rejectedCardsHtml = ""; // rendered on the Performance page's "Rejected" tab
 {
   const listingPath = join(ROOT, "current-offerings.html");
   let listing = readFileSync(listingPath, "utf8");
-  // Closed offerings move off the inventory and onto the Performance page
-  const open = offerings.filter((o) => !isClosed(o));
+  // Closed + Rejected offerings move off the inventory and onto the
+  // Performance page (their own tabs).
+  const open = offerings.filter((o) => !isClosed(o) && !isRejected(o));
   const closed = offerings.filter(isClosed);
-  // Default order: newest first — the sheet grows downward, so reverse the
-  // worksheet row order (bottom of the sheet = newest = top of the page)
-  const sorted = [...open].reverse();
+  const rejected = offerings.filter(isRejected);
+  /* Default order (Jerry, 2026-07-31): status groups — Available →
+     Confirm Availability → Limited → Backup → Coming Soon — A–Z inside
+     each group. */
+  const sorted = [...open].sort((a, b) =>
+    a._rank - b._rank || a["Investment Name"].localeCompare(b["Investment Name"]));
 
+  const chipText = (s) => (s || "");
   const makeCard = (o) => {
     const page = `/offerings/${o._slug}/`;
     const photo = o["Photo Link Use"] || o["Property Photo Link"] || "";
     const tag = slugify(o["Property Type"] || "other");
-    const pctNum = parseFloat(o["Available Percentage"]) || 0;
+    const pctNum = o._availN != null ? o._availN : (parseFloat(o["Available Percentage"]) || 0);
     const sChip = statusClass(o["Status"]);
     const ltvRaw = (o["In-Place LTV"] || "").trim().replace(/\s*LTV\s*$/i, "");
     const ltvDisplay = !ltvRaw ? "—" : (/^0(\.0+)?\s*%$/.test(ltvRaw) ? "All-Cash" : ltvRaw);
-    return `      <article class="offering-card" data-tags="${esc(tag)}">
+    const states = (o["Location (Use)"] || "").split(/[,;]+/).map((s) => s.trim().toLowerCase()).filter(Boolean).join(" ");
+    /* data-* attributes drive the client-side filter/sort bar */
+    const attrs = [
+      `data-tags="${esc(tag)}"`,
+      `data-status="${esc(slugify(o["Status"] || ""))}"`,
+      `data-strategy="${esc(slugify(o["Strategy"] || ""))}"`,
+      `data-sponsor="${esc(slugify(o["Sponsor"] || ""))}"`,
+      `data-states="${esc(states)}"`,
+      `data-regd="${esc(slugify(o["Offering Type (Reg D)"] || ""))}"`,
+      `data-exit="${esc(slugify(o["721 Exchange Exit"] || ""))}"`,
+      `data-min="${o._minN ?? ""}"`,
+      `data-yield="${o._yieldN != null ? (o._yieldN * 100).toFixed(2) : ""}"`,
+      `data-ltv="${o._ltvN != null ? (o._ltvN * 100).toFixed(2) : ""}"`,
+      `data-avail="${o._availN != null ? o._availN.toFixed(1) : ""}"`,
+      `data-created="${Date.parse(o._created) || 0}"`,
+      `data-name="${esc((o["Investment Name"] || "").toLowerCase())}"`,
+      `data-rank="${o._rank}"`,
+      `data-preferred="${o._sponsorRec && o._sponsorRec.preferred ? 1 : 0}"`,
+    ].join(" ");
+    const capText = isRejected(o)
+      ? "Rejected in Baker underwriting review"
+      : isClosed(o)
+        ? "Fully subscribed &middot; closed"
+        : `${esc(o["Available Percentage"] || "—")} of equity still available${o["Available Equity"] ? ` &middot; ${esc(o["Available Equity"])}` : ""}`;
+    return `      <article class="offering-card" ${attrs}>
         <a class="card-photo" href="${page}">
-          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" loading="lazy" onerror="this.style.display='none'">` : ""}
+          ${photo ? `<img src="${esc(optimizedPhoto(photo, 640))}" alt="${esc(o["Investment Name"])}" width="640" height="360" loading="lazy" onerror="this.style.display='none'">` : ""}
           <div class="chip-row">
-            <span class="status-chip${sChip ? " " + sChip : ""}">${esc((o["Status"] || "").replace(/\s*\/\s*Under Review\s*$/i, ""))}</span>
+            <span class="status-chip${sChip ? " " + sChip : ""}">${esc(chipText(o["Status"]))}</span>
             <span class="type-chip">${esc(o["Property Type"] || "")}</span>
           </div>
         </a>
@@ -566,8 +710,8 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
             <div class="cs"><span class="label">Location</span><span class="value">${esc(o["Location (Use)"] || "—")}</span></div>
           </div>
           <div class="availability">
-            <div class="bar"><div class="fill" style="width: ${isClosed(o) ? 0 : Math.min(100, Math.max(0, pctNum))}%"></div></div>
-            <span class="cap">${isClosed(o) ? "Fully subscribed &middot; closed" : `${esc(o["Available Percentage"] || "—")} of equity still available &middot; ${esc(o["Available Equity"] || "")}`}</span>
+            <div class="bar"><div class="fill" style="width: ${(isClosed(o) || isRejected(o)) ? 0 : Math.min(100, Math.max(0, pctNum))}%"></div></div>
+            <span class="cap">${capText}</span>
           </div>
           <a class="view-btn" href="${page}">View Offering</a>
         </div>
@@ -575,138 +719,180 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   };
   const cards = sorted.map(makeCard).join("\n");
 
-  // "Recently closed" — newest Last Updated first (fall back to name order)
+  // "Recently closed" / "Rejected" — newest Last Updated first
   const dateVal = (o) => {
     const t = Date.parse(o["Last Updated"] || "");
     return Number.isNaN(t) ? 0 : t;
   };
-  const closedSorted = [...closed].sort((a, b) =>
-    dateVal(b) - dateVal(a) || a["Investment Name"].localeCompare(b["Investment Name"])
-  );
-  closedCardsHtml = closedSorted.length
-    ? closedSorted.map(makeCard).join("\n")
+  const byRecency = (a, b) => dateVal(b) - dateVal(a) || a["Investment Name"].localeCompare(b["Investment Name"]);
+  closedCardsHtml = closed.length
+    ? [...closed].sort(byRecency).map(makeCard).join("\n")
     : `      <p class="page-note">No recently closed offerings.</p>`;
+  rejectedCardsHtml = rejected.length
+    ? [...rejected].sort(byRecency).map(makeCard).join("\n")
+    : `      <p class="page-note">No rejected offerings at the moment. Offerings land here when our underwriting review turns one down.</p>`;
 
-  // Filter pills from the property types actually present
-  const types = [...new Set(sorted.map((o) => (o["Property Type"] || "").trim()).filter(Boolean))].sort();
-  const pills = [`      <button type="button" class="active" data-filter="all">All</button>`]
-    .concat(types.map((t) => `      <button type="button" data-filter="${esc(slugify(t))}">${esc(t)}</button>`))
-    .join("\n");
+  /* ----- filter dropdowns, built from the values actually present ----- */
+  const STATE_NAMES = { AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California", CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia", HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa", KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland", MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri", MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey", NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio", OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina", SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont", VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming", DC: "Washington, DC" };
+  const uniq = (fn) => [...new Set(sorted.map(fn).map((v) => (v || "").trim()).filter(Boolean))].sort();
+  // Single-choice dropdown (numeric ranges)
+  const sel = (key, label, opts) => {
+    if (!opts.length) return "";
+    return `        <label class="fctl"><span>${esc(label)}</span>
+          <select class="fsel" data-key="${key}" aria-label="Filter by ${esc(label)}">
+            <option value="">All</option>
+${opts.map(([val, text]) => `            <option value="${esc(val)}">${esc(text)}</option>`).join("\n")}
+          </select>
+        </label>`;
+  };
+  // Multi-choice checkbox dropdown
+  const msel = (key, label, opts) => {
+    if (!opts.length) return "";
+    return `        <div class="fctl">
+          <span>${esc(label)}</span>
+          <details class="fmulti" data-key="${key}">
+            <summary><span class="msel-val">All</span></summary>
+            <div class="fm-panel" role="group" aria-label="Filter by ${esc(label)}">
+${opts.map(([val, text]) => `              <label><input type="checkbox" value="${esc(val)}"> ${esc(text)}</label>`).join("\n")}
+            </div>
+          </details>
+        </div>`;
+  };
+  const types = uniq((o) => o["Property Type"]);
+  const statuses = [...new Set(sorted.map((o) => o["Status"]))]
+    .sort((a, b) => statusRank(a) - statusRank(b));
+  const strategies = uniq((o) => o["Strategy"]).sort((a, b) =>
+    ["Core", "Core-Plus", "Value-Add", "Opportunistic"].indexOf(a) - ["Core", "Core-Plus", "Value-Add", "Opportunistic"].indexOf(b));
+  const sponsorNames = uniq((o) => o["Sponsor"]);
+  const states = [...new Set(sorted.flatMap((o) => (o["Location (Use)"] || "").split(/[,;]+/).map((s) => s.trim()).filter(Boolean)))]
+    .map((code) => [code.toLowerCase(), STATE_NAMES[code.toUpperCase()] || code])
+    .sort((a, b) => a[1].localeCompare(b[1]));
+  const exits = uniq((o) => o["721 Exchange Exit"]).sort((a, b) =>
+    ["None", "Optional", "Mandatory", "Unclear"].indexOf(a) - ["None", "Optional", "Mandatory", "Unclear"].indexOf(b));
 
-  const put = (src, startMark, endMark, content) => {
+  const filtersHtml = [
+    msel("type", "Property Type", types.map((t) => [slugify(t), t])),
+    msel("status", "Availability", statuses.map((s) => [slugify(s), s])),
+    msel("strategy", "Strategy", strategies.map((s) => [slugify(s), s])),
+    msel("sponsor", "Sponsor", sponsorNames.map((s) => [slugify(s), s])),
+    msel("state", "State", states),
+    msel("exit", "721 Exchange Exit", exits.map((e) => [slugify(e), e])),
+    sel("min", "Minimum Investment", [["0-50000", "Up to $50K"], ["0-100000", "Up to $100K"], ["0-250000", "Up to $250K"], ["250000-", "$250K and up"]]),
+    sel("yield", "Avg Yield", [["4", "4%+"], ["5", "5%+"], ["6", "6%+"], ["7", "7%+"]]),
+    sel("ltv", "Leverage", [["allcash", "All-Cash (no debt)"], ["lt50", "Under 50% LTV"], ["gte50", "50%+ LTV"]]),
+    `        <div class="fctl">
+          <span>Sponsors</span>
+          <label class="pref-box"><input type="checkbox" id="pref-only"> Preferred only</label>
+          <a class="pref-link" href="/performance">Preferred sponsor performance &rarr;</a>
+        </div>`,
+  ].filter(Boolean).join("\n");
+
+  /* ----- status legend, generated from the statuses actually in the data
+     so it can never drift out of sync with Airtable ----- */
+  const LEGEND_DEFS = {
+    "Available": "Open for new investment — equity remains and reservations are being accepted.",
+    "Confirm Availability": "Remaining equity is moving quickly or being re-verified — contact us to confirm current availability before reserving.",
+    "Limited Availability": "Nearly fully subscribed — only a limited amount of equity remains.",
+    "Accepting Backup Reservations": "Fully reserved — we can place a backup reservation in case an allocation frees up.",
+    "Under Review": "In Baker 1031's underwriting review or pre-launch — not yet open for reservations.",
+    "Closed": "Fully subscribed or completed — no longer available (see the Recently Closed tab).",
+    "Rejected": "Did not pass Baker 1031's underwriting review (see the Rejected tab). Not a prediction of performance.",
+  };
+  const legendStatuses = [...new Set(offerings.map((o) => o["Status"]))]
+    .filter((s) => LEGEND_DEFS[s])
+    .sort((a, b) => statusRank(a) - statusRank(b));
+  const legendHtml = legendStatuses.map((s) => {
+    const cls = statusClass(s);
+    return `        <div class="legend-row"><span class="status-chip${cls ? " " + cls : ""}">${esc(s)}</span><p>${esc(LEGEND_DEFS[s])}</p></div>`;
+  }).join("\n");
+
+  const put3 = (src, startMark, endMark, content) => {
     const s = src.indexOf(startMark), e = src.indexOf(endMark);
     if (s === -1 || e === -1) throw new Error(`Missing ${startMark}/${endMark} markers`);
     return src.slice(0, s + startMark.length) + "\n" + content + "\n      " + src.slice(e);
   };
-  listing = put(listing, "<!-- OFFERINGS:START -->", "<!-- OFFERINGS:END -->", cards);
-  listing = put(listing, "<!-- FILTERS:START -->", "<!-- FILTERS:END -->", pills);
+  listing = put3(listing, "<!-- OFFERINGS:START -->", "<!-- OFFERINGS:END -->", cards);
+  listing = put3(listing, "<!-- FILTERS:START -->", "<!-- FILTERS:END -->", filtersHtml);
+  listing = put3(listing, "<!-- LEGEND:START -->", "<!-- LEGEND:END -->", legendHtml);
+  // Closed + Rejected live as tabs on this page too (per Jerry 2026-07-31);
+  // the Performance page keeps its copies.
+  listing = put3(listing, "<!-- CLOSED:START -->", "<!-- CLOSED:END -->", closedCardsHtml);
+  listing = put3(listing, "<!-- REJECTED:START -->", "<!-- REJECTED:END -->", rejectedCardsHtml);
   writeFileSync(listingPath, listing);
-  console.log(`Baked ${sorted.length} open cards + ${types.length} filter pills into current-offerings.html (${closed.length} closed → performance page)`);
+  console.log(`Baked ${sorted.length} open + ${closed.length} closed + ${rejected.length} rejected cards + filter bar into current-offerings.html`);
 }
 
 /* ---------------- 4) performance.html — Sponsor Track Record ---------------- */
 {
-  const PERF_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
-  const resP = await fetch(PERF_CSV_URL, { redirect: "follow" });
-  if (!resP.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resP.status}`);
-  const pRows = parseCSV(await resP.text());
-  const ph = pRows[0].map((h) => h.trim());
-  const pi = (n) => ph.indexOf(n);
-  for (const need of ["Sponsor", "Investment", "Hold Period", "Equity Multiple", "Annual Return"]) {
-    if (pi(need) === -1) throw new Error(`Sponsor Trackrecord tab is missing '${need}'`);
-  }
-  const deals = pRows.slice(1)
-    .filter((r) => (r[pi("Sponsor")] || "").trim() && (r[pi("Investment")] || "").trim())
-    .map((r) => ({
-      sponsor: r[pi("Sponsor")].trim(),
-      investment: r[pi("Investment")].trim(),
-      location: (r[pi("Location")] || "").trim(),
-      assetClass: (r[pi("Asset Class")] || "").trim(),
-      hold: (r[pi("Hold Period")] || "").trim(),
-      multiple: (r[pi("Equity Multiple")] || "").trim(),
-      annual: (r[pi("Annual Return")] || "").trim()
-    }));
-  if (deals.length < 50) throw new Error(`Only ${deals.length} track-record rows — refusing to build.`);
+  const deals = [...atDeals].sort((a, b) => a.sponsor.localeCompare(b.sponsor) || a.investment.localeCompare(b.investment));
 
-  // Clean malformed multiples like "2.x" / ".x" (missing digits in the sheet)
-  const cleanMult = (m) => /^\d*\.?\d+x$/i.test(m) ? m : "";
-  deals.sort((a, b) => a.sponsor.localeCompare(b.sponsor) || a.investment.localeCompare(b.investment));
+  // Sponsor name → profile-page link (covers override-added sponsors too)
+  const slugByName = new Map(atSponsors.map((s) => [normName(s.name), s.slug]));
+  try {
+    const sup = JSON.parse(readFileSync(join(ROOT, "data", "sponsor-overrides.json"), "utf8"));
+    for (const a of sup.additions || []) {
+      if (a.name && !slugByName.has(normName(a.name))) slugByName.set(normName(a.name), slugify(a.name));
+    }
+  } catch {}
+  const spLink = (name) => {
+    const slug = slugByName.get(normName(name));
+    return slug ? `<a href="/sponsors/${slug}/">${esc(name)}</a>` : esc(name);
+  };
 
   const rowsHtml = deals.map((d) => `          <tr>
-            <td>${esc(d.sponsor)}</td>
+            <td>${spLink(d.sponsor)}</td>
             <td>${esc(d.investment)}</td>
             <td>${esc(d.location || "—")}</td>
             <td>${esc(d.assetClass || "—")}</td>
             <td class="num">${esc(d.hold || "—")}</td>
-            <td class="num">${esc(cleanMult(d.multiple) || "—")}</td>
+            <td class="num">${esc(d.multiple || "—")}</td>
             <td class="num">${esc(d.annual || "—")}</td>
           </tr>`).join("\n");
-  const sponsors = [...new Set(deals.map((d) => d.sponsor))].sort();
-  const optionsHtml = sponsors.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
+  const sponsorNames = [...new Set(deals.map((d) => d.sponsor))].sort();
+  const optionsHtml = sponsorNames.map((s) => `        <option value="${esc(s)}">${esc(s)}</option>`).join("\n");
 
-  // Sponsor-level table from the "Sponsor Connection" tab (sponsors with track records)
-  const SC_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
-  const resSC = await fetch(SC_CSV_URL, { redirect: "follow" });
-  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
-  const scRows = parseCSV(await resSC.text());
-  const sch = scRows[0].map((h) => h.trim());
-  const sci = (n) => sch.indexOf(n);
-  for (const need of ["Investment Firm", "Full-Cycle Deals", "Average Annual Return"]) {
-    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
-  }
-  const noData = (v) => {
-    const t = (v || "").trim();
-    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t)) return "";
-    if (/^\d*\.?x$/i.test(t) || t === ".x") return ""; // malformed multiples like "2.x"
-    return t;
-  };
-  const sponsorRows = scRows.slice(1)
-    .filter((r) => {
-      const fc = (r[sci("Full-Cycle Deals")] || "").trim();
-      return (r[sci("Investment Firm")] || "").trim() && fc && fc !== "0" && !/^no data$/i.test(fc);
-    })
-    .sort((a, b) => a[sci("Investment Firm")].localeCompare(b[sci("Investment Firm")]))
-    .map((r) => `          <tr>
-            <td>${esc(r[sci("Investment Firm")])}${/^yes$/i.test((r[sci("Preferred?")] || "").trim()) ? ' <span class="pref-chip">Preferred</span>' : ""}</td>
-            <td class="num">${esc(noData(r[sci("Year Founded")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("AUM")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Full-Cycle Deals")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Annual Return")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Equity Multiple")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Average Hold Period")]) || "—")}</td>
-            <td class="num">${esc(noData(r[sci("Success Rate")]) || "—")}</td>
-          </tr>`);
+  // Sponsor-level table: EVERY sponsor in Airtable (per Jerry 2026-07-31),
+  // with a note on rows that have no reported performance data.
+  const NO_DATA_NOTE = "Sponsor firm either has not reported performance data or has not completed a full-cycle investment.";
+  const sponsorRows = [...atSponsors]
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map((s) => {
+      const hasData = s.deals.length > 0 || (parseFloat(s.fullCycle) || 0) > 0 || s.avgAnnual || s.avgMultiple;
+      const nameCell = `<td>${spLink(s.name)}${s.preferred ? ' <span class="pref-chip">Preferred</span>' : ""}</td>`;
+      // No-data sponsors: one note spanning the metric columns (no extra row height)
+      const metricCells = hasData
+        ? `            <td class="num">${esc(s.founded || "—")}</td>
+            <td class="num">${esc(s.aum || "—")}</td>
+            <td class="num">${esc(s.fullCycle || (s.deals.length ? String(s.deals.length) : "") || "—")}</td>
+            <td class="num">${esc(s.avgAnnual || "—")}</td>
+            <td class="num">${esc(s.avgMultiple || "—")}</td>
+            <td class="num">${esc(s.avgHold || "—")}</td>
+            <td class="num">${esc(s.success || "—")}</td>`
+        : `            <td class="sp-nodata-cell" colspan="7">${NO_DATA_NOTE}</td>`;
+      return `          <tr>
+            ${nameCell}
+${metricCells}
+          </tr>`;
+    });
   if (sponsorRows.length < 5) throw new Error(`Only ${sponsorRows.length} sponsor rows — refusing to build.`);
 
   // ---- Preferred vs All summary (computed from the deal-level track record,
-  //      same methodology as the homepage chart: average across completed programs) ----
-  const prefSet = new Set(scRows.slice(1)
-    .filter((r) => /^yes$/i.test((r[sci("Preferred?")] || "").trim()))
-    .map((r) => normName(r[sci("Investment Firm")])));
+  //      same methodology as the homepage chart: average across completed
+  //      programs; success = share of programs returning ≥ 1.00x equity) ----
+  const prefSet = new Set(atSponsors.filter((s) => s.preferred).map((s) => normName(s.name)));
   const pct = (v) => { const m = String(v).trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
-  const multVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
-  const numVal = (v) => { const m = String(v).trim().match(/^(\d*\.?\d+)$/); return m ? parseFloat(m[1]) : null; };
   const mean = (arr) => arr.length ? arr.reduce((a, x) => a + x, 0) / arr.length : null;
-  // sponsor-level success rates + program counts for the weighted success figure
-  const successBySponsor = new Map(scRows.slice(1).map((r) => [normName(r[sci("Investment Firm")]), {
-    rate: pct(r[sci("Success Rate")]),
-    count: numVal(r[sci("Full-Cycle Deals")])
-  }]));
   function groupStats(label, groupDeals) {
-    const sponsors = [...new Set(groupDeals.map((d) => normName(d.sponsor)))];
-    const avgAnn = mean(groupDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
-    const avgMult = mean(groupDeals.map((d) => multVal(d.multiple)).filter((x) => x !== null));
-    const avgHold = mean(groupDeals.map((d) => numVal(d.hold)).filter((x) => x !== null));
-    let wSum = 0, wTot = 0;
-    for (const s of sponsors) {
-      const sc = successBySponsor.get(s);
-      if (sc && sc.rate !== null && sc.count) { wSum += sc.rate * sc.count; wTot += sc.count; }
-    }
-    const success = wTot ? wSum / wTot : null;
+    const gSponsors = [...new Set(groupDeals.map((d) => normName(d.sponsor)))];
+    const avgAnn = mean(groupDeals.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
+    const avgMult = mean(groupDeals.map((d) => d._multN).filter((x) => x != null));
+    const avgHold = mean(groupDeals.map((d) => d._holdN).filter((x) => x != null));
+    const ms = groupDeals.map((d) => d._multN).filter((x) => x != null);
+    const success = ms.length ? (ms.filter((x) => x >= 1).length / ms.length) * 100 : null;
     const f = (v, suffix, digits = 2) => v === null ? "—" : v.toFixed(digits) + suffix;
     return `          <tr>
             <td style="font-weight:700">${esc(label)}</td>
-            <td class="num">${sponsors.length}</td>
+            <td class="num">${gSponsors.length}</td>
             <td class="num">${groupDeals.length}</td>
             <td class="num">${f(avgAnn, "%")}</td>
             <td class="num">${f(avgMult, "x")}</td>
@@ -724,7 +910,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
      live calculation (average annual return across completed preferred-
      sponsor programs). Chart scale: 0% = y310, 25% = y54 → 10.24 px/%. ---- */
   {
-    const prefAnnual = mean(prefDeals.map((d) => pct(d.annual)).filter((x) => x !== null));
+    const prefAnnual = mean(prefDeals.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
     if (prefAnnual === null || prefAnnual < 5 || prefAnnual > 24.5) {
       throw new Error(`Preferred-sponsor average ${prefAnnual}% outside sane chart range — refusing to build.`);
     }
@@ -744,7 +930,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     idx = idx.replace(/(aria-label="Bar chart: Baker 1031 preferred sponsors )[\d.]+%/, `$1${v}%`);
     writeFileSync(idxPath, idx);
     // FAQ: live average-hold sentence from the full track record
-    const holds = deals.map((d) => numVal(d.hold)).filter((x) => x !== null);
+    const holds = deals.map((d) => d._holdN).filter((x) => x != null);
     if (holds.length > 100) {
       const avgHold = (holds.reduce((a, x) => a + x, 0) / holds.length).toFixed(1);
       // Typical range = middle 90% of programs (5th–95th percentile), so a
@@ -766,84 +952,47 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   perf = perf.replace("<!-- PERF:SPONSOR_ROWS -->", sponsorRows.join("\n"));
   perf = perf.replace("<!-- PERF:ROWS -->", rowsHtml);
   perf = perf.replace("<!-- PERF:SPONSORS -->", optionsHtml);
-  perf = perf.replace("<!-- PERF:CLOSED_CARDS -->", closedCardsHtml);
+  // Closed + Rejected offerings live on the Listings page tabs only (per
+  // Jerry 2026-07-31) — the Performance page no longer carries those cards.
   writeFileSync(join(ROOT, "performance.html"), perf);
-  console.log(`Wrote performance.html (${sponsorRows.length} sponsors, ${deals.length} programs, closed cards included).`);
+  console.log(`Wrote performance.html (${sponsorRows.length} sponsors incl. no-data rows, ${deals.length} programs).`);
 }
 
 /* ---------------- 4b) Sponsor directory: profile pages + hub + deal-by-deal track records ---------------- */
 {
-  const SC_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Connection")}`;
-  const TR_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent("Sponsor Trackrecord")}`;
-  const [resSC, resTR] = await Promise.all([fetch(SC_URL, { redirect: "follow" }), fetch(TR_URL, { redirect: "follow" })]);
-  if (!resSC.ok) throw new Error(`Sponsor Connection fetch failed: ${resSC.status}`);
-  if (!resTR.ok) throw new Error(`Sponsor Trackrecord fetch failed: ${resTR.status}`);
-  const scRows = parseCSV(await resSC.text());
-  const sch = scRows[0].map((h) => h.trim());
-  const sci = (n) => sch.indexOf(n);
-  for (const need of ["Investment Firm", "Description / Overview", "Full-Cycle Deals"]) {
-    if (sci(need) === -1) throw new Error(`Sponsor Connection tab is missing '${need}'`);
-  }
-  const trRows = parseCSV(await resTR.text());
-  const trh = trRows[0].map((h) => h.trim());
-  const ti = (n) => trh.indexOf(n);
-
-  const noData = (v) => {
-    const t = (v || "").trim();
-    if (!t || /^no data$/i.test(t) || /^not disclosed$/i.test(t) || /^n\/a$/i.test(t)) return "";
-    if (/^\d*\.?x$/i.test(t) || t === ".x") return "";
-    return t;
-  };
   const cleanMult = (m) => /^\d*\.?\d+x$/i.test((m || "").trim()) ? (m || "").trim() : "";
-  const pct = (v) => { const m = String(v || "").trim().match(/^(-?\d*\.?\d+)%$/); return m ? parseFloat(m[1]) : null; };
-  const multVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)x$/i); return m ? parseFloat(m[1]) : null; };
-  const numVal = (v) => { const m = String(v || "").trim().match(/^(\d*\.?\d+)/); return m ? parseFloat(m[1]) : null; };
   const mean = (a) => a.length ? a.reduce((x, y) => x + y, 0) / a.length : null;
 
-  // Deal-by-deal track record, grouped by normalized sponsor name
+  // Deal-by-deal track record grouped by normalized sponsor name (fallback
+  // matching for override-added sponsors without linked records)
   const dealsBy = new Map();
-  for (const r of trRows.slice(1)) {
-    const s = (r[ti("Sponsor")] || "").trim();
-    const inv = (r[ti("Investment")] || "").trim();
-    if (!s || !inv) continue;
-    const k = normName(s);
+  for (const d of atDeals) {
+    const k = normName(d.sponsor);
     if (!dealsBy.has(k)) dealsBy.set(k, []);
-    dealsBy.get(k).push({
-      investment: inv,
-      location: (r[ti("Location")] || "").trim(),
-      assetClass: (r[ti("Asset Class")] || "").trim(),
-      hold: (r[ti("Hold Period")] || "").trim(),
-      multiple: (r[ti("Equity Multiple")] || "").trim(),
-      annual: (r[ti("Annual Return")] || "").trim(),
-    });
+    dealsBy.get(k).push(d);
   }
 
-  // Sponsor records (any row with a firm name)
-  const sponsors = scRows.slice(1)
-    .filter((r) => (r[sci("Investment Firm")] || "").trim())
-    .map((r) => {
-      const name = r[sci("Investment Firm")].trim();
-      const slug = slugify(name);
-      const website = noData(r[sci("Website")]);
-      const domain = website.replace(/^https?:\/\//i, "").replace(/\/.*$/, "");
-      return {
-        name, slug,
-        preferred: /^yes$/i.test((r[sci("Preferred?")] || "").trim()),
-        founded: noData(r[sci("Year Founded")]),
-        aum: noData(r[sci("AUM")]),
-        description: noData(r[sci("Description / Overview")]),
-        advantages: [1, 2, 3, 4, 5].map((i) => noData(r[sci(`Key Strategy / Advantage ${i}`)])).filter(Boolean),
-        website, domain,
-        hq: noData(r[sci("Headquarters (City, State)")]),
-        logo: noData(r[sci("Logo")]),
-        fullCycle: noData(r[sci("Full-Cycle Deals")]),
-        avgAnnual: noData(r[sci("Average Annual Return")]),
-        avgMultiple: noData(r[sci("Average Equity Multiple")]),
-        avgHold: noData(r[sci("Average Hold Period")]),
-        success: noData(r[sci("Success Rate")]),
-        deals: dealsBy.get(normName(name)) || [],
-      };
-    });
+  // Sponsor records straight from the Sponsor Connection table (adapter has
+  // already normalized formats, linked deals, and lowercased slugs).
+  const sponsors = atSponsors.map((s) => ({
+    name: s.name,
+    slug: s.slug,
+    preferred: s.preferred,
+    founded: s.founded,
+    aum: s.aum,
+    description: s.description,
+    advantages: s.advantages,
+    website: s.website,
+    domain: s.domain,
+    hq: s.hq,
+    logo: normalizeLogo(s.logo),
+    fullCycle: s.fullCycle,
+    avgAnnual: s.avgAnnual,
+    avgMultiple: s.avgMultiple,
+    avgHold: s.avgHold,
+    success: s.success,
+    deals: s.deals,
+  }));
   if (sponsors.length < 20) throw new Error(`Only ${sponsors.length} sponsors — refusing to build.`);
 
   /* Build-side supplement (data/sponsor-overrides.json): fills only BLANK
@@ -901,7 +1050,7 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
   let count = 0;
   for (const s of sponsors) {
     const canonical = `${SITE}/sponsors/${s.slug}/`;
-    const metaDesc = `${s.name} — DST sponsor profile: ${s.aum ? s.aum + " AUM, " : ""}${s.fullCycle ? s.fullCycle + " full-cycle deals, " : ""}strategy, and full-cycle track record tracked by Baker 1031 Investments.`.slice(0, 300);
+    const metaDesc = metaTrim(`${s.name} — DST sponsor profile: ${s.aum ? s.aum + " AUM, " : ""}${s.fullCycle ? s.fullCycle + " full-cycle deals, " : ""}strategy, and full-cycle track record tracked by Baker 1031.`, 155);
 
     // meta line
     const metaBits = [];
@@ -933,9 +1082,9 @@ let closedCardsHtml = ""; // rendered on the Performance page's "Recently Closed
     let trackHtml;
     if (s.deals.length) {
       const dd = [...s.deals].sort((a, b) => a.investment.localeCompare(b.investment));
-      const aAnn = mean(dd.map((d) => pct(d.annual)).filter((x) => x !== null));
-      const aMul = mean(dd.map((d) => multVal(d.multiple)).filter((x) => x !== null));
-      const aHold = mean(dd.map((d) => numVal(d.hold)).filter((x) => x !== null));
+      const aAnn = mean(dd.map((d) => d._annN).filter((x) => x != null).map((x) => x * 100));
+      const aMul = mean(dd.map((d) => d._multN).filter((x) => x != null));
+      const aHold = mean(dd.map((d) => d._holdN).filter((x) => x != null));
       const bits = [`${dd.length} full-cycle program${dd.length === 1 ? "" : "s"} in the Baker 1031 dataset`];
       if (aAnn !== null) bits.push(`averaging ${aAnn.toFixed(2)}% annual return`);
       if (aMul !== null) bits.push(`a ${aMul.toFixed(2)}x average equity multiple`);
@@ -965,19 +1114,24 @@ ${rows}
     }
 
     const chipHtml = s.preferred ? `<span class="sp-chip">Preferred</span>` : "";
+    /* GSC Security 2026-07-29: nominative-use disclaimer, rendered above the fold on
+       every sponsor profile. Required alongside the schema change below to clear the
+       "Deceptive pages" manual action. */
+    const disclaimerHtml = `\n<p class="sp-disclaimer" style="margin:1rem 0 0;padding:.75rem 1rem;border-left:3px solid #c9d2e4;background:#f5f7fb;font-size:.8125rem;line-height:1.5;color:#4a5568">Baker 1031 Investments is an independent broker-dealer representative and is <strong>not affiliated with, endorsed by, or sponsored by ${esc(s.name)}</strong>. This page is Baker 1031&rsquo;s own research profile of the sponsor. ${esc(s.name)} and its logo are trademarks of their respective owner, used here for identification only.</p>`;
     const logoHtml = s.logo
-      ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">`
+      ? `<img class="sp-logo" src="${esc(optimizedPhoto(s.logo, 240))}" alt="${esc(s.name)} logo" width="240" height="240" onerror="this.style.display='none'">`
       : "";
 
+    /* GSC Security 2026-07-29 ("Deceptive pages"): this graph previously emitted a
+       standalone Organization node carrying the SPONSOR's own name, url and logo on a
+       baker1031.com URL - markup that asserts the page IS that company. With the
+       sponsor's trademark logo and no disclaimer, that reads as third-party
+       impersonation under Google's Social Engineering policy. The sponsor is now the
+       SUBJECT of our profile page (about); the only Organization we assert is ours. */
     const jsonld = graphLd([
       {
-        "@type": "Organization", name: s.name,
-        ...(s.website ? { url: (s.website.match(/^https?:/i) ? s.website : "https://" + s.website) } : {}),
-        ...(s.logo ? { logo: s.logo } : {}),
-        description: truncate(desc, 300),
-      },
-      {
         "@type": ["ProfilePage", "WebPage"], url: canonical,
+        about: { "@type": "Organization", name: s.name },
         name: `${s.name} — DST Sponsor Profile`, description: metaDesc,
         isPartOf: WEBSITE_REF, author: AUTHOR, publisher: PUBLISHER, dateModified: "2026-07-01", inLanguage: "en-US",
         isAccessibleForFree: false,
@@ -987,19 +1141,26 @@ ${rows}
     ]);
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(s.name)} &mdash; DST Sponsor Profile | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`${s.name} — DST Sponsor Profile`))}</title>`);
     html = ensureOg(html, `${s.name} — DST Sponsor Profile`, metaDesc, canonical);
     html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaDesc)}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // gated but crawlable (paywall markup)
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Overview</h2>", `<h2>${esc(s.name)} Overview</h2>`],
+      ["<h2>Key strategies &amp; advantages</h2>", `<h2>${esc(s.name)} Strategies &amp; Advantages</h2>`],
+      ["<h2>Track record</h2>", `<h2>${esc(s.name)} Track Record</h2>`],
+      ["<h2>Current offerings from this sponsor</h2>", `<h2>Current ${esc(s.name)} Offerings</h2>`],
+    ]) html = html.replace(from, to);
     html = put(html, "<!-- SP:CRUMB -->", "<!-- /SP:CRUMB -->", esc(s.name), s.slug);
     html = put(html, "<!-- SP:NAV -->", "<!-- /SP:NAV -->", navFor(s.slug), s.slug);
     html = put(html, "<!-- SP:LOGO -->", "<!-- /SP:LOGO -->", logoHtml, s.slug);
     html = put(html, "<!-- SP:CHIP -->", "<!-- /SP:CHIP -->", chipHtml, s.slug);
     html = put(html, "<!-- SP:NAME -->", "<!-- /SP:NAME -->", esc(s.name), s.slug);
     html = put(html, "<!-- SP:META -->", "<!-- /SP:META -->", metaLine, s.slug);
-    html = put(html, "<!-- SP:LEAD -->", "<!-- /SP:LEAD -->", esc(lead), s.slug);
+    html = put(html, "<!-- SP:LEAD -->", "<!-- /SP:LEAD -->", esc(lead) + disclaimerHtml, s.slug);
     html = put(html, "<!-- SP:FACTS -->", "<!-- /SP:FACTS -->", facts, s.slug);
     html = put(html, "<!-- SP:OVERVIEW -->", "<!-- /SP:OVERVIEW -->", overview, s.slug);
     html = put(html, "<!-- SP:ADV -->", "<!-- /SP:ADV -->", advHtml, s.slug);
@@ -1014,7 +1175,12 @@ ${rows}
   // ----- hub: nav + cards (Preferred first, then A–Z) -----
   const cardOrder = [...prefList, ...alpha.filter((s) => !s.preferred)];
   const cards = cardOrder.map((s) => {
-    const logo = s.logo ? `<img src="${esc(s.logo)}" alt="${esc(s.name)} logo" onerror="this.style.display='none'">` : `<span></span>`;
+    /* Hub cards go through Cloudinary too, so the directory page never calls
+       logo.dev directly with the public token (same rule as the profiles),
+       and carry explicit dimensions so 85 logos don't shift the grid. */
+    const logo = s.logo
+      ? `<img src="${esc(optimizedPhoto(s.logo, 260))}" alt="${esc(s.name)} logo" width="260" height="260" loading="lazy" onerror="this.style.display='none'">`
+      : `<span></span>`;
     const chip = s.preferred ? `<span class="chip">Preferred</span>` : `<span class="chip" style="visibility:hidden">.</span>`;
     const oneLine = s.aum
       ? `${esc(s.aum)} AUM${s.fullCycle ? ` &middot; ${esc(s.fullCycle)} full-cycle deals` : ""}${s.deals.length ? ` &middot; deal-by-deal track record` : ""}`
@@ -1047,21 +1213,25 @@ ${rows}
     { loc: `${SITE}/sponsors`, priority: "0.6" },
     { loc: `${SITE}/property-types`, priority: "0.6" },
     ...["data-centers","government-leased","healthcare","hospitality","industrial","land","life-sciences","marina","multifamily","net-lease","office","oil-gas-royalties","self-storage","senior-living","small-bay-industrial","student-housing"].map((s) => ({ loc: `${SITE}/property-types/${s}/`, priority: "0.5" })),
-    { loc: `${SITE}/process.html`, priority: "0.5" },
-    { loc: `${SITE}/terms.html`, priority: "0.3" },
-    { loc: `${SITE}/disclosures.html`, priority: "0.3" },
-    { loc: `${SITE}/reg-bi.html`, priority: "0.3" },
-    { loc: `${SITE}/ccpa.html`, priority: "0.3" },
-    { loc: `${SITE}/accessibility.html`, priority: "0.3" },
-    { loc: `${SITE}/commitment-to-privacy.html`, priority: "0.3" },
-    { loc: `${SITE}/privacy-policy.html`, priority: "0.3" },
+    /* A sitemap should only list final 200 URLs. These 8 were listed with .html,
+       which netlify.toml force-301s to the extensionless form the pages already
+       self-canonicalize to (build-aux-pages.mjs). */
+    { loc: `${SITE}/process`, priority: "0.5" },
+    { loc: `${SITE}/terms`, priority: "0.3" },
+    { loc: `${SITE}/disclosures`, priority: "0.3" },
+    { loc: `${SITE}/reg-bi`, priority: "0.3" },
+    { loc: `${SITE}/ccpa`, priority: "0.3" },
+    { loc: `${SITE}/accessibility`, priority: "0.3" },
+    { loc: `${SITE}/commitment-to-privacy`, priority: "0.3" },
+    { loc: `${SITE}/privacy-policy`, priority: "0.3" },
     ...JSON.parse(readFileSync(join(ROOT, "data", "glossary.json"), "utf8")).terms.map((t) => ({ loc: `${SITE}/glossary/${t.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "markets.json"), "utf8")).jurisdictions.map((j) => ({ loc: `${SITE}/markets/${j.slug}/`, priority: "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "audiences.json"), "utf8")).audiences.map((a) => ({ loc: `${SITE}/audiences/${a.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "calculators.json"), "utf8")).calculators.map((c) => ({ loc: `${SITE}/calculators/${c.slug}/`, priority: "0.6" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "sponsors.json"), "utf8")).sponsors.map((s) => ({ loc: `${SITE}/sponsors/${s.slug}/`, priority: s.deals ? "0.6" : "0.5" })),
     ...JSON.parse(readFileSync(join(ROOT, "data", "learn-articles.json"), "utf8")).map((a) => ({ loc: `${SITE}/learn/${a.slug}/`, priority: "0.6", lastmod: (ADATES[a.slug] || {}).modified })),
-    ...offerings.map((o) => ({
+    // Rejected offerings are noindex reference pages — keep them out of the sitemap
+    ...offerings.filter((o) => !isRejected(o)).map((o) => ({
       loc: `${SITE}/offerings/${o._slug}/`,
       priority: isClosed(o) ? "0.3" : "0.7"
     }))
@@ -1182,11 +1352,19 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(t.term)} — Glossary | Baker 1031</title>`);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(t.lead)}">`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`${t.term} — Glossary`))}</title>`);
+    // t.lead doubles as the visible Definition paragraph, so long entries carry
+    // a purpose-written metaDesc instead of being truncated on the page.
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(t.metaDesc || t.lead, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // glossary term pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Definition</h2>", `<h2>What Is ${esc(t.term)}?</h2>`],
+      ["<h2>Key points</h2>", `<h2>Key Points About ${esc(t.term)}</h2>`],
+      ["<h2>Related terms</h2>", `<h2>Terms Related to ${esc(t.term)}</h2>`],
+    ]) html = html.replace(from, to);
     // nested one level deeper (/glossary/<slug>/) → asset paths already absolute (/css, /js) — good
     // content — marker-based put() is fully immune to `$` in the data
     html = put(html, "<!-- T:CRUMB -->", "<!-- /T:CRUMB -->", esc(t.term), t.slug);
@@ -1268,12 +1446,20 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so `$`/`%` in data is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>1031 Exchange &amp; DST Investing in ${esc(j.name)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(`1031 Exchange & DST Investing in ${j.name}`))}</title>`);
     html = ensureOg(html, `1031 Exchange & DST Investing in ${j.name}`, j.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(j.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(j.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // market pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>State tax treatment of a 1031 exchange</h2>", `<h2>${esc(j.name)} Tax Treatment of a 1031 Exchange</h2>`],
+      ["<h2>Market snapshot</h2>", `<h2>${esc(j.name)} Market Snapshot</h2>`],
+      ["<h2>Why 1031 &amp; DST investors look here</h2>", `<h2>Why 1031 &amp; DST Investors Look at ${esc(j.name)}</h2>`],
+      ["<h2>Replacement-property options</h2>", `<h2>Replacement-Property Options for ${esc(j.name)} Investors</h2>`],
+      ["<h2>Frequently asked questions</h2>", `<h2>${esc(j.name)} 1031 Exchange FAQ</h2>`],
+    ]) html = html.replace(from, to);
     // content — marker-based put() (immune to `$` in the data)
     html = put(html, "<!-- M:CRUMB -->", "<!-- /M:CRUMB -->", esc(j.name), j.slug);
     html = put(html, "<!-- M:FOLDERS -->", "<!-- /M:FOLDERS -->", foldersFor(j.slug), j.slug);
@@ -1340,12 +1526,19 @@ ${rows}
 
     let html = tpl;
     // head — function replacers so any `$` in copy is never read as a backreference
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(a.title))}</title>`);
     html = ensureOg(html, a.title, a.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(a.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(a.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // audience pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
+    /* Unique section H2s (see the offering builder for why). */
+    for (const [from, to] of [
+      ["<h2>Is this you?</h2>", `<h2>Is This You? Signs a 1031 Exchange Fits ${esc(a.name)}</h2>`],
+      ["<h2>How Baker 1031 helps</h2>", `<h2>How Baker 1031 Helps ${esc(a.name)}</h2>`],
+      ["<h2>Why work with Baker 1031</h2>", `<h2>Why ${esc(a.name)} Work With Baker 1031</h2>`],
+      ["<h2>Frequently asked questions</h2>", `<h2>${esc(a.name)}: 1031 Exchange FAQ</h2>`],
+    ]) html = html.replace(from, to);
     // content — marker-based put()
     html = put(html, "<!-- A:CRUMB -->", "<!-- /A:CRUMB -->", esc(a.name), a.slug);
     html = put(html, "<!-- A:FOLDERS -->", "<!-- /A:FOLDERS -->", foldersFor(a.slug), a.slug);
@@ -1438,9 +1631,9 @@ ${rows}
   </script>`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(c.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(c.title))}</title>`);
     html = ensureOg(html, c.title, c.metaDesc, canonical);
-    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(c.metaDesc)}">`);
+    html = html.replace(/<meta name="description"[^>]*>/, () => `<meta name="description" content="${esc(metaTrim(c.metaDesc, 155))}">`);
     html = html.replace(/<link rel="canonical"[^>]*>/, () => `<link rel="canonical" href="${canonical}">`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // calculator pages are public/indexable
     html = html.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, () => jsonld);
@@ -1714,10 +1907,10 @@ ${rows}
         },
       } : null,
     ];
-    const headBlock = `<meta name="description" content="${esc(a.metaDesc)}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
+    const headBlock = `<meta name="description" content="${esc(metaTrim(a.metaDesc, 155))}"><link rel="canonical" href="${canonical}"><meta property="og:title" content="${esc(a.title)}"><meta property="og:description" content="${esc(a.metaDesc)}"><meta property="og:type" content="article"><meta property="og:url" content="${canonical}"><meta property="og:image" content="${OG_IMAGE}"><meta name="twitter:card" content="summary_large_image">${graphLd(nodes)}`;
 
     let html = tpl;
-    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(a.title)} | Baker 1031</title>`);
+    html = html.replace(/<title>[\s\S]*?<\/title>/, () => `<title>${esc(brandTitle(a.seoTitle || a.title))}</title>`);
     html = html.replace(/\s*<meta name="robots"[^>]*>/g, ""); // articles are public/indexable
     html = put(html, "<!-- L:HEAD -->", "<!-- /L:HEAD -->", headBlock, a.slug);
     html = put(html, "<!-- L:CRUMB -->", "<!-- /L:CRUMB -->", esc(a.title), a.slug);
@@ -1817,7 +2010,7 @@ ${rows}
     "process.html", "404.html",
     "terms.html", "disclosures.html", "reg-bi.html", "ccpa.html", "accessibility.html", "commitment-to-privacy.html",
     "privacy-policy.html", "scheduled.html", "call-confirmed.html", "book.html", "schedule.html",
-    "offerings", "data", "css", "js", "assets", "documents",
+    "offerings", "data", "css", "js", "assets", "video", "documents",
     "sitemap.xml", "robots.txt", "llms.txt", "llms-full.txt"
   ];
   let copied = 0;
@@ -1910,7 +2103,19 @@ ${rows}
   const lines = [];
   const seen = new Set();
   let mapped = 0, fallback = 0;
-  const add = (from, to) => { if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); } };
+  const add = (fromRaw, to) => {
+    /* _redirects is whitespace-delimited: a literal space in the source path
+       silently corrupts the rule. Percent-encode before emitting. */
+    const from = fromRaw.replace(/ /g, "%20");
+    if (!seen.has(from)) { seen.add(from); lines.push(`${from}  ${to}  301`); }
+    /* GSC 2026-07-29: Google also has the EXTENSIONLESS variants of the old flat URLs
+       indexed (/1031-exchange-boot as well as /1031-exchange-boot.html) - 479 of them
+       were 404ing. Emit both forms, never shadowing a page that exists in dist/. */
+    const bare = from.replace(/\.html$/, "");
+    if (bare !== from && bare !== "" && !seen.has(bare) && !exists(bare)) {
+      seen.add(bare); lines.push(`${bare}  ${to}  301`);
+    }
+  };
 
   const OVERRIDE = {
     "/investments.html": "/current-offerings",
@@ -2037,13 +2242,122 @@ ${rows}
       LEGACY_DIR.push([`/property-types/${v}/`, `/property-types/${newSlug}/`]);
     }
   }
+  /* Flat legacy slugs not in the legacy-content manifest but still indexed and
+     404ing (GSC 2026-07-29). Every destination verified against dist/. */
+  const FLAT_LEGACY = {
+    "/1031-deals": "/current-offerings", "/1031-properties": "/current-offerings",
+    "/listings": "/current-offerings", "/all-listings": "/current-offerings",
+    "/shares": "/current-offerings", "/realized-dsts": "/current-offerings",
+    "/diversified-portfolios": "/current-offerings", "/investment-properties": "/current-offerings",
+    "/1031-exchange-properties": "/current-offerings", "/access-1031-exchange-listings": "/current-offerings",
+    "/1031-delaware-statutory-trust-marketplace": "/current-offerings",
+    "/request-listings": "/current-offerings", "/request-listings-access": "/current-offerings",
+    "/request-investment-listings": "/current-offerings", "/request-1031-dst-listings": "/current-offerings",
+    "/register": "/#request-access", "/registration": "/#request-access",
+    "/verification": "/#request-access", "/verification-confirm": "/#request-access",
+    "/baker1031.com/registration": "/#request-access",
+    "/historical-performance": "/performance", "/historical-1031-dst-performance": "/performance",
+    "/past-dst-performance-data": "/performance", "/sponsor-track-records": "/performance",
+    "/about-us": "/learn/about/", "/meet-jerry-baker": "/learn/jerry-baker-bio/",
+    "/about-jerry-baker": "/learn/jerry-baker-bio/",
+    "/glossary-1031-dst-properties": "/glossary",
+    "/glossary-of-1031-exchange-and-dst-property-terms": "/glossary",
+    "/1031-exchange": "/learn/1031-exchange-guide/",
+    "/learn/what-is-a-1031-exchange/": "/learn/1031-exchange-guide/",
+    "/learn/what-is-a-dst/": "/learn/dst-guide/",
+    "/delaware-statutory-trusts-dsts": "/learn/delaware-statutory-trusts/",
+    "/tenant-in-common-tic-1031-exchange": "/learn/delaware-statutory-trusts/",
+    "/721-exchange-1031-exchange-into-a-reit": "/learn/721-exchange-guide/",
+    "/1031-exchange-and-delaware-statutory-trust-faq": "/learn/1031-exchange-faq/",
+    "/1031-exchange-dst-resources": "/learn", "/1031-investment-strategies": "/learn",
+    "/real-estate-memos": "/learn", "/content-hub-1": "/learn",
+    "/real-estate-has-swung-too-far-toward-simplicity": "/learn",
+    "/the-quiet-compounder-a-rational-case-for-the-delaware-statutory-trust": "/learn",
+    "/the-estate-planner-s-exchange-how-the-721-dst-quietly-solves-the-problem-most-heirs-never-see-coming": "/learn",
+    "/lander": "/", "/homepage": "/", "/search": "/learn",
+    "/1031-exchange-calculator": "/calculators",
+    "/calculators/1031-dst-portfolio-builder": "/calculators",
+    "/calculators/sell-vs-1031-exchange-calculator": "/calculators/after-tax-proceeds/",
+    "/calculators/depreciation-recapture-calculator": "/calculators/depreciation-recapture/",
+  };
+  for (const [f, t] of Object.entries(FLAT_LEGACY)) { add(f, t); if (!f.endsWith("/")) add(f + "/", t); }
+
+  /* Netlify redirect matching is case-SENSITIVE; the old site linked sponsors in
+     TitleCase (/sponsors/Brookfield). Emit a cased variant per real profile page. */
+  const sponsorSlugs = existsSync(join(dist, "sponsors"))
+    ? readdirSync(join(dist, "sponsors")).filter((d) => statSync(join(dist, "sponsors", d)).isDirectory())
+    : [];
+  for (const slug of sponsorSlugs) {
+    if (!exists(`/sponsors/${slug}/`)) continue;
+    const v = slug.split("-").map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join("-");
+    if (v === slug) continue;
+    add(`/sponsors/${v}`, `/sponsors/${slug}/`);
+    add(`/sponsors/${v}/`, `/sponsors/${slug}/`);
+  }
+
   for (const [f, t] of LEGACY_DIR) add(f, t);
+  /* Safety net: any /sponsors/<x> with no profile page lands on the hub, not a 404.
+     Non-forced, so real profile pages still serve. */
+  /* Netlify silently DROPS self-referential splats: a rule of the form "/x/*  /x"
+     is treated as a loop and never fires. That is why the pre-existing
+     "/property-types/*  /property-types" rule never worked and the old TitleCase-
+     with-spaces URLs stayed 404. Enumerate the variants instead of relying on it. */
+  const titleWords = (slug) => slug.split("-").map((w) => (w ? w[0].toUpperCase() + w.slice(1) : w)).join(" ");
+  for (const slug of readdirSync(join(dist, "property-types")).filter((d) => statSync(join(dist, "property-types", d)).isDirectory())) {
+    for (const v of new Set([titleWords(slug), titleWords(slug).replace(/ /g, "-")])) {
+      if (v === slug) continue;
+      add(`/property-types/${v}`, `/property-types/${slug}/`);
+      add(`/property-types/${v}/`, `/property-types/${slug}/`);
+    }
+  }
+  for (const [from, to] of [
+    ["/property-types/Net-Lease Retail", "/property-types/net-lease/"],
+    ["/property-types/Manufactured Housing", "/property-types"],
+    ["/property-types/Medical Office", "/property-types/healthcare/"],
+  ]) { add(from, to); add(from + "/", to); }
+
+  /* Same self-referential problem killed "/sponsors/*  /sponsors". */
+  for (const slug of sponsorSlugs) {
+    if (!exists(`/sponsors/${slug}/`)) continue;
+    for (const v of new Set([titleWords(slug), titleWords(slug).replace(/ And /g, " & "), slug.replace(/-and-/g, "-&-")])) {
+      if (v === slug) continue;
+      add(`/sponsors/${v}`, `/sponsors/${slug}/`);
+      add(`/sponsors/${v}/`, `/sponsors/${slug}/`);
+    }
+  }
+  for (const [from, to] of [
+    ["/sponsors/AEI", "/sponsors/aei-capital-corporation/"],
+    ["/sponsors/Sealy", "/sponsors/sealy-and-company/"],
+  ]) { add(from, to); add(from + "/", to); }
   // Slug-preserving splats: old deep URLs mostly reused the same slugs. A miss
   // lands on the new 404 — no worse than today, and hits carry their equity.
-  lines.push("/insights/*  /learn/:splat  301");
-  lines.push("/properties/*  /offerings/:splat  301");
+  /* GSC 2026-07-29: these two were slug-PRESERVING and forwarded blindly, so
+     /properties/<x> and /insights/<x> 301'd straight into 404s. */
+  lines.push("/insights/*  /learn  301");
+  const offeringSlugs = existsSync(join(dist, "offerings"))
+    ? readdirSync(join(dist, "offerings")).filter((d) => statSync(join(dist, "offerings", d)).isDirectory())
+    : [];
+  for (const slug of offeringSlugs) {
+    add(`/properties/${slug}`, `/offerings/${slug}/`);
+    add(`/properties/${slug}/`, `/offerings/${slug}/`);
+  }
+  lines.push("/properties/*  /current-offerings  301");
+  add("/offerings", "/current-offerings");
+  add("/offerings/", "/current-offerings");
   lines.push("/strategies/*  /learn  301");
   lines.push("/property-types/*  /property-types  301");
+
+  /* Retired Squarespace-era collections still being crawled (GSC 2026-07-29). */
+  for (const [pre, hub] of [
+    ["/1031-dst-education", "/learn"], ["/1031-education-insights", "/learn"],
+    ["/content-hub", "/learn"], ["/1031-dst-success-stories", "/learn"],
+    ["/jerrys-insights", "/learn"], ["/tax-center", "/learn"],
+    ["/guides", "/learn"], ["/1031-exchange-strategies", "/learn"],
+    ["/capabilities", "/learn"], ["/about-baker-1031", "/learn/about/"],
+    ["/investor-portal", "/current-offerings"], ["/property-listings", "/current-offerings"],
+    ["/available-dst-properties", "/current-offerings"], ["/delaware-statutory-trust", "/current-offerings"],
+    ["/request-access", "/#request-access"], ["/data-center", "/performance"],
+  ]) { add(pre, hub); add(pre + "/", hub); lines.push(`${pre}/*  ${hub}  301`); }
 
   /* ---- URL standardization (audit): extensionless is the canonical form the
      nav already uses; force the .html duplicates to it so the 9 exact-duplicate
@@ -2057,6 +2371,40 @@ ${rows}
 
   writeFileSync(join(dist, "_redirects"), lines.join("\n") + "\n");
   console.log(`Wrote dist/_redirects (${lines.length} redirects: ${mapped} direct, ${fallback} hub-fallback).`);
+}
+
+/* ---------------- SEO guard (audit) ----------------
+   Reports anything in dist/ that would trip the Screaming Frog checks again:
+   over-length titles/descriptions, missing <h2>, images with no dimensions,
+   and any brand logo that slipped out untransformed. Warns rather than fails
+   — a handful of Learn headlines are long on their own words and are worked
+   through editorially — but a regression shows up in the deploy log. */
+{
+  const dist = join(ROOT, "dist");
+  const long = { title: [], desc: [], noH2: [], noDim: 0, rawLogo: 0 };
+  (function walk(dir) {
+    for (const e of readdirSync(dir)) {
+      if (["assets", "css", "js", "documents", "data", "video"].includes(e)) continue;
+      const p = join(dir, e);
+      if (statSync(p).isDirectory()) { walk(p); continue; }
+      if (!e.endsWith(".html")) continue;
+      const s = readFileSync(p, "utf8");
+      const rel = p.slice(dist.length) || "/";
+      const unesc = (x) => x.replace(/&amp;/g, "&").replace(/&mdash;/g, "—").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&rsquo;/g, "’").replace(/&ldquo;/g, "“").replace(/&rdquo;/g, "”");
+      const tm = s.match(/<title>([\s\S]*?)<\/title>/);
+      if (tm && unesc(tm[1]).trim().length > 60) long.title.push(`${rel} (${unesc(tm[1]).trim().length})`);
+      const dm = s.match(/<meta name="description" content="([\s\S]*?)">/);
+      if (dm && unesc(dm[1]).length > 155) long.desc.push(`${rel} (${unesc(dm[1]).length})`);
+      if (!/<h2[\s>]/.test(s)) long.noH2.push(rel);
+      for (const tag of s.match(/<img[^>]*>/g) || []) if (!/width=/.test(tag) || !/height=/.test(tag)) long.noDim++;
+      long.rawLogo += (s.match(/upload\/v1783843015/g) || []).length;
+    }
+  })(dist);
+  const n = (a) => a.length;
+  console.log(`SEO guard: ${n(long.title)} titles >60, ${n(long.desc)} descriptions >155, ${n(long.noH2)} pages with no <h2>, ${long.noDim} images without dimensions, ${long.rawLogo} untransformed logo refs.`);
+  if (n(long.desc)) console.warn(`  descriptions >155: ${long.desc.join(", ")}`);
+  if (n(long.noH2)) console.warn(`  no <h2>: ${long.noH2.join(", ")}`);
+  if (long.rawLogo) console.warn(`  WARNING: untransformed brand logo is back — check lib/images.mjs BRAND_LOGO usage.`);
 }
 
 console.log("Build complete.");

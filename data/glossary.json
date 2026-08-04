@@ -24,7 +24,8 @@
         "qualified-opportunity-zone-business",
         "capital-gains-tax"
       ],
-      "oneLine": "Holding a Qualified Opportunity Fund for 10+ years erases capital gains tax on its appreciation."
+      "oneLine": "Holding a Qualified Opportunity Fund for 10+ years erases capital gains tax on its appreciation.",
+      "metaDesc": "Holding a Qualified Opportunity Fund investment for at least 10 years lets an investor eliminate capital gains tax on the fund's own appreciation."
     },
     {
       "slug": "1031-exchange",
@@ -49,7 +50,8 @@
         "180-day-exchange-period",
         "qualified-intermediary"
       ],
-      "oneLine": "Defer capital gains tax by reinvesting investment property proceeds into like-kind real estate."
+      "oneLine": "Defer capital gains tax by reinvesting investment property proceeds into like-kind real estate.",
+      "metaDesc": "A 1031 exchange lets a real estate investor defer capital gains tax by reinvesting sale proceeds from one property into another like-kind property."
     },
     {
       "slug": "180-day-exchange-period",
@@ -97,7 +99,8 @@
         "replacement-property",
         "qualified-intermediary"
       ],
-      "oneLine": "The 45 calendar days a 1031 investor has to name replacement properties in writing."
+      "oneLine": "The 45 calendar days a 1031 investor has to name replacement properties in writing.",
+      "metaDesc": "The 45-day identification period is the window in a 1031 exchange when the investor must formally identify replacement properties in writing."
     },
     {
       "slug": "721-exchange",
@@ -122,7 +125,8 @@
         "reit",
         "delaware-statutory-trust"
       ],
-      "oneLine": "Contribute property to a REIT partnership for OP units and defer tax under Section 721."
+      "oneLine": "Contribute property to a REIT partnership for OP units and defer tax under Section 721.",
+      "metaDesc": "A 721 exchange lets an investor contribute real estate to a REIT's operating partnership for OP units, deferring capital gains tax under Section 721."
     },
     {
       "slug": "accredited-investor",
@@ -147,7 +151,8 @@
         "regulation-d-rule-506c",
         "ppm"
       ],
-      "oneLine": "Someone meeting SEC income or net worth limits who can buy private securities like DSTs."
+      "oneLine": "Someone meeting SEC income or net worth limits who can buy private securities like DSTs.",
+      "metaDesc": "An accredited investor meets SEC income or net worth thresholds, allowing them to buy private, unregistered securities like DSTs."
     },
     {
       "slug": "accredited-investor-vs-qualified-purchaser",
@@ -220,7 +225,8 @@
         "tenants-in-common-tic",
         "sponsor"
       ],
-      "oneLine": "An investor's fractional ownership share in a DST that owns the underlying real estate."
+      "oneLine": "An investor's fractional ownership share in a DST that owns the underlying real estate.",
+      "metaDesc": "A beneficial interest is an investor's fractional share in a Delaware Statutory Trust, entitling them to income and appreciation without holding title."
     },
     {
       "slug": "boot",
@@ -341,7 +347,8 @@
         "1031-exchange",
         "delaware-statutory-trust"
       ],
-      "oneLine": "Matching the mortgage paid off with equal new debt (or cash) to fully defer tax in a 1031."
+      "oneLine": "Matching the mortgage paid off with equal new debt (or cash) to fully defer tax in a 1031.",
+      "metaDesc": "Debt replacement is the 1031 rule that an investor must take on debt equal to the mortgage paid off, or add cash, to defer all tax."
     },
     {
       "slug": "delaware-statutory-trust",
@@ -366,7 +373,8 @@
         "sponsor",
         "master-lease"
       ],
-      "oneLine": "An entity holding real estate that offers passive, 1031-eligible fractional interests."
+      "oneLine": "An entity holding real estate that offers passive, 1031-eligible fractional interests.",
+      "metaDesc": "A Delaware Statutory Trust holds real estate and lets multiple investors own fractional, passive, 1031-eligible interests in the property."
     },
     {
       "slug": "depreciation-recapture",
@@ -438,7 +446,8 @@
         "like-kind-property",
         "replacement-property"
       ],
-      "oneLine": "Splitting partnership property into tenant-in-common shares so partners can 1031 separately."
+      "oneLine": "Splitting partnership property into tenant-in-common shares so partners can 1031 separately.",
+      "metaDesc": "A drop and swap is where a partnership distributes property to partners as tenants in common before a 1031 exchange so each can exchange separately."
     },
     {
       "slug": "dst-vs-tic",
@@ -462,7 +471,8 @@
         "beneficial-interest",
         "master-lease"
       ],
-      "oneLine": "Two 1031 fractional structures: DSTs allow many passive owners; TICs cap 35 with control."
+      "oneLine": "Two 1031 fractional structures: DSTs allow many passive owners; TICs cap 35 with control.",
+      "metaDesc": "DST vs. TIC compares two fractional structures for 1031 exchanges: DSTs allow many passive investors while TICs cap owners at 35 with more control."
     },
     {
       "slug": "ffo",
@@ -486,7 +496,8 @@
         "upreit",
         "op-units"
       ],
-      "oneLine": "A REIT earnings metric that adds depreciation back to net income to show true cash flow."
+      "oneLine": "A REIT earnings metric that adds depreciation back to net income to show true cash flow.",
+      "metaDesc": "Funds from operations (FFO) is a REIT earnings measure that adds depreciation back to net income for a truer picture of the cash properties generate."
     },
     {
       "slug": "full-cycle",
@@ -534,7 +545,8 @@
         "1031-exchange",
         "boot"
       ],
-      "oneLine": "Using 1031 funds to build or renovate the replacement property before taking title."
+      "oneLine": "Using 1031 funds to build or renovate the replacement property before taking title.",
+      "metaDesc": "An improvement exchange lets a 1031 investor use exchange funds to build or renovate the replacement property before taking title."
     },
     {
       "slug": "like-kind-property",
@@ -558,7 +570,8 @@
         "45-day-identification-period",
         "drop-and-swap"
       ],
-      "oneLine": "Investment or business real estate that qualifies for a tax-deferred 1031 exchange."
+      "oneLine": "Investment or business real estate that qualifies for a tax-deferred 1031 exchange.",
+      "metaDesc": "Like-kind property is real estate held for investment or business use that can be exchanged tax-deferred under Section 1031; nearly all of it qualifies."
     },
     {
       "slug": "master-lease",
@@ -582,7 +595,8 @@
         "sponsor",
         "triple-net-lease-nnn"
       ],
-      "oneLine": "A DST leases its whole property to a master tenant who operates it and pays rent."
+      "oneLine": "A DST leases its whole property to a master tenant who operates it and pays rent.",
+      "metaDesc": "A master lease is where a DST leases its entire property to a master tenant, who operates it and pays rent used to fund investor distributions."
     },
     {
       "slug": "mortgage-boot",
@@ -654,7 +668,8 @@
         "passive-income",
         "1031-exchange"
       ],
-      "oneLine": "A 3.8% federal surtax on investment income once income tops $200k single / $250k joint."
+      "oneLine": "A 3.8% federal surtax on investment income once income tops $200k single / $250k joint.",
+      "metaDesc": "The Net Investment Income Tax is a 3.8% federal surtax on investment income for higher earners: rental income, capital gains, dividends, and more."
     },
     {
       "slug": "op-units",
@@ -678,7 +693,8 @@
         "reit",
         "step-up-in-basis"
       ],
-      "oneLine": "Partnership units from a 721 exchange that defer tax and pay REIT-like distributions."
+      "oneLine": "Partnership units from a 721 exchange that defer tax and pay REIT-like distributions.",
+      "metaDesc": "OP units are operating partnership units received for contributing property to a REIT's partnership in a 721 exchange, deferring tax while paying income."
     },
     {
       "slug": "opportunity-zone",
@@ -702,7 +718,8 @@
         "10-year-hold",
         "capital-gains-tax"
       ],
-      "oneLine": "An IRS-designated distressed area where fund investments earn capital gains tax breaks."
+      "oneLine": "An IRS-designated distressed area where fund investments earn capital gains tax breaks.",
+      "metaDesc": "An Opportunity Zone is an IRS-designated distressed area where investing capital gains through a Qualified Opportunity Fund earns tax breaks."
     },
     {
       "slug": "passive-income",
@@ -726,7 +743,8 @@
         "cap-rate",
         "net-investment-income-tax"
       ],
-      "oneLine": "Earnings from investments that need little ongoing effort, like DST or rental distributions."
+      "oneLine": "Earnings from investments that need little ongoing effort, like DST or rental distributions.",
+      "metaDesc": "Passive income is earnings from investments requiring little ongoing effort, such as DST distributions or rental income, taxed under special IRS rules."
     },
     {
       "slug": "ppm",
@@ -750,7 +768,8 @@
         "accredited-investor",
         "delaware-statutory-trust"
       ],
-      "oneLine": "The disclosure document detailing a private offering's terms, fees, risks, and sponsor."
+      "oneLine": "The disclosure document detailing a private offering's terms, fees, risks, and sponsor.",
+      "metaDesc": "A private placement memorandum is the disclosure document a sponsor gives investors in a private offering like a DST, outlining terms, risks, and fees."
     },
     {
       "slug": "qualified-intermediary",
@@ -798,7 +817,8 @@
         "delaware-statutory-trust",
         "180-day-exchange-period"
       ],
-      "oneLine": "A fidelity bond protecting a 1031 investor's funds from theft by the intermediary."
+      "oneLine": "A fidelity bond protecting a 1031 investor's funds from theft by the intermediary.",
+      "metaDesc": "A qualified intermediary bond is a fidelity bond protecting a 1031 investor's exchange funds against theft or misappropriation by the intermediary."
     },
     {
       "slug": "qualified-opportunity-fund",
@@ -822,7 +842,8 @@
         "10-year-hold",
         "capital-gains-tax"
       ],
-      "oneLine": "A fund that invests 90%+ of assets in Opportunity Zones to deliver capital gains tax breaks."
+      "oneLine": "A fund that invests 90%+ of assets in Opportunity Zones to deliver capital gains tax breaks.",
+      "metaDesc": "A Qualified Opportunity Fund pools capital gains and invests at least 90% of its assets in Opportunity Zone property or businesses."
     },
     {
       "slug": "qualified-opportunity-zone-business",
@@ -847,7 +868,8 @@
         "10-year-hold",
         "capital-gains-tax"
       ],
-      "oneLine": "An operating business in an Opportunity Zone a fund can invest in to meet its asset test."
+      "oneLine": "An operating business in an Opportunity Zone a fund can invest in to meet its asset test.",
+      "metaDesc": "A qualified opportunity zone business is an operating business meeting IRS tests that a Qualified Opportunity Fund can invest in for its 90% rule."
     },
     {
       "slug": "realized-gain-vs-recognized-gain",
@@ -871,7 +893,8 @@
         "capital-gains-tax",
         "adjusted-basis"
       ],
-      "oneLine": "Realized gain is total profit; recognized gain is the part taxed now, and 1031 defers it."
+      "oneLine": "Realized gain is total profit; recognized gain is the part taxed now, and 1031 defers it.",
+      "metaDesc": "Realized gain is the total profit on a property sale; recognized gain is the portion taxed now, and a 1031 exchange defers that recognition."
     },
     {
       "slug": "regulation-d",
@@ -895,7 +918,8 @@
         "accredited-investor",
         "ppm"
       ],
-      "oneLine": "The SEC framework for selling securities privately, without full registration, used by DSTs."
+      "oneLine": "The SEC framework for selling securities privately, without full registration, used by DSTs.",
+      "metaDesc": "Regulation D is the SEC framework letting companies sell securities privately without full SEC registration — the basis for most DST offerings."
     },
     {
       "slug": "regulation-d-rule-506b",
@@ -919,7 +943,8 @@
         "accredited-investor",
         "ppm"
       ],
-      "oneLine": "Reg D exemption: unlimited accredited plus up to 35 non-accredited investors, no advertising."
+      "oneLine": "Reg D exemption: unlimited accredited plus up to 35 non-accredited investors, no advertising.",
+      "metaDesc": "Rule 506(b) is a Regulation D exemption allowing unlimited accredited capital plus up to 35 non-accredited investors, but bars general solicitation."
     },
     {
       "slug": "regulation-d-rule-506c",
@@ -1015,7 +1040,8 @@
         "180-day-exchange-period",
         "replacement-property"
       ],
-      "oneLine": "Buying the 1031 replacement property before selling the old one, via a parked title."
+      "oneLine": "Buying the 1031 replacement property before selling the old one, via a parked title.",
+      "metaDesc": "A reverse exchange lets a 1031 investor buy the replacement property before selling the relinquished one, with a titleholder parking the new asset."
     },
     {
       "slug": "securitized-real-estate",
@@ -1039,7 +1065,8 @@
         "reit",
         "regulation-d"
       ],
-      "oneLine": "Property ownership packaged as securities, DST interests or REIT shares, instead of title."
+      "oneLine": "Property ownership packaged as securities, DST interests or REIT shares, instead of title.",
+      "metaDesc": "Securitized real estate is property ownership packaged as securities, like DST interests or REIT shares, that investors buy instead of holding title."
     },
     {
       "slug": "sponsor",
@@ -1111,7 +1138,8 @@
         "depreciation-recapture",
         "1031-exchange"
       ],
-      "oneLine": "Resets an inherited asset's basis to date-of-death value, often erasing deferred gains."
+      "oneLine": "Resets an inherited asset's basis to date-of-death value, often erasing deferred gains.",
+      "metaDesc": "Step-up in basis resets an inherited asset's cost basis to fair market value at the owner's death, potentially erasing deferred capital gains for heirs."
     },
     {
       "slug": "tenants-in-common-tic",
@@ -1135,7 +1163,8 @@
         "beneficial-interest",
         "drop-and-swap"
       ],
-      "oneLine": "Direct deeded co-ownership by up to 35 investors, each usable in a 1031 exchange."
+      "oneLine": "Direct deeded co-ownership by up to 35 investors, each usable in a 1031 exchange.",
+      "metaDesc": "Tenancy in common is a structure where multiple investors hold direct deeded shares of a property, each able to use their share in a 1031 exchange."
     },
     {
       "slug": "triple-net-lease-nnn",
@@ -1159,7 +1188,8 @@
         "passive-income",
         "distribution-yield"
       ],
-      "oneLine": "A commercial lease where the tenant pays taxes, insurance, and maintenance on top of rent."
+      "oneLine": "A commercial lease where the tenant pays taxes, insurance, and maintenance on top of rent.",
+      "metaDesc": "A triple-net lease is one where the tenant pays property taxes, insurance, and maintenance on top of rent, giving the owner low-touch income."
     },
     {
       "slug": "unrecaptured-section-1250-gain",
@@ -1183,7 +1213,8 @@
         "adjusted-basis",
         "1031-exchange"
       ],
-      "oneLine": "The depreciation portion of real estate gain, taxed at a maximum federal rate of 25%."
+      "oneLine": "The depreciation portion of real estate gain, taxed at a maximum federal rate of 25%.",
+      "metaDesc": "Unrecaptured Section 1250 gain is the part of real estate gain from prior depreciation, taxed at a maximum federal rate of 25%."
     },
     {
       "slug": "upreit",

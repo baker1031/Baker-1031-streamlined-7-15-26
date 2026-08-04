@@ -51,10 +51,13 @@ const clip = (s, n) => { s = strip(s); return s.length > n ? s.slice(0, n - 1).t
 /* ---------------- Build records ---------------- */
 const records = [];
 
-// Offerings — current only (Closed = gated Performance page, never indexed)
+// Offerings — current only (Closed + Rejected = gated Performance page, never indexed)
 {
   const offerings = read("data/offerings.json").offerings;
-  const open = offerings.filter((o) => (o["Status"] || "").trim().toLowerCase() !== "closed");
+  const open = offerings.filter((o) => {
+    const s = (o["Status (internal)"] || o["Status"] || "").trim().toLowerCase();
+    return s !== "closed" && s !== "rejected";
+  });
   for (const o of open) {
     const facts = [o["Property Type"], o["Structure"], o["Location (Use)"] || o["Location"],
       o["Minimum Investment"] && `Minimum ${o["Minimum Investment"]}`].filter(Boolean).join(" · ");

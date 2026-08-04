@@ -2,6 +2,7 @@
    on the insights/learn layout. Run before build-offerings.mjs. */
 
 import { readFileSync, writeFileSync, mkdirSync } from "fs";
+import { brandTitle, metaTrim } from "./lib/html.mjs";
 import { join } from "path";
 
 const ROOT = process.argv[2] || ".";
@@ -151,7 +152,7 @@ ${quoteHtml}
       </article>
     </div>`;
 
-  const html = shell({ title: `${t(name)} for 1031 Exchange &amp; DST Investors &mdash; Baker 1031`, desc: metaDesc, canonical, jsonld, main });
+  const html = shell({ title: t(brandTitle(`${name} for 1031 Exchange & DST Investors`)), desc: metaTrim(metaDesc, 155), canonical, jsonld, main });
   const dir = join(ROOT, "property-types", slug);
   mkdirSync(dir, { recursive: true });
   writeFileSync(join(dir, "index.html"), html);
@@ -178,6 +179,7 @@ ${quoteHtml}
       <h1>DST &amp; 1031 Property Types</h1>
       <p>Every property type that reaches the DST and 1031-exchange market has its own demand drivers, lease structure, and risk profile. These guides break down how each sector works, what the track record shows, where the risks sit, and who it suits &mdash; so you can match a replacement property to your goals.</p>
     </div>
+    <h2>DST &amp; 1031 Property Types by Sector</h2>
     <div class="pt-grid">
 ${cards}
     </div>`;
@@ -185,7 +187,7 @@ ${cards}
     "@context": "https://schema.org", "@type": "CollectionPage", name: "DST & 1031 Property Types", url: `${SITE}/property-types.html`,
     hasPart: TYPES.map(([slug, , name]) => ({ "@type": "Article", name, url: `${SITE}/property-types/${slug}/` }))
   })}</script>`;
-  let html = shell({ title: "DST &amp; 1031 Property Types &mdash; Baker 1031 Investments", desc: "Guides to every DST and 1031-exchange property type — multifamily, industrial, net lease, self-storage, healthcare, data centers, and more.", canonical: `${SITE}/property-types`, jsonld, main });
+  let html = shell({ title: "DST &amp; 1031 Property Types | Baker 1031", desc: "Guides to every DST and 1031-exchange property type — multifamily, industrial, net lease, self-storage, healthcare, data centers, and more.", canonical: `${SITE}/property-types`, jsonld, main });
   html = html.replace("</head>", `${extraCss}\n</head>`);
   writeFileSync(join(ROOT, "property-types.html"), html);
 }

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sponsor Performance &mdash; Baker 1031 Investments</title>
-<meta name="description" content="Aggregated full-cycle track record of the DST sponsors Baker 1031 tracks — realized deals, hold periods, and outcomes. Sponsor-reported data; registration required.">
+<meta name="description" content="Aggregated full-cycle track record of the DST sponsors Baker 1031 tracks: realized deals, hold periods, and outcomes. Sponsor-reported data.">
 <link rel="canonical" href="https://baker1031.com/performance">
 <meta property="og:title" content="Sponsor Performance &mdash; Baker 1031 Investments"><meta property="og:description" content="Aggregated full-cycle track record of the DST sponsors Baker 1031 tracks — realized deals, hold periods, and outcomes. Sponsor-reported data; registration required."><meta property="og:type" content="website"><meta property="og:url" content="https://baker1031.com/performance"><meta property="og:image" content="https://baker1031.com/assets/og-card.png"><meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="css/tokens.css">
@@ -151,6 +151,13 @@
   .perf-tabs button.active { color: var(--navy); border-bottom-color: var(--navy); }
   .perf-panel { display: none; }
   .perf-panel.active { display: block; }
+  /* Breathing room between each panel's heading and the table below it —
+     matches the page-head spacing used elsewhere on the site. */
+  .perf-panel h2 { margin-bottom: 1.5rem; }
+  /* Sponsor-name links + no-data note in the sponsor table */
+  .perf td a { color: var(--navy); font-weight: 600; }
+  .perf td a:hover { text-decoration: underline; }
+  .sp-nodata-cell { font-size: 0.76rem; color: #8a8f99; font-style: italic; text-align: left !important; }
 
 /* ---------- Offering cards ---------- */
   .offering-grid {
@@ -214,6 +221,8 @@
   .status-chip.backup { color: #b7791f; }
   .status-chip.soon { color: var(--navy); }
   .status-chip.closed { color: #8a8f99; }
+  .status-chip.confirm { color: #6b46c1; }
+  .status-chip.rejected { color: #b03a3a; }
   .type-chip {
     margin-left: auto;
     font-size: 0.64rem;
@@ -333,7 +342,7 @@
 
   <header class="main-header">
     <div class="main-header-inner">
-      <a class="logo" href="/"><img src="https://res.cloudinary.com/opoazlei/image/upload/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments"></a>
+      <a class="logo" href="/"><img width="400" height="75" src="/assets/img/logo.webp" alt="Baker 1031 Investments"></a>
       <button class="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" onclick="var b=this.nextElementSibling;var o=b.classList.toggle('open');this.setAttribute('aria-expanded',o)">
         <svg viewBox="0 0 24 24" width="22" height="22" stroke="currentColor" stroke-width="2" fill="none"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -374,10 +383,10 @@
     <div class="perf-tabs" role="tablist">
       <button type="button" class="active" data-tab="sponsors">Performance by Sponsor</button>
       <button type="button" data-tab="deals">Full Track Record</button>
-      <button type="button" data-tab="closed">Recently Closed Offerings</button>
     </div>
 
     <section class="perf-panel active" id="panel-sponsors">
+      <h2>Full-Cycle Track Record by Sponsor</h2>
       <div class="perf-wrap" style="margin-bottom: 1.5rem;">
         <table class="perf summary" id="summary-table">
           <thead>
@@ -415,7 +424,7 @@
           </tbody>
         </table>
       </div>
-      <p class="page-note">&ldquo;Preferred&rdquo; is Baker 1031&rsquo;s own designation, not an endorsement, recommendation, or guarantee of any security or of future performance. Group averages are simple averages across each group&rsquo;s completed full-cycle programs shown in the Full Track Record tab; success rate is weighted by each sponsor&rsquo;s completed-program count. Sponsor-level figures are provided by each sponsor and have not been independently verified except as described in the applicable offering materials. Averages are across each sponsor&rsquo;s completed full-cycle programs, net to investor over each program&rsquo;s hold. Past performance does not guarantee future results.</p>
+      <p class="page-note">&ldquo;Preferred&rdquo; is Baker 1031&rsquo;s own designation, not an endorsement, recommendation, or guarantee of any security or of future performance. Group averages are simple averages across each group&rsquo;s completed full-cycle programs shown in the Full Track Record tab; success rate is the share of those programs (with a reported equity multiple) that returned at least 1.00x investor equity. Sponsor-level figures are provided by each sponsor and have not been independently verified except as described in the applicable offering materials. Averages are across each sponsor&rsquo;s completed full-cycle programs, net to investor over each program&rsquo;s hold. Past performance does not guarantee future results.</p>
     </section>
 
     <section class="perf-panel" id="panel-deals">
@@ -451,13 +460,6 @@
     <p class="page-note">Shown to verified accredited investors only. Results are historical, realized outcomes for completed programs as reported by each sponsor and have not been independently verified except as described in the applicable offering materials. Equity multiple and average annual return are net to investor over each program&rsquo;s full hold period. Past performance does not guarantee future results; individual program results vary widely and losses can occur.</p>
     </section>
 
-    <section class="perf-panel" id="panel-closed">
-      <div class="offering-grid">
-      <!-- PERF:CLOSED_CARDS -->
-      </div>
-      <p class="page-note">Offerings move here automatically when their status changes to Closed &mdash; they are fully subscribed or have completed and are no longer available. Details pages are retained for reference. Past performance does not guarantee future results.</p>
-    </section>
-
   </main>
 
   <!-- Footer (same as offering page / homepage) -->
@@ -477,7 +479,7 @@
     <div class="footer-inner">
       <div class="footer-cols">
         <div class="footer-brand">
-          <img src="https://res.cloudinary.com/opoazlei/image/upload/f_auto,q_auto/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png" alt="Baker 1031 Investments">
+          <img width="400" height="75" src="/assets/img/logo.webp" alt="Baker 1031 Investments">
           <p>An independent family firm helping 1031 exchange investors move from active ownership into passive, institutional-quality real estate through DST, 721 exchange, mineral royalty, and Opportunity Zone investments.</p>
         </div>
         <div>
@@ -529,7 +531,7 @@
 
       <div class="footer-bottom">
         <span>&copy; 2026 Baker 1031 Investments. All rights reserved.</span>
-        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/documents/privacy-policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a> &nbsp;&middot;&nbsp; <a href="/employee.html">Employee Login</a></span>
+        <span><a href="/terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="/privacy-policy.html">Privacy Policy</a> &nbsp;&middot;&nbsp; <a href="/disclosures.html">Disclosures</a> &nbsp;&middot;&nbsp; <a href="/accessibility.html">Accessibility</a> &nbsp;&middot;&nbsp; <a href="/documents/form-crs.pdf" target="_blank" rel="noopener">Form CRS</a></span>
       </div>
     </div>
       <div class="footer-love" aria-hidden="true">We <svg class="love-heart" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg> 1031 Exchanges</div>

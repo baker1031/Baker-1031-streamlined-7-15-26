@@ -13,12 +13,12 @@
 (function () {
   "use strict";
 
-  var CLOUD = "https://res.cloudinary.com/opoazlei/image/upload";
-  var LOGO = CLOUD + "/v1783843015/76c3b97b-a853-46f1-bf6f-19285b0754f8_l5pbup.png";
-  var HEADSHOT = CLOUD + "/v1783927734/jerry-baker_ovhy2w.jpg";
-  var HERO = CLOUD + "/f_jpg,q_auto:good,w_1632/v1783843881/Apartments_pllp0h.jpg";
-  var BACKHERO = CLOUD + "/f_jpg,q_auto:good,w_1632/v1783843880/Hotel_ojlaau.jpg";
-  var LOGO_WHITE = CLOUD + "/v1783843015/f8ed098a-c0f6-44f7-ab09-99a7ebc61298_ada1wu.png";
+  var ASSETS = "/assets/img";
+  var LOGO = ASSETS + "/logo.png";
+  var HEADSHOT = ASSETS + "/jerry-baker-600.jpg";
+  var HERO = ASSETS + "/apartments-print.jpg";
+  var BACKHERO = ASSETS + "/hotel-print.jpg";
+  var LOGO_WHITE = ASSETS + "/logo-white.png";
   var HEART = '<svg class="lh" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
   var ORIGIN = "https://baker1031.com";
 

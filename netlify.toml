@@ -100,6 +100,16 @@
   status = 302
   force = true
 
+# /portal-access?t=<token> → magic-link redemption function. Special-situation
+# portal entry that bypasses the Kinde login (see netlify/functions/magic-link.mjs
+# and the generator card on /employee.html). 200 = rewrite, not redirect, so the
+# clean URL is what lands in the client's email. The function sets its own
+# noindex + no-store headers.
+[[redirects]]
+  from = "/portal-access"
+  to = "/.netlify/functions/magic-link"
+  status = 200
+
 # /schedule → the public booking page. NO redirect entry belongs here: Netlify
 #           already serves schedule.html at /schedule the same way it serves
 #           terms.html at /terms. A forced "/schedule/" -> "/schedule" rule was
@@ -137,6 +147,12 @@
     Netlify-CDN-Cache-Control = "public, s-maxage=3600, stale-while-revalidate=86400, durable"
 
 [[headers]]
+  for = "/video/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+    Netlify-CDN-Cache-Control = "public, s-maxage=31536000, durable"
+
+[[headers]]
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
@@ -165,6 +181,13 @@
 
 [[headers]]
   for = "/employee.html"
+  [headers.values]
+    X-Robots-Tag = "noindex, nofollow"
+
+# Same page when served extensionless (Pretty URLs) and its data function —
+# keep every form of the employee tool out of the index.
+[[headers]]
+  for = "/employee"
   [headers.values]
     X-Robots-Tag = "noindex, nofollow"
 
@@ -210,4 +233,4 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     # CSP in REPORT-ONLY mode first (audit): watch the console / reports for a week,
     # then move to Content-Security-Policy once no legitimate source is blocked.
-    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://esm.sh https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://res.cloudinary.com https://img.logo.dev https://assets.baker1031.com https://*.leadconnectorhq.com https://*.msgsndr.com; media-src 'self' https://res.cloudinary.com; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://auth.baker1031.com https://*.kinde.com https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com; frame-src https://api.leadconnectorhq.com https://*.leadconnectorhq.com https://*.msgsndr.com https://auth.baker1031.com https://player.vimeo.com https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://auth.baker1031.com"
+    Content-Security-Policy-Report-Only = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://esm.sh https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com https://www.google.com https://www.gstatic.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.logo.dev https://assets.baker1031.com https://*.leadconnectorhq.com https://*.msgsndr.com; media-src 'self' https://assets.baker1031.com; font-src 'self' data:; connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://auth.baker1031.com https://*.kinde.com https://link.msgsndr.com https://*.msgsndr.com https://*.leadconnectorhq.com; frame-src https://api.leadconnectorhq.com https://*.leadconnectorhq.com https://*.msgsndr.com https://auth.baker1031.com https://player.vimeo.com https://www.google.com; frame-ancestors 'self'; base-uri 'self'; form-action 'self' https://auth.baker1031.com"

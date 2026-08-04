@@ -7,7 +7,7 @@
       "kicker": "Property Sellers",
       "title": "Selling an Investment Property",
       "headline": "Selling an investment property? Defer the tax and stay invested.",
-      "metaDesc": "Selling an investment property? Defer capital-gains tax and depreciation recapture with a 1031 exchange into passive DST, 721, or Opportunity Zone real estate.",
+      "metaDesc": "Selling an investment property? Defer capital-gains tax and depreciation recapture with a 1031 exchange into passive DST or 721 real estate.",
       "lead": "When you sell appreciated investment real estate, federal capital-gains tax and depreciation recapture can take a large share of your proceeds. A properly structured 1031 exchange lets you defer that tax and reinvest the full amount into passive, institutional-quality real estate.",
       "pains": [
         "You're facing a capital-gains and depreciation-recapture bill that could consume a quarter to a third of your gain.",
@@ -41,9 +41,9 @@
       "slug": "tired-landlords",
       "name": "Tired landlords",
       "kicker": "Tired Landlords",
-      "title": "For Tired Landlords",
+      "title": "1031 Exchanges for Tired Landlords",
       "headline": "Done with tenants, toilets, and turnover?",
-      "metaDesc": "Tired of being a landlord? 1031-exchange your rental into passive, professionally managed real estate — defer the tax and step off the management treadmill.",
+      "metaDesc": "Tired of being a landlord? 1031-exchange your rental into passive, professionally managed real estate and step off the management treadmill.",
       "lead": "You've built equity as a landlord, but the late-night calls, vacancies, and repairs have worn thin. A 1031 exchange lets you trade active management for passive, professionally managed real estate without triggering the tax you've deferred for years.",
       "pains": [
         "You're tired of managing tenants, maintenance, and vacancies, but don't want a big tax bill for selling.",
@@ -115,7 +115,7 @@
       "kicker": "Business Owners",
       "title": "For Business Owners",
       "headline": "Selling business real estate? Defer the real estate gain.",
-      "metaDesc": "Selling your business or its building? Defer the real estate gain with a 1031 exchange of the real property into passive, professionally managed DST real estate.",
+      "metaDesc": "Selling your business or its building? Defer the real estate gain with a 1031 exchange into passive, professionally managed DST real estate.",
       "lead": "When you sell a business or the building it operates in, the real-property portion of the sale can qualify for a 1031 exchange, letting you defer a substantial tax bill and redeploy that equity into passive, income-producing real estate.",
       "pains": [
         "You're selling your company or its real estate and facing a large gain on the building.",
@@ -149,7 +149,7 @@
       "slug": "retirees",
       "name": "Retirees",
       "kicker": "Retirees",
-      "title": "For Retirees",
+      "title": "1031 Exchanges & DSTs for Retirees",
       "headline": "Turn real estate equity into passive retirement income.",
       "metaDesc": "Retirees: convert appreciated real estate into passive, income-producing property with a 1031 exchange — defer the tax and simplify your estate.",
       "lead": "As you move into retirement, active real estate can feel like a burden. A 1031 exchange lets you convert appreciated property into passive, income-producing real estate, deferring the tax, simplifying your holdings, and easing the transition to your heirs.",
@@ -187,7 +187,7 @@
       "kicker": "Advisors & CPAs",
       "title": "For Advisors & CPAs",
       "headline": "Partner with us on your clients' 1031 exchanges.",
-      "metaDesc": "Advisors and CPAs: partner with an independent firm on client 1031 exchanges — vetted DST, 721, and Opportunity Zone options while you keep the relationship.",
+      "metaDesc": "Advisors and CPAs: partner with an independent firm on client 1031 exchanges — vetted DST, 721, and OZ options while you keep the relationship.",
       "lead": "When your clients sell appreciated real estate, they need vetted, well-structured replacement options, and you need to stay at the center of the relationship. Baker 1031 works alongside financial advisors, CPAs, and attorneys to give clients access to institutional DST, 721, and Opportunity Zone offerings.",
       "pains": [
         "Your client is selling real estate and needs a 1031 solution you can stand behind.",

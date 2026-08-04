@@ -9,7 +9,7 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 ## Key pages
 
 - [Home](https://baker1031.com/): firm overview and strategies
-- [Learn (research library)](https://baker1031.com/learn): 525 in-depth articles and guides
+- [Learn (research library)](https://baker1031.com/learn): 528 in-depth articles and guides
 - [Glossary](https://baker1031.com/glossary): 50 plain-English 1031/DST/REIT/OZ terms
 - [Calculators](https://baker1031.com/calculators): 10 free interactive tax/yield tools
 - [Markets by state](https://baker1031.com/markets): 63 state and metro 1031/DST tax guides
@@ -262,6 +262,10 @@ Contact: Baker 1031 Investments, 650 California Street, San Francisco, CA 94108 
 - [Opportunity Zone Investment Minimums & Accreditation](https://baker1031.com/learn/opportunity-zone-investment-minimums-and-accreditation/)
 - [Opportunity Zone Map Changes & New Designations](https://baker1031.com/learn/opportunity-zone-map-changes-and-new-designations/)
 - [Opportunity Zone Map: How to Find Qualified Zones](https://baker1031.com/learn/opportunity-zone-map-how-to-find-qualified-zones/)
+
+## Firm, Fees & Methodology
+
+- [The Top DST Brokerage Firms for 1031 Exchange Investors](https://baker1031.com/learn/top-dst-brokerage-firms-for-1031-investors/)
 
 ## DST sponsors
 
