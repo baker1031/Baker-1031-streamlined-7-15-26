@@ -52,7 +52,7 @@ Required Netlify production variables:
 One-time setup and migration endpoints are protected by `HS_SETUP_SECRET`:
 
 1. `GET /.netlify/functions/hubspot-setup?secret=...` creates missing contact and deal properties idempotently.
-2. `GET /.netlify/functions/ghl-hubspot-backfill?secret=...&mode=dry-run&limit=25` audits a batch without CRM writes.
+2. `GET /.netlify/functions/ghl-hubspot-backfill?secret=...&mode=dry-run&limit=25` audits a batch without CRM writes; use the returned `nextStartAfterId` and `nextStartAfter` values on the next request to continue through the list.
 3. A write batch requires `POST`, `mode=write`, `confirm=IMPORT_GHL_TO_HUBSPOT`, and `HUBSPOT_MIGRATION_ENABLED=true`.
 4. `ghl-hubspot-webhook` is available for a GHL Custom Webhook workflow if stage/task changes need immediate delivery instead of the one-time backfill.
 

@@ -7,6 +7,7 @@
 
    The endpoint is intentionally guarded and capped per request. It is
    idempotent for contacts/deals and marks migrated tasks with their GHL ID.
+   The response includes a continuation cursor for the next batch.
 */
 
 import { json, requireSecret } from "./lib/http.mjs";
@@ -38,6 +39,8 @@ export default async (req) => {
   const url = new URL(req.url);
   const mode = url.searchParams.get("mode") || "dry-run";
   const limit = Math.min(MAX_PER_REQUEST, Math.max(1, Number(url.searchParams.get("limit") || 25)));
+  let startAfterId = url.searchParams.get("startAfterId") || undefined;
+  let startAfter = url.searchParams.get("startAfter") || undefined;
   if (mode === "write" && (req.method !== "POST" || url.searchParams.get("confirm") !== "IMPORT_GHL_TO_HUBSPOT")) {
     return json({ error: "write mode requires POST and confirm=IMPORT_GHL_TO_HUBSPOT" }, 400);
   }
@@ -47,8 +50,6 @@ export default async (req) => {
 
   const fieldMap = await getContactFieldMap();
   const stats = { mode, scannedContacts: 0, contactsCreatedOrUpdated: 0, opportunitiesCreatedOrUpdated: 0, tasksCreated: 0, notesCreated: 0, skipped: 0, errors: [] };
-  let startAfterId;
-  let startAfter;
   const seen = new Set();
 
   do {
@@ -69,7 +70,7 @@ export default async (req) => {
     startAfter = meta.startAfter;
   } while (stats.scannedContacts < limit && (startAfterId || startAfter));
 
-  return json({ ok: true, ...stats });
+  return json({ ok: true, ...stats, nextStartAfterId: startAfterId || null, nextStartAfter: startAfter || null });
 };
 
 async function migrateContact(contact, fieldMap, mode, stats) {
