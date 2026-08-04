@@ -165,7 +165,7 @@ async function migrateOpportunities(opportunities, contactId, ghlPipeline, stats
       closedate: opportunity.forecastExpectedCloseDate || opportunity.forecastExpectedCloseDate,
       ghl_opportunity_id: opportunity.id,
       ghl_pipeline_id: opportunity.pipelineId,
-      ghl_stage_name: stageName(opportunity),
+      ghl_stage_name: stageName(opportunity, ghlPipeline),
       ghl_status: opportunity.status,
       ghl_source: opportunity.source,
       situation: opportunity.customFields?.situation,
