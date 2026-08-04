@@ -197,8 +197,9 @@ async function handleNote(noteMeta) {
 
   // Granola remains connected to GHL, but the same meeting summary and action
   // items are mirrored into HubSpot when the contact can be matched by email.
-  const hubspotContact = process.env.HUBSPOT_TOKEN && contact.email
-    ? await upsertHubSpotContact(contact.email, {
+  const hubspotContact = process.env.HUBSPOT_TOKEN && (contact.email || contact.phone)
+    ? await upsertHubSpotContact(contact.email || null, {
+        ghl_contact_id: contact.id,
         firstname: contact.firstName,
         lastname: contact.lastName,
         phone: contact.phone,

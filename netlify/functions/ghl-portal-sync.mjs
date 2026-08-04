@@ -69,6 +69,7 @@ export default async () => {
           await upsertHubSpotContact(email, {
             firstname: properName(c.firstName),
             lastname: properName(c.lastName),
+            ghl_contact_id: c.id,
             portal_access: /^yes$/i.test(now) ? "Yes" : "No"
           });
         } catch (e) { console.error("ghl-portal-sync: HubSpot mirror failed", e.message); }

@@ -42,6 +42,8 @@ export function assessAccreditation(value) {
 
 export const CONTACT_PROPERTY_DEFINITIONS = [
   string("ghl_contact_id", "GHL Contact ID"),
+  string("ghl_tags", "GHL Tags"),
+  string("ghl_assigned_to", "GHL Assigned User"),
   string("preferred_name", "Preferred Name"),
   string("state_of_residence", "State of Residence"),
   enumeration("investor_role", "Role", ["Investor", "Broker", "Financial Advisor", "CPA", "Attorney", "Qualified Intermediary", "Real Estate Agent", "Family Member / Assisting an Investor", "Other"]),

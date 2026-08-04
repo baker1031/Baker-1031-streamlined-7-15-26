@@ -27,6 +27,13 @@ export async function findContactByEmail(email) {
   return result[0] || null;
 }
 
+export async function findContactByPhone(phone) {
+  const value = String(phone || "").trim();
+  if (!value) return null;
+  const result = await search("contacts", [{ propertyName: "phone", operator: "EQ", value }], ["email", "firstname", "lastname", "phone"]);
+  return result[0] || null;
+}
+
 export async function findContactByGhlId(ghlId) {
   if (!ghlId) return null;
   const result = await search("contacts", [{ propertyName: "ghl_contact_id", operator: "EQ", value: String(ghlId) }]);
@@ -36,6 +43,7 @@ export async function findContactByGhlId(ghlId) {
 export async function upsertContact(email, properties = {}) {
   const cleanProps = clean({ ...properties, ...(email ? { email: String(email).trim().toLowerCase() } : {}) });
   let existing = email ? await findContactByEmail(email) : null;
+  if (!existing && cleanProps.phone) existing = await findContactByPhone(cleanProps.phone);
   if (!existing && cleanProps.ghl_contact_id) existing = await findContactByGhlId(cleanProps.ghl_contact_id);
   if (existing) {
     const updated = await hs(`/crm/v3/objects/contacts/${existing.id}`, { method: "PATCH", body: { properties: cleanProps } });
@@ -134,6 +142,44 @@ export async function searchTasksByMarker(marker) {
 export async function searchNotesByMarker(marker) {
   if (!marker) return [];
   return search("notes", [{ propertyName: "hs_note_body", operator: "CONTAINS_TOKEN", value: marker }], ["hs_note_body"], false);
+}
+
+export async function searchEmailsByMarker(marker) {
+  if (!marker) return [];
+  return search("emails", [{ propertyName: "hs_email_text", operator: "CONTAINS_TOKEN", value: marker }], ["hs_email_subject", "hs_email_text"], false);
+}
+
+export async function createEmail({ subject, text, html, timestamp, contactId, dealId, marker } = {}) {
+  if (!subject && !text) return null;
+  const body = [text, marker].filter(Boolean).join("\n\n");
+  const properties = clean({
+    hs_email_subject: String(subject || "(No subject)").slice(0, 255),
+    hs_email_text: body.slice(0, 65536),
+    hs_email_html: html ? String(html).slice(0, 65536) : undefined,
+    hs_timestamp: timestamp || new Date().toISOString(),
+    hs_email_direction: "EMAIL"
+  });
+  const associations = [];
+  if (contactId) associations.push(association(contactId, 198));
+  if (dealId) associations.push(association(dealId, 210));
+  const result = await hs("/crm/v3/objects/emails", {
+    method: "POST",
+    body: { properties, ...(associations.length ? { associations } : {}) }
+  });
+  return result.ok ? result.data : null;
+}
+
+export async function searchPage(objectType, filters = [], properties = [], after) {
+  const result = await hs(`/crm/v3/objects/${objectType}/search`, {
+    method: "POST",
+    body: {
+      filterGroups: filters.length ? [{ filters }] : [],
+      properties,
+      limit: 100,
+      ...(after ? { after: String(after) } : {})
+    }
+  });
+  return result.ok ? result.data : { results: [], paging: {} };
 }
 
 export async function search(objectType, filters, properties = [], sort = true) {

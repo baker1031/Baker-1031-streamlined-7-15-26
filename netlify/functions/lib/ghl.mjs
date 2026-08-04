@@ -51,13 +51,46 @@ export async function upsertContact({ email, firstName, lastName, name, phone, c
 /* Runtime name→id map for CONTACT custom fields (cached per instance). */
 let _fieldCache = null;
 export async function getContactFieldMap() {
-  if (_fieldCache) return _fieldCache;
+  if (_fieldCache?.byName) return _fieldCache.byName;
+  const catalog = await getContactFieldCatalog();
+  return catalog.byName;
+}
+
+export async function getContactFieldCatalog() {
+  if (_fieldCache?.byName) return _fieldCache;
   const res = await ghl(`/locations/${LOC()}/customFields`, { query: { model: "contact" } });
   const fields = (res.data && (res.data.customFields || [])) || [];
-  const map = {};
-  for (const f of fields) if (f && f.name) map[String(f.name).trim().toLowerCase()] = f.id;
-  _fieldCache = map;
-  return map;
+  const byName = {};
+  const byId = {};
+  for (const f of fields) {
+    if (!f || !f.id) continue;
+    byId[String(f.id)] = f;
+    if (f.name) byName[String(f.name).trim().toLowerCase()] = f.id;
+  }
+  _fieldCache = { byName, byId, fields };
+  return _fieldCache;
+}
+
+export async function getContactById(contactId) {
+  if (!contactId) return null;
+  const res = await ghl(`/contacts/${encodeURIComponent(contactId)}`);
+  return res.ok ? (res.data?.contact || res.data) : null;
+}
+
+export async function findContactByEmail(email) {
+  const value = String(email || "").trim().toLowerCase();
+  if (!value) return null;
+  const res = await ghl(`/contacts/`, { query: { locationId: LOC(), query: value, limit: 20 } });
+  const contacts = res.data?.contacts || [];
+  return contacts.find((contact) => String(contact.email || "").trim().toLowerCase() === value) || null;
+}
+
+export async function findContactByPhone(phone) {
+  const last10 = String(phone || "").replace(/\D/g, "").slice(-10);
+  if (last10.length < 10) return null;
+  const res = await ghl(`/contacts/`, { query: { locationId: LOC(), query: last10, limit: 20 } });
+  const contacts = res.data?.contacts || [];
+  return contacts.find((contact) => String(contact.phone || "").replace(/\D/g, "").slice(-10) === last10) || null;
 }
 
 /* Resolve the pipeline + its stage ids by display name (cached). */
