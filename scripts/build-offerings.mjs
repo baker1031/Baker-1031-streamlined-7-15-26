@@ -42,6 +42,10 @@ const OG_IMAGE = `${SITE}/assets/og-card.png`;
 // below. The access form submits via fetch and has onsubmit prevented, so this
 // script never sees a native form submit — no double-counting of leads.
 const GHL_TRACKING = `<!-- GoHighLevel website tracking --><script src="https://link.msgsndr.com/js/external-tracking.js" data-tracking-id="tk_7ab70c544749430ba9bc3086c9f8053d"></script>`;
+// HubSpot website tracking for portal 246948683. This is analytics/visitor
+// identification only; CRM writes remain handled by the Netlify functions.
+// The loader is injected once per generated page, before </head>.
+const HUBSPOT_TRACKING = `<!-- HubSpot tracking --><script type="text/javascript" id="hs-script-loader" async defer src="https://js-na2.hs-scripts.com/246948683.js"></script>`;
 // Social-card coverage (audit): every generated page gets OG/Twitter tags.
 function ensureOg(html, title, desc, url) {
   if (html.includes('property="og:image"')) return html;
@@ -2075,6 +2079,11 @@ ${rows}
     // GoHighLevel website tracking — one per page, before </head> (idempotent).
     if (!s.includes("external-tracking.js") && s.includes("</head>")) {
       s = s.replace("</head>", `${GHL_TRACKING}\n</head>`);
+      changed = true;
+    }
+    // HubSpot website tracking — one per page, before </head> (idempotent).
+    if (!s.includes("hs-script-loader") && !s.includes("hs-scripts.com") && s.includes("</head>")) {
+      s = s.replace("</head>", `${HUBSPOT_TRACKING}\n</head>`);
       changed = true;
     }
     for (const { attr, dir, hashes } of assets) {
