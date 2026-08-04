@@ -11,7 +11,7 @@
 <link rel="canonical" href="https://baker1031.com/scheduled.html">
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="preconnect" href="https://api.leadconnectorhq.com" crossorigin>
+<link rel="preconnect" href="https://cal.com" crossorigin>
 <link rel="preconnect" href="https://link.msgsndr.com" crossorigin>
 <link rel="dns-prefetch" href="https://img.logo.dev">
 <link rel="stylesheet" href="/css/learn-layout.css">
@@ -108,7 +108,7 @@
         <div class="sched-step">
           <div class="n">2</div>
           <h3>Book your intro call</h3>
-          <p>Pick a time below for a short introductory consultation &mdash; about 25 minutes, by phone or video.</p>
+          <p>Pick a time below for a short introductory phone consultation &mdash; about 25 minutes.</p>
         </div>
         <div class="sched-step">
           <div class="n">3</div>
@@ -272,11 +272,9 @@
         );
       }
 
-      // Build the GoHighLevel booking widget (same calendar the site uses),
-      // prefilled from the stashed values. form_embed.js auto-sizes the iframe to
-      // its full content height, so the calendar never needs an inner scrollbar.
+      // Build the Cal.com phone booking widget, prefilled from the stashed values.
       function buildCalendar() {
-        var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
+        var CAL_BOOKING_URL = 'https://cal.com/jerry-baker-yn6qn1/25min';
         var holder = document.getElementById('sched-cal');
         var loading = document.getElementById('sched-cal-loading');
 
@@ -287,41 +285,33 @@
           : (digits.length === 11 && digits.charAt(0) === '1') ? '+' + digits
           : '';
         var params = new URLSearchParams();
-        if (data.first_name) params.set('first_name', data.first_name);
-        if (data.last_name) params.set('last_name', data.last_name);
+        if (data.first_name || data.last_name) params.set('name', [data.first_name, data.last_name].filter(Boolean).join(' '));
         if (data.email) params.set('email', data.email);
         if (e164Phone) params.set('phone', e164Phone);
 
         var iframe = document.createElement('iframe');
-        iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + (params.toString() ? '?' + params.toString() : '');
-        iframe.id = GHL_BOOKING_ID + '_' + Date.now();
+        iframe.src = CAL_BOOKING_URL + (params.toString() ? '?' + params.toString() : '');
+        iframe.id = 'cal-phone-booking_' + Date.now();
         iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
         iframe.setAttribute('scrolling', 'no');
         iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
         holder.appendChild(iframe);
 
-        if (!document.getElementById('ghl-embed-js')) {
-          var s = document.createElement('script');
-          s.id = 'ghl-embed-js';
-          s.src = 'https://link.msgsndr.com/js/form_embed.js';
-          document.body.appendChild(s);
-        }
-
-        // Conversion signals. The GoHighLevel tracker (external-tracking.js, injected
+        // Conversion signals. The site tracker (external-tracking.js, injected
         // at build) records the /scheduled.html pageview automatically; these gtag
         // calls are best-effort if GA4 is present.
         if (window.gtag) gtag('event', 'generate_lead', { method: 'access_request_form', currency: 'USD', value: 1 });
         window.addEventListener('message', function (e) {
           var o = String(e.origin || '');
-          if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
+          if (o.indexOf('cal.com') === -1) return;
           var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
           // Match ONLY the real booking-completion message: it carries a completion
           // word alongside the booking context. On load the widget posts a message
           // that merely contains its own ".../widget/booking/..." URL — that has the
           // word "booking" but NO completion word, so it must not trigger a redirect.
-          if (!(/booking|appointment/i.test(raw) && /complete|booked|confirmed|success/i.test(raw))) return;
-          if (window.__ghlBooked) return; window.__ghlBooked = true;
-          if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: route, currency: 'USD', value: 1 });
+          if (!/bookingSuccessful|booking.*success/i.test(raw)) return;
+          if (window.__calBooked) return; window.__calBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'cal.com_phone', event_type: route, currency: 'USD', value: 1 });
           // Booking complete — hand off to the branded confirmation page. Small delay
           // lets the GHL widget settle and the analytics beacon flush first.
           setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);

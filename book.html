@@ -11,7 +11,7 @@
 <link rel="canonical" href="https://baker1031.com/book.html">
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="preconnect" href="https://api.leadconnectorhq.com" crossorigin>
+<link rel="preconnect" href="https://cal.com" crossorigin>
 <link rel="preconnect" href="https://link.msgsndr.com" crossorigin>
 <link rel="dns-prefetch" href="https://img.logo.dev">
 <link rel="stylesheet" href="/css/learn-layout.css">
@@ -78,7 +78,7 @@
         </div>
         <div class="sched-kicker" id="sched-kicker">Baker 1031 Investments</div>
         <h1 id="sched-title">Schedule your introductory call</h1>
-        <p class="sched-lead" id="sched-lead">Pick any time that works for you below &mdash; a short introductory consultation, about 25 minutes, by phone or video. Once you book, your investor portal is set up automatically.</p>
+        <p class="sched-lead" id="sched-lead">Pick any time that works for you below &mdash; a short introductory consultation, about 25 minutes, by phone. Once you book, your investor portal is set up automatically.</p>
         <div id="sched-gate-cta" class="sched-gate-cta" style="display:none">
           <a href="/#request-access" class="portal-btn" style="text-decoration:none;display:inline-block;background:var(--navy);color:#fff;font-weight:700;font-size:0.9rem;padding:0.62rem 1.25rem;border-radius:8px">Request investment access &rarr;</a>
         </div>
@@ -188,7 +188,7 @@
          with the new ?k= value. Any old link stops working immediately.
          ------------------------------------------------------------------- */
       var BOOKING_KEY = 'bkr-Vq7K2m9Pxr31';
-      var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
+      var CAL_BOOKING_URL = 'https://cal.com/jerry-baker-yn6qn1/25min';
 
       var qs = new URLSearchParams(location.search);
       var providedKey = (qs.get('k') || '').trim();
@@ -227,7 +227,7 @@
       buildCalendar();
 
       function buildCalendar() {
-        // E.164-normalize any phone we were handed so GHL prefills it cleanly.
+        // E.164-normalize any phone we were handed so Cal.com prefills it cleanly.
         var digits = phone.replace(/\D/g, '');
         var e164Phone = phone.charAt(0) === '+' ? '+' + digits
           : digits.length === 10 ? '+1' + digits
@@ -235,39 +235,31 @@
           : '';
 
         var params = new URLSearchParams();
-        if (first) params.set('first_name', first);
-        if (last) params.set('last_name', last);
+        if (first || last) params.set('name', [first, last].filter(Boolean).join(' '));
         if (email) params.set('email', email);
         if (e164Phone) params.set('phone', e164Phone);
 
         var iframe = document.createElement('iframe');
-        iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + (params.toString() ? '?' + params.toString() : '');
-        iframe.id = GHL_BOOKING_ID + '_' + Date.now();
+        iframe.src = CAL_BOOKING_URL + (params.toString() ? '?' + params.toString() : '');
+        iframe.id = 'cal-phone-booking_' + Date.now();
         iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
         iframe.setAttribute('scrolling', 'no');
         iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
         holder.appendChild(iframe);
-
-        if (!document.getElementById('ghl-embed-js')) {
-          var s = document.createElement('script');
-          s.id = 'ghl-embed-js';
-          s.src = 'https://link.msgsndr.com/js/form_embed.js';
-          document.body.appendChild(s);
-        }
 
         // Best-effort conversion signal if GA4 is present.
         if (window.gtag) gtag('event', 'generate_lead', { method: 'direct_booking_link', currency: 'USD', value: 1 });
 
         window.addEventListener('message', function (e) {
           var o = String(e.origin || '');
-          if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
+          if (o.indexOf('cal.com') === -1) return;
           var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
           // Only the real booking-completion message carries a completion word
           // alongside the booking context. The widget's load-time message has
           // "booking" (its own URL) but no completion word — must not fire.
-          if (!(/booking|appointment/i.test(raw) && /complete|booked|confirmed|success/i.test(raw))) return;
-          if (window.__ghlBooked) return; window.__ghlBooked = true;
-          if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: 'direct', currency: 'USD', value: 1 });
+          if (!/bookingSuccessful|booking.*success/i.test(raw)) return;
+          if (window.__calBooked) return; window.__calBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'cal.com_phone', event_type: 'direct', currency: 'USD', value: 1 });
           setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
         });
       }
