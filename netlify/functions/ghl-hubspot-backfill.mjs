@@ -191,6 +191,7 @@ function readCustomFields(contact, fieldMap) {
   };
   const role = normalizeRole(get("Role"));
   const dstFamiliarity = normalizeDstFamiliarity(get("DST Familiarity"));
+  const currentPlan = normalizeCurrentPlan(get("Current Plan (Where DSTs Fit)"));
   return clean({
     preferred_name: get("Preferred Name"),
     state_of_residence: get("State of Residence"),
@@ -199,7 +200,7 @@ function readCustomFields(contact, fieldMap) {
     household_income: get("Household Income"),
     net_worth: get("Net Worth"),
     ...dstFamiliarity,
-    current_plan: get("Current Plan (Where DSTs Fit)"),
+    ...currentPlan,
     us_check: get("US Check"),
     accreditation_check: get("Accreditation Check"),
     portal_access: get("Portal Access"),
@@ -292,6 +293,19 @@ function normalizeDstFamiliarity(value) {
         ? "Very familiar"
         : "Somewhat familiar";
   return { dst_familiarity: mapped, dst_familiarity_details: raw };
+}
+function normalizeCurrentPlan(value) {
+  const raw = String(value || "").trim();
+  if (!raw) return {};
+  const allowed = new Set(["DSTs are my main focus", "Exploring DSTs alongside other options", "Not really interested in DSTs"]);
+  if (allowed.has(raw)) return { current_plan: raw };
+  const lower = raw.toLowerCase();
+  const mapped = /not interested|no dst|without dst|avoid dst/.test(lower)
+    ? "Not really interested in DSTs"
+    : /main focus|primarily dst|only dst/.test(lower)
+      ? "DSTs are my main focus"
+      : "Exploring DSTs alongside other options";
+  return { current_plan: mapped, current_plan_details: raw };
 }
 function number(value) {
   if (value === undefined || value === null || value === "") return undefined;

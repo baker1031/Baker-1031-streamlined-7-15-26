@@ -52,6 +52,7 @@ export const CONTACT_PROPERTY_DEFINITIONS = [
   enumeration("dst_familiarity", "DST Familiarity", ["New to DSTs", "Somewhat familiar", "Very familiar", "Experienced DST investor"]),
   string("dst_familiarity_details", "DST Familiarity — details"),
   enumeration("current_plan", "Current Plan (Where DSTs Fit)", ["DSTs are my main focus", "Exploring DSTs alongside other options", "Not really interested in DSTs"]),
+  string("current_plan_details", "Current Plan — details"),
   string("us_check", "US Check"),
   string("accreditation_check", "Accreditation Check"),
   enumeration("portal_access", "Portal Access", ["Yes", "No"]),
