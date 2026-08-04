@@ -28,6 +28,7 @@ import {
   createNote as createHubSpotNote
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, assessAccreditation as assessHubSpotAccreditation } from "./lib/hs-config.mjs";
+import { properName } from "./lib/name.mjs";
 
 export default async (req) => {
   if (!process.env.GHL_TOKEN && !process.env.HUBSPOT_TOKEN) return ok("crm not configured");
@@ -68,7 +69,7 @@ export default async (req) => {
     return ok(`skipped: missing ${missing.join(", ")}`);
   }
 
-  const name = [data.first_name, data.last_name].filter(Boolean).join(" ") || data.email;
+  const name = properName([data.first_name, data.last_name].filter(Boolean).join(" ")) || data.email;
 
   // ---------- calculations ----------
   const equity = money(data.equity_amount);
@@ -133,8 +134,8 @@ async function syncToGHL({ data, name, equity, debt, anticipated, total, ltv, de
 
   const contact = await upsertContact({
     email: data.email,
-    firstName: data.first_name,
-    lastName: data.last_name,
+    firstName: properName(data.first_name),
+    lastName: properName(data.last_name),
     name,
     phone: data.phone,
     customFields: cf,
@@ -168,8 +169,8 @@ async function syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv
   const { leadStatus, lifecycle } = assessHubSpotAccreditation(data.accreditation_check);
   const smsOptIn = String(data.sms_consent || "").trim().toLowerCase() === "yes";
   const contact = await upsertHubSpotContact(data.email, clean({
-    firstname: data.first_name,
-    lastname: data.last_name,
+    firstname: properName(data.first_name),
+    lastname: properName(data.last_name),
     phone: data.phone,
     preferred_name: data.preferred_name,
     state: data.state,

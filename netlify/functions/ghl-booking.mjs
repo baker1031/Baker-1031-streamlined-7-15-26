@@ -28,6 +28,7 @@ import {
 import { PIPELINE_NAME, STAGES, LEAD_STATUS, buildContactFields } from "./lib/ghl-config.mjs";
 import { upsertContact as upsertHubSpotContact, findOpenDealForContact, createDeal, updateDeal, createNote as createHubSpotNote } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, LEAD_STATUS as HUBSPOT_LEAD_STATUS } from "./lib/hs-config.mjs";
+import { properName } from "./lib/name.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
@@ -44,9 +45,9 @@ export default async (req) => {
   // GHL custom-webhook payloads vary; read the contact from the common shapes.
   const c = body.contact || body.customData || body;
   const email = String(c.email || body.email || "").trim().toLowerCase();
-  const first = c.first_name || c.firstName || body.first_name || "";
-  const last  = c.last_name  || c.lastName  || body.last_name  || "";
-  const fullName = c.full_name || c.name || body.full_name || [first, last].filter(Boolean).join(" ") || email;
+  const first = properName(c.first_name || c.firstName || body.first_name || "");
+  const last  = properName(c.last_name  || c.lastName  || body.last_name  || "");
+  const fullName = properName(c.full_name || c.name || body.full_name || [first, last].filter(Boolean).join(" ")) || email;
   if (!email) return ok("no attendee email in payload");
 
   /* ---------- CRM: lead status, portal flag, opportunity stage ---------- */

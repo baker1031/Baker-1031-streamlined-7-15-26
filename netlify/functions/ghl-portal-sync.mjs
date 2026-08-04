@@ -22,6 +22,8 @@ import { getStore } from "@netlify/blobs";
 import { getContactFieldMap, listContacts } from "./lib/ghl.mjs";
 import { kindeToken, createUser, findUserByEmail, suspendUser, unsuspendUser } from "./lib/kinde.mjs";
 import { PORTAL_FIELD_NAME } from "./lib/ghl-config.mjs";
+import { upsertContact as upsertHubSpotContact } from "./lib/hubspot.mjs";
+import { properName } from "./lib/name.mjs";
 
 export default async () => {
   if (!process.env.GHL_TOKEN) { console.log("ghl-portal-sync: no GHL_TOKEN"); return; }
@@ -52,7 +54,7 @@ export default async () => {
       if (!email) continue;
 
       if (/^yes$/i.test(now)) {
-        const res = await createUser(token, { email, given: c.firstName || "", family: c.lastName || "" });
+        const res = await createUser(token, { email, given: properName(c.firstName), family: properName(c.lastName) });
         if (res.ok && !res.created) {
           const user = await findUserByEmail(token, email);
           if (user && user.is_suspended) await unsuspendUser(token, user.id);
@@ -60,6 +62,16 @@ export default async () => {
       } else if (/^no$/i.test(now)) {
         const user = await findUserByEmail(token, email);
         if (user) await suspendUser(token, user.id);
+      }
+
+      if (process.env.HUBSPOT_TOKEN) {
+        try {
+          await upsertHubSpotContact(email, {
+            firstname: properName(c.firstName),
+            lastname: properName(c.lastName),
+            portal_access: /^yes$/i.test(now) ? "Yes" : "No"
+          });
+        } catch (e) { console.error("ghl-portal-sync: HubSpot mirror failed", e.message); }
       }
 
       await store.set(`pa:${c.id}`, now).catch(() => {});

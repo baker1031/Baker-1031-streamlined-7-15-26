@@ -9,6 +9,9 @@ import {
   createDeal, updateDeal, createTask, searchTasksByMarker
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES } from "./lib/hs-config.mjs";
+import { properName } from "./lib/name.mjs";
+import { resolvePipeline } from "./lib/ghl.mjs";
+import { PIPELINE_NAME } from "./lib/ghl-config.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
@@ -24,8 +27,8 @@ export default async (req) => {
   const contact = email || ghlContactId
     ? await upsertContact(email, clean({
         ghl_contact_id: ghlContactId,
-        firstname: source.firstName || source.first_name,
-        lastname: source.lastName || source.last_name,
+        firstname: properName(source.firstName || source.first_name),
+        lastname: properName(source.lastName || source.last_name),
         phone: source.phone,
         company: source.companyName,
         contact_source: source.source
@@ -36,14 +39,16 @@ export default async (req) => {
   const opportunity = body.opportunity || body.opportunities?.[0] || null;
   let deal = null;
   if (opportunity?.id && contactId) {
+    const ghlPipeline = await resolvePipeline(PIPELINE_NAME).catch(() => null);
+    const incomingStage = stageLabel(opportunity, ghlPipeline);
     const props = clean({
       dealname: opportunity.name,
       amount: opportunity.monetaryValue,
       pipeline: "default",
-      dealstage: mapStage(opportunity.pipelineStageName || opportunity.stageName, opportunity.status),
+      dealstage: mapStage(incomingStage, opportunity.status),
       ghl_opportunity_id: opportunity.id,
       ghl_pipeline_id: opportunity.pipelineId,
-      ghl_stage_name: opportunity.pipelineStageName || opportunity.stageName,
+      ghl_stage_name: incomingStage,
       ghl_status: opportunity.status,
       ghl_source: opportunity.source
     });
@@ -80,5 +85,10 @@ function mapStage(stage, status) {
   if (/review/.test(value)) return DEAL_STAGES.REVIEWING_OPPORTUNITIES;
   if (/commit/.test(value)) return DEAL_STAGES.COMMITTED;
   return DEAL_STAGES.NEW_REGISTRATION;
+}
+function stageLabel(opportunity, ghlPipeline) {
+  const direct = opportunity.pipelineStageName || opportunity.stageName || "";
+  const id = opportunity.pipelineStageId || direct;
+  return ghlPipeline?.stageNames?.[String(id)] || direct || id;
 }
 function clean(values) { return Object.fromEntries(Object.entries(values).filter(([, value]) => value !== undefined && value !== null && value !== "")); }

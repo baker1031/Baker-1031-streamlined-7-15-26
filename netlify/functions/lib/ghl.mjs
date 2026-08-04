@@ -69,8 +69,12 @@ export async function resolvePipeline(pipelineName) {
   const p = pipelines.find((x) => String(x.name).trim().toLowerCase() === pipelineName.trim().toLowerCase()) || pipelines[0];
   if (!p) return null;
   const stages = {};
-  for (const s of (p.stages || [])) stages[String(s.name).trim().toLowerCase()] = s.id;
-  _pipeCache = { id: p.id, stages };
+  const stageNames = {};
+  for (const s of (p.stages || [])) {
+    stages[String(s.name).trim().toLowerCase()] = s.id;
+    stageNames[String(s.id)] = s.name;
+  }
+  _pipeCache = { id: p.id, stages, stageNames };
   return _pipeCache;
 }
 export function stageId(pipe, name) {

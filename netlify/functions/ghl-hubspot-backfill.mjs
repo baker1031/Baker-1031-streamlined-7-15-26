@@ -17,7 +17,9 @@ import {
   createNote, createTask, searchNotesByMarker, searchTasksByMarker
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, assessAccreditation } from "./lib/hs-config.mjs";
-import { getContactFieldMap, listContacts } from "./lib/ghl.mjs";
+import { getContactFieldMap, listContacts, resolvePipeline } from "./lib/ghl.mjs";
+import { PIPELINE_NAME } from "./lib/ghl-config.mjs";
+import { properName } from "./lib/name.mjs";
 
 // Each contact may require several sequential GHL and HubSpot API calls.
 // Keep synchronous requests comfortably below Netlify's function timeout.
@@ -51,6 +53,7 @@ export default async (req) => {
   }
 
   const fieldMap = await getContactFieldMap();
+  const ghlPipeline = await resolvePipeline(PIPELINE_NAME).catch(() => null);
   const stats = { mode, scannedContacts: 0, contactsCreatedOrUpdated: 0, opportunitiesCreatedOrUpdated: 0, tasksCreated: 0, notesCreated: 0, skipped: 0, errors: [] };
   const seen = new Set();
 
@@ -62,7 +65,7 @@ export default async (req) => {
       seen.add(contact.id);
       stats.scannedContacts++;
       try {
-        await migrateContact(contact, fieldMap, mode, stats);
+        await migrateContact(contact, fieldMap, ghlPipeline, mode, stats);
       } catch (error) {
         stats.errors.push({ kind: "contact", id: contact.id, message: String(error.message || error).slice(0, 180) });
       }
@@ -72,17 +75,17 @@ export default async (req) => {
     startAfter = meta.startAfter;
   } while (stats.scannedContacts < limit && (startAfterId || startAfter));
 
-  return json({ ok: true, ...stats, nextStartAfterId: startAfterId || null, nextStartAfter: startAfter || null });
+  return json({ ok: true, ...stats, ghlStageCatalog: { nameToId: ghlPipeline?.stages || {}, idToName: ghlPipeline?.stageNames || {} }, nextStartAfterId: startAfterId || null, nextStartAfter: startAfter || null });
 };
 
-async function migrateContact(contact, fieldMap, mode, stats) {
+async function migrateContact(contact, fieldMap, ghlPipeline, mode, stats) {
   const values = readCustomFields(contact, fieldMap);
   const { lead_status: ghlLeadStatus, ...contactValues } = values;
   const accreditation = assessAccreditation(values.accreditation_check);
   const properties = clean({
     ghl_contact_id: contact.id,
-    firstname: contact.firstName,
-    lastname: contact.lastName,
+    firstname: properName(contact.firstName),
+    lastname: properName(contact.lastName),
     email: contact.email,
     phone: contact.phone,
     company: contact.companyName,
@@ -103,7 +106,7 @@ async function migrateContact(contact, fieldMap, mode, stats) {
     const contactRecord = await upsertContact(contact.email, properties);
     if (!contactRecord?.id) throw new Error("HubSpot contact upsert failed");
     stats.contactsCreatedOrUpdated++;
-    await migrateContactActivities(contact, contactRecord.id, mode, stats);
+    await migrateContactActivities(contact, contactRecord.id, ghlPipeline, mode, stats);
     return;
   }
 
@@ -114,9 +117,9 @@ async function migrateContact(contact, fieldMap, mode, stats) {
   await listContactNotes(contact.id);
 }
 
-async function migrateContactActivities(contact, hubspotContactId, mode, stats) {
+async function migrateContactActivities(contact, hubspotContactId, ghlPipeline, mode, stats) {
   const opportunities = await listContactOpportunities(contact.id);
-  const dealId = await migrateOpportunities(opportunities, hubspotContactId, stats);
+  const dealId = await migrateOpportunities(opportunities, hubspotContactId, ghlPipeline, stats);
   const notes = await listContactNotes(contact.id);
   for (const note of notes) {
     const marker = `[GHL note:${note.id || "unknown"}]`;
@@ -149,14 +152,14 @@ async function migrateContactActivities(contact, hubspotContactId, mode, stats) 
   }
 }
 
-async function migrateOpportunities(opportunities, contactId, stats) {
+async function migrateOpportunities(opportunities, contactId, ghlPipeline, stats) {
   let firstDealId = null;
   for (const opportunity of opportunities) {
     const properties = clean({
       dealname: opportunity.name || "GHL Opportunity",
       amount: number(opportunity.monetaryValue),
       pipeline: "default",
-      dealstage: stageFor(opportunity),
+      dealstage: stageFor(opportunity, ghlPipeline),
       closedate: opportunity.forecastExpectedCloseDate || opportunity.forecastExpectedCloseDate,
       ghl_opportunity_id: opportunity.id,
       ghl_pipeline_id: opportunity.pipelineId,
@@ -251,11 +254,13 @@ async function ghl(path, { method = "GET", body, query } = {}) {
   return { data };
 }
 
-function stageName(opportunity) {
-  return opportunity.pipelineStageName || opportunity.stageName || opportunity.pipelineStageId || "";
+function stageName(opportunity, ghlPipeline) {
+  const direct = opportunity.pipelineStageName || opportunity.stageName || "";
+  const stageId = opportunity.pipelineStageId || direct;
+  return ghlPipeline?.stageNames?.[String(stageId)] || direct || stageId || "";
 }
-function stageFor(opportunity) {
-  const name = String(stageName(opportunity)).trim().toLowerCase();
+function stageFor(opportunity, ghlPipeline) {
+  const name = String(stageName(opportunity, ghlPipeline)).trim().toLowerCase();
   return STAGE_BY_NAME.find(([label]) => name === label)?.[1] || (String(opportunity.status).toLowerCase() === "won" ? DEAL_STAGES.CLOSED_FUNDED : String(opportunity.status).toLowerCase() === "lost" ? DEAL_STAGES.CLOSED_LOST : DEAL_STAGES.NEW_REGISTRATION);
 }
 function isOpen(opportunity) { return !["won", "lost", "abandoned"].includes(String(opportunity.status || "open").toLowerCase()); }
