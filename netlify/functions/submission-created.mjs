@@ -29,10 +29,9 @@ import {
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, assessAccreditation as assessHubSpotAccreditation } from "./lib/hs-config.mjs";
 import { properName } from "./lib/name.mjs";
-import { syncRegistrationToLoops, sendLoopsEvent } from "./lib/loops.mjs";
 
 export default async (req) => {
-  if (!process.env.GHL_TOKEN && !process.env.HUBSPOT_TOKEN && !process.env.LOOPS_API_KEY) return ok("crm not configured");
+  if (!process.env.GHL_TOKEN && !process.env.HUBSPOT_TOKEN) return ok("crm not configured");
 
   let body;
   try { body = await req.json(); } catch { return ok("bad payload"); }
@@ -93,15 +92,6 @@ export default async (req) => {
       await syncToHubSpot({ data, name, equity, debt, anticipated, total, ltv, dealValue, day45, day180 });
     } catch (e) { console.error("hubspot write failed:", e); }
   }
-  try {
-    await syncRegistrationToLoops(data);
-    await sendLoopsEvent(data.email, "ghl_registration", {
-      firstName: properName(data.first_name),
-      lastName: properName(data.last_name),
-      source: "Baker 1031 website"
-    });
-  } catch (e) { console.error("loops contact sync failed:", e); }
-
   return ok("synced");
 };
 

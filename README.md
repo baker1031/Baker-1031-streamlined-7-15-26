@@ -6,7 +6,7 @@ Static site, no build step required. Open `index.html` or deploy the folder as-i
 
 | File | Page |
 |---|---|
-| `index.html` | Homepage (public) — hero video, strategies, chart, full-cycle DSTs, request-access popup form with Cal.com routing |
+| `index.html` | Homepage (public) — hero video, strategies, chart, full-cycle DSTs, request-access popup form with GoHighLevel booking routing |
 | `current-offerings.html` | Current Offerings listing (post-login) |
 | `offering-template.html` | Offering detail page (post-login) — populated with AEI Healthcare Portfolio VII DST; every dynamic value tagged `data-field="<column name>"` for wiring to the offerings sheet |
 
@@ -32,7 +32,7 @@ The site is fully static and already loads with zero framework runtime, which is
 
 ## Kinde auth setup
 
-- `js/auth.js` — Kinde PKCE client (CDN, no build). Login always routes to `current-offerings.html`; portal pages redirect unauthenticated visitors to Kinde; Log Out signs out. Self-sign-up is disabled by policy — accounts are provisioned server-side by `netlify/functions/cal-webhook.mjs` after the request-access form is completed and the Cal.com introductory phone call is booked.
+- `js/auth.js` — Kinde PKCE client (CDN, no build). Login always routes to `current-offerings.html`; portal pages redirect unauthenticated visitors to Kinde; Log Out signs out. Self-sign-up is disabled by policy — accounts are provisioned server-side by `netlify/functions/ghl-booking.mjs` after the request-access form is completed and the GoHighLevel introductory phone call is booked.
 - Netlify env vars required: `KINDE_DOMAIN`, `KINDE_M2M_CLIENT_ID`, `KINDE_M2M_CLIENT_SECRET` (from a Kinde Machine-to-Machine app with Management API `create:users` scope).
 - Kinde dashboard: allowed callback + logout URLs must include the Netlify URL and production domain. Disable self-sign-up under the environment's policies.
 
@@ -46,11 +46,9 @@ mirrors meeting notes and action-item tasks when the participant has an email.
 Required Netlify production variables:
 
 - `HUBSPOT_TOKEN` — the HubSpot private-app token; keep it server-side
-- `LOOPS_API_KEY` — the Loops API key; keep it server-side. New website registrations
-  are created or updated as Loops contacts. Workflow event delivery is gated by
-  `LOOPS_EVENTS_ENABLED=true` so the Loops drafts can be reviewed before sending.
-  The current event names are `ghl_registration`, `appointment_booked`, and
-  `appointment_no_show`.
+- `LOOPS_API_KEY` / `LOOPS_EVENTS_ENABLED` — NO LONGER USED (2026-08-06). Loops was
+  removed from the stack; nurture and appointment emails are handled by the
+  GoHighLevel workflows. These variables can be deleted from Netlify.
 - `HS_SETUP_SECRET` — existing server-side setup secret
 - `GHL_TOKEN`, `GHL_LOCATION_ID`, and `GHL_WEBHOOK_SECRET` — existing GHL values
 
@@ -66,3 +64,11 @@ HubSpot private-app token. Configure HubSpot's Gmail integration for ongoing
 logging; an automated historical backfill requires a separate, server-side
 Google OAuth refresh token with Gmail read access and should be run as a
 separate, consented import. The site does not copy mailbox history by default.
+
+## Booking (2026-08-06)
+
+Booking reverted from Cal.com to the GoHighLevel calendar embed
+(`cZ2NwImWnEdoJUnObSNF`) on `book.html`, `schedule.html`, and `scheduled.html`.
+`netlify/functions/cal-webhook.mjs` remains deployed but dormant, and
+`cal-reminders.mjs` is inert with its cron schedule removed. Loops is fully
+unhooked from site code.

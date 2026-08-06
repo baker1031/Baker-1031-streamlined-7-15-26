@@ -14,16 +14,16 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Baker 1031 Investments">
 <meta property="og:title" content="Schedule a call with Jerry Baker">
-<meta property="og:description" content="A short introductory phone consultation, about 25 minutes.">
+<meta property="og:description" content="A short introductory consultation, about 25 minutes, by phone or video.">
 <meta property="og:url" content="https://baker1031.com/schedule">
 <meta property="og:image" content="https://baker1031.com/assets/img/jerry-baker-600.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Schedule a call with Jerry Baker">
-<meta name="twitter:description" content="A short introductory phone consultation, about 25 minutes.">
+<meta name="twitter:description" content="A short introductory consultation, about 25 minutes, by phone or video.">
 <meta name="twitter:image" content="https://baker1031.com/assets/img/jerry-baker-600.jpg">
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="preconnect" href="https://esm.sh" crossorigin>
-<link rel="preconnect" href="https://cal.com" crossorigin>
+<link rel="preconnect" href="https://api.leadconnectorhq.com" crossorigin>
 <link rel="preconnect" href="https://link.msgsndr.com" crossorigin>
 <link rel="dns-prefetch" href="https://img.logo.dev">
 <link rel="stylesheet" href="/css/learn-layout.css">
@@ -97,7 +97,7 @@
         </div>
         <div class="sched-kicker" id="sched-kicker">Baker 1031 Investments</div>
         <h1 id="sched-title">Schedule a call with Jerry Baker</h1>
-        <p class="sched-lead" id="sched-lead">Pick any time that works for you below &mdash; a short introductory consultation, about 25 minutes, by phone. Once you book, your investor portal is set up automatically.</p>
+        <p class="sched-lead" id="sched-lead">Pick any time that works for you below &mdash; a short introductory consultation, about 25 minutes, by phone or video. Once you book, your investor portal is set up automatically.</p>
       </div>
 
       <div class="sched-cal-card" id="sched-cal-card">
@@ -193,9 +193,10 @@
       /* -------------------------------------------------------------------
          PUBLIC SHORT LINK — baker1031.com/schedule
 
-         An open, brandable shortcut to the Cal.com intro-call calendar for email
-         signatures, texts, and business cards. The Cal webhook syncs CRM,
-         portal access, and follow-up automation before the visitor lands on
+         An open, brandable shortcut to the intro-call calendar for email
+         signatures, texts, and business cards. Same GoHighLevel calendar as
+         /scheduled.html and /book.html, so the GHL "Booking -> Portal
+         Provisioning" workflow still fires and the visitor still lands on
          the branded /call-confirmed.html page afterwards.
 
          Difference vs /book.html: no access key. /book.html stays the private,
@@ -210,7 +211,7 @@
          handed out directly, not a page we want competing in search with the
          Request Access funnel.
          ------------------------------------------------------------------- */
-      var CAL_BOOKING_URL = 'https://cal.com/jerry-baker-yn6qn1/25min';
+      var GHL_BOOKING_ID = 'cZ2NwImWnEdoJUnObSNF';
 
       var qs = new URLSearchParams(location.search);
 
@@ -229,59 +230,55 @@
       // Jerry Baker" on every visit, since that framing is the point of the page.
       if (first && leadEl) {
         leadEl.textContent = 'Hi ' + firstSafe + ' — pick any time that works for you below. '
-          + 'It’s a short introductory consultation, about 25 minutes, by phone. '
+          + 'It’s a short introductory consultation, about 25 minutes, by phone or video. '
           + 'Once you book, your investor portal is set up automatically.';
       }
       buildCalendar();
 
       function buildCalendar() {
-        // E.164-normalize any phone we were handed so Cal.com prefills it cleanly.
+        // E.164-normalize any phone we were handed so GHL prefills it cleanly.
         var digits = phone.replace(/\D/g, '');
         var e164Phone = phone.charAt(0) === '+' ? '+' + digits
           : digits.length === 10 ? '+1' + digits
           : (digits.length === 11 && digits.charAt(0) === '1') ? '+' + digits
           : '';
 
-        if (loading) loading.remove();
-        (function (C, A, L) {
-          let p = function (a, ar) { a.q.push(ar); };
-          let d = C.document;
-          C.Cal = C.Cal || function () {
-            let cal = C.Cal, ar = arguments;
-            if (!cal.loaded) {
-              cal.ns = {}; cal.q = cal.q || [];
-              d.head.appendChild(d.createElement('script')).src = A;
-              cal.loaded = true;
-            }
-            if (ar[0] === L) {
-              const api = function () { p(api, arguments); };
-              const namespace = ar[1]; api.q = api.q || [];
-              if (typeof namespace === 'string') {
-                cal.ns[namespace] = cal.ns[namespace] || api;
-                p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]);
-              } else p(cal, ar);
-              return;
-            }
-            p(cal, ar);
-          };
-        })(window, 'https://app.cal.com/embed/embed.js', 'init');
-        Cal('init', '25min', { origin: 'https://app.cal.com' });
-        Cal.ns['25min']('ui', { theme: 'light', cssVarsPerTheme: {
-          light: { 'cal-brand': '#2b3a5f', 'cal-brand-emphasis': '#22304f', 'cal-brand-text': '#ffffff', 'cal-brand-accent': '#ffffff' },
-          dark: { 'cal-brand': '#2b3a5f', 'cal-brand-emphasis': '#22304f', 'cal-brand-text': '#ffffff', 'cal-brand-accent': '#ffffff' }
-        }});
-        Cal('inline', { elementOrSelector: '#sched-cal', calLink: 'jerry-baker-yn6qn1/25min', config: {
-          layout: 'month_view', name: [first, last].filter(Boolean).join(' '), email: email, phone: e164Phone
-        }});
-        Cal.ns['25min']('on', { action: 'bookingSuccessful', callback: function () {
-          if (window.__calBooked) return; window.__calBooked = true;
-          if (window.gtag) gtag('event', 'schedule', { method: 'cal.com_phone', event_type: 'short_link', currency: 'USD', value: 1 });
-          setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
-        }});
+        var params = new URLSearchParams();
+        if (first) params.set('first_name', first);
+        if (last) params.set('last_name', last);
+        if (email) params.set('email', email);
+        if (e164Phone) params.set('phone', e164Phone);
+
+        var iframe = document.createElement('iframe');
+        iframe.src = 'https://api.leadconnectorhq.com/widget/booking/' + GHL_BOOKING_ID + (params.toString() ? '?' + params.toString() : '');
+        iframe.id = GHL_BOOKING_ID + '_' + Date.now();
+        iframe.style.cssText = 'width:100%;border:none;overflow:hidden;display:block;min-height:520px';
+        iframe.setAttribute('scrolling', 'no');
+        iframe.addEventListener('load', function () { if (loading) loading.style.display = 'none'; });
+        holder.appendChild(iframe);
+
+        if (!document.getElementById('ghl-embed-js')) {
+          var s = document.createElement('script');
+          s.id = 'ghl-embed-js';
+          s.src = 'https://link.msgsndr.com/js/form_embed.js';
+          document.body.appendChild(s);
+        }
 
         // Best-effort conversion signal if GA4 is present.
         if (window.gtag) gtag('event', 'generate_lead', { method: 'schedule_short_link', currency: 'USD', value: 1 });
 
+        window.addEventListener('message', function (e) {
+          var o = String(e.origin || '');
+          if (o.indexOf('leadconnectorhq') === -1 && o.indexOf('msgsndr') === -1) return;
+          var raw = ''; try { raw = typeof e.data === 'string' ? e.data : JSON.stringify(e.data || ''); } catch (_) {}
+          // Only the real booking-completion message carries a completion word
+          // alongside the booking context. The widget's load-time message has
+          // "booking" (its own URL) but no completion word — must not fire.
+          if (!(/booking|appointment/i.test(raw) && /complete|booked|confirmed|success/i.test(raw))) return;
+          if (window.__ghlBooked) return; window.__ghlBooked = true;
+          if (window.gtag) gtag('event', 'schedule', { method: 'gohighlevel', event_type: 'short_link', currency: 'USD', value: 1 });
+          setTimeout(function () { window.location.href = '/call-confirmed.html'; }, 500);
+        });
       }
     })();
   </script>

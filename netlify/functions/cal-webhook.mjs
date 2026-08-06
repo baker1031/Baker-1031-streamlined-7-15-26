@@ -2,7 +2,8 @@
 
    Cal.com sends a signed POST here for the event type used by the website.
    The handler keeps the established GHL -> HubSpot -> Kinde path in sync and
-   stores the appointment so the scheduled Loops reminder function can run.
+   stores the appointment for reference. Reminder emails are handled by
+   GoHighLevel; this function no longer drives an email provider.
 */
 
 import { getStore } from "@netlify/blobs";
@@ -21,7 +22,6 @@ import {
 } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, LEAD_STATUS as HUBSPOT_LEAD_STATUS } from "./lib/hs-config.mjs";
 import { properName } from "./lib/name.mjs";
-import { sendLoopsEvent } from "./lib/loops.mjs";
 
 const APPOINTMENT_STORE = "cal-appointments";
 const BOOKING_EVENT = "BOOKING_CREATED";
@@ -179,18 +179,6 @@ async function processBooking(details, payload, markerId, triggerEvent, errors) 
         }
       }
     } catch (error) { errors.push({ system: "kinde", message: errorMessage(error) }); }
-
-    try {
-      await sendLoopsEvent(details.email, "appointment_booked", {
-        appointmentId: markerId,
-        title: payload.title || "Introductory Phone Call",
-        startTime: payload.startTime || payload.start_time,
-        endTime: payload.endTime || payload.end_time,
-        phone: details.phone,
-        bookingUrl: payload.bookingUrl || payload.booking_url,
-        triggerEvent
-      });
-    } catch (error) { errors.push({ system: "loops", message: errorMessage(error) }); }
   }
 }
 
@@ -210,16 +198,6 @@ async function processCancellation(details, payload, markerId, errors) {
       }
     } catch (error) { errors.push({ system: "hubspot", message: errorMessage(error) }); }
   }
-
-  try {
-    await sendLoopsEvent(details.email, "appointment_cancelled", {
-      appointmentId: markerId,
-      title: payload.title || "Introductory Phone Call",
-      startTime: payload.startTime || payload.start_time,
-      endTime: payload.endTime || payload.end_time,
-      status: "cancelled"
-    });
-  } catch (error) { errors.push({ system: "loops", message: errorMessage(error) }); }
 }
 
 async function processNoShow(details, payload, markerId, errors) {
@@ -243,16 +221,6 @@ async function processNoShow(details, payload, markerId, errors) {
     } catch (error) { errors.push({ system: "hubspot", message: errorMessage(error) }); }
   }
 
-  if (markerCreated) {
-    try {
-      await sendLoopsEvent(details.email, "appointment_no_show", {
-        appointmentId: markerId,
-        title: payload.title || "Introductory Phone Call",
-        startTime: payload.startTime || payload.start_time,
-        status: "no-show"
-      });
-    } catch (error) { errors.push({ system: "loops", message: errorMessage(error) }); }
-  }
 }
 
 async function markAppointmentCancelled(markerId, payload) {
