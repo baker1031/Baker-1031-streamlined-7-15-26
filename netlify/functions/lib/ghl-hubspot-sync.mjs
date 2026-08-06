@@ -11,6 +11,12 @@ export async function mirrorGhlContact(contact, overrides = {}) {
   if (!contact) return null;
   const catalog = await getContactFieldCatalog();
   const values = readCustomFields(contact, catalog);
+  // `lead_status` is a GHL custom-field name with no HubSpot equivalent — HubSpot
+  // uses `hs_lead_status`. Spreading it into the payload makes HubSpot reject the
+  // whole PATCH with 400 PROPERTY_DOESNT_EXIST, which threw and returned a 500 to
+  // GoHighLevel. Strip it here and use it only to derive lifecyclestage, matching
+  // what ghl-hubspot-backfill.mjs already does.
+  const { lead_status: ghlLeadStatus, ...contactValues } = values;
   const accreditation = assessAccreditation(values.accreditation_check);
   const email = cleanEmail(contact.email);
   const properties = clean({
@@ -29,9 +35,9 @@ export async function mirrorGhlContact(contact, overrides = {}) {
     contact_type: contact.type,
     ghl_tags: Array.isArray(contact.tags) ? contact.tags.join(", ") : contact.tags,
     ghl_assigned_to: contact.assignedTo || contact.assigned_to,
-    ...values,
+    ...contactValues,
     hs_lead_status: accreditation.leadStatus,
-    lifecyclestage: /approved|scheduled/i.test(String(values.lead_status || "")) ? "salesqualifiedlead" : "lead",
+    lifecyclestage: /approved|scheduled/i.test(String(ghlLeadStatus || "")) ? "salesqualifiedlead" : "lead",
     ...overrides
   });
   if (!email && !properties.phone) return null;

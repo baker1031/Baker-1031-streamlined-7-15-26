@@ -34,8 +34,16 @@ export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
 
   const secret = process.env.GHL_WEBHOOK_SECRET;
-  if (!secret) return new Response("forbidden", { status: 403 }); // fail closed
-  if (new URL(req.url).searchParams.get("secret") !== secret) return new Response("forbidden", { status: 403 });
+  if (!secret) {
+    console.warn("ghl-booking REJECTED: GHL_WEBHOOK_SECRET is not set in this deploy");
+    return new Response("forbidden", { status: 403 }); // fail closed
+  }
+  if (new URL(req.url).searchParams.get("secret") !== secret) {
+    // See ghl-hubspot-webhook.mjs — env vars are fixed at deploy time, so a
+    // rotated secret needs a fresh deploy before this will ever match.
+    console.warn("ghl-booking REJECTED: ?secret does not match GHL_WEBHOOK_SECRET for this deploy");
+    return new Response("forbidden", { status: 403 });
+  }
 
   if (!process.env.GHL_TOKEN) return ok("ghl not configured");
 
