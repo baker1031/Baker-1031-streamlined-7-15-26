@@ -22,7 +22,15 @@ import { mirrorGhlContact } from "./lib/ghl-hubspot-sync.mjs";
 export default async (req) => {
   if (req.method !== "POST") return json({ error: "method not allowed" }, 405);
   const secret = process.env.GHL_WEBHOOK_SECRET;
-  if (!secret || new URL(req.url).searchParams.get("secret") !== secret) return json({ error: "forbidden" }, 403);
+  if (!secret || new URL(req.url).searchParams.get("secret") !== secret) {
+    // Log loudly: a silent 403 here is indistinguishable from "nothing happened"
+    // in the GHL execution log, which hid a two-day outage.
+    console.warn(!secret
+      ? "ghl-hubspot-webhook REJECTED: GHL_WEBHOOK_SECRET is not set in this deploy"
+      : "ghl-hubspot-webhook REJECTED: ?secret does not match GHL_WEBHOOK_SECRET for this deploy. "
+        + "Netlify bakes env vars in at deploy time — after rotating the value you must create a new deploy.");
+    return json({ error: "forbidden" }, 403);
+  }
   if (!process.env.HUBSPOT_TOKEN) return json({ ok: true, note: "HubSpot not configured" });
 
   let body;
