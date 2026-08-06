@@ -29,7 +29,6 @@ import { PIPELINE_NAME, STAGES, LEAD_STATUS, buildContactFields } from "./lib/gh
 import { upsertContact as upsertHubSpotContact, findOpenDealForContact, createDeal, updateDeal, createNote as createHubSpotNote } from "./lib/hubspot.mjs";
 import { DEAL_STAGES, LEAD_STATUS as HUBSPOT_LEAD_STATUS } from "./lib/hs-config.mjs";
 import { properName } from "./lib/name.mjs";
-import { sendLoopsEvent } from "./lib/loops.mjs";
 
 export default async (req) => {
   if (req.method !== "POST") return ok("method ignored");
@@ -120,18 +119,6 @@ export default async (req) => {
     }
   } catch (e) {
     console.error("ghl-booking provisioning failed:", e);
-  }
-
-  try {
-    const appointment = body.appointment || body;
-    await sendLoopsEvent(email, "appointment_booked", {
-      appointmentId: appointment.id || body.appointmentId || body.appointment_id,
-      title: appointment.title || body.title,
-      startTime: appointment.startTime || appointment.start_time || body.startTime || body.start_time,
-      endTime: appointment.endTime || appointment.end_time || body.endTime || body.end_time
-    });
-  } catch (e) {
-    console.error("loops booking event failed:", e);
   }
 
   return ok("booking processed");
